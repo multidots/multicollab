@@ -1,0 +1,26 @@
+# Debug plugins
+plugins/log-deprecated-notices
+plugins/monster-widget
+plugins/query-monitor
+plugins/user-switching
+
+# Uploads directory
+# uploads
+
+#PHPStorm configurations
+.idea
+wp-content/plugins/suggestion-block/admin/js/node_modules/
+#wp-content/plugins/theme-check/
+
+# mu-plugins; these are managed at the platform-level
+mu-plugins
+
+# drop-ins; these are managed at the platform-level
+object-cache.php
+db.php
+
+/admin/js/node_modules
+node_modules
+composer.json
+composer.lock
+vendor/
