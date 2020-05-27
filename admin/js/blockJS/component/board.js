@@ -172,8 +172,8 @@ export default class Board extends React.Component {
 
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
 
-            var metaId = currentTextID.substring(3);
-            metaId = '_' + metaId;
+            var el = currentTextID.substring(3);
+            var metaId = '_' + el;
             var data = {
                 'action': 'my_action',
                 'currentPostID': CurrentPostID,
@@ -181,8 +181,11 @@ export default class Board extends React.Component {
                 'metaId': metaId
             };
 
+            jQuery('#' + el + ' .shareCommentContainer').addClass('loading');
             let _this = this;
             jQuery.post(ajaxurl, data, function (data) {
+
+                jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
 
                 data = jQuery.parseJSON(data);
                 arr[arr.length - 1]['dtTime'] = data.dtTime;

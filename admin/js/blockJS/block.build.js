@@ -182,7 +182,6 @@ jQuery(window).load(function () {
 });
 
 function bring_back_comments() {
-    //alert('hey2');
     var $ = jQuery;
 
     // Reset Draft Comments Data.
@@ -713,8 +712,8 @@ var Board = function (_React$Component) {
 
                 var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
 
-                var metaId = currentTextID.substring(3);
-                metaId = '_' + metaId;
+                var el = currentTextID.substring(3);
+                var metaId = '_' + el;
                 var data = {
                     'action': 'my_action',
                     'currentPostID': CurrentPostID,
@@ -722,8 +721,11 @@ var Board = function (_React$Component) {
                     'metaId': metaId
                 };
 
+                jQuery('#' + el + ' .shareCommentContainer').addClass('loading');
                 var _this = this;
                 jQuery.post(ajaxurl, data, function (data) {
+
+                    jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
 
                     data = jQuery.parseJSON(data);
                     arr[arr.length - 1]['dtTime'] = data.dtTime;

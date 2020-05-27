@@ -78,7 +78,9 @@ div#Div1 {
     overflow: scroll;
     top: 160px;
 }
-.shareCommentContainer{display: none;border-top: 1px solid #ccc;padding: 12px;}
+.shareCommentContainer.loading:after {content: '\f531';font-family: dashicons;position: absolute;left: 80px;bottom: 11px;color: #23282d;transform: rotate(360deg);animation: 1s all;}
+.cls-board-outer.loading{background-color:#f8f8f8}
+.shareCommentContainer{display: none;border-top: 1px solid #ccc;padding: 12px;position: relative;}
 .focus .shareCommentContainer{display: block;}
 .boardTop {padding: 12px}
 .cls-board-outer {

@@ -103,7 +103,6 @@ jQuery(window).load(function () {
 });
 
 function bring_back_comments() {
-    //alert('hey2');
     var $ = jQuery;
 
     // Reset Draft Comments Data.
