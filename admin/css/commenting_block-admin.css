@@ -158,7 +158,7 @@ div#Div1 {
 .cls-board-outer .board .commentContainer.reverted_back.deleted {
 
     /* background: red; */
-    background: #ff450078;
+    background: #ffa787;
 }
 
 .cls-board-outer .board .commentContainer.permanent_draft {
@@ -172,7 +172,7 @@ div#Div1 {
 }
 
 .reverted_back.resolved {
-    background: #e709ab30;
+    background: #fa9f77;
 }
 
 .cls-board-outer .board .commentContainer .commentText {
