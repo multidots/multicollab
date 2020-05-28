@@ -257,6 +257,7 @@ div#Div1 {
 .user-data-row:last-child {
     border: 0;
     padding: 0;
+    margin: 0;
 }
 
 #custom-history-popup {
@@ -280,7 +281,7 @@ div#Div1 {
     opacity: 1;
     max-height: calc(90vh - 100px);
     overflow-y: scroll;
-    box-shadow: 0px 2px 4px 0px #00000094;
+    box-shadow: 0 0 5px 0 #000000ba;
 }
 
 #custom-history-popup table {
@@ -398,7 +399,7 @@ span.user-name {
 }
 
 .comment-header .avtar {
-    width: 32px;
+    width: 35px;
     margin-right: 10px;
     flex-shrink: 0;
 }
@@ -555,6 +556,11 @@ body:not(.mobile) .character-map-popover .components-popover__content:not(.is-mo
     min-width: 550px;
 }
 
+.divsuggestion-text {
+    width: 100%;
+    line-height: 1.2;
+}
+
 button.btn-comment.btn-accept:hover {
     box-shadow: none;
     background-color: rgba(0, 0, 0, 0.06);
@@ -613,4 +619,8 @@ button.btn-comment.btn-reject {
 
 .comment-header button {
     margin-top: 0 !important;
+}
+
+.cls-board-outer .board .commentContainer:first-child .comment-header .avtar img {
+    border: 3px solid  rgb(31, 161, 93);
 }
