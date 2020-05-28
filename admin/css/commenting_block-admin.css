@@ -555,11 +555,6 @@ body:not(.mobile) .character-map-popover .components-popover__content:not(.is-mo
     min-width: 550px;
 }
 
-.divsuggestion-text {
-    width: 100%;
-    line-height: 1.2;
-}
-
 button.btn-comment.btn-accept:hover {
     box-shadow: none;
     background-color: rgba(0, 0, 0, 0.06);

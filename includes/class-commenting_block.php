@@ -68,7 +68,7 @@ class Commenting_block {
 	 */
 	public function __construct() {
 		if ( defined( 'COMMENTING_BLOCK_VERSION' ) ) {
-			$this->version = Commenting_block_VERSION;
+			$this->version = COMMENTING_BLOCK_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}

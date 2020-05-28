@@ -182,7 +182,6 @@ jQuery(window).load(function () {
 });
 
 function bring_back_comments() {
-    //alert('hey2');
     var $ = jQuery;
 
     // Reset Draft Comments Data.
@@ -713,8 +712,8 @@ var Board = function (_React$Component) {
 
                 var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
 
-                var metaId = currentTextID.substring(3);
-                metaId = '_' + metaId;
+                var el = currentTextID.substring(3);
+                var metaId = '_' + el;
                 var data = {
                     'action': 'my_action',
                     'currentPostID': CurrentPostID,
@@ -722,8 +721,11 @@ var Board = function (_React$Component) {
                     'metaId': metaId
                 };
 
+                jQuery('#' + el + ' .shareCommentContainer').addClass('loading');
                 var _this = this;
                 jQuery.post(ajaxurl, data, function (data) {
+
+                    jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
 
                     data = jQuery.parseJSON(data);
                     arr[arr.length - 1]['dtTime'] = data.dtTime;
@@ -876,11 +878,6 @@ var Board = function (_React$Component) {
 
             var buttonText = 1 === this.hasComments && 1 !== this.props.freshBoard ? 'Reply' : 'Comment';
 
-            var str = this.props.selectedText;
-            if (typeof str != "undefined" && str.length > 15) {
-                str = str.substring(0, 15) + "...";
-            }
-
             return wp.element.createElement(
                 'div',
                 { className: 'board' },
@@ -895,60 +892,6 @@ var Board = function (_React$Component) {
                             null,
                             'The are no comments!'
                         )
-                    ),
-                    str && wp.element.createElement(
-                        'div',
-                        { className: 'top-header comment-header' },
-                        wp.element.createElement(
-                            'div',
-                            { className: 'avtar' },
-                            wp.element.createElement('img', { src: this.props.suserProfile, alt: 'avatar2' })
-                        ),
-                        wp.element.createElement(
-                            'div',
-                            { className: 'commenter-name-time' },
-                            wp.element.createElement(
-                                'div',
-                                { className: 'commenter-name' },
-                                this.props.suserName
-                            ),
-                            wp.element.createElement(
-                                'div',
-                                { className: 'comment-time' },
-                                this.props.dateTime
-                            )
-                        ),
-                        wp.element.createElement(
-                            'div',
-                            { className: 'buttons-holder' },
-                            wp.element.createElement(
-                                'div',
-                                { className: 'buttons-opner-suggestion' },
-                                wp.element.createElement(
-                                    'button',
-                                    { className: 'btn-comment btn-accept', onClick: this.acceptSuggestion.bind(this) },
-                                    wp.element.createElement(
-                                        'svg',
-                                        { xmlns: 'http://www.w3.org/2000/svg', width: '24', height: '24' },
-                                        wp.element.createElement('path', { d: 'M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z' })
-                                    )
-                                ),
-                                wp.element.createElement(
-                                    'button',
-                                    { className: 'btn-comment btn-reject', onClick: this.removeSuggestion.bind(this) },
-                                    wp.element.createElement(
-                                        'svg',
-                                        { xmlns: 'http://www.w3.org/2000/svg', width: '24', height: '24' },
-                                        wp.element.createElement('path', { d: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z' })
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                    wp.element.createElement(
-                        'div',
-                        { className: 'divsuggestion-text' },
-                        str
                     ),
                     this.state.comments && this.state.comments.map(function (item, index) {
                         return _this3.displayComments(item, index);

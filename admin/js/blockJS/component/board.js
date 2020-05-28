@@ -172,8 +172,8 @@ export default class Board extends React.Component {
 
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
 
-            var metaId = currentTextID.substring(3);
-            metaId = '_' + metaId;
+            var el = currentTextID.substring(3);
+            var metaId = '_' + el;
             var data = {
                 'action': 'my_action',
                 'currentPostID': CurrentPostID,
@@ -181,8 +181,11 @@ export default class Board extends React.Component {
                 'metaId': metaId
             };
 
+            jQuery('#' + el + ' .shareCommentContainer').addClass('loading');
             let _this = this;
             jQuery.post(ajaxurl, data, function (data) {
+
+                jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
 
                 data = jQuery.parseJSON(data);
                 arr[arr.length - 1]['dtTime'] = data.dtTime;
@@ -303,49 +306,12 @@ export default class Board extends React.Component {
         const {isActive, inputValue, onChange, value, myval2, selectedText, datatext} = this.props;
         const buttonText = 1 === this.hasComments && 1 !== this.props.freshBoard ? 'Reply' : 'Comment';
 
-        var str = this.props.selectedText;
-        if (typeof (str) != "undefined" && str.length > 15) {
-            str = str.substring(0, 15) + "...";
-        }
-
         return (
             <div className="board">
                 <div className="boardTop">
                     {0 === this.hasComments &&
-                    <div className="no-comments"><i>The are no comments!</i></div>
+                        <div className="no-comments"><i>The are no comments!</i></div>
                     }
-                    {str &&
-
-                    <div className="top-header comment-header">
-                        <div className="avtar"><img src={this.props.suserProfile} alt="avatar2"/></div>
-                        <div className="commenter-name-time">
-                            <div className="commenter-name">{this.props.suserName}</div>
-                            <div className="comment-time">{this.props.dateTime}</div>
-                        </div>
-                        <div className="buttons-holder">
-
-                            <div className="buttons-opner-suggestion">
-                                <button className="btn-comment btn-accept" onClick={this.acceptSuggestion.bind(this)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-                                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path>
-                                    </svg>
-                                </button>
-                                <button className="btn-comment btn-reject" onClick={this.removeSuggestion.bind(this)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-                                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    }
-                    <div className="divsuggestion-text">
-                        {
-                            str
-                        }
-
-                    </div>
                     {
                         this.state.comments && this.state.comments.map((item, index) => {
                             return this.displayComments(item, index);
