@@ -668,7 +668,7 @@ var Board = function (_React$Component) {
 
             var newText = jQuery('#' + currentTextID).val();
 
-            if (newText !== "") {
+            if ('' !== newText) {
 
                 var userID = wp.data.select("core").getCurrentUser().id;
                 var userName = wp.data.select("core").getCurrentUser().name;
@@ -939,6 +939,10 @@ var Comment = function (_React$Component) {
         value: function save(event) {
 
             var newText = this.newText.value;
+            if ('' === newText) {
+                alert("Please write a comment to share!");
+                return false;
+            }
             var metaId = this.newText.id.substring(3);
             var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
             this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, this.props.dateTime, elID);

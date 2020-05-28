@@ -126,7 +126,7 @@ export default class Board extends React.Component {
 
         var newText = jQuery('#' + currentTextID).val();
 
-        if (newText !== "") {
+        if ('' !== newText) {
 
             var userID = wp.data.select("core").getCurrentUser().id;
             var userName = wp.data.select("core").getCurrentUser().name;
