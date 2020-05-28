@@ -137,7 +137,10 @@ class Commenting_block_Admin {
 
 				foreach ( $timestamps as $t ) {
 
-					$prev_state['comments'][ $t ]['thread'] = $prev_state['comments'][ $t ]['draft_edits']['thread'];
+					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
+					if ( ! empty( $edited_draft ) ) {
+						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
+					}
 
 					// Change status to publish.
 					$prev_state['comments'][ $t ]['status'] = 'publish';
@@ -147,7 +150,6 @@ class Commenting_block_Admin {
 
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
-
 			}
 		}
 
@@ -451,13 +453,9 @@ class Commenting_block_Admin {
 		$commentListOld = get_post_meta( $current_post_id, $metaId, true );
 		$commentListOld = maybe_unserialize( $commentListOld );
 
-		$new_timestamp = current_time( 'timestamp' );
+		$edited_draft           = array();
+		$edited_draft['thread'] = $edited_comment['thread'];
 
-		$edited_draft              = array();
-		$edited_draft['thread']    = $edited_comment['thread'];
-		$edited_draft['timestamp'] = $new_timestamp;
-
-		unlink( $edited_comment['timestamp'] );
 		$commentListOld['comments'][ $old_timestamp ]['draft_edits'] = $edited_draft;
 
 		update_post_meta( $current_post_id, $metaId, $commentListOld );
@@ -469,8 +467,6 @@ class Commenting_block_Admin {
 		$current_drafts['edited'][ $metaId ][] = $old_timestamp;
 
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
-
-		echo json_encode( array( 'timestamp' => $new_timestamp ) );
 
 		wp_die(); // this is required to terminate immediately and return a proper response
 	}
@@ -634,7 +630,7 @@ class Commenting_block_Admin {
 		$commentList = get_post_meta( $current_post_id, $elID, true );
 
 		$superCareerData = maybe_unserialize( $commentList );
-		$comments = $superCareerData['comments'];
+		$comments        = $superCareerData['comments'];
 
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );

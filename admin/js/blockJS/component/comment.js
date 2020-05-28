@@ -24,7 +24,7 @@ export default class Comment extends React.Component {
         var newText = this.newText.value;
         var metaId = this.newText.id.substring(3);
         var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
-        this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, elID);
+        this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, this.props.dateTime, elID);
 
         this.setState({editing: false})
     }

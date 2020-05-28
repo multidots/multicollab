@@ -86,6 +86,10 @@ div#Div1 {
     padding: 12px;
 }
 
+.shareCommentContainer.loading .btn {
+    pointer-events: none;
+}
+
 .focus .shareCommentContainer {
     display: block;
 }

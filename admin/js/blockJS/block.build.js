@@ -622,39 +622,23 @@ var Board = function (_React$Component) {
         }
     }, {
         key: 'updateComment',
-        value: function updateComment(newText, idx, cTimestamp, metaID) {
+        value: function updateComment(newText, idx, cTimestamp, dateTime, metaID) {
             var arr = this.state.comments;
-
-            var date = new Date();
-
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1;
-            var day = date.getDate();
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var seconds = date.getSeconds();
-            var ampm = hours >= 12 ? 'pm' : 'am';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            var strTime = hours + ':' + minutes + ' ' + ampm;
-            //var fullDt = year + "-" + month + "-" + day + " " + strTime;
             var userID = wp.data.select("core").getCurrentUser().id;
             var userName = wp.data.select("core").getCurrentUser().name;
             var userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
             userProfile = userProfile[Object.keys(userProfile)[1]];
 
             var newArr = {};
-            newArr['userData'] = userID;
-            //newArr['dtTime'] = fullDt;
-            newArr['thread'] = newText;
             newArr['userName'] = userName;
             newArr['profileURL'] = userProfile;
+            newArr['dtTime'] = dateTime;
+            newArr['thread'] = newText;
+            newArr['userData'] = userID;
             newArr['index'] = idx;
-            newArr['timestamp'] = cTimestamp;
             newArr['status'] = 'draft reverted_back';
+            newArr['timestamp'] = cTimestamp;
             arr[idx] = newArr;
-            //arr.push(newText);
             var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
             metaID = '_' + metaID;
             var data = {
@@ -666,12 +650,8 @@ var Board = function (_React$Component) {
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             var _this = this;
 
-            jQuery('.commentText textarea').parents('.commentContainer').addClass('loading');
-            jQuery.post(ajaxurl, data, function (data) {
-                arr[idx]['timestamp'] = data.timestamp;
-                jQuery('.commentContainer').removeClass('loading');
-                _this.setState({ comments: arr });
-            });
+            jQuery.post(ajaxurl, data, function () {});
+            this.setState({ comments: arr });
         }
     }, {
         key: 'addNewComment',
@@ -961,7 +941,7 @@ var Comment = function (_React$Component) {
             var newText = this.newText.value;
             var metaId = this.newText.id.substring(3);
             var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
-            this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, elID);
+            this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, this.props.dateTime, elID);
 
             this.setState({ editing: false });
         }
