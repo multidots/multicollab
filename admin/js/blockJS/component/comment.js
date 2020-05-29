@@ -22,9 +22,13 @@ export default class Comment extends React.Component {
     save(event) {
 
         var newText = this.newText.value;
+        if ('' === newText) {
+            alert("Please write a comment to share!");
+            return false;
+        }
         var metaId = this.newText.id.substring(3);
         var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
-        this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, elID);
+        this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, this.props.dateTime, elID);
 
         this.setState({editing: false})
     }
@@ -137,13 +141,13 @@ export default class Comment extends React.Component {
         return (
             <div className="commentContainer">
                 <div className="commentText">
-          <textarea
-              ref={(input) => {
-                  this.newText = input;
-              }}
-              onChange={this.handleChange}
-              defaultValue={this.state.showEditedDraft ? this.props.editedDraft : this.props.children}>
-          </textarea>
+                  <textarea
+                      ref={(input) => {
+                          this.newText = input;
+                      }}
+                      onChange={this.handleChange}
+                      defaultValue={this.state.showEditedDraft ? this.props.editedDraft : this.props.children}>
+                  </textarea>
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment">
                     {'Save'}
