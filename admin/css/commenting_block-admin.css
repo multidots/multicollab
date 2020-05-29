@@ -94,18 +94,18 @@ div#Div1 {
 }
 
 .cls-board-outer {
-    position: relative;
-    /* position: fixed; */
-    left: 0;
-    /* right: 300px; */
+    position: relative;    /* position: fixed; */
+    left: 0;    /* right: 300px; */
+
     /* top: 240px; */
+
     /* height: 50vh; */
     overflow: auto;
     background: #fff;
     width: 285px;
     box-shadow: rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-    border-radius: 8px;
-    /* display:none; */
+    border-radius: 8px;    /* display:none; */
+
     /* z-index: 1; */
     margin-bottom: 15px;
     transition: all 0.3s;
@@ -143,19 +143,19 @@ div#Div1 {
     display: block;
 }
 
-.cls-board-outer .board .commentContainer.reverted_back.added {
+.cls-board-outer .board .commentContainer.added {
 
     /* background: green; */
     background: #dffff4;
 }
 
-.cls-board-outer .board .commentContainer.reverted_back.edited {
+.cls-board-outer .board .commentContainer.edited {
 
     /* background: yellow; */
     background: #ffffb5;
 }
 
-.cls-board-outer .board .commentContainer.reverted_back.deleted {
+.cls-board-outer .board .commentContainer.deleted {
 
     /* background: red; */
     background: #ffa787;
@@ -623,4 +623,49 @@ button.btn-comment.btn-reject {
 
 .cls-board-outer .board .commentContainer:first-child .comment-header .avtar img {
     border: 3px solid  rgb(31, 161, 93);
+}
+
+.cls-board-outer.focus {
+    background: #cef2f6;
+}
+
+.shareCommentContainer.loading {
+    position: relative;
+}
+
+.shareCommentContainer.loading::after {
+    content: "";
+    -webkit-animation-duration: 0.75s;
+    -moz-animation-duration: 0.75s;
+    animation-duration: 0.75s;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: rotate-forever;
+    -moz-animation-name: rotate-forever;
+    animation-name: rotate-forever;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-timing-function: linear;
+    animation-timing-function: linear;
+    height: 20px;
+    width: 20px;
+    border: 4px solid red;
+    border-right-color: transparent;
+    border-radius: 50%;
+    position: absolute;
+    left: 100px;
+    bottom: 15px;
+}
+
+@-webkit-keyframes rotate-forever{
+    0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}
+    100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@-moz-keyframes rotate-forever{
+    0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}
+    100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@keyframes rotate-forever{
+    0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}
+    100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
 }
