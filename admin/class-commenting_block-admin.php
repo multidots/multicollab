@@ -65,14 +65,18 @@ class Commenting_block_Admin {
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
 
+		$current_timestamp = current_time( 'timestamp' );
+
 		// Mark Resolved Threads.
 		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
 			$resolved_drafts = $current_drafts['resolved'];
 
 			foreach ( $resolved_drafts as $el ) {
-				$prev_state             = get_post_meta( $post_ID, $el, true );
-				$prev_state             = maybe_unserialize( $prev_state );
-				$prev_state['resolved'] = 'true';
+				$prev_state                       = get_post_meta( $post_ID, $el, true );
+				$prev_state                       = maybe_unserialize( $prev_state );
+				$prev_state['resolved']           = 'true';
+				$prev_state['resolved_timestamp'] = $current_timestamp;
+				$prev_state['resolved_by']        = get_current_user_id();
 				update_post_meta( $post_ID, $el, $prev_state );
 
 				// Send Email.
@@ -91,7 +95,7 @@ class Commenting_block_Admin {
 						$user_info   = get_userdata( $arr['userData'] );
 						$username    = $user_info->display_name;
 						$profile_url = get_avatar_url( $user_info->user_email );
-						$dtTime      = date( $time_format . ' ' . $date_format, $timestamp );
+						$date        = date( $time_format . ' ' . $date_format, $timestamp );
 						$comment     = $arr['thread'];
 
 						$html .= "<div className='comment-header'>
@@ -162,7 +166,11 @@ class Commenting_block_Admin {
 				$prev_state = maybe_unserialize( $prev_state );
 
 				foreach ( $timestamps as $t ) {
+					// Update the timestamp of deleted comment.
+					$previous_comment = $prev_state['comments'][ $t ];
 					unset( $prev_state['comments'][ $t ] );
+					$prev_state['comments'][ $current_timestamp ]           = $previous_comment;
+					$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
 			}
@@ -255,13 +263,20 @@ class Commenting_block_Admin {
 
 	public function my_action() {
 
-		$commentList     = str_replace( "\\", "", $_POST['commentList'] );
-		$commentList     = json_decode( $commentList, true );
+		$commentList = str_replace( "\\", "", $_POST['commentList'] );
+		$commentList = json_decode( $commentList, true );
+
 		$current_post_id = $_POST['currentPostID'];
 		$arr             = array();
 
 		$commentList = end( $commentList );
 		$metaId      = $_POST['metaId'];
+
+		// If 'commented on' text is blank, stop process.
+		if ( empty( $commentList['commentedOnText'] ) ) {
+			echo json_encode( array( 'error' => 'Please select text to comment on.' ) );
+			wp_die();
+		}
 
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
@@ -272,10 +287,9 @@ class Commenting_block_Admin {
 		$commentListOld  = get_post_meta( $current_post_id, $metaId, true );
 		$superCareerData = maybe_unserialize( $commentListOld );
 
-		$arr['status']   = 'draft';//$post_status;
+		$arr['status']   = 'draft';
 		$arr['userData'] = get_current_user_id();
-		//$arr['dtTime']   = $timestamp;
-		$arr['thread'] = $commentList['thread'];
+		$arr['thread']   = $commentList['thread'];
 
 		// Update Current Drafts.
 		$current_drafts = get_post_meta( $current_post_id, 'current_drafts', true );
@@ -291,7 +305,6 @@ class Commenting_block_Admin {
 
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 			$superCareerData['comments'][ $timestamp ] = $arr;
-			//array_push( $superCareerData['comments'], $arr );
 		} else {
 			$superCareerData                           = array();
 			$superCareerData['comments'][ $timestamp ] = $arr;
@@ -304,13 +317,12 @@ class Commenting_block_Admin {
 		update_post_meta( $current_post_id, $metaId, $superCareerData );
 
 		echo json_encode( array( 'dtTime' => $dtTime, 'timestamp' => $timestamp ) );
-
-		wp_die(); // this is required to terminate immediately and return a proper response
+		wp_die();
 	}
 
 	public function mdgcf_comments_history() {
-		global $wpdb;
-		$limit           = $_POST['limit'];
+
+		$limit           = isset( $_POST['limit'] ) ? $_POST['limit'] : 10;
 		$current_post_id = $_POST['currentPostID'];
 
 		$all_meta         = get_post_meta( $current_post_id );
@@ -320,17 +332,18 @@ class Commenting_block_Admin {
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
 
+		$total_comments = 0;
 		foreach ( $all_meta as $dataid => $v ) {
 			if ( strpos( $dataid, '_el' ) === 0 ) {
-				$v        = maybe_unserialize( $v[0] );
-				$comments = $v['comments'];
-
+				$dataid            = str_replace( '_', '', $dataid );
+				$v                 = maybe_unserialize( $v[0] );
+				$comments          = $v['comments'];
 				$commented_on_text = $v['commentedOnText'];
+				$resolved          = isset( $v['resolved'] ) ? $v['resolved'] : 'false';
 
-				$comment_count = 0;
-				foreach ( $comments as $timestamp => $c ) {
-					$udata = $c['userData'];
+				if ( 'true' === $resolved ) {
 
+					$udata = isset( $v['resolved_by'] ) ? $v['resolved_by'] : 0;
 					if ( ! array_key_exists( $udata, $userData ) ) {
 						$user_info = get_userdata( $udata );
 
@@ -341,102 +354,90 @@ class Commenting_block_Admin {
 						$profile_url = $userData[ $udata ]['profileURL'];
 					}
 
-					$thread = $c['thread'];
-					$dtTime = date( $time_format . ' ' . $date_format, $timestamp );
-					//$dtTime    = $c['dtTime'];
-					//$timestamp = strtotime( $dtTime );
-					$dataid = str_replace( '_', '', $dataid );
+					$timestamp = isset( $v['resolved_timestamp'] ) ? $v['resolved_timestamp'] : '';
+					$dtTime    = date( $time_format . ' ' . $date_format, $timestamp );
 
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
-					$comment_count ++;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dataid']            = $dataid;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['commented_on_text'] = $commented_on_text;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['username']          = $username;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['profileURL']        = $profile_url;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dtTime']            = $dtTime;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = 'resolved thread';
+
+				} else {
+
+					$comment_count = 0;
+					foreach ( $comments as $timestamp => $c ) {
+
+						$status         = 0 === $comment_count ? 'commented on' : 'replied on';
+						$comment_status = isset( $c['status'] ) ? $c['status'] : '';
+						$status         = 'deleted' === $comment_status ? 'deleted comment of' : $status;
+
+						// Stop displaying history of comments in draft mode.
+						if ( 'draft' === $comment_status ) {
+							continue;
+						}
+
+						$udata = $c['userData'];
+
+						if ( ! array_key_exists( $udata, $userData ) ) {
+							$user_info = get_userdata( $udata );
+
+							$userData[ $udata ]['username']   = $username = $user_info->display_name;
+							$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
+						} else {
+							$username    = $userData[ $udata ]['username'];
+							$profile_url = $userData[ $udata ]['profileURL'];
+						}
+
+						$thread = $c['thread'];
+						$dtTime = date( $time_format . ' ' . $date_format, $timestamp );
+
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $status;
+						$comment_count ++;
+						$total_comments ++;
+					}
 				}
 			}
 		}
 
-		krsort( $prepareDataTable, SORT_NUMERIC );
+		$html = '<div id="history-popup-insder">';
+		if ( 0 !== $total_comments ) {
+			krsort( $prepareDataTable, SORT_NUMERIC );
 
-		$count = 0;
-		$data  = array();
-		$html  = '<div id="history-popup-insder">';
+			$count = 0;
 
-		foreach ( $prepareDataTable as $timestamp => $comments ) {
+			foreach ( $prepareDataTable as $timestamp => $comments ) {
+				foreach ( $comments as $c ) {
+					$count ++;
 
-			foreach ( $comments as $c ) {
-				$count ++;
-
-				$html .= "<div class='user-data-row'>";
-				$html .= "<div class='user-data-box'>";
-				$html .= "<div class='user-avtar'><img src='" . $c['profileURL'] . "'/></div>";
-				$html .= "<div class='user-title'>
-									<span class='user-name'>" . $c['username'] . " commented on </span>
+					$html .= "<div class='user-data-row'>";
+					$html .= "<div class='user-data-box'>";
+					$html .= "<div class='user-avtar'><img src='" . $c['profileURL'] . "'/></div>";
+					$html .= "<div class='user-title'>
+									<span class='user-name'>" . $c['username'] . " " . $c['status'] . "</span>
 									\"<a href='javascript:void(0)' data-id='" . $c['dataid'] . "' class='user-comented-on'>" . $c['commented_on_text'] . "</a>\"
 									<div class='user-comment'> " . $c['thread'] . "</div>
 								</div>";
-				$html .= "<div class='user-time'>" . $c['dtTime'] . "</div>";
-				$html .= "</div>";
-				$html .= "</div>";
+					$html .= "<div class='user-time'>" . $c['dtTime'] . "</div>";
+					$html .= "</div>";
+					$html .= "</div>";
 
-				if ( $count >= $limit ) {
-					break;
+					if ( $count >= $limit ) {
+						break;
+					}
 				}
 			}
+		} else {
+			$html .= "No comments found.";
 		}
-
-		/*foreach ( $all_meta as $dataid => $v ) {
-			if ( strpos( $dataid, '_el' ) === 0 ) {
-				$html .= '<tr>';
-
-				$v        = maybe_unserialize( $v[0] );
-				$comments = $v['comments'];
-
-				$commented_on_text = $v['commentedOnText'];
-				$html              .= "<td rowspan='" . count( $comments ) . "'>$commented_on_text</td>";
-
-				$comment_count = 0;
-				foreach ( $comments as $c ) {
-					if ( 0 !== $comment_count ) {
-						$html .= '<tr>';
-					}
-					$udata = $c['userData'];
-					if ( ! array_key_exists( $udata, $userData ) ) {
-						$user_info = get_userdata( $udata );
-
-						$userData[ $udata ]['username']   = $username = $user_info->display_name;
-						$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-					} else {
-						$username    = $userData[ $udata ]['username'];
-						$profile_url = $userData[ $udata ]['profileURL'];
-					}
-					$html .= "<td>" . $username . "</td>";
-					$html .= "<td><img src='" . $profile_url . "'/></td>";
-					$html .= "<td>" . $c['thread'] . "</td>";
-					$html .= "<td>Added</td>";
-					$html .= "<td>" . $c['dtTime'] . "</td>";
-
-					$html .= '</tr>';
-					$comment_count ++;
-				}
-
-				$data[ $dataid ] = $comments;
-
-				$html .= '</tr>';
-
-				$count ++;
-				if ( $count >= $limit ) {
-					break;
-				}
-			}
-		}*/
-		//$html .= '</table>';
-
-		/*echo '<pre>';
-		print_r( $html );
-		die( '<br><----here' );*/
+		$html .= "</div>";
 
 		echo $html;
 		wp_die();
@@ -640,29 +641,30 @@ class Commenting_block_Admin {
 			$username    = $user_info->display_name;
 			$profile_url = get_avatar_url( $user_info->user_email );
 			$thread      = $val['thread'];
+			$status      = isset( $val['status'] ) ? $val['status'] : '';
 
 			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
 
 			$date = date( $time_format . ' ' . $date_format, $t );
 
-			array_push( $userDetails,
-				[
-					'userName'    => $username,
-					'profileURL'  => $profile_url,
-					'dtTime'      => $date,
-					'thread'      => $thread,
-					'userData'    => $val['userData'],
-					'status'      => $val['status'],
-					'timestamp'   => $t,
-					'editedDraft' => $edited_draft,
-				] );
-
+			if ( 'deleted' !== $status ) {
+				array_push( $userDetails,
+					[
+						'userName'    => $username,
+						'profileURL'  => $profile_url,
+						'dtTime'      => $date,
+						'thread'      => $thread,
+						'userData'    => $val['userData'],
+						'status'      => $status,
+						'timestamp'   => $t,
+						'editedDraft' => $edited_draft,
+					] );
+			}
 		}
 
-		$data['userDetails'] = $userDetails;
-		$data['resolved']    = 'true' === $superCareerData['resolved'] ? 'true' : 'false';
-		$data['onChange']    = $superCareerData['onChange'];
-		$data['value']       = $superCareerData['value'];
+		$data['userDetails']     = $userDetails;
+		$data['resolved']        = 'true' === $superCareerData['resolved'] ? 'true' : 'false';
+		$data['commentedOnText'] = $superCareerData['commentedOnText'];
 
 		return rest_ensure_response( $data );
 

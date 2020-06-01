@@ -32,13 +32,18 @@ export default class Board extends React.Component {
         if (1 !== this.props.freshBoard) {
             const allPosts = wp.apiFetch({path: 'career-data-by-select1/my-route1/?currentPostID=' + currentPostID + '&elID=' + metaselectedText}).then(fps => {
 
-                const {userDetails, value, onChange, resolved} = fps;
-                this.props.lastVal = value;
+                const {userDetails, resolved, commentedOnText} = fps;
+
+                // Update the 'commented on text' if not having value.
+                this.commentedOnText = undefined !== this.commentedOnText ? this.commentedOnText : commentedOnText;
+
                 this.props.resolved = resolved;
-                if ('true' === resolved) {
+                if ('true' === resolved || 0 === userDetails.length) {
                     let elIDRemove = selectedText
-                    jQuery('body').attr('remove-comment', elIDRemove);
-                    jQuery('body').append('<style>body[remove-comment*="' + elIDRemove + '"] [datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
+                    let removed_comments = jQuery('body').attr('remove-comment');
+                    removed_comments = undefined !== removed_comments ? removed_comments + ',' + elIDRemove : elIDRemove;
+                    jQuery('body').attr('remove-comment', removed_comments);
+                    jQuery('body').append('<style>[datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
                     jQuery('[datatext="' + elIDRemove + '"]').addClass('removed');
                     jQuery('#' + elIDRemove).remove();
 
@@ -46,7 +51,6 @@ export default class Board extends React.Component {
                 }
 
                 jQuery.each(userDetails, function (key, val) {
-                    //	postSelections.push(val);
                     postSelections.push(val);
                 });
 
@@ -113,14 +117,15 @@ export default class Board extends React.Component {
         // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
         let _this = this;
 
-        jQuery.post(ajaxurl, data, function () { });
+        jQuery.post(ajaxurl, data, function () {
+        });
         this.setState({comments: arr})
     }
 
     addNewComment(event) {
         event.preventDefault();
 
-        const {lastVal, onChanged, datatext} = this.props;
+        const {datatext} = this.props;
 
         var currentTextID = 'txt' + datatext;
 
@@ -137,13 +142,9 @@ export default class Board extends React.Component {
             var newArr = {};
             newArr['userData'] = userID;
             newArr['thread'] = newText;
-
-            newArr['commentedOnText'] = this.commentedOnText;
-
+            newArr['commentedOnText'] = undefined !== this.commentedOnText ? this.commentedOnText : '';
             newArr['userName'] = userName;
             newArr['profileURL'] = userProfile;
-            newArr['value'] = lastVal;
-            newArr['onChange'] = onChanged;
             newArr['status'] = 'draft reverted_back';
 
             arr.push(newArr);
@@ -166,6 +167,10 @@ export default class Board extends React.Component {
                 jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
 
                 data = jQuery.parseJSON(data);
+                if (undefined !== data.error) {
+                    alert(data.error);
+                    return false;
+                }
                 arr[arr.length - 1]['dtTime'] = data.dtTime;
                 arr[arr.length - 1]['timestamp'] = data.timestamp;
 
@@ -287,7 +292,7 @@ export default class Board extends React.Component {
             <div className="board">
                 <div className="boardTop">
                     {0 === this.hasComments &&
-                        <div className="no-comments"><i>The are no comments!</i></div>
+                    <div className="no-comments"><i>The are no comments!</i></div>
                     }
                     {
                         this.state.comments && this.state.comments.map((item, index) => {

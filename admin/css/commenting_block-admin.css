@@ -203,6 +203,7 @@ div#Div1 {
     outline: none;
     cursor: pointer;
     margin-top: 10px;/*display: none;*/
+    min-width: 100px;
 }
 
 .cls-board-outer .board .shareCommentContainer textarea:focus + button, .cls-board-outer .board .shareCommentContainer.hovered button {
@@ -625,10 +626,6 @@ button.btn-comment.btn-reject {
     margin-top: 0 !important;
 }
 
-.cls-board-outer .board .commentContainer:first-child .comment-header .avtar img {
-    border: 3px solid  rgb(31, 161, 93);
-}
-
 .cls-board-outer.focus {
     background: #cef2f6;
 }
@@ -657,7 +654,7 @@ button.btn-comment.btn-reject {
     border-right-color: transparent;
     border-radius: 50%;
     position: absolute;
-    left: 100px;
+    left: 120px;
     bottom: 15px;
 }
 

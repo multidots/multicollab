@@ -66,10 +66,10 @@ export default class Comment extends React.Component {
             let name = 'multidots/comment';
 
             const {lastVal, onChanged} = this.props;
-            window.lastVal = lastVal;
+            let removedComments = jQuery('body').attr('remove-comment');
+            removedComments = undefined !== removedComments ? removedComments + ',' + elIDRemove : elIDRemove;
             jQuery('body').attr('remove-comment', elIDRemove);
-            jQuery('body').append('<style>body[remove-comment*="' + elIDRemove + '"] [datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
-            //let onChangedDynamic = null === onChanged || undefined === onChanged ? window.onChange : onChanged;
+            jQuery('body').append('<style>[datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
 
             if (null === onChanged || undefined === onChanged) {
                 jQuery('[datatext="' + elIDRemove + '"]').addClass('removed');
@@ -124,9 +124,6 @@ export default class Comment extends React.Component {
                                 <button onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)} className="btn btn-comment">
                                     {'Delete'}
                                 </button>
-                                {/*<button onClick={this.resolve.bind(this)} className="btn btn-comment">
-                  {'Resolve'}
-                </button>*/}
                             </div>
                             }
                         </Fragment>

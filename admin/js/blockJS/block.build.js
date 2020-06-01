@@ -106,11 +106,10 @@ function fetchComments() {
         var allThreads = [];
 
         jQuery('.wp-block mdspan').each(function () {
-            // `this` is the div
+
             selectedText = jQuery(this).attr('datatext');
+
             if (jQuery('#' + selectedText).length === 0) {
-                txtselectedText = 'txt' + jQuery(this).attr('datatext');
-                jQuery('#' + selectedText + ' textarea').attr('id', txtselectedText);
 
                 var newNode = document.createElement('div');
                 newNode.setAttribute("id", selectedText);
@@ -119,7 +118,7 @@ function fetchComments() {
                 var referenceNode = document.getElementById('md-span-comments');
                 referenceNode.appendChild(newNode);
 
-                ReactDOM.render(wp.element.createElement(__WEBPACK_IMPORTED_MODULE_0__component_board__["a" /* default */], { datatext: selectedText /*onChanged={onChange}*/ }), document.getElementById(selectedText));
+                ReactDOM.render(wp.element.createElement(__WEBPACK_IMPORTED_MODULE_0__component_board__["a" /* default */], { datatext: selectedText }), document.getElementById(selectedText));
             }
             allThreads.push(selectedText);
         });
@@ -216,23 +215,24 @@ function bring_back_comments() {
         if (response.deleted) {
             $.each(response.deleted, function (el, timestamps) {
                 $.each(timestamps, function (el, t) {
-                    $('#' + t).removeClass('publish').addClass('reverted_back deleted');
+                    $('#' + t).remove();
+                    //$('#' + t).removeClass('publish').addClass('reverted_back deleted');
                 });
             });
         }
 
         if (response.edited) {
-            //Object.keys(response.edited).map(timestamp => {
             $.each(response.edited, function (el, timestamps) {
 
                 $.each(timestamps, function (el, t) {
                     $('#' + t).removeClass('publish').addClass('reverted_back edited');
 
-                    //const someElement = document.querySelector("#el1588681363428 .board");
-                    //const someElement = document.getElementById("1588696591");
+                    // Update the component with new text.
                     var someElement = document.getElementById(t);
                     var myComp = FindReact(someElement);
                     myComp.setState({ showEditedDraft: true });
+
+                    $('#' + t + ' .commentText').append(' <i style="font-size:12px;color:#23282dba">(edited)</i>');
                 });
             });
         }
@@ -340,12 +340,7 @@ var mdComment = {
                     end = value.end;
 
 
-                start = start < 15 ? 0 : start - 15;
-                end = end + 15;
-
                 var commentedOnText = text.substring(start, end);
-
-                window.onChange = onChange;
 
                 onChange(toggleFormat(value, { type: name }), ReactDOM.render(wp.element.createElement(__WEBPACK_IMPORTED_MODULE_0__component_board__["a" /* default */], { datatext: currentTime, onChanged: onChange, lastVal: value, freshBoard: 1, commentedOnText: commentedOnText }), document.getElementById(currentTime)));
 
@@ -365,8 +360,8 @@ var mdComment = {
                     value = _props2.value,
                     activeAttributes = _props2.activeAttributes;
 
-
-                if (undefined !== activeAttributes.datatext && activeAttributes.datatext === jQuery('body').attr('remove-comment')) {
+                var removedComments = jQuery('body').attr('remove-comment');
+                if (undefined !== activeAttributes.datatext && undefined !== removedComments && removedComments.indexOf(activeAttributes.datatext) !== -1) {
                     onChange(removeFormat(value, name));
                 }
 
@@ -388,11 +383,11 @@ var mdComment = {
                         // user will have to add comment from scratch.
                         if (jQuery('#' + selectedText).length === 0) {
 
-                            if (selectedText !== jQuery('body').attr('remove-comment')) {
+                            var _removedComments = jQuery('body').attr('remove-comment');
+                            if (undefined === _removedComments || undefined !== _removedComments && _removedComments.indexOf(selectedText) === -1) {
                                 createBoard(selectedText, value, onChange);
                             } else {
-                                //onChange(applyFormat(value, {type: name, attributes: {datatext: currentTime, style: 'background:green'}}));
-                                jQuery('[datatext="' + selectedText + '"]').css('background', 'green');
+                                jQuery('[datatext="' + selectedText + '"]').css('background', 'transparent');
                             }
                         }
 
@@ -561,16 +556,20 @@ var Board = function (_React$Component) {
         if (1 !== _this2.props.freshBoard) {
             var allPosts = wp.apiFetch({ path: 'career-data-by-select1/my-route1/?currentPostID=' + currentPostID + '&elID=' + metaselectedText }).then(function (fps) {
                 var userDetails = fps.userDetails,
-                    value = fps.value,
-                    onChange = fps.onChange,
-                    resolved = fps.resolved;
+                    resolved = fps.resolved,
+                    commentedOnText = fps.commentedOnText;
 
-                _this2.props.lastVal = value;
+                // Update the 'commented on text' if not having value.
+
+                _this2.commentedOnText = undefined !== _this2.commentedOnText ? _this2.commentedOnText : commentedOnText;
+
                 _this2.props.resolved = resolved;
-                if ('true' === resolved) {
+                if ('true' === resolved || 0 === userDetails.length) {
                     var elIDRemove = selectedText;
-                    jQuery('body').attr('remove-comment', elIDRemove);
-                    jQuery('body').append('<style>body[remove-comment*="' + elIDRemove + '"] [datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
+                    var removed_comments = jQuery('body').attr('remove-comment');
+                    removed_comments = undefined !== removed_comments ? removed_comments + ',' + elIDRemove : elIDRemove;
+                    jQuery('body').attr('remove-comment', removed_comments);
+                    jQuery('body').append('<style>[datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
                     jQuery('[datatext="' + elIDRemove + '"]').addClass('removed');
                     jQuery('#' + elIDRemove).remove();
 
@@ -578,7 +577,6 @@ var Board = function (_React$Component) {
                 }
 
                 jQuery.each(userDetails, function (key, val) {
-                    //	postSelections.push(val);
                     postSelections.push(val);
                 });
 
@@ -658,10 +656,7 @@ var Board = function (_React$Component) {
         value: function addNewComment(event) {
             event.preventDefault();
 
-            var _props2 = this.props,
-                lastVal = _props2.lastVal,
-                onChanged = _props2.onChanged,
-                datatext = _props2.datatext;
+            var datatext = this.props.datatext;
 
 
             var currentTextID = 'txt' + datatext;
@@ -679,13 +674,9 @@ var Board = function (_React$Component) {
                 var newArr = {};
                 newArr['userData'] = userID;
                 newArr['thread'] = newText;
-
-                newArr['commentedOnText'] = this.commentedOnText;
-
+                newArr['commentedOnText'] = undefined !== this.commentedOnText ? this.commentedOnText : '';
                 newArr['userName'] = userName;
                 newArr['profileURL'] = userProfile;
-                newArr['value'] = lastVal;
-                newArr['onChange'] = onChanged;
                 newArr['status'] = 'draft reverted_back';
 
                 arr.push(newArr);
@@ -708,6 +699,10 @@ var Board = function (_React$Component) {
                     jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
 
                     data = jQuery.parseJSON(data);
+                    if (undefined !== data.error) {
+                        alert(data.error);
+                        return false;
+                    }
                     arr[arr.length - 1]['dtTime'] = data.dtTime;
                     arr[arr.length - 1]['timestamp'] = data.timestamp;
 
@@ -732,9 +727,9 @@ var Board = function (_React$Component) {
                 var elIDRemove = elID;
                 var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
                 alert(elID);
-                var _props3 = this.props,
-                    lastVal = _props3.lastVal,
-                    onChanged = _props3.onChanged;
+                var _props2 = this.props,
+                    lastVal = _props2.lastVal,
+                    onChanged = _props2.onChanged;
 
 
                 onChanged(removeFormat(lastVal, name2));
@@ -748,9 +743,9 @@ var Board = function (_React$Component) {
                 elID = elID[0].id;
                 var elIDRemove = elID;
                 var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
-                var _props4 = this.props,
-                    value = _props4.value,
-                    onChange = _props4.onChange;
+                var _props3 = this.props,
+                    value = _props3.value,
+                    onChange = _props3.onChange;
 
                 elID = '_' + elID;
 
@@ -767,9 +762,9 @@ var Board = function (_React$Component) {
                         alert('wrong');
                     }
                 });
-                var _props5 = this.props,
-                    lastVal = _props5.lastVal,
-                    onChanged = _props5.onChanged;
+                var _props4 = this.props,
+                    lastVal = _props4.lastVal,
+                    onChanged = _props4.onChanged;
 
                 onChanged(removeFormat(lastVal, name2));
             }
@@ -777,18 +772,18 @@ var Board = function (_React$Component) {
     }, {
         key: 'displayComments',
         value: function displayComments(text, i) {
-            var _props6 = this.props,
-                isActive = _props6.isActive,
-                inputValue = _props6.inputValue,
-                myval2 = _props6.myval2,
-                value = _props6.value; /*onChange*/
+            var _props5 = this.props,
+                isActive = _props5.isActive,
+                inputValue = _props5.inputValue,
+                myval2 = _props5.myval2,
+                value = _props5.value; /*onChange*/
 
-            var _props7 = this.props,
-                lastVal = _props7.lastVal,
-                onChanged = _props7.onChanged,
-                selectedText = _props7.selectedText,
-                suserProfile = _props7.suserProfile,
-                suserName = _props7.suserName;
+            var _props6 = this.props,
+                lastVal = _props6.lastVal,
+                onChanged = _props6.onChanged,
+                selectedText = _props6.selectedText,
+                suserProfile = _props6.suserProfile,
+                suserName = _props6.suserName;
 
 
             var username = void 0,
@@ -847,14 +842,14 @@ var Board = function (_React$Component) {
         value: function render() {
             var _this3 = this;
 
-            var _props8 = this.props,
-                isActive = _props8.isActive,
-                inputValue = _props8.inputValue,
-                onChange = _props8.onChange,
-                value = _props8.value,
-                myval2 = _props8.myval2,
-                selectedText = _props8.selectedText,
-                datatext = _props8.datatext;
+            var _props7 = this.props,
+                isActive = _props7.isActive,
+                inputValue = _props7.inputValue,
+                onChange = _props7.onChange,
+                value = _props7.value,
+                myval2 = _props7.myval2,
+                selectedText = _props7.selectedText,
+                datatext = _props7.datatext;
 
             var buttonText = 1 === this.hasComments && 1 !== this.props.freshBoard ? 'Reply' : 'Comment';
 
@@ -991,10 +986,10 @@ var Comment = function (_React$Component) {
                     lastVal = _props2.lastVal,
                     onChanged = _props2.onChanged;
 
-                window.lastVal = lastVal;
+                var removedComments = jQuery('body').attr('remove-comment');
+                removedComments = undefined !== removedComments ? removedComments + ',' + elIDRemove : elIDRemove;
                 jQuery('body').attr('remove-comment', elIDRemove);
-                jQuery('body').append('<style>body[remove-comment*="' + elIDRemove + '"] [datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
-                //let onChangedDynamic = null === onChanged || undefined === onChanged ? window.onChange : onChanged;
+                jQuery('body').append('<style>[datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
 
                 if (null === onChanged || undefined === onChanged) {
                     jQuery('[datatext="' + elIDRemove + '"]').addClass('removed');

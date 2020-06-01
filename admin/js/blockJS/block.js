@@ -20,11 +20,10 @@ function fetchComments() {
         var allThreads = [];
 
         jQuery('.wp-block mdspan').each(function () {
-            // `this` is the div
+
             selectedText = jQuery(this).attr('datatext');
+
             if (jQuery('#' + selectedText).length === 0) {
-                txtselectedText = 'txt' + jQuery(this).attr('datatext');
-                jQuery('#' + selectedText + ' textarea').attr('id', txtselectedText);
 
                 var newNode = document.createElement('div');
                 newNode.setAttribute("id", selectedText);
@@ -34,7 +33,7 @@ function fetchComments() {
                 referenceNode.appendChild(newNode);
 
                 ReactDOM.render(
-                    <Board datatext={selectedText} /*onChanged={onChange}*//>,
+                    <Board datatext={selectedText}/>,
                     document.getElementById(selectedText)
                 )
             }
@@ -137,26 +136,26 @@ function bring_back_comments() {
         if (response.deleted) {
             $.each(response.deleted, function (el, timestamps) {
                 $.each(timestamps, function (el, t) {
-                    $('#' + t).removeClass('publish').addClass('reverted_back deleted');
+                    $('#' + t).remove();
+                    //$('#' + t).removeClass('publish').addClass('reverted_back deleted');
                 });
             });
         }
 
         if (response.edited) {
-            //Object.keys(response.edited).map(timestamp => {
             $.each(response.edited, function (el, timestamps) {
 
                 $.each(timestamps, function (el, t) {
                     $('#' + t).removeClass('publish').addClass('reverted_back edited');
 
-                    //const someElement = document.querySelector("#el1588681363428 .board");
-                    //const someElement = document.getElementById("1588696591");
+                    // Update the component with new text.
                     const someElement = document.getElementById(t);
                     const myComp = FindReact(someElement);
                     myComp.setState({showEditedDraft: true});
+
+                    $('#' + t + ' .commentText').append(' <i style="font-size:12px;color:#23282dba">(edited)</i>');
                 });
             });
-
         }
 
     });
@@ -250,12 +249,7 @@ const mdComment = {
             const {value, onChange} = this.props;
             let {text, start, end} = value;
 
-            start = start < 15 ? 0 : (start - 15);
-            end = end + 15;
-
             const commentedOnText = text.substring(start, end);
-
-            window.onChange = onChange;
 
             onChange(toggleFormat(value, {type: name}),
                 ReactDOM.render(
@@ -276,8 +270,10 @@ const mdComment = {
             var referenceNode = document.getElementById('md-span-comments');
 
             const {onChange, value, activeAttributes} = this.props;
-
-            if (undefined !== activeAttributes.datatext && activeAttributes.datatext === jQuery('body').attr('remove-comment')) {
+            let removedComments = jQuery('body').attr('remove-comment');
+            if (undefined !== activeAttributes.datatext &&
+                ( undefined !== removedComments && removedComments.indexOf(activeAttributes.datatext) !== -1  )
+            ) {
                 onChange(removeFormat(value, name));
             }
 
@@ -299,11 +295,13 @@ const mdComment = {
                     // user will have to add comment from scratch.
                     if (jQuery('#' + selectedText).length === 0) {
 
-                        if (selectedText !== jQuery('body').attr('remove-comment')) {
+                        let removedComments = jQuery('body').attr('remove-comment');
+                        if ( undefined === removedComments ||
+                            ( undefined !== removedComments && removedComments.indexOf(selectedText) === -1 )
+                        ) {
                             createBoard(selectedText, value, onChange);
                         } else {
-                            //onChange(applyFormat(value, {type: name, attributes: {datatext: currentTime, style: 'background:green'}}));
-                            jQuery('[datatext="' + selectedText + '"]').css('background', 'green');
+                            jQuery('[datatext="' + selectedText + '"]').css('background', 'transparent');
                         }
                     }
 
