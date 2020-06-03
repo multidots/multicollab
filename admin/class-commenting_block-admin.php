@@ -417,8 +417,11 @@ class Commenting_block_Admin {
 				foreach ( $comments as $c ) {
 
 					// Limit the number of characters of 'Commented On' Text.
+					$limit             = 50;
 					$commented_on_text = $c['commented_on_text'];
-					$commented_on_text = substr($commented_on_text, 0, 50) . '...';
+					if ( $limit < strlen( $commented_on_text ) ) {
+						$commented_on_text = substr( $commented_on_text, 0, $limit ) . '...';
+					}
 
 					$count ++;
 
