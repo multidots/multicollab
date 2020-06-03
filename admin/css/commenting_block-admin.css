@@ -366,11 +366,9 @@ span.user-name {
 #custom-history-popup table td {
     padding: 15px 0;
 }
-
-#history-toggle.active {
-    color: green;
+#comments-toggle.active,#history-toggle.active {
+    color: #3b923b;
 }
-
 .block-editor-editor-skeleton__body {
     position: relative;
 }
@@ -625,15 +623,21 @@ button.btn-comment.btn-reject {
 .comment-header button {
     margin-top: 0 !important;
 }
-
 .cls-board-outer.focus {
     background: #cef2f6;
 }
-
+.custom-buttons button {
+    box-shadow: none !important;
+}
 .shareCommentContainer.loading {
     position: relative;
 }
-
+body.hide-comments mdspan {
+    background: transparent !important;
+}
+body.hide-comments #md-span-comments {
+    display: none !important;
+}
 .shareCommentContainer.loading::after {
     content: "";
     -webkit-animation-duration: 0.75s;

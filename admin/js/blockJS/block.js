@@ -67,8 +67,13 @@ function fetchComments() {
 // Load.
 jQuery(window).load(function () {
 
-    const customHistoryButton = '<div class="components-dropdown"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-admin-comments" id="history-toggle"></span></button></div>';
+    // Add history button.
+    const customHistoryButton = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-text-page" id="history-toggle"></span></button></div>';
     jQuery('.edit-post-header-toolbar').append(customHistoryButton);
+
+    // Add comments toggle button.
+    const customCommentsToggleButton = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-admin-comments" id="comments-toggle"></span></button></div>';
+    jQuery('.edit-post-header-toolbar').append(customCommentsToggleButton);
 
     const customHistoryPopup = '<div id="custom-history-popup"></div>';
     jQuery('.edit-post-layout').append(customHistoryPopup);

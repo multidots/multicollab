@@ -55,6 +55,7 @@
             $(this).parent().addClass('hovered');
         });
 
+        // History Toggle
         $(document).on('click', '#history-toggle', function () {
             $('#custom-history-popup, #history-toggle').toggleClass('active');
 
@@ -76,7 +77,13 @@
                 });
 
             }
-        })
+        });
+
+        // Comments Toggle
+        $(document).on('click', '#comments-toggle', function () {
+            $('body').toggleClass('hide-comments');
+            $('#comments-toggle').toggleClass('active');
+        });
     });
 
     // Load.

@@ -415,6 +415,11 @@ class Commenting_block_Admin {
 
 			foreach ( $prepareDataTable as $timestamp => $comments ) {
 				foreach ( $comments as $c ) {
+
+					// Limit the number of characters of 'Commented On' Text.
+					$commented_on_text = $c['commented_on_text'];
+					$commented_on_text = substr($commented_on_text, 0, 50) . '...';
+
 					$count ++;
 
 					$html .= "<div class='user-data-row'>";
@@ -422,7 +427,7 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-avtar'><img src='" . $c['profileURL'] . "'/></div>";
 					$html .= "<div class='user-title'>
 									<span class='user-name'>" . $c['username'] . " " . $c['status'] . "</span>
-									\"<a href='javascript:void(0)' data-id='" . $c['dataid'] . "' class='user-comented-on'>" . $c['commented_on_text'] . "</a>\"
+									\"<a href='javascript:void(0)' data-id='" . $c['dataid'] . "' class='user-comented-on'>" . $commented_on_text . "</a>\"
 									<div class='user-comment'> " . $c['thread'] . "</div>
 								</div>";
 					$html .= "<div class='user-time'>" . $c['dtTime'] . "</div>";

@@ -68,7 +68,7 @@ export default class Comment extends React.Component {
             const {lastVal, onChanged} = this.props;
             let removedComments = jQuery('body').attr('remove-comment');
             removedComments = undefined !== removedComments ? removedComments + ',' + elIDRemove : elIDRemove;
-            jQuery('body').attr('remove-comment', elIDRemove);
+            jQuery('body').attr('remove-comment', removedComments);
             jQuery('body').append('<style>[datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
 
             if (null === onChanged || undefined === onChanged) {

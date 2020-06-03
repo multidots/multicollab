@@ -149,8 +149,13 @@ function fetchComments() {
 // Load.
 jQuery(window).load(function () {
 
-    var customHistoryButton = '<div class="components-dropdown"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-admin-comments" id="history-toggle"></span></button></div>';
+    // Add history button.
+    var customHistoryButton = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-text-page" id="history-toggle"></span></button></div>';
     jQuery('.edit-post-header-toolbar').append(customHistoryButton);
+
+    // Add comments toggle button.
+    var customCommentsToggleButton = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-admin-comments" id="comments-toggle"></span></button></div>';
+    jQuery('.edit-post-header-toolbar').append(customCommentsToggleButton);
 
     var customHistoryPopup = '<div id="custom-history-popup"></div>';
     jQuery('.edit-post-layout').append(customHistoryPopup);
@@ -988,7 +993,7 @@ var Comment = function (_React$Component) {
 
                 var removedComments = jQuery('body').attr('remove-comment');
                 removedComments = undefined !== removedComments ? removedComments + ',' + elIDRemove : elIDRemove;
-                jQuery('body').attr('remove-comment', elIDRemove);
+                jQuery('body').attr('remove-comment', removedComments);
                 jQuery('body').append('<style>[datatext="' + elIDRemove + '"] {background-color:transparent !important;}</style>');
 
                 if (null === onChanged || undefined === onChanged) {
