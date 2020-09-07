@@ -2,11 +2,13 @@
 
 > **⚠️ Note:** This is a beta version. Use it for contributions only.
 
-<p align="center"><a href="#"><img src="https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/01-main-banner.png" alt="GB Script"></a></p>
+<p align="center"><a href="https://www.multidots.com/gutenberg-commenting-demo/" target="_blank"><img src="https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/01-main-banner.png" alt="Commentgin Demo"></a></p>
 
 ## Critical Importance of Google doc-style Commenting Plugin
 
 Did you know that 35% of the web uses WordPress from stand-alone blog posts to content-intensive news sites and more? But, publishing content on WordPress is not a simple exercise. One needs to create content, and then get suggestions from all stakeholders, and implement these. But it is not over yet. In most cases, stakeholders will take one final look at the content, again place comments where necessary, and ask content creators to make the necessary changes. Typically, this review/validation process becomes even more time consuming because it does not happen in a consistent manner. 
+
+<p align="center"><a href="https://www.multidots.com/gutenberg-commenting-demo/" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92399082-53419380-f147-11ea-806f-701ad073b9d9.png" alt="Commenting Video"></a></p>
 
 Imagine that you are creating a post, which you have published as a draft. During the review process, the stakeholder will take a look and more often than not suggest changes via a Word/Google doc. The content creator takes a look at the comments, makes the necessary changes and the stakeholder again takes a look at the revised draft. If needed, more revisions are sought, using the same process.
 
