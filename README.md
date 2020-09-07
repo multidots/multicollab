@@ -1,8 +1,8 @@
-<p align="center"><a href="#"><img src="https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/01-main-banner.png" alt="GB Script"></a></p>
-
 # Google Doc-Style Gutenberg Block Commenting
 
 > **⚠️ Note:** This is a beta version. Use it for contributions only.
+
+<p align="center"><a href="#"><img src="https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/01-main-banner.png" alt="GB Script"></a></p>
 
 ## Critical Importance of Google doc-style Commenting Plugin
 
@@ -42,13 +42,13 @@ This Google-doc style comments plugin gives users the option of not only adding 
 
 ### Comments Hide/Show
 
-![image](https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/01-commenting-block.png)
+![image](https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/05-Comments-hide-show.png)
 
 This Google-doc style comments plugin gives users the option of not only adding comments but also editing, replying to, and resolving comments in a page/post. It offers you complete flexibility.
 
 ## How to Use
 
-Step by step guide to Comment on post/page in WordPress Platform?
+Step by step guide to comment on post/page in WordPress Platform.
 
 ### Step 1
 
@@ -56,7 +56,7 @@ Install the latest WordPress (should be 5.X or newer)
 
 ### Step 2
 
-Download, install & activate the Comment Plugin.
+Download, install & activate the plugin.
 
 ### Step 3
 
