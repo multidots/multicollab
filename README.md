@@ -17,7 +17,7 @@ But not anymore! WordPress Google Doc-Style Gutenberg Block Commenting Plugin is
 Multidots recognizes the need for a plugin that smoothens the comments process and we created a plugin solution that leverages the features of the native Gutenberg editor in WordPress to place comments. This plugin allows client comments or key stakeholders’ comments to be placed on the specific text in Gutenberg blocks. This is a beta version and we have made it publicly available to the WordPress community. While we have done all the research and identified specific needs that this plugin will address, we believe the community’s participation will further enhance the comments plugin features.
 
 <a href="https://www.multidots.com/gutenberg-commenting-demo/" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92439939-52514600-f1c9-11ea-8b6e-cf853877f328.png" alt="Landing Page" style="max-height:60px;"></a>
-<a href="https://www.multidots.com/gutenberg-commenting-demo/?demo=start" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92439981-639a5280-f1c9-11ea-8504-bf0e7b7eabc5.png" alt="Commenting Live Demo" style="max-height:60px;></a>
+<a href="https://www.multidots.com/gutenberg-commenting-demo/?demo=start" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92439981-639a5280-f1c9-11ea-8504-bf0e7b7eabc5.png" alt="Commenting Live Demo" style="max-height:60px;"></a>
 
 ## Key Features
 
