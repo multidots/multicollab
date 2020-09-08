@@ -137,7 +137,7 @@ class Commenting_block_Admin {
 									<div className='commenter-name-time'>
 									<div className='commenter-name'>". esc_html( $username ) ."</div>
 									<div className='comment-time'>". esc_html( $date ) ."</div>
-									<div className='comment'>" . __( 'Comment', 'commenting_block' ) .": ". esc_html( $text_comment. " ". $draft ) . "</div>
+									<div className='comment'>" . __( 'Comment', 'commenting_block' ) .": ". esc_html( $text_comment ). " ". esc_html(  $draft ) . "</div>
 									</div>
 								</div>";
 

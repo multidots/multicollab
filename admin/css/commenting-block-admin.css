@@ -305,7 +305,7 @@ mdspan {
 
 .user-time {
     float: right;
-    width: 170px;
+    width: 200px;
     text-align: right;
     color: #939393;
     font-size: 14px;
@@ -322,7 +322,7 @@ mdspan {
 .user-title {
     float: left;
     width: 60%;
-    width: calc(100% - 240px);
+    width: calc(100% - 265px);
     font-size: 15px;
 }
 
