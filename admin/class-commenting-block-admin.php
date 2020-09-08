@@ -137,7 +137,7 @@ class Commenting_block_Admin {
 									<div className='commenter-name-time'>
 									<div className='commenter-name'>". esc_html( $username ) ."</div>
 									<div className='comment-time'>". esc_html( $date ) ."</div>
-									<div className='comment'>Comment: ". esc_html( $text_comment. " ". $draft ) . "</div>
+									<div className='comment'>" . __( 'Comment', 'commenting_block' ) .": ". esc_html( $text_comment. " ". $draft ) . "</div>
 									</div>
 								</div>";
 
@@ -267,7 +267,7 @@ class Commenting_block_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/commenting_block-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/commenting-block-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -292,7 +292,7 @@ class Commenting_block_Admin {
 
 		$screen = get_current_screen();
 		if ( $screen->is_block_editor ) {
-			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/commenting_block-admin.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/commenting-block-admin.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'commenting-block', plugin_dir_url( __FILE__ ) . 'js/blockJS/block.build.js', array(
 				'jquery',
 				'wp-blocks',
@@ -499,7 +499,7 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-data-box'>";
 					$html .= "<div class='user-avtar'><img src='" . esc_url( $c['profileURL'] ) . "'/></div>";
 					$html .= "<div class='user-title'>
-									<span class='user-name'>" . esc_html( $c['username'] . " " . $c['status'] ) . "</span>
+									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span>
 									\"<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>\"
 									<div class='user-comment'> " . esc_html( $c['thread'] ) . "</div>
 								</div>";
