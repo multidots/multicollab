@@ -1331,7 +1331,6 @@ var Board = function (_React$Component) {
 
                     // Flushing the text from the textarea
                     jQuery('#' + currentTextID).val('');
-                    jQuery('#' + datatext + ' .no-comments').remove();
 
                     // Remove 'no comments' msg if available.
                     if (0 !== jQuery('.no-comment-found').length) {

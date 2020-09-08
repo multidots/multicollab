@@ -246,7 +246,6 @@ export default class Board extends React.Component {
 
                 // Flushing the text from the textarea
                 jQuery('#' + currentTextID).val('');
-                jQuery('#' + datatext + ' .no-comments').remove();
 
                 // Remove 'no comments' msg if available.
                 if( 0 !== jQuery('.no-comment-found').length ) {
@@ -326,9 +325,6 @@ export default class Board extends React.Component {
         return (
             <div className={`board ${undefined === this.hasComments && this.currentUserProfile && 'fresh-board'}`}>
                 <div className="boardTop">
-                    {0 === this.hasComments &&
-                    <div className="no-comments"><i>The are no comments!</i></div>
-                    }
                     {
                         this.state.comments && this.state.comments.map((item, index) => {
                             return this.displayComments(item, index);
