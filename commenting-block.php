@@ -39,19 +39,19 @@ define( 'COMMENTING_BLOCK_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-commenting_block-activator.php
+ * This action is documented in includes/class-commenting-block-activator.php
  */
 function activate_commenting_block() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting_block-activator.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-activator.php';
 	Commenting_block_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-commenting_block-deactivator.php
+ * This action is documented in includes/class-commenting-block-deactivator.php
  */
 function deactivate_commenting_block() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting_block-deactivator.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-deactivator.php';
 	Commenting_block_Deactivator::deactivate();
 }
 
@@ -62,7 +62,7 @@ register_deactivation_hook( __FILE__, 'deactivate_commenting_block' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-commenting_block.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block.php';
 
 /**
  * Begins execution of the plugin.
