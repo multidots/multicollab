@@ -437,7 +437,7 @@ class Commenting_block_Admin {
 					foreach ( $comments as $timestamp => $c ) {
 
 						$cstatus         = 0 === $comment_count ? __( 'commented', 'commenting_block' ) : __( 'replied', 'commenting_block' );
-						$cstatus		 .= __( 'on', 'commenting_block' );
+						$cstatus		 .= __( ' on', 'commenting_block' );
 						$comment_status = isset( $c['status'] ) ? $c['status'] : '';
 						$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'commenting_block' ) : $cstatus;
 
