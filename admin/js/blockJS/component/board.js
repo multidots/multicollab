@@ -245,7 +245,7 @@ export default class Board extends React.Component {
                 _this.setState({comments: arr});
 
                 // Flushing the text from the textarea
-                jQuery('#' + currentTextID).val('');
+                jQuery('#' + currentTextID).val('').focus();
 
                 // Remove 'no comments' msg if available.
                 if( 0 !== jQuery('.no-comment-found').length ) {
@@ -318,6 +318,15 @@ export default class Board extends React.Component {
         }
     }
 
+    componentDidMount() {
+        if(this.props.freshBoard) {
+            const datatext = this.props.datatext;
+            setTimeout(function(){
+                jQuery( '#txt' + datatext ).focus();
+            },500);
+        }
+    }
+
     render() {
         const {datatext} = this.props;
         const buttonText = 1 === this.hasComments && 1 !== this.props.freshBoard ? 'Reply' : 'Comment';
@@ -349,8 +358,6 @@ export default class Board extends React.Component {
                     <button onClick={this.cancelComment} className="btn btn-cancel">Cancel</button>
                 </div>
             </div>
-
-
         );
     }
 }

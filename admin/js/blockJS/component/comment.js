@@ -18,6 +18,12 @@ export default class Comment extends React.Component {
 
     }
 
+    componentDidUpdate() {
+        const editedCommentID = this.props.timestamp;
+        const commenttedText = jQuery('#' + editedCommentID + ' textarea').val();
+        jQuery('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+    }
+
     edit() {
         this.setState({editing: true})
     }
@@ -161,7 +167,7 @@ export default class Comment extends React.Component {
 
     renderEditingMode() {
         return (
-            <div className="commentContainer">
+            <div className="commentContainer" id={this.props.timestamp}>
                 <div className="comment-header">
                     <div className="comment-details">
                         <div className="avtar"><img src={this.props.profileURL} alt="avatar"/></div>

@@ -1330,7 +1330,7 @@ var Board = function (_React$Component) {
                     _this.setState({ comments: arr });
 
                     // Flushing the text from the textarea
-                    jQuery('#' + currentTextID).val('');
+                    jQuery('#' + currentTextID).val('').focus();
 
                     // Remove 'no comments' msg if available.
                     if (0 !== jQuery('.no-comment-found').length) {
@@ -1413,6 +1413,16 @@ var Board = function (_React$Component) {
             }
         }
     }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            if (this.props.freshBoard) {
+                var datatext = this.props.datatext;
+                setTimeout(function () {
+                    jQuery('#txt' + datatext).focus();
+                }, 500);
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this3 = this;
@@ -1427,15 +1437,6 @@ var Board = function (_React$Component) {
                 wp.element.createElement(
                     'div',
                     { className: 'boardTop' },
-                    0 === this.hasComments && wp.element.createElement(
-                        'div',
-                        { className: 'no-comments' },
-                        wp.element.createElement(
-                            'i',
-                            null,
-                            'The are no comments!'
-                        )
-                    ),
                     this.state.comments && this.state.comments.map(function (item, index) {
                         return _this3.displayComments(item, index);
                     })
@@ -1544,6 +1545,13 @@ var Comment = function (_React$Component) {
     }
 
     _createClass(Comment, [{
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            var editedCommentID = this.props.timestamp;
+            var commenttedText = jQuery('#' + editedCommentID + ' textarea').val();
+            jQuery('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+        }
+    }, {
         key: 'edit',
         value: function edit() {
             this.setState({ editing: true });
@@ -1745,7 +1753,7 @@ var Comment = function (_React$Component) {
 
             return wp.element.createElement(
                 'div',
-                { className: 'commentContainer' },
+                { className: 'commentContainer', id: this.props.timestamp },
                 wp.element.createElement(
                     'div',
                     { className: 'comment-header' },
