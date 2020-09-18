@@ -18,7 +18,6 @@
  *
  * @package    commenting-block
  * @subpackage commenting-block/admin
- * @author     multidots <janki.moradiya@multidots.com>
  */
 class Commenting_block_Admin {
 
