@@ -6,8 +6,8 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting_block
- * @subpackage commenting_block/admin
+ * @package    commenting-block
+ * @subpackage commenting-block/admin
  */
 
 /**
@@ -16,8 +16,8 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    commenting_block
- * @subpackage commenting_block/admin
+ * @package    commenting-block
+ * @subpackage commenting-block/admin
  * @author     multidots <janki.moradiya@multidots.com>
  */
 class Commenting_block_Admin {
@@ -115,9 +115,9 @@ class Commenting_block_Admin {
 
 					$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-					$html = __( 'Hi Admin', 'commenting_block' );
+					$html = __( 'Hi Admin', 'commenting-block' );
 					$html .= ',<br><br>';
-					$html = __( 'The following comment has been resolved', 'commenting_block' );
+					$html = __( 'The following comment has been resolved', 'commenting-block' );
 					$html .= ':<br><br>';
 
 					foreach ( $comments as $timestamp => $arr ) {
@@ -137,7 +137,7 @@ class Commenting_block_Admin {
 									<div className='commenter-name-time'>
 									<div className='commenter-name'>". esc_html( $username ) ."</div>
 									<div className='comment-time'>". esc_html( $date ) ."</div>
-									<div className='comment'>" . __( 'Comment', 'commenting_block' ) .": ". esc_html( $text_comment ). " ". esc_html(  $draft ) . "</div>
+									<div className='comment'>" . __( 'Comment', 'commenting-block' ) .": ". esc_html( $text_comment ). " ". esc_html(  $draft ) . "</div>
 									</div>
 								</div>";
 
@@ -145,14 +145,14 @@ class Commenting_block_Admin {
 						}
 					}
 
-					$html .= '<br>' . __( 'Thank you!', 'commenting_block' );
+					$html .= '<br>' . __( 'Thank you!', 'commenting-block' );
 
 					$users_emails = array_unique( $users_emails );
 					if ( ( $key = array_search( $current_user_email, $users_emails, true ) ) !== false ) {
 						unset( $users_emails[ $key ] );
 					}
 
-					wp_mail( $users_emails, __( 'Comment Resolved', 'commenting_block' ), $html, $headers );
+					wp_mail( $users_emails, __( 'Comment Resolved', 'commenting-block' ), $html, $headers );
 				}
 			}
 		}
@@ -436,10 +436,10 @@ class Commenting_block_Admin {
 					$comment_count = 0;
 					foreach ( $comments as $timestamp => $c ) {
 
-						$cstatus         = 0 === $comment_count ? __( 'commented', 'commenting_block' ) : __( 'replied', 'commenting_block' );
-						$cstatus		 .= __( ' on', 'commenting_block' );
+						$cstatus         = 0 === $comment_count ? __( 'commented', 'commenting-block' ) : __( 'replied', 'commenting-block' );
+						$cstatus		 .= __( ' on', 'commenting-block' );
 						$comment_status = isset( $c['status'] ) ? $c['status'] : '';
-						$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'commenting_block' ) : $cstatus;
+						$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'commenting-block' ) : $cstatus;
 
 						// Stop displaying history of comments in draft mode.
 						if ( 'draft' === $comment_status ) {
@@ -513,7 +513,7 @@ class Commenting_block_Admin {
 				}
 			}
 		} else {
-			$html .= __( 'No comments found.', 'commenting_block' );
+			$html .= __( 'No comments found.', 'commenting-block' );
 		}
 		$html .= "</div>";
 

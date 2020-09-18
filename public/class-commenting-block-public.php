@@ -6,8 +6,8 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting_block
- * @subpackage commenting_block/public
+ * @package    commenting-block
+ * @subpackage commenting-block/public
  */
 
 /**
@@ -16,9 +16,9 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @package    commenting_block
- * @subpackage commenting_block/public
- * @author     multidots <janki.moradiya@multidots.com>
+ * @package    commenting-block
+ * @subpackage commenting-block/public
+ * @author     multidots
  */
 class Commenting_block_Public {
 

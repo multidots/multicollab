@@ -6,8 +6,8 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting_block
- * @subpackage commenting_block/includes
+ * @package    commenting-block
+ * @subpackage commenting-block/includes
  */
 
 /**
@@ -16,9 +16,9 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    commenting_block
- * @subpackage commenting_block/includes
- * @author     multidots <janki.moradiya@multidots.com>
+ * @package    commenting-block
+ * @subpackage commenting-block/includes
+ * @author     multidots
  */
 class Commenting_block_Deactivator {
 

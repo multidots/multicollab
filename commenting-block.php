@@ -10,7 +10,7 @@
  *
  * @link              #
  * @since             1.0.0
- * @package           commenting_block
+ * @package           commenting-block
  *
  * @wordpress-plugin
  * Plugin Name:       Gutenberg Commenting Feature
@@ -21,7 +21,7 @@
  * Author URI:        #
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       commenting_block
+ * Text Domain:       commenting-block
  * Domain Path:       /languages
  */
 

@@ -8,8 +8,8 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting_block
- * @subpackage commenting_block/admin/partials
+ * @package    commenting-block
+ * @subpackage commenting-block/admin/partials
  */
 ?>
 
