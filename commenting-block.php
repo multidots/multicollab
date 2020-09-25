@@ -10,17 +10,17 @@
  *
  * @link              #
  * @since             1.0.0
- * @package           content-collaboration-inline-commenting
+ * @package           commenting-block
  *
  * @wordpress-plugin
  * Plugin Name:       Gutenberg Commenting Feature
- * Plugin URI:        #
  * Description:       This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
  * Version:           1.0.0
  * Author:            multidots
  * Author URI:        https://www.multidots.com/
  * License:           GPL-2.0+
- * Text Domain:       content-collaboration-inline-commenting
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       commenting-block
  * Domain Path:       /languages
  */
 
