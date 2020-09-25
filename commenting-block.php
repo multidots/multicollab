@@ -18,9 +18,8 @@
  * Description:       This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
  * Version:           1.0.0
  * Author:            multidots
- * Author URI:        #
+ * Author URI:        https://www.multidots.com/
  * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       content-collaboration-inline-commenting
  * Domain Path:       /languages
  */
