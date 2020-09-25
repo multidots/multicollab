@@ -6,8 +6,8 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting-block
- * @subpackage commenting-block/includes
+ * @package    content-collaboration-inline-commenting
+ *
  */
 
 /**
@@ -16,8 +16,8 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    commenting-block
- * @subpackage commenting-block/includes
+ * @package    content-collaboration-inline-commenting
+ *
  * @author     multidots
  */
 class Commenting_block_Deactivator {

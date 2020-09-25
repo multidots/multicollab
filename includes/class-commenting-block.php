@@ -9,8 +9,8 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting-block
- * @subpackage commenting-block/includes
+ * @package    content-collaboration-inline-commenting
+ *
  */
 
 /**
@@ -23,8 +23,8 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    commenting-block
- * @subpackage commenting-block/includes
+ * @package    content-collaboration-inline-commenting
+ *
  * @author     multidots
  */
 class Commenting_block {

@@ -6,8 +6,7 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting-block
- * @subpackage commenting-block/public
+ * @package    content-collaboration-inline-commenting
  */
 
 /**
@@ -16,8 +15,7 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @package    commenting-block
- * @subpackage commenting-block/public
+ * @package    content-collaboration-inline-commenting
  * @author     multidots
  */
 class Commenting_block_Public {

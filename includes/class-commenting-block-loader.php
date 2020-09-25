@@ -6,8 +6,8 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting-block
- * @subpackage commenting-block/includes
+ * @package    content-collaboration-inline-commenting
+ *
  */
 
 /**
@@ -17,8 +17,8 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    commenting-block
- * @subpackage commenting-block/includes
+ * @package    content-collaboration-inline-commenting
+ *
  * @author     multidots
  */
 class Commenting_block_Loader {

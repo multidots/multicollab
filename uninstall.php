@@ -22,7 +22,7 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting-block
+ * @package    content-collaboration-inline-commenting
  */
 
 // If uninstall not called from WordPress, then exit.

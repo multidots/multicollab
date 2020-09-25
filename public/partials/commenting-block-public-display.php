@@ -8,8 +8,7 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting-block
- * @subpackage commenting-block/public/partials
+ * @package    content-collaboration-inline-commenting
  */
 ?>
 

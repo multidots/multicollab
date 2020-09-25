@@ -6,8 +6,7 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting-block
- * @subpackage commenting-block/admin
+ * @package    content-collaboration-inline-commenting
  */
 
 /**
@@ -16,8 +15,7 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    commenting-block
- * @subpackage commenting-block/admin
+ * @package    content-collaboration-inline-commenting
  */
 class Commenting_block_Admin {
 
@@ -114,9 +112,9 @@ class Commenting_block_Admin {
 
 					$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
-					$html = __( 'Hi Admin', 'commenting-block' );
+					$html = __( 'Hi Admin', 'content-collaboration-inline-commenting' );
 					$html .= ',<br><br>';
-					$html = __( 'The following comment has been resolved', 'commenting-block' );
+					$html = __( 'The following comment has been resolved', 'content-collaboration-inline-commenting' );
 					$html .= ':<br><br>';
 
 					foreach ( $comments as $timestamp => $arr ) {
@@ -136,7 +134,7 @@ class Commenting_block_Admin {
 									<div className='commenter-name-time'>
 									<div className='commenter-name'>". esc_html( $username ) ."</div>
 									<div className='comment-time'>". esc_html( $date ) ."</div>
-									<div className='comment'>" . __( 'Comment', 'commenting-block' ) .": ". esc_html( $text_comment ). " ". esc_html(  $draft ) . "</div>
+									<div className='comment'>" . __( 'Comment', 'content-collaboration-inline-commenting' ) .": ". esc_html( $text_comment ). " ". esc_html(  $draft ) . "</div>
 									</div>
 								</div>";
 
@@ -144,14 +142,14 @@ class Commenting_block_Admin {
 						}
 					}
 
-					$html .= '<br>' . __( 'Thank you!', 'commenting-block' );
+					$html .= '<br>' . __( 'Thank you!', 'content-collaboration-inline-commenting' );
 
 					$users_emails = array_unique( $users_emails );
 					if ( ( $key = array_search( $current_user_email, $users_emails, true ) ) !== false ) {
 						unset( $users_emails[ $key ] );
 					}
 
-					wp_mail( $users_emails, __( 'Comment Resolved', 'commenting-block' ), $html, $headers );
+					wp_mail( $users_emails, __( 'Comment Resolved', 'content-collaboration-inline-commenting' ), $html, $headers );
 				}
 			}
 		}
@@ -292,7 +290,7 @@ class Commenting_block_Admin {
 		$screen = get_current_screen();
 		if ( $screen->is_block_editor ) {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/commenting-block-admin.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'commenting-block', plugin_dir_url( __FILE__ ) . 'js/blockJS/block.build.js', array(
+			wp_enqueue_script( 'content-collaboration-inline-commenting', plugin_dir_url( __FILE__ ) . 'js/blockJS/block.build.js', array(
 				'jquery',
 				'wp-blocks',
 				'wp-i18n',
@@ -312,7 +310,7 @@ class Commenting_block_Admin {
 			$current_user_role = $wp_roles->roles[ $curr_user->roles[0] ]['name'];
 			$date_format       = get_option( 'date_format' );
 			$time_format       = get_option( 'time_format' );
-			wp_localize_script( 'commenting-block', 'suggestionBlock', array( 'userRole' => $current_user_role, 'dateFormat' => $date_format, 'timeFormat' => $time_format ) );
+			wp_localize_script( 'content-collaboration-inline-commenting', 'suggestionBlock', array( 'userRole' => $current_user_role, 'dateFormat' => $date_format, 'timeFormat' => $time_format ) );
 
 			wp_enqueue_script( 'jquery-ui-draggable' );
 			wp_enqueue_script( 'jquery-ui-droppable' );
@@ -435,10 +433,10 @@ class Commenting_block_Admin {
 					$comment_count = 0;
 					foreach ( $comments as $timestamp => $c ) {
 
-						$cstatus         = 0 === $comment_count ? __( 'commented', 'commenting-block' ) : __( 'replied', 'commenting-block' );
-						$cstatus		 .= __( ' on', 'commenting-block' );
+						$cstatus         = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
+						$cstatus		 .= __( ' on', 'content-collaboration-inline-commenting' );
 						$comment_status = isset( $c['status'] ) ? $c['status'] : '';
-						$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'commenting-block' ) : $cstatus;
+						$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
 
 						// Stop displaying history of comments in draft mode.
 						if ( 'draft' === $comment_status ) {
@@ -512,7 +510,7 @@ class Commenting_block_Admin {
 				}
 			}
 		} else {
-			$html .= __( 'No comments found.', 'commenting-block' );
+			$html .= __( 'No comments found.', 'content-collaboration-inline-commenting' );
 		}
 		$html .= "</div>";
 

@@ -9,8 +9,7 @@
  * @link       #
  * @since      1.0.0
  *
- * @package    commenting-block
- * @subpackage commenting-block/includes
+ * @package    content-collaboration-inline-commenting
  */
 
 /**
@@ -20,8 +19,8 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    commenting-block
- * @subpackage commenting-block/includes
+ * @package    content-collaboration-inline-commenting
+ *
  * @author     multidots
  */
 class Commenting_block_i18n {
