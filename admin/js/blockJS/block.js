@@ -75,7 +75,6 @@ function fetchComments() {
         if( 0 === span_count ) {
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
-            $('#md-span-comments').append('<p class="no-comment-found">No comments at</p>');
         } else {
             $('.wp-block mdspan').each(function () {
 
@@ -294,7 +293,7 @@ const mdComment = {
             let {text, start, end} = value;
             const commentedOnText = text.substring(start, end);
 
-            // If text is not selected, show notice.No comments at
+            // If text is not selected, show notice.
             if( start === end ) {
                 alert('Please select text to comment on.');
                 return;
@@ -410,13 +409,6 @@ const mdComment = {
                     this.floatComments(selectedText);
                 }
 
-            }
-
-            // Remove 'no comments' msg if available.
-            if( 0 === jQuery('.wp-block mdspan').length && 0 === jQuery('.no-comment-found').length ) {
-                jQuery('#md-span-comments').append('<p class="no-comment-found">No comments at</p>');
-            } else if ( 0 !== jQuery('.wp-block mdspan').length ) {
-                jQuery('.no-comment-found').remove();
             }
         }
 

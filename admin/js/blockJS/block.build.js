@@ -651,7 +651,6 @@ function fetchComments() {
         if (0 === span_count) {
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
-            $('#md-span-comments').append('<p class="no-comment-found">No comments at</p>');
         } else {
             $('.wp-block mdspan').each(function () {
 
@@ -880,7 +879,7 @@ var mdComment = {
 
                 var commentedOnText = text.substring(start, end);
 
-                // If text is not selected, show notice.No comments at
+                // If text is not selected, show notice.
                 if (start === end) {
                     alert('Please select text to comment on.');
                     return;
@@ -987,13 +986,6 @@ var mdComment = {
                         }
                         this.floatComments(selectedText);
                     }
-                }
-
-                // Remove 'no comments' msg if available.
-                if (0 === jQuery('.wp-block mdspan').length && 0 === jQuery('.no-comment-found').length) {
-                    jQuery('#md-span-comments').append('<p class="no-comment-found">No comments at</p>');
-                } else if (0 !== jQuery('.wp-block mdspan').length) {
-                    jQuery('.no-comment-found').remove();
                 }
             }
         }, {
@@ -1204,11 +1196,6 @@ var Board = function (_React$Component) {
                 wp.data.dispatch('core/editor').editPost({ meta: { reflect_comments_changes: 1 } });
             });
             this.setState({ comments: arr });
-
-            // Remove 'no comments' msg if available.
-            if (0 === jQuery('.wp-block mdspan').length && 0 === jQuery('.no-comment-found').length) {
-                jQuery('#md-span-comments').append('<p class="no-comment-found">No comments at</p>');
-            }
         }
     }, {
         key: 'updateComment',
@@ -1331,11 +1318,6 @@ var Board = function (_React$Component) {
 
                     // Flushing the text from the textarea
                     jQuery('#' + currentTextID).val('').focus();
-
-                    // Remove 'no comments' msg if available.
-                    if (0 !== jQuery('.no-comment-found').length) {
-                        jQuery('.no-comment-found').remove();
-                    }
                 });
             } else alert("Please write a comment to share!");
         }
@@ -1599,13 +1581,7 @@ var Comment = function (_React$Component) {
                 };
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                 jQuery.post(ajaxurl, data, function () {
-
                     jQuery('div#' + elIDRemove).remove();
-
-                    // Remove 'no comments' msg if available.
-                    if (0 === jQuery('.wp-block mdspan').length && 0 === jQuery('.no-comment-found').length) {
-                        jQuery('#md-span-comments').append('<p class="no-comment-found">No comments at</p>');
-                    }
                 });
 
                 // Remove Tag.

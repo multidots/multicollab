@@ -67,14 +67,7 @@ export default class Comment extends React.Component {
             };
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function () {
-
                 jQuery('div#' + elIDRemove).remove();
-
-                // Remove 'no comments' msg if available.
-                if( 0 === jQuery('.wp-block mdspan').length && 0 === jQuery('.no-comment-found').length ) {
-                    jQuery('#md-span-comments').append('<p class="no-comment-found">No comments at</p>');
-                }
-
             });
 
             // Remove Tag.

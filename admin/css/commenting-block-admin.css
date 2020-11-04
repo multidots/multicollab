@@ -1139,23 +1139,3 @@ del[data-rich-text-format-boundary="true"] {
 .custom-buttons button:hover svg * {
     fill: #007cba;
 }
-
-#md-comments-suggestions-parent .no-comment-found {
-    left: 0;
-    background: #fff;
-    box-shadow: rgba(60, 64, 67, 0.2) 0 0 10px 2px;
-    margin-bottom: 15px;
-    transition: all 0.5s;
-    border: 1px solid #e9eaed;
-    right: 0;
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
-    padding: 20px 10px;
-    text-align: center;
-    border-radius: 0;
-    color: #007cba;
-    font-size: 18px;
-    font-style: italic;
-    cursor: inherit;
-}

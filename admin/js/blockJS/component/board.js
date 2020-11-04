@@ -122,11 +122,6 @@ export default class Board extends React.Component {
             wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } });
         });
         this.setState({comments: arr});
-
-        // Remove 'no comments' msg if available.
-        if( 0 === jQuery('.wp-block mdspan').length && 0 === jQuery('.no-comment-found').length ) {
-            jQuery('#md-span-comments').append('<p class="no-comment-found">No comments at</p>');
-        }
     }
 
     updateComment(newText, idx, cTimestamp, dateTime, metaID) {
@@ -246,11 +241,6 @@ export default class Board extends React.Component {
 
                 // Flushing the text from the textarea
                 jQuery('#' + currentTextID).val('').focus();
-
-                // Remove 'no comments' msg if available.
-                if( 0 !== jQuery('.no-comment-found').length ) {
-                    jQuery('.no-comment-found').remove();
-                }
             });
 
         } else alert("Please write a comment to share!")
