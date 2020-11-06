@@ -1104,6 +1104,11 @@ del[data-rich-text-format-boundary="true"] {
 
 .suggestion-mode .components-dropdown-menu__menu[role="menu"] .components-menu-group:nth-child(2) {display:none;}
 
+body.hide-comments .block-editor-writing-flow {
+    width: 100%;
+    float: none;
+}
+
 #md-comments-suggestions-parent .no-comment, #md-comments-suggestions-parent .no-suggestion {
     left: 0;
     background: #fff;
