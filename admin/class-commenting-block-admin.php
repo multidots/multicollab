@@ -323,7 +323,7 @@ class Commenting_block_Admin {
 	 */
 	public function cf_add_comment() {
 
-		$commentList = filter_input( INPUT_POST, "commentList", FILTER_SANITIZE_STRING );
+		$commentList = filter_input( INPUT_POST, "commentList" ); // FILTER_SANITIZE_STRING
 		$commentList = html_entity_decode( $commentList );
 		$commentList = json_decode( $commentList, true );
 
@@ -533,7 +533,7 @@ class Commenting_block_Admin {
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
 
-		$edited_comment = filter_input( INPUT_POST, "editedComment", FILTER_SANITIZE_STRING );
+		$edited_comment = filter_input( INPUT_POST, "editedComment" ); // FILTER_SANITIZE_STRING
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );
 
