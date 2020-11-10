@@ -678,7 +678,7 @@ body.hide-comments mdspan {
     background: transparent !important;
 }
 
-body.hide-comments #md-span-comments {
+body.hide-comments #md-comments-suggestions-parent {
     display: none !important;
 }
 
