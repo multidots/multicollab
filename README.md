@@ -2,52 +2,52 @@
 
 > **⚠️ Note:** This is a beta version. Use it for contributions only.
 
-<p align="center"><a href="https://www.multidots.com/gutenberg-commenting-demo/" target="_blank"><img src="https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/01-main-banner.png" alt="Commenting Demo"></a></p>
+<p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/wp-content/uploads/sites/5/2020/08/01-main-banner.png" alt="Commenting Demo"></a></p>
 
 ## Critical Importance of Google doc-style Commenting Plugin
 
-Did you know that 35% of the web uses WordPress from stand-alone blog posts to content-intensive news sites and more? But, publishing content on WordPress is not a simple exercise. One needs to create content, and then get suggestions from all stakeholders, and implement these. But it is not over yet. In most cases, stakeholders will take one final look at the content, again place comments where necessary, and ask content creators to make the necessary changes. Typically, this review/validation process becomes even more time consuming because it does not happen in a consistent manner. 
+Did you know that 35% of the web uses, WordPress from stand-alone blog posts to content-intensive news sites and more? But, publishing content on WordPress is not a simple task. One needs to create content, then get suggestions from all stakeholders, and then implement these. But it is not over yet. In most cases, stakeholders will take one final look at the content, again place comments where required, and ask content creators to make the necessary changes. **Typically, this review/validation process becomes even more time consuming because it does not happen consistently.**
 
-Imagine that you are creating a post, which you have published as a draft. During the review process, the stakeholder will take a look and more often than not suggest changes via a Word/Google doc. The content creator takes a look at the comments, makes the necessary changes and the stakeholder again takes a look at the revised draft. If needed, more revisions are sought, using the same process.
+Imagine that you are creating a post, which you have published as a draft. During the review process, the stakeholder will review and, more often than not, suggest changes via a Word/Google doc. The content creator will review the comments, makes the required changes, and inform the stakeholder to review the updates. If needed, more revisions are sought, using the same process.
 
-But not anymore! WordPress Google Doc-Style Gutenberg Block Commenting Plugin is built to streamline the comments process in a Google-doc style, wherein feedback/suggestion comments can be placed from within the WordPress platform, by choosing the specific content areas, where changes need to be made.
+But not anymore! **WordPress Google Doc-Style Gutenberg Block Commenting Plugin is built to streamline the commenting process in a Google-doc style, wherein feedback/suggestion comments can be placed from within the WordPress platform, by choosing the specific content areas, where changes need to be made.**
 
-<p align="center"><a href="https://www.multidots.com/gutenberg-commenting-demo/" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92399082-53419380-f147-11ea-806f-701ad073b9d9.png" alt="Commenting Video"></a></p>
+<p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92399082-53419380-f147-11ea-806f-701ad073b9d9.png" alt="Commenting Video"></a></p>
 
-Multidots recognizes the need for a plugin that smoothens the comments process and we created a plugin solution that leverages the features of the native Gutenberg editor in WordPress to place comments. This plugin allows client comments or key stakeholders’ comments to be placed on the specific text in Gutenberg blocks. This is a beta version and we have made it publicly available to the WordPress community. While we have done all the research and identified specific needs that this plugin will address, we believe the community’s participation will further enhance the comments plugin features.
+Multidots recognized the need for a plugin that eases the commenting process. We created a plugin solution that leverages the features of the native Gutenberg editor within WordPress to place comments. This plugin allows clients or key stakeholders to comment directly on the specific text in the Gutenberg blocks. This is a beta version, and we have made it publicly available to the WordPress community. While we have done all the research and identified specific needs that this plugin will address, we believe the community’s participation will further enhance the comments plugin features.
 
-<a href="https://www.multidots.com/gutenberg-commenting-demo/" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92440226-cc81ca80-f1c9-11ea-8322-0d771ba4d794.png" alt="Landing Page" style="max-height:60px;"></a>
-<a href="https://www.multidots.com/gutenberg-commenting-demo/?demo=start" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92440377-09e65800-f1ca-11ea-8e90-01706121f450.png" alt="Commenting Live Demo" style="max-height:60px;"></a>
+<a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92440226-cc81ca80-f1c9-11ea-8322-0d771ba4d794.png" alt="Landing Page" style="max-height:60px;"></a>
+<a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/?demo=start" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92440377-09e65800-f1ca-11ea-8e90-01706121f450.png" alt="Commenting Live Demo" style="max-height:60px;"></a>
 
 ## Key Features
 
-### Comment in Gutenberg Block
+### Commenting in Gutenberg Block
 
-![image](https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/01-commenting-block.png)
+![image](https://www.multidots.com/google-doc-style-gutenberg-block-commenting/wp-content/uploads/sites/5/2020/08/01-commenting-block.png)
 
-Place comments on default Gutenberg paragraph and header blocks that are a part of page/post. It will be as easy as clicking and typing in your comment. No time wastage.
+Place comments on default Gutenberg paragraph and header blocks that are a part of the page/post. You can easily add your comment by highlighting the section and typing in your comment—no time wasted.
 
-### Comment Activity
+### Commenting Activity
 
-![image](https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/02-comment-activity.png)
+![image](https://www.multidots.com/google-doc-style-gutenberg-block-commenting/wp-content/uploads/sites/5/2020/08/02-comment-activity.png)
 
-We keep track of all comment activity with this WordPress plugin. You get a history of comments including who placed the comment, when it was placed and where.
+We keep track of all comment activity with this WordPress plugin. You get a history of comments, including who placed the comment, when it was placed and where.
 
-### Comment Notification
+### Commenting Notification
 
-![image](https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/03-Comment-notification.png)
+![image](https://www.multidots.com/google-doc-style-gutenberg-block-commenting/wp-content/uploads/sites/5/2020/08/03-Comment-notification.png)
 
-If someone resolves a comment thread on a particular page/post, all the participants of that specific thread will immediately get a notification through email. Suggestions don’t fall through the gap.
+If someone resolves a comment thread on a particular page/post, all participants of that specific thread will immediately get a notification via email.
 
-### Comment Resolution
+### Commenting Resolution
 
-![image](http://multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/04-Comment-resolution.png)
+![image](http://multidots.com/google-doc-style-gutenberg-block-commenting/wp-content/uploads/sites/5/2020/08/04-Comment-resolution.png)
 
-This Google-doc style comments plugin gives users the option of not only adding comments but also editing, replying to, and resolving comments in a page/post. It offers you complete flexibility.
+This Google Docs-style commenting plugin gives users the option of adding, editing, replying to, and resolving comments all within a page/post. It offers you complete flexibility.
 
-### Comments Hide/Show
+### Commenting Hide/Show
 
-![image](https://www.multidots.com/gutenberg-commenting-demo/wp-content/uploads/sites/5/2020/08/05-Comments-hide-show.png)
+![image](https://www.multidots.com/google-doc-style-gutenberg-block-commenting/wp-content/uploads/sites/5/2020/08/05-Comments-hide-show.png)
 
 This Google-doc style comments plugin gives users the option of not only adding comments but also editing, replying to, and resolving comments in a page/post. It offers you complete flexibility.
 
@@ -77,7 +77,7 @@ Open a dropdown menu and selext 'Comment' option to start commenting.
 
 ## Gutenberg Blocks Compatibility
 
-This plugin is compatible with a range of Gutenberg blocks allowing comments placement across a large-section of your content.
+This plugin is compatible with a range of Gutenberg blocks allowing comments to be placed across a large-section of your content.
 
 * Paragraph Block
 * List Block
@@ -94,9 +94,17 @@ This plugin is compatible with a range of Gutenberg blocks allowing comments pla
 * Button Block
 * Media & Text
 
-## Require Environment
+## Required Environment
 
 ![image](https://user-images.githubusercontent.com/25176325/92396511-bed53200-f142-11ea-8f95-9a99af928509.png)
+
+## A Work in Progress
+
+The current version of the WordPress commenting plugin is in a state of evolution. It already provides a solution for one big problem – seamless commenting. Its current limitations include:
+
+- Users can only comment on a few native blocks.
+- Does not support Classic Editor
+- Currently only compatible with WordPress version 5.X+
 
 ## How to Contribute 
 
@@ -112,7 +120,7 @@ All type of contributions from are most welcome.
 
 ## Future Roadmap
 
-The next release of this Google doc-style Gutenberg block commenting plugin will be a more optimized version with far more enhanced comments features. These will be as follows:
+The next release of this Google Docs-style Gutenberg block commenting plugin will be a more optimized version with far more enhanced commenting features. These will be as follows:
 
 ### 1 Markup features along with the comments.
 
@@ -120,11 +128,9 @@ This feature will allow users to add suggestions for adding/removing certain tex
 
 ### 2. Asynchronous comments
 
-WordPress is offering a collaborative editing experience through Google Docs, so that different users are able to edit the same content of a page/post at the same time. To keep in step with this WordPress development, we are also planning an update wherein different users can add comments on a particular Gutenberg content block at the same time through the Content Editor.
+WordPress is offering a collaborative editing experience through Google Docs so that different users are able to edit the same content of a page/post simultaneously. To keep in step with this WordPress development, we are also planning an update wherein different users can add comments on a particular Gutenberg content block at the same time through the Content Editor.
 
-We hope the “Comment” feature will help manage editorial flow within Gutenberg blocks. We will appreciate bug reports and any other contributions that can enhance the value of this Gutenberg Google-doc style comments plugin. Please refer to this guide for more information about how to get involved.
-
-We hope the “Comment” feature will help manage editorial flow within Gutenberg blocks. We will appreciate bug reports and any other contributions that can enhance the value of this Gutenberg Google-doc style comments plugin. Please refer to this guide for more information about how to get involved.
+We hope the “Commenting” feature will help manage editorial flow within Gutenberg blocks. We appreciate bug reports and any other contributions that can enhance the value of this Gutenberg Google Docs-style commenting plugin. Please refer to this guide for more information about how to get involved.
 
 ## Support 
 This repository is not for support. Please use it for contributions only. To get help/support, please email us at [help@multidots.com](mailto:help@multidots.com)
