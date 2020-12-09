@@ -289,6 +289,7 @@ export default class Board extends React.Component {
                 selectedText={selectedText}
                 timestamp={cTimestamp}
                 editedDraft={editedDraft}
+                showAvatars={localStorage.getItem("showAvatars")}
             >{
                 postedComment = postedComment ? postedComment : text
             }

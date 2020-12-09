@@ -367,7 +367,7 @@ span.user-name {
 
 #comments-toggle.active,
 #history-toggle.active {
-    color: #3b923b;
+    color: #4B1BCE;
 }
 
 .block-editor-editor-skeleton__body {
@@ -670,6 +670,10 @@ button.btn-comment.btn-reject {
     box-shadow: none !important;
 }
 
+.custom-buttons button:hover {
+    color: #4B1BCE;
+}
+
 .shareCommentContainer.loading {
     position: relative;
 }
@@ -785,6 +789,9 @@ body.hide-comments #md-comments-suggestions-parent {
     padding: 0 !important;
     margin: 0 !important;
     display: block;
+    overflow: hidden;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .comment-header .comment-actions {

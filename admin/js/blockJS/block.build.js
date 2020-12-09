@@ -1374,7 +1374,8 @@ var Board = function (_React$Component) {
                     onChanged: onChanged,
                     selectedText: selectedText,
                     timestamp: cTimestamp,
-                    editedDraft: editedDraft
+                    editedDraft: editedDraft,
+                    showAvatars: localStorage.getItem("showAvatars")
                 },
                 postedComment = postedComment ? postedComment : text
             );
@@ -1673,7 +1674,7 @@ var Comment = function (_React$Component) {
                     wp.element.createElement(
                         'div',
                         { className: 'comment-details' },
-                        wp.element.createElement(
+                        "1" === this.props.showAvatars && wp.element.createElement(
                             'div',
                             { className: 'avtar' },
                             wp.element.createElement('img', { src: this.props.profileURL, alt: 'avatar' })

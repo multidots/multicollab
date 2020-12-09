@@ -264,7 +264,7 @@ class Commenting_block_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/commenting-block-admin.css', array(), '1.0.1', 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/commenting-block-admin.css', array(), '1.0.2', 'all' );
 
 	}
 
@@ -303,7 +303,7 @@ class Commenting_block_Admin {
 				'wp-api-fetch',
 				'wp-plugins',
 				'wp-edit-post',
-			), '1.0.5', true );
+			), '1.0.6', true );
 
 			global $wp_roles;
 			$curr_user      = wp_get_current_user();
@@ -496,9 +496,15 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-data-box'>";
 					$html .= "<div class='user-avtar'><img src='" . esc_url( $c['profileURL'] ) . "'/></div>";
 					$html .= "<div class='user-title'>
-									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span>
-									\"<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>\"
-									<div class='user-comment'> " . esc_html( $c['thread'] ) . "</div>
+									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span>";
+
+					if( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] ) {
+						$html .= esc_html( $commented_on_text );
+					} else {
+						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>";
+					}
+
+					$html .= "<div class='user-comment'> " . esc_html( $c['thread'] ) . "</div>
 								</div>";
 					$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . "</div>";
 					$html .= "</div>";
@@ -577,6 +583,17 @@ class Commenting_block_Admin {
 
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
 
+		wp_die();
+	}
+
+	/**
+	 * Save show_avatar option in a localstorage.
+	 */
+	public function cf_get_show_avatars() {
+		// Returning show_avatar option to display avatars (or not to).
+		$show_avatars = get_option( 'show_avatars' );
+		$show_avatars = "1" === $show_avatars ? $show_avatars : 0;
+		echo wp_json_encode( $show_avatars );
 		wp_die();
 	}
 

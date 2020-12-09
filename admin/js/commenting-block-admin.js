@@ -34,6 +34,15 @@
     // Ready.
     $(document).ready(function () {
 
+        // Save show_avatar option in a localstorage.
+        var data = {
+            'action': 'cf_get_show_avatars'
+        };
+        $.post(ajaxurl, data, function (showAvatars) {
+            showAvatars = JSON.parse(showAvatars);
+            localStorage.setItem("showAvatars", showAvatars);
+        });
+
         // Focus comment popup on click.
         $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function () {
 

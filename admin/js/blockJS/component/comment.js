@@ -143,7 +143,11 @@ export default class Comment extends React.Component {
                         }
                     </div>
                     <div className="comment-details">
-                        <div className="avtar"><img src={this.props.profileURL} alt="avatar"/></div>
+                        {"1" === this.props.showAvatars &&
+                        <div className="avtar">
+                            <img src={this.props.profileURL} alt="avatar"/>
+                        </div>
+                        }
                         <div className="commenter-name-time">
                             <div className="commenter-name">{this.props.userName}</div>
                             <div className="comment-time">{this.props.dateTime}</div>
