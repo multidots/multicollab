@@ -303,7 +303,7 @@ class Commenting_block_Admin {
 				'wp-api-fetch',
 				'wp-plugins',
 				'wp-edit-post',
-			), '1.0.6', true );
+			), '1.0.7', true );
 
 			global $wp_roles;
 			$curr_user      = wp_get_current_user();

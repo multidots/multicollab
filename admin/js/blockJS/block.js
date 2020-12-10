@@ -11,15 +11,27 @@ const {registerFormatType, applyFormat, removeFormat} = wp.richText;
 const $ = jQuery;
 
 // Window Load functions.
-$(window).load(function () {
+$(window).on('load', function () {
 
-    // Add history button.
-    const customHistoryButton = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-text-page" id="history-toggle"></span></button></div>';
-    $('.edit-post-header-toolbar').append(customHistoryButton);
+        // Add history button.
+        var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-text-page" id="history-toggle"></span></button></div>';
 
     // Add comments toggle button.
-    const customCommentsToggleButton = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-admin-comments" id="comments-toggle"></span></button></div>';
-    $('.edit-post-header-toolbar').append(customCommentsToggleButton);
+    customButtons += '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-admin-comments" id="comments-toggle"></span></button></div>';
+
+    var loadAttempts = 0;
+    const loadIcons = setInterval(function () {
+        loadAttempts++;
+        if ( loadAttempts >= 10 || ( 1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length ) ) {
+            $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+        }
+
+        // Stop checking after 3 attempts as WordPress is wiping
+        // out these custom buttons in first few attempts.
+        if( loadAttempts >= 3 && 1 === $('#history-toggle').length ) {
+            clearInterval(loadIcons);
+        }
+    }, 2000);
 
     const customHistoryPopup = '<div id="custom-history-popup"></div>';
     $('.edit-post-layout').append(customHistoryPopup);
