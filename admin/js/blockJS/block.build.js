@@ -610,7 +610,7 @@ $(window).on('load', function () {
         if (loadAttempts >= 3 && 1 === $('#history-toggle').length) {
             clearInterval(loadIcons);
         }
-    }, 2000);
+    }, 1000);
 
     var customHistoryPopup = '<div id="custom-history-popup"></div>';
     $('.edit-post-layout').append(customHistoryPopup);
@@ -19840,7 +19840,7 @@ var currentlyProcessingQueue;
   didWarnUpdateInsideUpdate = false;
   currentlyProcessingQueue = null;
 
-  
+
 }
 
 function createUpdateQueue(baseState) {
@@ -24155,7 +24155,7 @@ function insertNonHydratedInstance(returnFiber, fiber) {
               break;
 
             case SuspenseComponent:
-              
+
               break;
           }
 
