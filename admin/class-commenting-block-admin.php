@@ -496,7 +496,7 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-data-box'>";
 					$html .= "<div class='user-avtar'><img src='" . esc_url( $c['profileURL'] ) . "'/></div>";
 					$html .= "<div class='user-title'>
-									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span>";
+									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span> ";
 
 					if( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] ) {
 						$html .= esc_html( $commented_on_text );
