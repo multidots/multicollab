@@ -594,6 +594,7 @@ $(window).on('load', function () {
 
     // Add history button.
     var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
+    commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
     var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
