@@ -14,7 +14,7 @@ const $ = jQuery;
 $(window).on('load', function () {
 
         // Add history button.
-        const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-text-page" id="history-toggle"></span></button></div>';
+        const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-text-page" id="history-toggle"><img src="/wp-content/plugins/gutenberg_commenting/admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
     const loadIcons = setInterval(function () {

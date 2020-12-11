@@ -34,7 +34,11 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'COMMENTING_BLOCK_VERSION', '1.0.0' );
+define( 'COMMENTING_BLOCK_VERSION', '1.0.3' );
+
+// Define constants.
+define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
+define( 'COMMENTING_BLOCK_DIR', plugin_dir_path( __FILE__ ) );
 
 /**
  * The code that runs during plugin activation.
