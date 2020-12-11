@@ -311,8 +311,8 @@ mdspan {
     font-size: 14px;
 }
 
-#custom-history-popup #history-popup-insder::before {
-    content: 'Comment Activity';
+#custom-history-popup #history-popup-insider::before {
+    content: 'Activity Center';
     font-size: 20px;
     display: block;
     margin: 0 0 20px;
@@ -333,6 +333,10 @@ mdspan {
 .user-data-row {
     border-top: 1px solid #e9eaed;
     padding: 15px 0;
+}
+
+#comments-toggle {
+    float: right;
 }
 
 span.user-name {

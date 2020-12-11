@@ -14,10 +14,7 @@ const $ = jQuery;
 $(window).on('load', function () {
 
         // Add history button.
-        var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-text-page" id="history-toggle"></span></button></div>';
-
-    // Add comments toggle button.
-    customButtons += '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-admin-comments" id="comments-toggle"></span></button></div>';
+        const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span class="dashicons dashicons-text-page" id="history-toggle"></span></button></div>';
 
     var loadAttempts = 0;
     const loadIcons = setInterval(function () {
@@ -33,7 +30,7 @@ $(window).on('load', function () {
         }
     }, 2000);
 
-    const customHistoryPopup = '<div id="custom-history-popup"></div>';
+    const customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
     $('.edit-post-layout').append(customHistoryPopup);
 
     fetchComments();

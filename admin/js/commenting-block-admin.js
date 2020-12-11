@@ -129,7 +129,7 @@
                 };
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                 $.post(ajaxurl, data, function (response) {
-                    $('#custom-history-popup').html(response);
+                    $('#custom-history-popup-inner').html(response);
                 });
 
             }
@@ -138,7 +138,16 @@
         // Comments Toggle
         $(document).on('click', '#comments-toggle', function () {
             $('body').toggleClass('hide-comments');
-            $('#comments-toggle').toggleClass('active');
+            $(this).toggleClass('active'); /* If active, comments are hidden. */
+
+            if( $(this).hasClass('active') ) {
+                $('a', this).text('Show All Comments');
+            } else {
+                $('a', this).text('Hide All Comments');
+            }
+
+            // Hide Activity Center.
+            $('#history-toggle').trigger('click');
         });
 
         // Hide Comments from Dropdown

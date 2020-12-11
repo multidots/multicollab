@@ -264,7 +264,7 @@ class Commenting_block_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/commenting-block-admin.css', array(), '1.0.2', 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/commenting-block-admin.css', array(), '1.0.3', 'all' );
 
 	}
 
@@ -474,7 +474,7 @@ class Commenting_block_Admin {
 			}
 		}
 
-		$html = '<div id="history-popup-insder">';
+		$html = '<div id="history-popup-insider">';
 		if ( 0 !== $total_comments ) {
 			krsort( $prepareDataTable, SORT_NUMERIC );
 
