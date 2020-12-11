@@ -164,7 +164,7 @@ class Commenting_block {
 		$this->loader->add_action( 'wp_ajax_cf_delete_comment', $plugin_admin,'cf_delete_comment' );
 		$this->loader->add_action( 'wp_ajax_cf_resolve_thread', $plugin_admin,'cf_resolve_thread' );
 		$this->loader->add_action( 'wp_ajax_cf_reset_drafts_meta', $plugin_admin,'cf_reset_drafts_meta' );
-		$this->loader->add_action( 'wp_ajax_cf_get_show_avatars', $plugin_admin,'cf_get_show_avatars' );
+		$this->loader->add_action( 'wp_ajax_cf_store_in_localstorage', $plugin_admin,'cf_store_in_localstorage' );
 		$this->loader->add_action( 'wp_ajax_cf_merge_draft_stacks', $plugin_admin,'cf_merge_draft_stacks' );
 		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'cf_rest_api' );
 	}

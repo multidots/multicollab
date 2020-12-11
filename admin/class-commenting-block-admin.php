@@ -587,13 +587,18 @@ class Commenting_block_Admin {
 	}
 
 	/**
-	 * Save show_avatar option in a localstorage.
+	 * Save important details in a localstorage.
 	 */
-	public function cf_get_show_avatars() {
+	public function cf_store_in_localstorage() {
+
 		// Returning show_avatar option to display avatars (or not to).
 		$show_avatars = get_option( 'show_avatars' );
 		$show_avatars = "1" === $show_avatars ? $show_avatars : 0;
-		echo wp_json_encode( $show_avatars );
+
+		// Store plugin URL in localstorage so that its easy
+		// to get sub site URL in JS files in Multisite environment.
+
+		echo wp_json_encode( array( 'showAvatars' => $show_avatars, 'commentingPluginUrl' => COMMENTING_BLOCK_URL ) );
 		wp_die();
 	}
 

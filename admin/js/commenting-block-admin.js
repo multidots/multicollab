@@ -36,11 +36,12 @@
 
         // Save show_avatar option in a localstorage.
         var data = {
-            'action': 'cf_get_show_avatars'
+            'action': 'cf_store_in_localstorage'
         };
-        $.post(ajaxurl, data, function (showAvatars) {
-            showAvatars = JSON.parse(showAvatars);
-            localStorage.setItem("showAvatars", showAvatars);
+        $.post(ajaxurl, data, function (response) {
+            response = JSON.parse(response);
+            localStorage.setItem("showAvatars", response.showAvatars);
+            localStorage.setItem("commentingPluginUrl", response.commentingPluginUrl);
         });
 
         // Focus comment popup on click.

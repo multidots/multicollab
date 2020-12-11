@@ -923,6 +923,7 @@ body.hide-comments #md-comments-suggestions-parent {
 
 .custom-buttons {
     position: relative;
+    padding-top: 3px;
 }
 
 .custom-buttons.active:before,
