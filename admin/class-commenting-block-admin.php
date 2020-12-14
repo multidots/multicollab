@@ -59,9 +59,9 @@ class Commenting_block_Admin {
 	public function cf_get_user() {
 
 		$curr_user = wp_get_current_user();
-		$userID       = $curr_user->ID;
-		$userName     = $curr_user->display_name;
-		$userURL      = get_avatar_url( $userID );
+		$userID    = $curr_user->ID;
+		$userName  = $curr_user->display_name;
+		$userURL   = get_avatar_url( $userID );
 
 		echo wp_json_encode( array( 'id' => $userID, 'name' => $userName, 'url' => $userURL ) );
 		wp_die();
@@ -76,6 +76,8 @@ class Commenting_block_Admin {
 	public function cf_post_status_changes( $post_ID, $post, $update ) {
 
 		$p_content = is_object( $post ) ? $post->post_content : $post;
+		$p_link    = get_edit_post_link( $post_ID );
+		$p_title   = get_the_title( $post_ID );
 
 		// Publish drafts from the 'current_drafts' stack.
 		$current_drafts = get_post_meta( $post_ID, 'current_drafts', true );
@@ -90,6 +92,11 @@ class Commenting_block_Admin {
 		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
 			$resolved_drafts = $current_drafts['resolved'];
 
+			// Get current user details.
+			$curr_user                 = wp_get_current_user();
+			$current_user_email        = $curr_user->user_email;
+			$current_user_display_name = $curr_user->display_name;
+
 			foreach ( $resolved_drafts as $el ) {
 				$prev_state                       = get_post_meta( $post_ID, $el, true );
 				$prev_state                       = maybe_unserialize( $prev_state );
@@ -97,9 +104,6 @@ class Commenting_block_Admin {
 				$prev_state['resolved_timestamp'] = $current_timestamp;
 				$prev_state['resolved_by']        = get_current_user_id();
 				update_post_meta( $post_ID, $el, $prev_state );
-
-				$curr_user = wp_get_current_user();
-				$current_user_email = $curr_user->user_email;
 
 				// Send Email.
 				$comments = get_post_meta( $post_ID, "$el", true );
@@ -111,45 +115,63 @@ class Commenting_block_Admin {
 					$users_emails = array();
 
 					$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-
-					$html = __( 'Hi Admin', 'content-collaboration-inline-commenting' );
-					$html .= ',<br><br>';
-					$html = __( 'The following comment has been resolved', 'content-collaboration-inline-commenting' );
-					$html .= ':<br><br>';
-
+					$html    = '
+					<style>
+					.comment-box{-webkit-box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);border:1px solid #E2E4E7;border-radius:5px;background:#fff;padding:20px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:600px;width:70%;font-family:Arial,serif;margin:40px 0 0;}
+					.comment-box .comment-box-header{padding-bottom:15px;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #ccc;margin-bottom:15px;}
+					.comment-box .comment-box-header p{margin:15px 0;}
+					.comment-box .comment-box-header a{color:#0073aa;text-decoration:none;display:inline-block;padding:5px 7px 4px;border:1px solid #ccc;border-radius:5px;}
+					.comment-box .comment-box-header a:hover{text-decoration:underline;color:#006799;}
+					.comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+					.comment-header:last-child{margin-bottom:0;}
+					.comment-header .avtar{width:40px;margin-right:10px;}
+					.comment-header .avtar img{max-width:100%;border-radius:50%;}
+					.comment-header .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
+					.comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+					.comment-header .commenter-name-time .commenter-name{font-size:16px;font-weight:600;font-family:Arial,serif;margin-right:10px;}
+					.comment-header .commenter-name-time .comment-time{font-size:12px;font-weight:400;font-family:Arial,serif;color:#808080;}
+					.comment-header .comment{font-family:Arial,serif;font-size:14px;}
+					</style>
+					';
+					$html    .= '<div class="comment-box"><div class="comment-box-header">';
+					$html    .= '<p>';
+					$html    .= esc_html( $current_user_display_name ) . __( ' has resolved the following thread.', 'content-collaboration-inline-commenting' );
+					$html    .= '</p><a href="' . esc_url( $p_link ) . '" class="comment-page-title">' . esc_html( $p_title ) .'</a></div>';
+					$html    .= '<div class="comment-box-body">';
 					foreach ( $comments as $timestamp => $arr ) {
 
-						if( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
-							$user_info   = get_userdata( $arr['userData'] );
-							$username    = $user_info->display_name;
+						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
+							$user_info      = get_userdata( $arr['userData'] );
+							$username       = $user_info->display_name;
 							$users_emails[] = $user_info->user_email;
-							$profile_url = get_avatar_url( $user_info->user_email );
-							$date        = gmdate( $time_format . ' ' . $date_format, $timestamp );
-							$text_comment     = $arr['thread'];
-							$cstatus = $arr['status'];
-							$draft = 'draft' === $cstatus ? '(draft)' : '';
+							$profile_url    = get_avatar_url( $user_info->user_email );
+							$date           = gmdate( $time_format . ' ' . $date_format, $timestamp );
+							$text_comment   = $arr['thread'];
+							$cstatus        = $arr['status'];
+							$draft          = 'draft' === $cstatus ? '(draft)' : '';
 
-							$html .= "<div className='comment-header'>
-									<div className='avtar'><img src='" . esc_url( $profile_url ) ."' alt='avatar' /></div>
-									<div className='commenter-name-time'>
-									<div className='commenter-name'>". esc_html( $username ) ."</div>
-									<div className='comment-time'>". esc_html( $date ) ."</div>
-									<div className='comment'>" . __( 'Comment', 'content-collaboration-inline-commenting' ) .": ". esc_html( $text_comment ). " ". esc_html(  $draft ) . "</div>
-									</div>
-								</div>";
-
-							$html .= ' <br> ';
+							$html .= "<div class='comment-header'>
+										<div class='avtar'><img src='" . esc_url( $profile_url ) . "' alt='avatar' /></div>
+										<div class='comment-details'>
+											<div class='commenter-name-time'>
+												<div class='commenter-name'>" . esc_html( $username ) . "</div>
+												<div class='comment-time'>" . esc_html( $date ) . "</div>
+											</div>
+											<div class='comment'>" . __( '<strong>Comment</strong>', 'content-collaboration-inline-commenting' ) . ": " . esc_html( $text_comment ) . " " . esc_html( $draft ) . "
+											</div>
+										</div>
+									 </div>";
 						}
 					}
-
-					$html .= '<br>' . __( 'Thank you!', 'content-collaboration-inline-commenting' );
+					$html .= '</div>'; // .comment-box-body end
+					$html .= '</div>'; // .comment-box end
 
 					$users_emails = array_unique( $users_emails );
 					if ( ( $key = array_search( $current_user_email, $users_emails, true ) ) !== false ) {
 						unset( $users_emails[ $key ] );
 					}
 
-					wp_mail( $users_emails, __( 'Comment Resolved', 'content-collaboration-inline-commenting' ), $html, $headers );
+					wp_mail( $users_emails, __( 'Comment Resolved | WordPress', 'content-collaboration-inline-commenting' ), $html, $headers );
 				}
 			}
 		}
@@ -306,7 +328,7 @@ class Commenting_block_Admin {
 			), '1.0.7', true );
 
 			global $wp_roles;
-			$curr_user      = wp_get_current_user();
+			$curr_user         = wp_get_current_user();
 			$current_user_role = $wp_roles->roles[ $curr_user->roles[0] ]['name'];
 			$date_format       = get_option( 'date_format' );
 			$time_format       = get_option( 'time_format' );
@@ -383,7 +405,7 @@ class Commenting_block_Admin {
 	 */
 	public function cf_comments_history() {
 
-		$limit 			 = filter_input( INPUT_POST, "limit", FILTER_SANITIZE_NUMBER_INT );
+		$limit           = filter_input( INPUT_POST, "limit", FILTER_SANITIZE_NUMBER_INT );
 		$limit           = isset( $limit ) ? $limit : 10;
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 
@@ -433,10 +455,10 @@ class Commenting_block_Admin {
 					$comment_count = 0;
 					foreach ( $comments as $timestamp => $c ) {
 
-						$cstatus         = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
-						$cstatus		 .= __( ' on', 'content-collaboration-inline-commenting' );
+						$cstatus        = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
+						$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
 						$comment_status = isset( $c['status'] ) ? $c['status'] : '';
-						$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
+						$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
 
 						// Stop displaying history of comments in draft mode.
 						if ( 'draft' === $comment_status ) {
@@ -498,7 +520,7 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-title'>
 									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span> ";
 
-					if( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] ) {
+					if ( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] ) {
 						$html .= esc_html( $commented_on_text );
 					} else {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>";
@@ -556,9 +578,9 @@ class Commenting_block_Admin {
 		update_post_meta( $current_post_id, $metaId, $commentListOld );
 
 		// Update Current Drafts.
-		$current_drafts = get_post_meta( $current_post_id, 'current_drafts', true );
-		$current_drafts = maybe_unserialize( $current_drafts );
-		$current_drafts = empty( $current_drafts ) ? array() : $current_drafts;
+		$current_drafts                        = get_post_meta( $current_post_id, 'current_drafts', true );
+		$current_drafts                        = maybe_unserialize( $current_drafts );
+		$current_drafts                        = empty( $current_drafts ) ? array() : $current_drafts;
 		$current_drafts['edited'][ $metaId ][] = $old_timestamp;
 
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
@@ -576,9 +598,9 @@ class Commenting_block_Admin {
 		$timestamp       = filter_input( INPUT_POST, "timestamp", FILTER_SANITIZE_NUMBER_INT );
 
 		// Update Current Drafts.
-		$current_drafts = get_post_meta( $current_post_id, 'current_drafts', true );
-		$current_drafts = maybe_unserialize( $current_drafts );
-		$current_drafts = empty( $current_drafts ) ? array() : $current_drafts;
+		$current_drafts                         = get_post_meta( $current_post_id, 'current_drafts', true );
+		$current_drafts                         = maybe_unserialize( $current_drafts );
+		$current_drafts                         = empty( $current_drafts ) ? array() : $current_drafts;
 		$current_drafts['deleted'][ $metaId ][] = $timestamp;
 
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
@@ -744,7 +766,7 @@ class Commenting_block_Admin {
 			$username    = $user_info->display_name;
 			$profile_url = get_avatar_url( $user_info->user_email );
 			$thread      = $val['thread'];
-			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
+			$cstatus     = isset( $val['status'] ) ? $val['status'] : '';
 
 			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
 
