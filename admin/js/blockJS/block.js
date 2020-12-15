@@ -333,6 +333,13 @@ const mdComment = {
 
         getSelectedText() {
 
+            const {onChange, value, activeAttributes} = this.props;
+
+            // Ignore unnecessary event calls on hover.
+            if( $('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus') ) {
+                return;
+            }
+
             // Reset Comments Float.
             jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
             jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
@@ -340,7 +347,6 @@ const mdComment = {
 
             var referenceNode = document.getElementById('md-span-comments');
 
-            const {onChange, value, activeAttributes} = this.props;
 
             // Remove tags if selected tag ID exist in 'remove-comment' attribute of body.
             let removedComments = $('body').attr('remove-comment');
@@ -424,13 +430,11 @@ const mdComment = {
         }
 
         floatComments(selectedText) {
-
             if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
                 $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
                 $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
             }
-
         }
 
         removeSuggestion() {

@@ -913,6 +913,16 @@ var mdComment = {
         }, {
             key: 'getSelectedText',
             value: function getSelectedText() {
+                var _props2 = this.props,
+                    onChange = _props2.onChange,
+                    value = _props2.value,
+                    activeAttributes = _props2.activeAttributes;
+
+                // Ignore unnecessary event calls on hover.
+
+                if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
+                    return;
+                }
 
                 // Reset Comments Float.
                 jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
@@ -921,13 +931,7 @@ var mdComment = {
 
                 var referenceNode = document.getElementById('md-span-comments');
 
-                var _props2 = this.props,
-                    onChange = _props2.onChange,
-                    value = _props2.value,
-                    activeAttributes = _props2.activeAttributes;
-
                 // Remove tags if selected tag ID exist in 'remove-comment' attribute of body.
-
                 var removedComments = $('body').attr('remove-comment');
                 if (undefined !== activeAttributes.datatext && undefined !== removedComments && removedComments.indexOf(activeAttributes.datatext) !== -1) {
                     onChange(removeFormat(value, name));
@@ -1002,7 +1006,6 @@ var mdComment = {
         }, {
             key: 'floatComments',
             value: function floatComments(selectedText) {
-
                 if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
                     $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                     $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
