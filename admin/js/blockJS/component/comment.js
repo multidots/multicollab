@@ -53,10 +53,11 @@ export default class Comment extends React.Component {
 
     resolve(event) {
 
+        var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
+        elID = elID[0].id;
+        const elIDRemove = elID;
+
         if (confirm('Are you sure you want to resolve this thread ?')) {
-            var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-            elID = elID[0].id;
-            var elIDRemove = elID;
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
             elID = '_' + elID;
 
@@ -67,11 +68,13 @@ export default class Comment extends React.Component {
             };
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function () {
-                jQuery('div#' + elIDRemove).remove();
+                jQuery('#' + elIDRemove).remove();
             });
 
             // Remove Tag.
             this.removeTag(elIDRemove);
+        } else {
+            jQuery('#' + elIDRemove + ' #resolve_cb').prop('checked', false);
         }
     }
 

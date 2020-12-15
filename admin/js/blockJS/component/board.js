@@ -186,11 +186,15 @@ export default class Board extends React.Component {
             try {
                 userID = wp.data.select("core").getCurrentUser().id;
                 userName = wp.data.select("core").getCurrentUser().name;
-                userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
-                userProfile = userProfile[Object.keys(userProfile)[1]];
             } catch (e) {
                 userID = localStorage.getItem("userID");
                 userName = localStorage.getItem("userName");
+            }
+
+            if( '1' === localStorage.getItem("showAvatars") ) {
+                userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
+                userProfile = userProfile[Object.keys(userProfile)[1]];
+            } else {
                 userProfile = localStorage.getItem("userURL");
             }
 

@@ -1274,11 +1274,15 @@ var Board = function (_React$Component) {
                 try {
                     userID = wp.data.select("core").getCurrentUser().id;
                     userName = wp.data.select("core").getCurrentUser().name;
-                    userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
-                    userProfile = userProfile[Object.keys(userProfile)[1]];
                 } catch (e) {
                     userID = localStorage.getItem("userID");
                     userName = localStorage.getItem("userName");
+                }
+
+                if ('1' === localStorage.getItem("showAvatars")) {
+                    userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
+                    userProfile = userProfile[Object.keys(userProfile)[1]];
+                } else {
                     userProfile = localStorage.getItem("userURL");
                 }
 
@@ -1579,10 +1583,11 @@ var Comment = function (_React$Component) {
         key: 'resolve',
         value: function resolve(event) {
 
+            var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
+            elID = elID[0].id;
+            var elIDRemove = elID;
+
             if (confirm('Are you sure you want to resolve this thread ?')) {
-                var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-                elID = elID[0].id;
-                var elIDRemove = elID;
                 var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
                 elID = '_' + elID;
 
@@ -1593,11 +1598,13 @@ var Comment = function (_React$Component) {
                 };
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                 jQuery.post(ajaxurl, data, function () {
-                    jQuery('div#' + elIDRemove).remove();
+                    jQuery('#' + elIDRemove).remove();
                 });
 
                 // Remove Tag.
                 this.removeTag(elIDRemove);
+            } else {
+                jQuery('#' + elIDRemove + ' #resolve_cb').prop('checked', false);
             }
         }
     }, {
