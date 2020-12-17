@@ -51,6 +51,46 @@ class Commenting_block_Admin {
 
 		// Publish Comments on status change.
 		add_action( 'post_updated', array( $this, 'cf_post_status_changes' ), 10, 3 );
+
+		// Update caps for authors and contributors.
+		add_filter( 'admin_init', array( $this, 'cf_custom_caps') );
+
+		// Allow caps for Multisite environment.
+		add_filter( 'map_meta_cap', array( $this, 'cf_add_unfiltered_html_capability_to_users'), 1, 3 );
+	}
+
+	/**
+	 * Allowed Administrator, editor, author and contributor user to enter unfiltered html.
+	 *
+	 * @param array $caps All caps.
+	 * @param string $cap Cap in a loop.
+	 * @param int $user_id User ID.
+	 *
+	 * @return array
+	 */
+	function cf_add_unfiltered_html_capability_to_users( $caps, $cap, $user_id ) {
+		if ( 'unfiltered_html' === $cap && ( user_can( $user_id, 'administrator' ) || user_can( $user_id, 'editor' ) || user_can( $user_id, 'author' ) || user_can( $user_id, 'contributor' ) ) ) {
+			$caps = array( 'unfiltered_html' );
+		}
+		return $caps;
+	}
+
+	/**
+	 * Add capabilities to user roles to make 'mdspan' tag unfiltered.
+	 */
+	public function cf_custom_caps() {
+
+		$roles = array( 'author', 'contributor' );
+
+		foreach ( $roles as $role ) {
+
+			$role = get_role( $role );
+
+			if ( $role ) {
+				// Add custom capabilities.
+				$role->add_cap( 'unfiltered_html' );
+			}
+		}
 	}
 
 	/**

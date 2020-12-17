@@ -595,13 +595,19 @@ $(window).on('load', function () {
     // Add history button.
     var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
     commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
+
     var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
     var loadIcons = setInterval(function () {
         loadAttempts++;
+
         if (loadAttempts >= 10 || 1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length) {
-            $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+            if (0 === $('.edit-post-header-toolbar__left').length) {
+                $('.edit-post-header-toolbar').append(customButtons);
+            } else {
+                $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+            }
         }
 
         // Stop checking after 3 attempts as WordPress is wiping
@@ -913,6 +919,16 @@ var mdComment = {
         }, {
             key: 'getSelectedText',
             value: function getSelectedText() {
+                var _props2 = this.props,
+                    onChange = _props2.onChange,
+                    value = _props2.value,
+                    activeAttributes = _props2.activeAttributes;
+
+                // Ignore unnecessary event calls on hover.
+
+                if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
+                    return;
+                }
 
                 // Reset Comments Float.
                 jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
@@ -921,13 +937,7 @@ var mdComment = {
 
                 var referenceNode = document.getElementById('md-span-comments');
 
-                var _props2 = this.props,
-                    onChange = _props2.onChange,
-                    value = _props2.value,
-                    activeAttributes = _props2.activeAttributes;
-
                 // Remove tags if selected tag ID exist in 'remove-comment' attribute of body.
-
                 var removedComments = $('body').attr('remove-comment');
                 if (undefined !== activeAttributes.datatext && undefined !== removedComments && removedComments.indexOf(activeAttributes.datatext) !== -1) {
                     onChange(removeFormat(value, name));
@@ -1002,7 +1012,6 @@ var mdComment = {
         }, {
             key: 'floatComments',
             value: function floatComments(selectedText) {
-
                 if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
                     $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                     $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');

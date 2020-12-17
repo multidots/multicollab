@@ -13,21 +13,27 @@ const $ = jQuery;
 // Window Load functions.
 $(window).on('load', function () {
 
-        // Add history button.
-        var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
-        commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
-        const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+    // Add history button.
+    var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
+    commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
+
+    const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
     const loadIcons = setInterval(function () {
         loadAttempts++;
-        if ( loadAttempts >= 10 || ( 1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length ) ) {
-            $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+
+        if (loadAttempts >= 10 || (1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length)) {
+            if( 0 === $('.edit-post-header-toolbar__left').length ) {
+                $('.edit-post-header-toolbar').append(customButtons);
+            } else {
+                $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+            }
         }
 
         // Stop checking after 3 attempts as WordPress is wiping
         // out these custom buttons in first few attempts.
-        if( loadAttempts >= 3 && 1 === $('#history-toggle').length ) {
+        if (loadAttempts >= 3 && 1 === $('#history-toggle').length) {
             clearInterval(loadIcons);
         }
     }, 2000);
@@ -83,7 +89,7 @@ function fetchComments() {
 
         // If no comment tag exist, remove the loader and temp style tag immediately.
         const span_count = $('.wp-block mdspan').length;
-        if( 0 === span_count ) {
+        if (0 === span_count) {
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
         } else {
@@ -130,7 +136,8 @@ function fetchComments() {
             'action': 'cf_reset_drafts_meta',
             'currentPostID': CurrentPostID,
         };
-        $.post(ajaxurl, data, function () {});
+        $.post(ajaxurl, data, function () {
+        });
     }
 }
 
@@ -162,7 +169,7 @@ function bring_back_comments() {
                 $.each(timestamps, function (el, t) {
                     $('#' + t).removeClass('publish').addClass('reverted_back added');
                     /*taking extra care to display new threads*/
-                    $('head').append('<style>[id="'+t+'"]{display: block !important}</style>');
+                    $('head').append('<style>[id="' + t + '"]{display: block !important}</style>');
                 });
             });
         }
@@ -276,7 +283,7 @@ const mdComment = {
             const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
 
             const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            if( null !== blockAttributes ) {
+            if (null !== blockAttributes) {
                 const {content} = blockAttributes;
                 if ('' !== content) {
                     let tempDiv = document.createElement('div');
@@ -305,7 +312,7 @@ const mdComment = {
             const commentedOnText = text.substring(start, end);
 
             // If text is not selected, show notice.
-            if( start === end ) {
+            if (start === end) {
                 alert('Please select text to comment on.');
                 return;
             }
@@ -333,6 +340,13 @@ const mdComment = {
 
         getSelectedText() {
 
+            const {onChange, value, activeAttributes} = this.props;
+
+            // Ignore unnecessary event calls on hover.
+            if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
+                return;
+            }
+
             // Reset Comments Float.
             jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
             jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
@@ -340,12 +354,11 @@ const mdComment = {
 
             var referenceNode = document.getElementById('md-span-comments');
 
-            const {onChange, value, activeAttributes} = this.props;
 
             // Remove tags if selected tag ID exist in 'remove-comment' attribute of body.
             let removedComments = $('body').attr('remove-comment');
             if (undefined !== activeAttributes.datatext &&
-                ( undefined !== removedComments && removedComments.indexOf(activeAttributes.datatext) !== -1  )
+                (undefined !== removedComments && removedComments.indexOf(activeAttributes.datatext) !== -1)
             ) {
                 onChange(removeFormat(value, name));
             }
@@ -364,8 +377,8 @@ const mdComment = {
                     if (undefined !== selectedText && $('#' + selectedText).length === 0) {
 
                         let removedComments = $('body').attr('remove-comment');
-                        if ( undefined === removedComments ||
-                            ( undefined !== removedComments && removedComments.indexOf(selectedText) === -1 )
+                        if (undefined === removedComments ||
+                            (undefined !== removedComments && removedComments.indexOf(selectedText) === -1)
                         ) {
                             createBoard(selectedText, value, onChange);
                         } else {
@@ -380,9 +393,9 @@ const mdComment = {
 
                 // Delete the popup and its highlight if user
                 // leaves the new popup without adding comment.
-                if ( 1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length ) {
+                if (1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length) {
                     const latestBoard = $('.board.fresh-board').parents('.cls-board-outer').attr('id');
-                    if( selectedText !== latestBoard ) {
+                    if (selectedText !== latestBoard) {
                         this.removeTag(latestBoard);
                         $('#' + latestBoard).remove();
                     }
@@ -411,11 +424,11 @@ const mdComment = {
                 $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
                 // Float comments column.
-                if(undefined !== selectedText) {
+                if (undefined !== selectedText) {
                     //Active comment tab
-                    if ( ! $('#md-tabs .comment').hasClass('active') ) {
-                      $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
-                      $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
+                    if (!$('#md-tabs .comment').hasClass('active')) {
+                        $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
+                        $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
                     }
                     this.floatComments(selectedText);
                 }
@@ -424,13 +437,11 @@ const mdComment = {
         }
 
         floatComments(selectedText) {
-
             if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
                 $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
                 $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
             }
-
         }
 
         removeSuggestion() {
