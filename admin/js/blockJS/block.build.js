@@ -595,13 +595,19 @@ $(window).on('load', function () {
     // Add history button.
     var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
     commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
+
     var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
     var loadIcons = setInterval(function () {
         loadAttempts++;
+
         if (loadAttempts >= 10 || 1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length) {
-            $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+            if (0 === $('.edit-post-header-toolbar__left').length) {
+                $('.edit-post-header-toolbar').append(customButtons);
+            } else {
+                $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+            }
         }
 
         // Stop checking after 3 attempts as WordPress is wiping
