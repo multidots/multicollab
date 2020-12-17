@@ -53,10 +53,10 @@ class Commenting_block_Admin {
 		add_action( 'post_updated', array( $this, 'cf_post_status_changes' ), 10, 3 );
 
 		// Update caps for authors and contributors.
-		add_filter( 'admin_init', array( $this, 'cf_custom_caps') );
+		add_filter( 'admin_init', array( $this, 'cf_custom_caps' ) );
 
 		// Allow caps for Multisite environment.
-		add_filter( 'map_meta_cap', array( $this, 'cf_add_unfiltered_html_capability_to_users'), 1, 3 );
+		add_filter( 'map_meta_cap', array( $this, 'cf_add_unfiltered_html_capability_to_users' ), 1, 3 );
 	}
 
 	/**
@@ -72,6 +72,7 @@ class Commenting_block_Admin {
 		if ( 'unfiltered_html' === $cap && ( user_can( $user_id, 'administrator' ) || user_can( $user_id, 'editor' ) || user_can( $user_id, 'author' ) || user_can( $user_id, 'contributor' ) ) ) {
 			$caps = array( 'unfiltered_html' );
 		}
+
 		return $caps;
 	}
 
@@ -177,7 +178,7 @@ class Commenting_block_Admin {
 					$html    .= '<div class="comment-box"><div class="comment-box-header">';
 					$html    .= '<p>';
 					$html    .= esc_html( $current_user_display_name ) . __( ' has resolved the following thread.', 'content-collaboration-inline-commenting' );
-					$html    .= '</p><a href="' . esc_url( $p_link ) . '" class="comment-page-title">' . esc_html( $p_title ) .'</a></div>';
+					$html    .= '</p><a href="' . esc_url( $p_link ) . '" class="comment-page-title">' . esc_html( $p_title ) . '</a></div>';
 					$html    .= '<div class="comment-box-body">';
 					foreach ( $comments as $timestamp => $arr ) {
 
@@ -211,6 +212,10 @@ class Commenting_block_Admin {
 					if ( ( $key = array_search( $current_user_email, $users_emails, true ) ) !== false ) {
 						unset( $users_emails[ $key ] );
 					}
+
+					// Limit the page and site titles for Subject.
+					$p_title    = $this->cf_limit_characters( $p_title, 30 );
+					$site_title = $this->cf_limit_characters( $site_title, 20 );
 
 					wp_mail( $users_emails, __( "Comment Resolved — $p_title — $site_title", 'content-collaboration-inline-commenting' ), $html, $headers );
 				}
@@ -309,6 +314,16 @@ class Commenting_block_Admin {
 	}
 
 	/**
+	 * @param string $string The string to be limited.
+	 * @param int $limit The total number of characters allowed.
+	 *
+	 * @return string The limited string with '...' appended.
+	 */
+	public function cf_limit_characters( $string, $limit = 100 ) {
+		return strlen( $string ) > $limit ? substr( $string, 0, $limit ) . '...' : $string;
+	}
+
+	/**
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since    1.0.0
@@ -388,7 +403,7 @@ class Commenting_block_Admin {
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $message, $matches );
 
-		if( ! empty( $matches[0] ) ) {
+		if ( ! empty( $matches[0] ) ) {
 			$to        = $matches[0];
 			$subject   = 'You have been mentioned';
 			$body      = $message;
@@ -865,7 +880,7 @@ class Commenting_block_Admin {
 		// Fetch out all user's email
 		$email_list   = [];
 		$system_users = get_users();
-		foreach( $system_users as $user ) {
+		foreach ( $system_users as $user ) {
 			$email_list[] = [
 				'user_email' => $user->user_email
 			];
@@ -883,15 +898,14 @@ class Commenting_block_Admin {
 	public function cf_get_matched_user_email_list() {
 		global $wpdb;
 		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
-		if( ! empty( $niddle ) && '@' !== $niddle ) {
-			$emails = $wpdb->get_results(
+		if ( ! empty( $niddle ) && '@' !== $niddle ) {
+			$emails   = $wpdb->get_results(
 				"SELECT user_email FROM {$wpdb->prefix}users WHERE user_email LIKE '{$niddle}%'"
 			);
 			$response = $emails;
-		} else if( '@' === $niddle ) {
+		} else if ( '@' === $niddle ) {
 			$this->cf_get_user_email_list();
-		}
-		else {
+		} else {
 			$response = '';
 		}
 		echo wp_json_encode( $response );
