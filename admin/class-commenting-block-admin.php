@@ -115,9 +115,10 @@ class Commenting_block_Admin {
 	 */
 	public function cf_post_status_changes( $post_ID, $post, $update ) {
 
-		$p_content = is_object( $post ) ? $post->post_content : $post;
-		$p_link    = get_edit_post_link( $post_ID );
-		$p_title   = get_the_title( $post_ID );
+		$p_content  = is_object( $post ) ? $post->post_content : $post;
+		$p_link     = get_edit_post_link( $post_ID );
+		$p_title    = get_the_title( $post_ID );
+		$site_title = get_bloginfo( 'name' );
 
 		// Publish drafts from the 'current_drafts' stack.
 		$current_drafts = get_post_meta( $post_ID, 'current_drafts', true );
@@ -211,7 +212,7 @@ class Commenting_block_Admin {
 						unset( $users_emails[ $key ] );
 					}
 
-					wp_mail( $users_emails, __( 'Comment Resolved — Gutenberg Editorial Commenting Plugin - Multidots', 'content-collaboration-inline-commenting' ), $html, $headers );
+					wp_mail( $users_emails, __( "Comment Resolved — $p_title — $site_title", 'content-collaboration-inline-commenting' ), $html, $headers );
 				}
 			}
 		}
