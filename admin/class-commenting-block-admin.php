@@ -355,6 +355,11 @@ class Commenting_block_Admin {
 		$commentList = end( $commentList );
 		$metaId      = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
 
+		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
+		preg_match_all($pattern, $commentList['thread'], $matches);
+		var_dump($matches[0]);
+		die();
+
 		// If 'commented on' text is blank, stop process.
 		if ( empty( $commentList['commentedOnText'] ) ) {
 			echo wp_json_encode( array( 'error' => 'Please select text to comment on.' ) );
@@ -794,6 +799,58 @@ class Commenting_block_Admin {
 
 		return rest_ensure_response( $data );
 
+	}
+
+	/**
+	 * Fetch User Email List
+	 */
+	public function cf_get_user_email_list() {
+
+		// Fetch out all user's email
+		$email_list   = [];
+		$system_users = get_users();
+		foreach( $system_users as $user ) {
+			$email_list[] = [
+				'user_email' => $user->user_email
+			];
+		}
+
+		// Sending Response
+		$response = $email_list;
+		echo wp_json_encode( $response );
+		wp_die();
+	}
+
+	/**
+	 * Fetch Matched User Email List
+	 */
+	public function cf_get_matched_user_email_list() {
+		global $wpdb;
+		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
+		if( ! empty( $niddle ) && '@' !== $niddle ) {
+			$emails = $wpdb->get_results(
+				"SELECT user_email FROM {$wpdb->prefix}users WHERE user_email LIKE '{$niddle}%'"
+			);
+			$response = $emails;
+		} else if( '@' === $niddle ) {
+			$this->cf_get_user_email_list();
+		}
+		else {
+			$response = '';
+		}
+		echo wp_json_encode( $response );
+		wp_die();
+	}
+
+	/**
+	 * Sent Email to reciepients
+	 */
+	public function cf_sent_email() {
+
+		$content = $_POST[ 'content' ];
+		die( $content );
+		echo wp_json_encode( 'success' );
+		wp_die();
 	}
 
 }

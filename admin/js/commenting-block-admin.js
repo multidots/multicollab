@@ -112,6 +112,137 @@
             $(this).parent().addClass('hovered');
         });
 
+        // On Share Comment Textarea foucsin event
+        var trackingString = ''
+        $( document.body ).on( 'keyup', '.shareCommentContainer textarea', function(e) {
+            var key     = e.key;
+            var _self   = $( this );
+            var content = $( this ).val();
+            if( '@' === key ) {
+                $.ajax({
+                    url: ajaxurl,
+                    method: 'post',
+                    data: {
+                        action: 'cf_get_user_email_list',
+                        content: content
+                    },
+                    beforeSend: function() {},
+                    success: function( res ) {
+                        $( '.cf-system-user-email-list' ).remove()
+                        function emailList( emails ) {
+
+                            var listItem = '';
+                            emails.forEach( function( email ) {
+                                listItem += `<li>${email.user_email}</li>`
+                            } )
+
+                            var template = `
+                                <ul class="cf-system-user-email-list">
+                                    ${listItem}
+                                </ul>
+                            `;
+
+                            return template;
+                        }
+                        var data = JSON.parse( res )
+                        var emailList = emailList( data )
+                        $( emailList ).insertAfter( _self )
+
+                        // Setting up email address into textarea
+                        $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
+                            var getEmail = $( this ).text();
+                            var cursorPos = _self.prop( 'selectionStart' );
+                            console.log( cursorPos )
+                            var textBefore = content.substring( 0, cursorPos );
+                            var textAfter = content.substring( cursorPos, content.length );
+                            _self.val( `${textBefore}${getEmail}${textAfter} ` )
+                        } )
+
+                    },
+                    error: function( error ) {
+                        // Error Handling
+                    }
+                })
+                trackingString = ''
+            } else if( ' ' == e.key || 'Backspace' == e.key || 'ArrowLeft' == e.key || 'ArrowRight' == e.key ) { // Detecting space
+                $( '.cf-system-user-email-list' ).remove();
+            }
+
+            // After showing the list of
+            // if( 'Shift' !== e.key
+            //     && 'Control' !== e.key
+            //     && 'Alt' !== e.key
+            //     && 'CapsLock' !== e.key
+            //     && 'Meta' !== e.key
+            //     && 'ArrowLeft' == e.key
+            //     && 'ArrowRight' == e.key
+            //     && 'ArrowUp' == e.key
+            //     && 'ArrowDown' == e.key
+            //     ) {
+
+            //     if( 'Backspace' !== e.key ) {
+            //         trackingString += e.key
+            //     } else {
+            //         trackingString = trackingString.slice( 0, -1 )
+            //     }
+            //     console.log( trackingString )
+            //     $.ajax({
+            //         url: ajaxurl,
+            //         type: 'post',
+            //         data: {
+            //             action: 'cf_get_matched_user_email_list',
+            //             niddle: trackingString
+            //         },
+            //         beforeSend: function() {},
+            //         success: function( res ) {
+            //             $( '.cf-system-user-email-list' ).remove();
+            //             function emailList( emails ) {
+
+            //                 var listItem = '';
+            //                 emails.forEach( function( email ) {
+            //                     listItem += `<li>${email.user_email}</li>`
+            //                 } )
+
+            //                 var template = `
+            //                     <ul class="cf-system-user-email-list">
+            //                         ${listItem}
+            //                     </ul>
+            //                 `;
+
+            //                 return template;
+            //             }
+            //             var data = JSON.parse( res )
+            //             if( '' !== data ) {
+            //                 var emailList = emailList( data )
+            //                 $( emailList ).insertAfter( _self )
+            //             } else {
+            //                 $( '.cf-system-user-email-list' ).remove();
+            //             }
+            //         }
+            //     })
+            // }
+
+        } )
+
+        // Sending Email to the reciepients
+        // $( document.body ).on( 'click', '.shareCommentContainer .btn-success', function(e) {
+        //     var content = $( this ).val()
+        //     console.log( content );
+        //     $.ajax({
+        //         url: ajaxurl,
+        //         type: 'post',
+        //         data: {
+        //             action: 'cf_sent_email',
+        //             content: content
+        //         },
+        //         success: function( res ) {
+        //             var data = JSON.parse( res )
+        //             console.log( 'Message Sent' )
+        //         }
+        //     })
+        // } )
+
+
         // History Toggle
         $(document).on('click', '#history-toggle', function () {
             $('#custom-history-popup, #history-toggle').toggleClass('active');
