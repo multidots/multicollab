@@ -381,6 +381,20 @@ class Commenting_block_Admin {
 	}
 
 	/**
+	 * Sent email to the commented recipients
+	 */
+	public function cf_sent_email_to_commented_users( $message ) {
+		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
+		preg_match_all( $pattern, $message, $matches );
+
+		$to        = $matches[0];
+		$subject   = 'You have been mentioned';
+		$body      = $message;
+		$headers[] = 'Content-Type: text/html; charset=UTF-8';
+		wp_mail( $to, $subject, $body );
+	}
+
+	/**
 	 * Add Comment function.
 	 */
 	public function cf_add_comment() {
@@ -394,11 +408,6 @@ class Commenting_block_Admin {
 
 		$commentList = end( $commentList );
 		$metaId      = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
-
-		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
-		preg_match_all($pattern, $commentList['thread'], $matches);
-		var_dump($matches[0]);
-		die();
 
 		// If 'commented on' text is blank, stop process.
 		if ( empty( $commentList['commentedOnText'] ) ) {
@@ -442,6 +451,9 @@ class Commenting_block_Admin {
 		update_post_meta( $current_post_id, $metaId, $superCareerData );
 
 		echo wp_json_encode( array( 'dtTime' => $dtTime, 'timestamp' => $timestamp ) );
+
+		// Sending email
+		$this->cf_sent_email_to_commented_users( $commentList['thread'] );
 		wp_die();
 	}
 
@@ -882,15 +894,5 @@ class Commenting_block_Admin {
 		wp_die();
 	}
 
-	/**
-	 * Sent Email to reciepients
-	 */
-	public function cf_sent_email() {
-
-		$content = $_POST[ 'content' ];
-		die( $content );
-		echo wp_json_encode( 'success' );
-		wp_die();
-	}
 
 }
