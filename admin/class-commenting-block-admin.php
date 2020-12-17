@@ -387,11 +387,14 @@ class Commenting_block_Admin {
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $message, $matches );
 
-		$to        = $matches[0];
-		$subject   = 'You have been mentioned';
-		$body      = $message;
-		$headers[] = 'Content-Type: text/html; charset=UTF-8';
-		wp_mail( $to, $subject, $body );
+		if( ! empty( $matches[0] ) ) {
+			$to        = $matches[0];
+			$subject   = 'You have been mentioned';
+			$body      = $message;
+			$headers[] = 'Content-Type: text/html; charset=UTF-8';
+			wp_mail( $to, $subject, $body );
+		}
+
 	}
 
 	/**
