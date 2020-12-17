@@ -211,7 +211,7 @@ class Commenting_block_Admin {
 						unset( $users_emails[ $key ] );
 					}
 
-					wp_mail( $users_emails, __( 'Comment Resolved | WordPress', 'content-collaboration-inline-commenting' ), $html, $headers );
+					wp_mail( $users_emails, __( 'Comment Resolved — Gutenberg Editorial Commenting Plugin - Multidots', 'content-collaboration-inline-commenting' ), $html, $headers );
 				}
 			}
 		}
