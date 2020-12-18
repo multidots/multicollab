@@ -172,8 +172,12 @@
                 var cursorPos = _self.prop( 'selectionStart' );
                 if( '@' === e.key && true === e.shiftKey ) {
                     var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2 )
-
-                    if( ' @' == prevCharOfEmailSymbol || '' == prevCharOfEmailSymbol ) { // meaning @ is typed at the begining or as independent
+                    console.log( prevCharOfEmailSymbol )
+                    if(
+                        ' @' == prevCharOfEmailSymbol
+                        || '' == prevCharOfEmailSymbol
+                        || '@' == prevCharOfEmailSymbol
+                    ) { // meaning @ is typed at the begining or as independent
                         // fetch the all email list
                         isEmail = true
                         $.ajax({
