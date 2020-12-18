@@ -232,7 +232,7 @@
                                     }
                                 }
                             })
-
+                            console.log( '1: ' + trackingString )
                             // Setting up email address into textarea
                             var cursorPos  = _self.prop( 'selectionStart' );
                             $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
@@ -243,6 +243,7 @@
                                 _self.next( appendTo ).remove();
                                 trackingString = ''
                             } )
+
     
                         },
                         error: function( error ) {
@@ -292,21 +293,23 @@
                                         _self.next( appendTo ).remove();
                                         var data = JSON.parse( res )
                                         var listItem = '';
-                                        data.forEach( function( email ) {
-                                            listItem += `<li>${email.user_email}</li>`
-                                        } )
-                                        var emailList = `
-                                            <ul class="cf-system-user-email-list">
-                                                ${listItem}
-                                            </ul>
-                                        `;
-                                        $( emailList ).insertAfter( _self )
+                                        if( data.length > 0 ) {
+                                            data.forEach( function( email ) {
+                                                listItem += `<li>${email.user_email}</li>`
+                                            } )
+                                            var emailList = `
+                                                <ul class="cf-system-user-email-list">
+                                                    ${listItem}
+                                                </ul>
+                                            `;
+                                            $( emailList ).insertAfter( _self )
+                                        }
                                     }
                                 })
                             }
                         }
                     })
-
+                    console.log( '2: ' + trackingString )
                     // Setting up email address into textarea
                     var cursorPos  = _self.prop( 'selectionStart' );
                     $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
@@ -315,6 +318,7 @@
                         var textAfter  = content.substring( cursorPos, content.length );
                         _self.val( `${textBefore}${getEmail}${textAfter} ` );
                         _self.next( appendTo ).remove();
+                        trackingString = ''
                     } )
                 }
 
