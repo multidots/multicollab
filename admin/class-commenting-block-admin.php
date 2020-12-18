@@ -382,6 +382,9 @@ class Commenting_block_Admin {
 
 	/**
 	 * Sent email to the commented recipients
+	 *
+	 * @param string $message
+	 * @return void
 	 */
 	public function cf_sent_email_to_commented_users( $message ) {
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
