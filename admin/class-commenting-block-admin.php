@@ -901,9 +901,12 @@ class Commenting_block_Admin {
 	public function cf_get_matched_user_email_list() {
 		global $wpdb;
 		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
+		// echo '<pre>';
+		// var_dump( $niddle );
+		// echo '</pre>';
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$emails   = $wpdb->get_results(
-				"SELECT user_email FROM {$wpdb->prefix}users WHERE user_email LIKE '{$niddle}%'"
+				"SELECT user_email FROM {$wpdb->prefix}users WHERE user_email LIKE '%{$niddle}%'"
 			);
 			$response = $emails;
 		} else if ( '@' === $niddle ) {
