@@ -910,6 +910,7 @@ class Commenting_block_Admin {
 	public function cf_get_matched_user_email_list() {
 		global $wpdb;
 		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
+		$niddle = substr( $niddle, 1 );
 		// echo '<pre>';
 		// var_dump( $niddle );
 		// echo '</pre>';die();
