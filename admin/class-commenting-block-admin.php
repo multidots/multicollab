@@ -397,26 +397,6 @@ class Commenting_block_Admin {
 	}
 
 	/**
-	 * Sent email to the commented recipients
-	 *
-	 * @param string $message
-	 * @return void
-	 */
-	public function cf_sent_email_to_commented_users( $message ) {
-		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
-		preg_match_all( $pattern, $message, $matches );
-
-		if ( ! empty( $matches[0] ) ) {
-			$to        = $matches[0];
-			$subject   = 'You have been mentioned';
-			$body      = $message;
-			$headers[] = 'Content-Type: text/html; charset=UTF-8';
-			wp_mail( $to, $subject, $body );
-		}
-
-	}
-
-	/**
 	 * Add Comment function.
 	 */
 	public function cf_add_comment() {
@@ -473,9 +453,6 @@ class Commenting_block_Admin {
 		update_post_meta( $current_post_id, $metaId, $superCareerData );
 
 		echo wp_json_encode( array( 'dtTime' => $dtTime, 'timestamp' => $timestamp ) );
-
-		// Sending email
-		$this->cf_sent_email_to_commented_users( $commentList['thread'] );
 		wp_die();
 	}
 
@@ -874,49 +851,5 @@ class Commenting_block_Admin {
 		return rest_ensure_response( $data );
 
 	}
-
-	/**
-	 * Fetch User Email List
-	 */
-	public function cf_get_user_email_list() {
-
-		// Fetch out all user's email
-		$email_list   = [];
-		$system_users = get_users();
-		foreach ( $system_users as $user ) {
-			$email_list[] = [
-				'user_email' => $user->user_email
-			];
-		}
-
-		// Sending Response
-		$response = $email_list;
-		echo wp_json_encode( $response );
-		wp_die();
-	}
-
-	/**
-	 * Fetch Matched User Email List
-	 */
-	public function cf_get_matched_user_email_list() {
-		global $wpdb;
-		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
-		// echo '<pre>';
-		// var_dump( $niddle );
-		// echo '</pre>';
-		if ( ! empty( $niddle ) && '@' !== $niddle ) {
-			$emails   = $wpdb->get_results(
-				"SELECT user_email FROM {$wpdb->prefix}users WHERE user_email LIKE '%{$niddle}%'"
-			);
-			$response = $emails;
-		} else if ( '@' === $niddle ) {
-			$this->cf_get_user_email_list();
-		} else {
-			$response = '';
-		}
-		echo wp_json_encode( $response );
-		wp_die();
-	}
-
 
 }
