@@ -416,6 +416,13 @@ class Commenting_block_Admin {
 
 	}
 
+	public function convert_str_to_email( $str ) {
+		$mail_pattern = "/([A-z0-9\._-]+\@[A-z0-9_-]+\.)([A-z0-9\_\-\.]{1,}[A-z])/";
+		$formatted = preg_replace( $mail_pattern, '<a href="mailto:$1$2">$1$2</a>', $str );
+
+		return $formatted;
+	}
+
 	/**
 	 * Add Comment function.
 	 */
@@ -430,6 +437,8 @@ class Commenting_block_Admin {
 
 		$commentList = end( $commentList );
 		$metaId      = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
+
+		// $commentList['thread'] = $this->convert_str_to_email( $commentList['thread'] );
 
 		// If 'commented on' text is blank, stop process.
 		if ( empty( $commentList['commentedOnText'] ) ) {
@@ -903,7 +912,7 @@ class Commenting_block_Admin {
 		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
 		// echo '<pre>';
 		// var_dump( $niddle );
-		// echo '</pre>';
+		// echo '</pre>';die();
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$emails   = $wpdb->get_results(
 				"SELECT user_email FROM {$wpdb->prefix}users WHERE user_email LIKE '%{$niddle}%'"

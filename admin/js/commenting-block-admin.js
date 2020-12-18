@@ -113,35 +113,50 @@
         });
 
         // Email List Template Function
-        function emailList( emails ) {
+        var emailList = function( _self, data ) {
             var listItem = '';
-            emails.forEach( function( email ) {
-                listItem += `<li>${email.user_email}</li>`
+            if( data.length > 0 ) {
+                data.forEach( function( email ) {
+                    listItem += `<li>${email.user_email}</li>`
+                } )
+
+                var emailList = `
+                    <ul class="cf-system-user-email-list">
+                        ${listItem}
+                    </ul>
+                `;
+
+                $( emailList ).insertAfter( _self )
+            }
+        }
+
+        // Appening Email On Textarea
+        var appendEmailOnTextarea = function( _self, content, appendTo, trackingString ) {
+            var cursorPos  = _self.prop( 'selectionStart' );
+            $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
+                var getEmail   = $( this ).text();
+                var textBefore = content.substring( 0, cursorPos );
+                var textAfter  = content.substring( cursorPos, content.length );
+                _self.val( `${textBefore}${getEmail}${textAfter} ` );
+                _self.next( appendTo ).remove();
+                trackingString = ''
             } )
-
-            var template = `
-                <ul class="cf-system-user-email-list">
-                    ${listItem}
-                </ul>
-            `;
-
-            return template;
         }
 
         // On Share Comment Textarea foucsin event
         $( document.body ).on( 'keyup', '.shareCommentContainer textarea', function(e) {
-            var _self   = $( this );
-            var content = $( this ).val();
-            var appendTo = '.cf-system-user-email-list'
-
+            var _self          = $( this );
+            var content        = $( this ).val();
+            var appendTo       = '.cf-system-user-email-list'
+            var trackingString = ''
 
             // If textarea is empty then remove the appender
             if( '' === content ) {
                 $( this ).next( appendTo ).remove();
             }
-            var trackingString = ''
+
             // If e.key value is @
-            if( '@' === e.key ) {
+            if( '@' === e.key && true === e.shiftKey ) {
                 var currentCursorPos = _self.prop( 'selectionStart' );
                 var prevText = content.substring( currentCursorPos - 2, currentCursorPos - 1 )
                 if( '' == prevText || ' ' == prevText ) {
@@ -156,20 +171,9 @@
                         success: function( res ) {
                             _self.next( appendTo ).remove()
                             var data      = JSON.parse( res )
-                            var listItem = '';
-                            if( data.length > 0 ) {
-                                data.forEach( function( email ) {
-                                    listItem += `<li>${email.user_email}</li>`
-                                } )
-    
-                                var emailList = `
-                                    <ul class="cf-system-user-email-list">
-                                        ${listItem}
-                                    </ul>
-                                `;
-                                // var emailList = emailList( data )
-                                $( emailList ).insertAfter( _self )
-                            }
+
+                            // Showing Email List
+                            emailList( _self, data )
 
                             // Strat Traking the content
                             $( document.body ).on( 'keyup', '.shareCommentContainer textarea', function(e) {
@@ -192,8 +196,11 @@
                                 ) {
         
                                     if( 'Backspace' === e.key ) {
+                                        if( '' == _self.val() ) {
+                                            trackingString = ''
+                                        }
                                         trackingString = trackingString.slice( 0, -1 )
-                                    } else if( '@' === e.key ) {
+                                    } else if( '@' === e.key && true === e.shiftKey ) {
                                         var currentCursorPos = _self.prop( 'selectionStart' );
                                         var prevText = currentContent.substring( currentCursorPos - 2, currentCursorPos - 1 )
                                         if( '' == prevText || ' ' == prevText ) {
@@ -215,44 +222,24 @@
                                             success: function( res ) {
                                                 _self.next( appendTo ).remove();
                                                 var data = JSON.parse( res )
-                                                var listItem = '';
-                                                if( data.length > 0 ) {
-                                                    data.forEach( function( email ) {
-                                                        listItem += `<li>${email.user_email}</li>`
-                                                    } )
-                                                    var emailList = `
-                                                        <ul class="cf-system-user-email-list">
-                                                            ${listItem}
-                                                        </ul>
-                                                    `;
-                                                    $( emailList ).insertAfter( _self )
-                                                }
+                                                // Showing Email List
+                                                emailList( _self, data )
                                             }
                                         })
                                     }
                                 }
                             })
-                            console.log( '1: ' + trackingString )
                             // Setting up email address into textarea
-                            var cursorPos  = _self.prop( 'selectionStart' );
-                            $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
-                                var getEmail   = $( this ).text();
-                                var textBefore = content.substring( 0, cursorPos );
-                                var textAfter  = content.substring( cursorPos, content.length );
-                                _self.val( `${textBefore}${getEmail}${textAfter} ` );
-                                _self.next( appendTo ).remove();
-                                trackingString = ''
-                            } )
-
-    
+                            appendEmailOnTextarea( _self, content, appendTo, trackingString );
                         },
                         error: function( error ) {
                             // Error Handling
                         }
                     })
                 } else {
+                    var currentContent = ''
                     $( document.body ).on( 'keyup', '.shareCommentContainer textarea', function(e) {
-                        var currentContent = $( this ).val()
+                        currentContent = $( this ).val()
                         if( '' == currentContent ) {
                             trackingString = ''
                         }
@@ -270,11 +257,14 @@
                         ) {
 
                             if( 'Backspace' === e.key ) {
+                                if( '' == _self.val() ) {
+                                    trackingString = ''
+                                }
                                 trackingString = trackingString.slice( 0, -1 )
-                            } else if( '@' === e.key ) {
+                            } else if( '@' === e.key && true === e.shiftKey ) {
                                 var currentCursorPos = _self.prop( 'selectionStart' );
                                 var prevText = currentContent.substring( currentCursorPos - 2, currentCursorPos - 1 )
-                                if( '' == prevText ) {
+                                if( '' == prevText || ' ' == prevText ) {
                                     trackingString = ''
                                 }
                             } else {
@@ -292,42 +282,25 @@
                                     success: function( res ) {
                                         _self.next( appendTo ).remove();
                                         var data = JSON.parse( res )
-                                        var listItem = '';
-                                        if( data.length > 0 ) {
-                                            data.forEach( function( email ) {
-                                                listItem += `<li>${email.user_email}</li>`
-                                            } )
-                                            var emailList = `
-                                                <ul class="cf-system-user-email-list">
-                                                    ${listItem}
-                                                </ul>
-                                            `;
-                                            $( emailList ).insertAfter( _self )
-                                        }
+                                        // Showing Email List
+                                        emailList( _self, data )
                                     }
                                 })
                             }
                         }
                     })
-                    console.log( '2: ' + trackingString )
                     // Setting up email address into textarea
-                    var cursorPos  = _self.prop( 'selectionStart' );
-                    $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
-                        var getEmail   = $( this ).text();
-                        var textBefore = content.substring( 0, cursorPos );
-                        var textAfter  = content.substring( cursorPos, content.length );
-                        _self.val( `${textBefore}${getEmail}${textAfter} ` );
-                        _self.next( appendTo ).remove();
-                        trackingString = ''
-                    } )
+                    appendEmailOnTextarea( _self, content, appendTo, trackingString );
                 }
 
-            } else if( ' ' == e.key || 'Backspace' == e.key || 'ArrowLeft' == e.key || 'ArrowRight' == e.key ) { // Detecting space
+            } else if(
+                ' ' == e.key
+                || 'Backspace' == e.key
+                || 'ArrowLeft' == e.key
+                || 'ArrowRight' == e.key
+            ) { // Detecting space
                 $( '.cf-system-user-email-list' ).remove();
             }
-
-
-
         } )
 
         // History Toggle
