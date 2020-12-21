@@ -110,6 +110,10 @@ export default class Comment extends React.Component {
     }
 
     renderNormalMode() {
+
+        // Display the textarea for new comments.
+        jQuery('.cls-board-outer.focus .shareCommentContainer').show();
+
         const {index} = this.props;
         const commentStatus = this.props.status ? this.props.status : 'draft';
 
@@ -166,6 +170,10 @@ export default class Comment extends React.Component {
     }
 
     renderEditingMode() {
+
+        // Hide the textarea for new comments.
+        jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
+
         return (
             <div className="commentContainer" id={this.props.timestamp}>
                 <div className="comment-header">

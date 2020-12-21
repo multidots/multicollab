@@ -1653,6 +1653,10 @@ var Comment = function (_React$Component) {
     }, {
         key: 'renderNormalMode',
         value: function renderNormalMode() {
+
+            // Display the textarea for new comments.
+            jQuery('.cls-board-outer.focus .shareCommentContainer').show();
+
             var index = this.props.index;
 
             var commentStatus = this.props.status ? this.props.status : 'draft';
@@ -1754,6 +1758,9 @@ var Comment = function (_React$Component) {
         key: 'renderEditingMode',
         value: function renderEditingMode() {
             var _this2 = this;
+
+            // Hide the textarea for new comments.
+            jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
 
             return wp.element.createElement(
                 'div',

@@ -294,7 +294,7 @@ class Commenting_block_Admin {
 		// Flush Current Drafts Stack.
 		update_post_meta( $post_ID, 'current_drafts', '' );
 
-		// New Comments from past should be moved to'permanent_drafts'.
+		// New Comments from past should be moved to 'permanent_drafts'.
 		$permanent_drafts = get_post_meta( $post_ID, 'permanent_drafts', true );
 		$permanent_drafts = maybe_unserialize( $permanent_drafts );
 		if ( isset( $permanent_drafts['comments'] ) && 0 !== count( $permanent_drafts['comments'] ) ) {
@@ -505,49 +505,48 @@ class Commenting_block_Admin {
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['profileURL']        = $profile_url;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dtTime']            = $dtTime;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = 'resolved thread';
+				}
 
-				} else {
+				$comment_count = 0;
+				foreach ( $comments as $timestamp => $c ) {
 
-					$comment_count = 0;
-					foreach ( $comments as $timestamp => $c ) {
+					$cstatus        = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
+					$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
+					$comment_status = isset( $c['status'] ) ? $c['status'] : '';
+					$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
 
-						$cstatus        = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
-						$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
-						$comment_status = isset( $c['status'] ) ? $c['status'] : '';
-						$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
-
-						// Stop displaying history of comments in draft mode.
-						if ( 'draft' === $comment_status ) {
-							continue;
-						}
-
-						$udata = $c['userData'];
-
-						if ( ! array_key_exists( $udata, $userData ) ) {
-							$user_info = get_userdata( $udata );
-
-							$userData[ $udata ]['username']   = $username = $user_info->display_name;
-							$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-						} else {
-							$username    = $userData[ $udata ]['username'];
-							$profile_url = $userData[ $udata ]['profileURL'];
-						}
-
-						$thread = $c['thread'];
-						if ( ! empty( $timestamp ) ) {
-							$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
-						}
-
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $cstatus;
-						$comment_count ++;
-						$total_comments ++;
+					// Stop displaying history of comments in draft mode.
+					if ( 'draft' === $comment_status ) {
+						continue;
 					}
+
+					$udata = $c['userData'];
+
+					if ( ! array_key_exists( $udata, $userData ) ) {
+						$user_info = get_userdata( $udata );
+
+						$userData[ $udata ]['username']   = $username = $user_info->display_name;
+						$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
+					} else {
+						$username    = $userData[ $udata ]['username'];
+						$profile_url = $userData[ $udata ]['profileURL'];
+					}
+
+					$thread = $c['thread'];
+					if ( ! empty( $timestamp ) ) {
+						$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
+					}
+
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $cstatus;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['resolved']          = $resolved;
+					$comment_count ++;
+					$total_comments ++;
 				}
 			}
 		}
@@ -576,7 +575,7 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-title'>
 									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span> ";
 
-					if ( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] ) {
+					if ( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] || 'true' === $c['resolved'] ) {
 						$html .= esc_html( $commented_on_text );
 					} else {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>";

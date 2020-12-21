@@ -89,10 +89,20 @@
 
         // Scroll to the commented text and its popup from History Popup.
         $(document).on('click', '.user-comented-on', function (e) {
-            $('#custom-history-popup, #history-toggle').toggleClass('active');
+            $('#custom-history-popup, #history-toggle, .custom-buttons').toggleClass('active');
             e.preventDefault();
 
             const dataid = $(this).attr('data-id');
+
+            $('#' + dataid).offset({top: $('[datatext="' + dataid + '"]').offset().top});
+
+            // Trigger card click to focus.
+            $('#' + dataid).trigger('click');
+
+            $('[datatext="' + dataid + '"]').addClass('focus');
+            setTimeout(function () {
+                $('[datatext="' + dataid + '"]').removeClass('focus');
+            }, 1500);
 
             if (0 !== $("#" + dataid).length) {
                 const topOfPopup = $("#" + dataid).offset().top
@@ -100,12 +110,6 @@
                     scrollTop: topOfPopup
                 }, 1000);
             }
-
-            $('#' + dataid + ', [datatext="' + dataid + '"]').addClass('focus');
-            setTimeout(function () {
-                $('[datatext="' + dataid + '"]').removeClass('focus');
-            }, 1500);
-
         });
 
         $('.shareCommentContainer textarea').on('click', function () {
