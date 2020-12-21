@@ -416,6 +416,12 @@ class Commenting_block_Admin {
 
 	}
 
+	/**
+	 * Convert string to linkable email
+	 *
+	 * @param string $str
+	 * @return string
+	 */
 	public function convert_str_to_email( $str ) {
 		$mail_pattern = "/([A-z0-9\._-]+\@[A-z0-9_-]+\.)([A-z0-9\_\-\.]{1,}[A-z])/";
 		$formatted = preg_replace( $mail_pattern, '<a href="mailto:$1$2">$1$2</a>', $str );
@@ -438,7 +444,8 @@ class Commenting_block_Admin {
 		$commentList = end( $commentList );
 		$metaId      = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
 
-		// $commentList['thread'] = $this->convert_str_to_email( $commentList['thread'] );
+		// Adding link to email addresses
+		$commentList['thread'] = $this->convert_str_to_email( $commentList['thread'] );
 
 		// If 'commented on' text is blank, stop process.
 		if ( empty( $commentList['commentedOnText'] ) ) {
@@ -652,6 +659,8 @@ class Commenting_block_Admin {
 		$edited_comment = filter_input( INPUT_POST, "editedComment" );
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );
+
+		$edited_comment['thread'] = $this->convert_str_to_email( $edited_comment['thread'] );
 
 		$old_timestamp = $edited_comment['timestamp'];
 
@@ -911,9 +920,6 @@ class Commenting_block_Admin {
 		global $wpdb;
 		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
 		$niddle = substr( $niddle, 1 );
-		// echo '<pre>';
-		// var_dump( $niddle );
-		// echo '</pre>';die();
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$emails   = $wpdb->get_results(
 				"SELECT user_email FROM {$wpdb->prefix}users WHERE user_email LIKE '%{$niddle}%'"

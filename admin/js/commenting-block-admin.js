@@ -132,7 +132,7 @@
             }
         }
 
-        // @mentioning email features
+        // Create @mentioning email features
         var createAutoEmailMention = function() {
             var createTextarea = '.shareCommentContainer textarea';
             var typedText = ''
@@ -239,6 +239,130 @@
             } )
         }
         createAutoEmailMention();
+
+        // Email List Template Function
+        var emailListForEdit = function( _self, data ) {
+            var listItem = '';
+            if( data.length > 0 ) {
+                data.forEach( function( email ) {
+                    listItem += `<li>${email.user_email}</li>`
+                } )
+
+                var emailList = `
+                    <ul class="cf-edit-system-user-email-list">
+                        ${listItem}
+                    </ul>
+                `;
+
+                $( emailList ).insertAfter( _self )
+            }
+        }
+
+        // Edit @mentioning email features
+        var editAutoEmailMention = function() {
+            var editTextarea = '.commentContainer .commentText textarea';
+            var typedText = ''
+            var trackedStr = ''
+            var isEmail = false;
+            var appendIn = '.cf-edit-system-user-email-list'
+            var keysToAvoid = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
+            $( document.body ).on( 'keyup', editTextarea, function(e) {
+                var _self = $( this )
+                typedText = _self.val()
+
+                // If textarea is blank then remove email list
+                if( '' == typedText ) {
+                    $( appendIn ).remove();
+                }
+
+                // Handeling space. As if someone type space has no intension to write email.
+                // So we make isEmail false and trackedStr to blank
+                if( '' === e.key || ' ' === e.key ) {
+                    isEmail = false;
+                    trackedStr = '';
+                }
+
+                var cursorPos = _self.prop( 'selectionStart' );
+                if( '@' === e.key && true === e.shiftKey ) {
+                    var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2 )
+
+                    if(
+                        ' @' == prevCharOfEmailSymbol
+                        || '' == prevCharOfEmailSymbol
+                        || '@' == prevCharOfEmailSymbol
+                    ) { // meaning @ is typed at the begining or as independent
+                        // fetch the all email list
+                        isEmail = true
+                        $.ajax({
+                            url: ajaxurl,
+                            type: 'post',
+                            data: {
+                                action: 'cf_get_user_email_list',
+                            },
+                            beforeSend: function() {},
+                            success: function( res ) {
+                                $( appendIn ).remove(); // Remove previous DOM
+                                var data = JSON.parse( res );
+                                emailListForEdit( _self, data )
+                            }
+                        })
+                    } else { // Meaning @ is typed inside an email address
+                        // do nothing
+                    }
+                }
+
+                if( true == isEmail ) {
+                    var checkKeys = function( key ) {
+                        if( key === e.key ) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    if( ! keysToAvoid.find( checkKeys ) ) {
+                        if( 'Backspace' === e.key ) {
+                            trackedStr = trackedStr.slice( 0, -1 )
+                        } else {
+                            trackedStr += e.key
+                        }
+
+                        if( '@' !== trackedStr ) {
+                            // Sending Ajax Call to get the matched email list(s)
+                            $.ajax({
+                                url: ajaxurl,
+                                type: 'post',
+                                data: {
+                                    action: 'cf_get_matched_user_email_list',
+                                    niddle: trackedStr
+                                },
+                                beforeSend: function() {},
+                                success: function( res ) {
+                                    $( appendIn ).remove(); // Removing previous DOM
+                                    var data = JSON.parse( res );
+                                    emailListForEdit( _self, data )
+                                }
+                            })
+                        }
+                    }
+                }
+            } )
+            // Append email in textarea
+            $( document.body ).on( 'click', '.cf-edit-system-user-email-list li', function(e) {
+                var cursorPos = $( editTextarea ).prop( 'selectionStart' );
+                e.stopPropagation();
+                var email            = $( this ).text();
+                var trackedStrLength = trackedStr.length - 1; // Calculating length without @
+                if( trackedStrLength > 0 ) {
+                    email = email.slice( trackedStrLength );
+                }
+                var textBeforeEmail  = typedText.substr( 0, cursorPos );
+                var textAfterEmail   = typedText.substr( cursorPos, cursorPos.length )
+                var refinedContent   = `${textBeforeEmail}${email}${textAfterEmail} `;
+                $( this ).parents( 'ul' ).prev().val( refinedContent );
+                $( appendIn ).remove();
+                trackedStr = '';
+            } )
+        }
+        editAutoEmailMention();
 
         // History Toggle
         $(document).on('click', '#history-toggle', function () {

@@ -1,6 +1,7 @@
 const {Fragment} = wp.element;
 import React from 'react'
 import PropTypes from 'prop-types';
+import renderHTML from 'react-render-html'
 
 export default class Comment extends React.Component {
 
@@ -158,7 +159,7 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                    <span className='readlessTxt readMoreSpan active'>{str} {'' !== readmoreStr && <a className='readmoreComment' href='javascript:void(0)'>show more</a>}</span>
+                    <span className='readlessTxt readMoreSpan active'>{renderHTML(str)} {'' !== readmoreStr && <a className='readmoreComment' href='javascript:void(0)'>show more</a>}</span>
                     <span className='readmoreTxt readMoreSpan'>{readmoreStr} {'' !== readmoreStr && <a className='readlessComment' href='javascript:void(0)'>show less</a>}</span>
                 </div>
             </div>
