@@ -444,9 +444,6 @@ class Commenting_block_Admin {
 		$commentList = end( $commentList );
 		$metaId      = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
 
-		// Adding link to email addresses
-		$commentList['thread'] = $this->convert_str_to_email( $commentList['thread'] );
-
 		// If 'commented on' text is blank, stop process.
 		if ( empty( $commentList['commentedOnText'] ) ) {
 			echo wp_json_encode( array( 'error' => 'Please select text to comment on.' ) );
@@ -660,8 +657,6 @@ class Commenting_block_Admin {
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );
 
-		$edited_comment['thread'] = $this->convert_str_to_email( $edited_comment['thread'] );
-
 		$old_timestamp = $edited_comment['timestamp'];
 
 		$commentListOld = get_post_meta( $current_post_id, $metaId, true );
@@ -681,7 +676,8 @@ class Commenting_block_Admin {
 		$current_drafts['edited'][ $metaId ][] = $old_timestamp;
 
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
-
+		// Sending email
+		$this->cf_sent_email_to_commented_users( $edited_comment['thread'] );
 		wp_die();
 	}
 
@@ -897,10 +893,15 @@ class Commenting_block_Admin {
 	 * Fetch User Email List
 	 */
 	public function cf_get_user_email_list() {
+		// WP User Query
+		$args = [
+			'number' => 10
+		];
+		$users = new WP_User_Query( $args );
 
 		// Fetch out all user's email
 		$email_list   = [];
-		$system_users = get_users();
+		$system_users = $users->get_results();
 		foreach ( $system_users as $user ) {
 			$email_list[] = [
 				'user_email' => $user->user_email

@@ -30,8 +30,8 @@ export default class Comment extends React.Component {
     }
 
     save(event) {
-
         var newText = this.newText.value;
+
         if ('' === newText) {
             alert("Please write a comment to share!");
             return false;
@@ -122,6 +122,8 @@ export default class Comment extends React.Component {
         }
 
         let str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
+        str     = str.replace( /([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4})/ig, '<a href="mailto:$1">$1</a>' );
+
         let readmoreStr = '';
         const maxLength = 100;
         if(maxLength < str.length) {
@@ -159,8 +161,8 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                    <span className='readlessTxt readMoreSpan active'>{renderHTML(str)} {'' !== readmoreStr && <a className='readmoreComment' href='javascript:void(0)'>show more</a>}</span>
-                    <span className='readmoreTxt readMoreSpan'>{readmoreStr} {'' !== readmoreStr && <a className='readlessComment' href='javascript:void(0)'>show less</a>}</span>
+                    <span className='readlessTxt readMoreSpan active'>{renderHTML(str)} {'' !== readmoreStr && <a className='readmoreComment' href=''>show more</a>}</span>
+                    <span className='readmoreTxt readMoreSpan'>{renderHTML(readmoreStr)} {'' !== readmoreStr && <a className='readlessComment' href=''>show less</a>}</span>
                 </div>
             </div>
         );

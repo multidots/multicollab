@@ -284,8 +284,7 @@
 
                 var cursorPos = _self.prop( 'selectionStart' );
                 if( '@' === e.key && true === e.shiftKey ) {
-                    var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2 )
-
+                    var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2, 2 )
                     if(
                         ' @' == prevCharOfEmailSymbol
                         || '' == prevCharOfEmailSymbol

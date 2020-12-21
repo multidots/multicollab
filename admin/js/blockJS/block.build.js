@@ -13905,8 +13905,8 @@ var Comment = function (_React$Component) {
     }, {
         key: 'save',
         value: function save(event) {
-
             var newText = this.newText.value;
+
             if ('' === newText) {
                 alert("Please write a comment to share!");
                 return false;
@@ -14004,6 +14004,8 @@ var Comment = function (_React$Component) {
             }
 
             var str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
+            str = str.replace(/([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4})/ig, '<a href="mailto:$1">$1</a>');
+
             var readmoreStr = '';
             var maxLength = 100;
             if (maxLength < str.length) {
@@ -14071,18 +14073,18 @@ var Comment = function (_React$Component) {
                         ' ',
                         '' !== readmoreStr && wp.element.createElement(
                             'a',
-                            { className: 'readmoreComment', href: 'javascript:void(0)' },
+                            { className: 'readmoreComment', href: '' },
                             'show more'
                         )
                     ),
                     wp.element.createElement(
                         'span',
                         { className: 'readmoreTxt readMoreSpan' },
-                        readmoreStr,
+                        __WEBPACK_IMPORTED_MODULE_2_react_render_html___default()(readmoreStr),
                         ' ',
                         '' !== readmoreStr && wp.element.createElement(
                             'a',
-                            { className: 'readlessComment', href: 'javascript:void(0)' },
+                            { className: 'readlessComment', href: '' },
                             'show less'
                         )
                     )
