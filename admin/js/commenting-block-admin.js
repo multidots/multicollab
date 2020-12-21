@@ -132,19 +132,6 @@
             }
         }
 
-        // Appening Email On Textarea
-        // var appendEmailOnTextarea = function( _self, content, appendTo, trackingString ) {
-        //     var cursorPos  = _self.prop( 'selectionStart' );
-        //     $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
-        //         var getEmail   = $( this ).text();
-        //         var textBefore = content.substring( 0, cursorPos );
-        //         var textAfter  = content.substring( cursorPos, content.length );
-        //         _self.val( `${textBefore}${getEmail}${textAfter} ` );
-        //         _self.next( appendTo ).remove();
-        //         trackingString = ''
-        //     } )
-        // }
-
         // @mentioning email features
         var createAutoEmailMention = function() {
             var createTextarea = '.shareCommentContainer textarea';
@@ -172,7 +159,7 @@
                 var cursorPos = _self.prop( 'selectionStart' );
                 if( '@' === e.key && true === e.shiftKey ) {
                     var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2 )
-                    console.log( prevCharOfEmailSymbol )
+
                     if(
                         ' @' == prevCharOfEmailSymbol
                         || '' == prevCharOfEmailSymbol
@@ -231,18 +218,24 @@
                         }
                     }
 
-                    // Append email in textarea
-                    $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
-                        var email            = $( this ).text();
-                        var trackedStrLength = trackedStr.length - 1; // Calculating length without @
-                        email                = email.slice( trackedStrLength );
-                        var textBeforeEmail  = typedText.substr( 0, cursorPos );
-                        var textAfterEmail   = typedText.substr( cursorPos, cursorPos.length )
-                        var refinedContent   = `${textBeforeEmail}${email}${textAfterEmail} `;
-                        _self.val( refinedContent );
-                        $( appendIn ).remove();
-                    } )
+
                 }
+            } )
+            // Append email in textarea
+            $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
+                var cursorPos = $( createTextarea ).prop( 'selectionStart' );
+                e.stopPropagation();
+                var email            = $( this ).text();
+                var trackedStrLength = trackedStr.length - 1; // Calculating length without @
+                if( trackedStrLength > 0 ) {
+                    email = email.slice( trackedStrLength );
+                }
+                var textBeforeEmail  = typedText.substr( 0, cursorPos );
+                var textAfterEmail   = typedText.substr( cursorPos, cursorPos.length )
+                var refinedContent   = `${textBeforeEmail}${email}${textAfterEmail} `;
+                $( createTextarea ).val( refinedContent );
+                $( appendIn ).remove();
+                trackedStr = '';
             } )
         }
         createAutoEmailMention();
