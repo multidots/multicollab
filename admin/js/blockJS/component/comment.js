@@ -167,6 +167,8 @@ export default class Comment extends React.Component {
     }
 
     renderEditingMode() {
+        let textareaValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
+        let refinedString = textareaValue.replace( /<[^>]+>/g, '' );
         return (
             <div className="commentContainer" id={this.props.timestamp}>
                 <div className="comment-header">
@@ -180,11 +182,11 @@ export default class Comment extends React.Component {
                 </div>
                 <div className="commentText">
                   <textarea
-                      ref={(input) => {
-                          this.newText = input;
-                      }}
-                      onChange={this.handleChange}
-                      defaultValue={this.state.showEditedDraft ? this.props.editedDraft : this.props.children}>
+                        ref={(input) => {
+                            this.newText = input;
+                        }}
+                        onChange={this.handleChange}
+                        defaultValue={ refinedString }>
                   </textarea>
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">

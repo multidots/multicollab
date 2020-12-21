@@ -14094,6 +14094,8 @@ var Comment = function (_React$Component) {
         value: function renderEditingMode() {
             var _this2 = this;
 
+            var textareaValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
+            var refinedString = textareaValue.replace(/<[^>]+>/g, '');
             return wp.element.createElement(
                 'div',
                 { className: 'commentContainer', id: this.props.timestamp },
@@ -14132,7 +14134,7 @@ var Comment = function (_React$Component) {
                             _this2.newText = input;
                         },
                         onChange: this.handleChange,
-                        defaultValue: this.state.showEditedDraft ? this.props.editedDraft : this.props.children })
+                        defaultValue: refinedString })
                 ),
                 wp.element.createElement(
                     'button',
