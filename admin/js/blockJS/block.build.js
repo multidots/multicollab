@@ -1416,13 +1416,18 @@ var Board = function (_React$Component) {
     }, {
         key: 'cancelComment',
         value: function cancelComment() {
+
+            // Reset Comments Float.
+            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
+            jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
+            jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+
             var _props2 = this.props,
                 datatext = _props2.datatext,
                 onChanged = _props2.onChanged,
                 lastVal = _props2.lastVal;
 
             var name = 'multidots/comment';
-            jQuery('#' + datatext).removeClass('focus');
 
             if (0 === jQuery('#' + datatext + ' .boardTop .commentContainer').length) {
                 onChanged(removeFormat(lastVal, name));
@@ -1592,8 +1597,6 @@ var Comment = function (_React$Component) {
 
             if (confirm('Are you sure you want to delete this comment ?')) {
                 var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-                //	var elID = event.currentTarget.parentElement.parentElement.parentElement.id;
-
                 this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
             }
         }

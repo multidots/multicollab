@@ -44,9 +44,7 @@ export default class Comment extends React.Component {
     remove(event) {
 
         if (confirm('Are you sure you want to delete this comment ?')) {
-            var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-            //	var elID = event.currentTarget.parentElement.parentElement.parentElement.id;
-
+            const elID = jQuery(event.currentTarget).closest('.cls-board-outer');
             this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
         }
     }

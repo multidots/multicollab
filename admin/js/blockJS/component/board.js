@@ -304,9 +304,14 @@ export default class Board extends React.Component {
     }
 
     cancelComment() {
+
+        // Reset Comments Float.
+        jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
+        jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
+        jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+
         const {datatext, onChanged, lastVal} = this.props;
         const name = 'multidots/comment';
-        jQuery('#'+ datatext).removeClass('focus');
 
         if ( 0 === jQuery('#'+ datatext + ' .boardTop .commentContainer').length ) {
             onChanged(removeFormat(lastVal, name));

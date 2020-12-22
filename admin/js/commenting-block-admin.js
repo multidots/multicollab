@@ -45,7 +45,12 @@
         });
 
         // Focus comment popup on click.
-        $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function () {
+        $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function (e) {
+
+            var target = $(e.target), article;
+            if( 'dashicons dashicons-trash' === target[0].className ) {
+                return;
+            }
 
             const _this = $(this);
 
