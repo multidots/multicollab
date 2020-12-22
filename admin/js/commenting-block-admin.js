@@ -381,8 +381,9 @@
             } )
             // Append email in textarea
             $( document.body ).on( 'click', '.cf-edit-system-user-email-list li', function(e) {
-                e.stopPropagation();
+                // e.stopPropagation();
                 var email            = $( this ).data('email');
+                console.log( email )
                 var cursorPos        = $( editTextarea ).prop( 'selectionStart' );
                 var trackedStrLength = trackedStr.length - 1; // Calculating length without @
 
@@ -394,7 +395,7 @@
                 var textAfterEmail   = typedText.substr( cursorPos, cursorPos.length )
                 var refinedContent   = `${textBeforeEmail}${email}${textAfterEmail} `;
 
-                $( this ).parents( 'ul' ).prev().val( refinedContent );
+                $( this ).parents( '.cf-mentioned-user-popup' ).prev().val( refinedContent );
                 $( appendIn ).remove();
                 trackedStr = '';
             } )
