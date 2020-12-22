@@ -1104,7 +1104,7 @@ del[data-rich-text-format-boundary="true"] {
     right: 320px;
 }
 .components-notice-list {
-    z-index: 999;
+    z-index: 9999;
 }
 .components-notice-list:not(:empty) ~ div #md-comments-suggestions-parent {
     z-index: 999;

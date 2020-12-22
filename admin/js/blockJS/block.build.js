@@ -863,25 +863,52 @@ var mdComment = {
 
                 var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
                 if (null !== blockAttributes) {
-                    var content = blockAttributes.content;
 
-                    if ('' !== content) {
-                        var tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = content;
-                        var childElements = tempDiv.getElementsByTagName('mdspan');
-                        for (var i = 0; i < childElements.length; i++) {
-                            if (elIDRemove === childElements[i].attributes.datatext.value) {
-                                childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                                var finalContent = tempDiv.innerHTML;
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                    attributes: {
-                                        content: finalContent
+                    var findAttributes = ['content', 'citation', 'caption', 'value'];
+                    jQuery(findAttributes).each(function (i, attrb) {
+                        var content = blockAttributes[attrb];
+                        if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                            if ('' !== content) {
+                                var tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = content;
+                                var childElements = tempDiv.getElementsByTagName('mdspan');
+                                for (var _i2 = 0; _i2 < childElements.length; _i2++) {
+                                    if (elIDRemove === childElements[_i2].attributes.datatext.value) {
+                                        childElements[_i2].parentNode.replaceChild(document.createTextNode(childElements[_i2].innerText), childElements[_i2]);
+                                        var finalContent = tempDiv.innerHTML;
+
+                                        if (attrb === 'content') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    content: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'citation') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    citation: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'value') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    value: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'caption') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    caption: finalContent
+                                                }
+                                            });
+                                        }
+                                        break;
                                     }
-                                });
-                                break;
+                                }
                             }
                         }
-                    }
+                    });
                 }
             }
         }, {
@@ -1183,25 +1210,52 @@ var Board = function (_React$Component) {
 
             var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
             if (null !== blockAttributes) {
-                var content = blockAttributes.content;
 
-                if ('' !== content) {
-                    var tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content;
-                    var childElements = tempDiv.getElementsByTagName('mdspan');
-                    for (var i = 0; i < childElements.length; i++) {
-                        if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                            var finalContent = tempDiv.innerHTML;
-                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                attributes: {
-                                    content: finalContent
+                var findAttributes = ['content', 'citation', 'caption', 'value'];
+                jQuery(findAttributes).each(function (i, attrb) {
+                    var content = blockAttributes[attrb];
+                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                        if ('' !== content) {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = content;
+                            var childElements = tempDiv.getElementsByTagName('mdspan');
+                            for (var _i = 0; _i < childElements.length; _i++) {
+                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
+                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
+                                    var finalContent = tempDiv.innerHTML;
+
+                                    if (attrb === 'content') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                content: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'citation') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                citation: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'value') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                value: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'caption') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                caption: finalContent
+                                            }
+                                        });
+                                    }
+                                    break;
                                 }
-                            });
-                            break;
+                            }
                         }
                     }
-                }
+                });
             }
         }
     }, {
@@ -1331,6 +1385,7 @@ var Board = function (_React$Component) {
                 jQuery.post(ajaxurl, data, function (data) {
 
                     jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
+                    jQuery('.fresh-board').removeClass('fresh-board');
 
                     data = jQuery.parseJSON(data);
                     if (undefined !== data.error) {
@@ -1625,7 +1680,7 @@ var Comment = function (_React$Component) {
                 // Remove Tag.
                 this.removeTag(elIDRemove);
             } else {
-                jQuery('#' + elIDRemove + ' #resolve_cb').prop('checked', false);
+                jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
             }
         }
     }, {
@@ -1636,25 +1691,52 @@ var Comment = function (_React$Component) {
 
             var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
             if (null !== blockAttributes) {
-                var content = blockAttributes.content;
 
-                if ('' !== content) {
-                    var tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content;
-                    var childElements = tempDiv.getElementsByTagName('mdspan');
-                    for (var i = 0; i < childElements.length; i++) {
-                        if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                            var finalContent = tempDiv.innerHTML;
-                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                attributes: {
-                                    content: finalContent
+                var findAttributes = ['content', 'citation', 'caption', 'value'];
+                jQuery(findAttributes).each(function (i, attrb) {
+                    var content = blockAttributes[attrb];
+                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                        if ('' !== content) {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = content;
+                            var childElements = tempDiv.getElementsByTagName('mdspan');
+                            for (var _i = 0; _i < childElements.length; _i++) {
+                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
+                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
+                                    var finalContent = tempDiv.innerHTML;
+
+                                    if (attrb === 'content') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                content: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'citation') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                citation: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'value') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                value: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'caption') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                caption: finalContent
+                                            }
+                                        });
+                                    }
+                                    break;
                                 }
-                            });
-                            break;
+                            }
                         }
                     }
-                }
+                });
             }
         }
     }, {
@@ -1700,10 +1782,10 @@ var Comment = function (_React$Component) {
                         index === 0 && wp.element.createElement(
                             'div',
                             { className: 'comment-resolve' },
-                            wp.element.createElement('input', { id: 'resolve_cb', type: 'checkbox', onClick: this.resolve.bind(this), className: 'btn-comment', value: '1' }),
+                            wp.element.createElement('input', { id: "resolve_cb_" + this.props.timestamp + '_' + index, type: 'checkbox', onClick: this.resolve.bind(this), className: 'btn-comment', value: '1' }),
                             wp.element.createElement(
                                 'label',
-                                { htmlFor: 'resolve_cb' },
+                                { htmlFor: "resolve_cb_" + this.props.timestamp + '_' + index },
                                 'Mark as a Resolved'
                             )
                         ),

@@ -72,7 +72,7 @@ export default class Comment extends React.Component {
             // Remove Tag.
             this.removeTag(elIDRemove);
         } else {
-            jQuery('#' + elIDRemove + ' #resolve_cb').prop('checked', false);
+            jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
         }
     }
 
@@ -82,24 +82,52 @@ export default class Comment extends React.Component {
 
         const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
         if( null !== blockAttributes ) {
-            const {content} = blockAttributes;
-            if ('' !== content) {
-                let tempDiv = document.createElement('div');
-                tempDiv.innerHTML = content;
-                let childElements = tempDiv.getElementsByTagName('mdspan');
-                for (let i = 0; i < childElements.length; i++) {
-                    if (elIDRemove === childElements[i].attributes.datatext.value) {
-                        childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                        let finalContent = tempDiv.innerHTML;
-                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                            attributes: {
-                                content: finalContent
+
+            const findAttributes = ['content', 'citation', 'caption', 'value'];
+            jQuery(findAttributes).each( function (i, attrb) {
+                var content = blockAttributes[attrb];
+                if( undefined !== content && -1 !== content.indexOf(elIDRemove) ) {
+
+                    if ('' !== content) {
+                        let tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = content;
+                        let childElements = tempDiv.getElementsByTagName('mdspan');
+                        for (let i = 0; i < childElements.length; i++) {
+                            if (elIDRemove === childElements[i].attributes.datatext.value) {
+                                childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
+                                const finalContent = tempDiv.innerHTML;
+
+                                if (attrb === 'content') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            content: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'citation') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            citation: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'value') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            value: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'caption') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            caption: finalContent
+                                        }
+                                    });
+                                }
+                                break;
                             }
-                        });
-                        break;
+                        }
                     }
                 }
-            }
+            });
         }
     }
 
@@ -136,8 +164,8 @@ export default class Comment extends React.Component {
                     <div className="comment-actions">
                         {index === 0 &&
                             <div className="comment-resolve">
-                                <input id="resolve_cb" type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
-                                <label htmlFor="resolve_cb">{'Mark as a Resolved'}</label>
+                                <input id={"resolve_cb_" + this.props.timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
+                                <label htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
                             </div>
                         }
                         {this.props.userID === owner &&

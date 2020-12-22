@@ -516,7 +516,7 @@ class Commenting_block_Admin {
 					$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
 
 					// Stop displaying history of comments in draft mode.
-					if ( 'draft' === $comment_status ) {
+					if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
 						continue;
 					}
 
