@@ -64,7 +64,11 @@
             _this.offset({top: topOfText});
 
             var scrollTopClass = '';
-            if( 0 !== $('.block-editor-editor-skeleton__content').length ) {
+            if( 0 !== $('.interface-interface-skeleton__content').length ) {
+                // Latest WP Version
+                scrollTopClass = '.interface-interface-skeleton__content';
+
+            } else if( 0 !== $('.block-editor-editor-skeleton__content').length ) {
                 // Latest WP Version
                 scrollTopClass = '.block-editor-editor-skeleton__content';
 
@@ -88,13 +92,11 @@
         });
 
         // Scroll to the commented text and its popup from History Popup.
-        $(document).on('click', '.user-comented-on', function (e) {
+        $(document).on('click', '.user-commented-on', function (e) {
             $('#custom-history-popup, #history-toggle, .custom-buttons').toggleClass('active');
             e.preventDefault();
 
             const dataid = $(this).attr('data-id');
-
-            $('#' + dataid).offset({top: $('[datatext="' + dataid + '"]').offset().top});
 
             // Trigger card click to focus.
             $('#' + dataid).trigger('click');
@@ -103,13 +105,6 @@
             setTimeout(function () {
                 $('[datatext="' + dataid + '"]').removeClass('focus');
             }, 1500);
-
-            if (0 !== $("#" + dataid).length) {
-                const topOfPopup = $("#" + dataid).offset().top
-                $('.edit-post-layout__content').animate({
-                    scrollTop: topOfPopup
-                }, 1000);
-            }
         });
 
         $('.shareCommentContainer textarea').on('click', function () {

@@ -578,7 +578,7 @@ class Commenting_block_Admin {
 					if ( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] || 'true' === $c['resolved'] ) {
 						$html .= esc_html( $commented_on_text );
 					} else {
-						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>";
+						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . "</a>";
 					}
 
 					$html .= "<div class='user-comment'> " . esc_html( $c['thread'] ) . "</div>

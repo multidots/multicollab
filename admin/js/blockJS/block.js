@@ -24,7 +24,7 @@ $(window).on('load', function () {
         loadAttempts++;
 
         if (loadAttempts >= 10 || (1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length)) {
-            if( 0 === $('.edit-post-header-toolbar__left').length ) {
+            if (0 === $('.edit-post-header-toolbar__left').length) {
                 $('.edit-post-header-toolbar').append(customButtons);
             } else {
                 $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
@@ -347,10 +347,12 @@ const mdComment = {
                 return;
             }
 
-            // Reset Comments Float.
-            jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-            jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+            // Reset Comments Float only if the selected text has no comments on it.
+            if (undefined === activeAttributes.datatext) {
+                jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
+                jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
+                jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+            }
 
             var referenceNode = document.getElementById('md-span-comments');
 
@@ -416,23 +418,29 @@ const mdComment = {
                     )
                 }
 
-                // Adding focus on selected text's popup.
-                $('.cls-board-outer').removeClass('focus');
-                $('#' + selectedText + '.cls-board-outer').addClass('focus');
+                // Removing dark highlights from other texts,
+                // only if current active text has a attribute,
+                // and no 'focus' class active on mdspan tag.
+                // This condition prevents thread popup flickering
+                // when navigating through the activity center.
+                if (1 === $('mdspan[datatext="' + selectedText + '"][data-rich-text-format-boundary]').length && !$('mdspan').hasClass('focus')) {
 
-                // Removing dark highlights from other texts.
-                $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
+                    // Adding focus on selected text's popup.
+                    $('.cls-board-outer').removeClass('focus');
+                    $('#' + selectedText + '.cls-board-outer').addClass('focus');
 
-                // Float comments column.
-                if (undefined !== selectedText) {
-                    //Active comment tab
-                    if (!$('#md-tabs .comment').hasClass('active')) {
-                        $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
-                        $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
+                    $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
+
+                    // Float comments column.
+                    if (undefined !== selectedText) {
+                        //Active comment tab
+                        if (!$('#md-tabs .comment').hasClass('active')) {
+                            $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
+                            $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
+                        }
+                        this.floatComments(selectedText);
                     }
-                    this.floatComments(selectedText);
                 }
-
             }
         }
 
