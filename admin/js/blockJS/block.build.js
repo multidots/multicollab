@@ -14072,8 +14072,8 @@ var Comment = function (_React$Component) {
                         __WEBPACK_IMPORTED_MODULE_2_react_render_html___default()(str),
                         ' ',
                         '' !== readmoreStr && wp.element.createElement(
-                            'a',
-                            { className: 'readmoreComment', href: '' },
+                            'span',
+                            { className: 'readmoreComment' },
                             'show more'
                         )
                     ),
@@ -14083,8 +14083,8 @@ var Comment = function (_React$Component) {
                         __WEBPACK_IMPORTED_MODULE_2_react_render_html___default()(readmoreStr),
                         ' ',
                         '' !== readmoreStr && wp.element.createElement(
-                            'a',
-                            { className: 'readlessComment', href: '' },
+                            'span',
+                            { className: 'readlessComment' },
                             'show less'
                         )
                     )
