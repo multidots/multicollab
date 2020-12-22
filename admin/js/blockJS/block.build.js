@@ -13813,7 +13813,7 @@ var Board = function (_React$Component) {
                 wp.element.createElement(
                     'div',
                     { className: 'shareCommentContainer' },
-                    wp.element.createElement('textarea', { id: "txt" + datatext, placeholder: 'Write a comment..' }),
+                    wp.element.createElement('textarea', { id: "txt" + datatext, placeholder: 'Comment or add others with @' }),
                     wp.element.createElement(
                         'button',
                         { onClick: this.addNewComment, className: 'btn btn-success' },

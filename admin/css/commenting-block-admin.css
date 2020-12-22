@@ -1156,3 +1156,61 @@ body.hide-comments .block-editor-writing-flow {
 .custom-buttons button:hover svg * {
     fill: #007cba;
 }
+
+/* Email Mentioning Popup */
+.cf-mentioned-user-popup {
+    display: block;
+    width: 87%;
+    height: auto;
+    position: absolute;
+    z-index: 10;
+    background: #fff;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.cf-mentioned-user-popup ul {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.cf-mentioned-user-popup ul li {
+    list-style: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 7px 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    transition: all 0.3s ease-in-out;
+}
+.cf-mentioned-user-popup ul li:hover {
+    background-color: rgba( 0,0,0,0.05 );
+}
+.cf-mentioned-user-popup ul li:last-child {
+    border-bottom: 0px;
+}
+.cf-mentioned-user-popup ul li img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+.cf-mentioned-user-popup ul li .cf-user-info {
+    display: block;
+    padding-left: 10px;
+}
+.cf-mentioned-user-popup ul li .cf-user-info .cf-user-display-name {
+    color: rgb(60, 64, 67);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    text-transform: capitalize;
+    margin: 5px 0px 0px 0px !important;
+}
+.cf-mentioned-user-popup ul li .cf-user-info .cf-user-email {
+    margin: 0px 0px 5px 0px !important;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+}
+mark {
+    background-color: transparent;
+    font-weight: 600;
+    padding: 0;
+}

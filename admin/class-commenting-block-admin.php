@@ -368,8 +368,10 @@ class Commenting_block_Admin {
 		$screen = get_current_screen();
 		if ( $screen->is_block_editor ) {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/commenting-block-admin.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( 'cf-mark', plugin_dir_url( __FILE__ ) . 'js/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'content-collaboration-inline-commenting', plugin_dir_url( __FILE__ ) . 'js/blockJS/block.build.js', array(
 				'jquery',
+				'cf-mark',
 				'wp-blocks',
 				'wp-i18n',
 				'wp-element',
@@ -904,7 +906,9 @@ class Commenting_block_Admin {
 		$system_users = $users->get_results();
 		foreach ( $system_users as $user ) {
 			$email_list[] = [
-				'user_email' => $user->user_email
+				'display_name' => $user->display_name,
+				'user_email'   => $user->user_email,
+				'avatar'       => get_avatar_url( $user->ID, [ 'size' => '40' ] )
 			];
 		}
 
@@ -922,10 +926,22 @@ class Commenting_block_Admin {
 		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
 		$niddle = substr( $niddle, 1 );
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
-			$emails   = $wpdb->get_results(
-				"SELECT user_email FROM {$wpdb->prefix}users WHERE user_email LIKE '%{$niddle}%'"
-			);
-			$response = $emails;
+			$users = new WP_User_Query([
+				'search'         => '*' . $niddle . '*',
+				'search_columns' => ['user_email']
+			]);
+
+			// Fetch out matched user's email
+			$email_list   = [];
+			$system_users = $users->get_results();
+			foreach ( $system_users as $user ) {
+				$email_list[] = [
+					'display_name' => $user->display_name,
+					'user_email'   => $user->user_email,
+					'avatar'       => get_avatar_url( $user->ID, [ 'size' => '40' ] )
+				];
+			}
+			$response = $email_list;
 		} else if ( '@' === $niddle ) {
 			$this->cf_get_user_email_list();
 		} else {

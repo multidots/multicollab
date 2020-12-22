@@ -118,17 +118,40 @@
         var emailList = function( _self, data ) {
             var listItem = '';
             if( data.length > 0 ) {
-                data.forEach( function( email ) {
-                    listItem += `<li>${email.user_email}</li>`
+                data.forEach( function( user ) {
+                    listItem += `
+                        <li data-email="${user.user_email}">
+                            <img src="${user.avatar}" alt="${user.display_name}" />
+                            <div class="cf-user-info">
+                                <p class="cf-user-display-name">${user.display_name}</p>
+                                <p class="cf-user-email">${user.user_email}</p>
+                            </div>
+                        </li>`
                 } )
 
                 var emailList = `
-                    <ul class="cf-system-user-email-list">
-                        ${listItem}
-                    </ul>
+                    <div class="cf-mentioned-user-popup">
+                        <ul class="cf-system-user-email-list">
+                            ${listItem}
+                        </ul>
+                    </div>
                 `;
 
                 $( emailList ).insertAfter( _self )
+            }
+        }
+
+
+        // Make matched text highlighted
+        var makeMatchedTextHighlighted = function( term, markEmail, markName ) {
+
+            var term       = term.substring(1);
+            var $markEmail = $( markEmail );
+            var $markName  = $( markName );
+
+            if ( term ) {
+                $markEmail.mark( term );
+                $markName.mark( term );
             }
         }
 
@@ -213,26 +236,28 @@
                                     $( appendIn ).remove(); // Removing previous DOM
                                     var data = JSON.parse( res );
                                     emailList( _self, data )
+                                    makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' )
                                 }
                             })
                         }
                     }
-
-
                 }
             } )
             // Append email in textarea
             $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
-                var cursorPos = $( createTextarea ).prop( 'selectionStart' );
                 e.stopPropagation();
-                var email            = $( this ).text();
+                var email            = $( this ).data('email');
+                var cursorPos        = $( createTextarea ).prop( 'selectionStart' );
                 var trackedStrLength = trackedStr.length - 1; // Calculating length without @
+
                 if( trackedStrLength > 0 ) {
                     email = email.slice( trackedStrLength );
                 }
+
                 var textBeforeEmail  = typedText.substr( 0, cursorPos );
                 var textAfterEmail   = typedText.substr( cursorPos, cursorPos.length )
                 var refinedContent   = `${textBeforeEmail}${email}${textAfterEmail} `;
+
                 $( createTextarea ).val( refinedContent );
                 $( appendIn ).remove();
                 trackedStr = '';
@@ -244,14 +269,23 @@
         var emailListForEdit = function( _self, data ) {
             var listItem = '';
             if( data.length > 0 ) {
-                data.forEach( function( email ) {
-                    listItem += `<li>${email.user_email}</li>`
+                data.forEach( function( user ) {
+                    listItem += `
+                        <li data-email="${user.user_email}">
+                            <img src="${user.avatar}" alt="${user.display_name}" />
+                            <div class="cf-user-info">
+                                <p class="cf-user-display-name">${user.display_name}</p>
+                                <p class="cf-user-email">${user.user_email}</p>
+                            </div>
+                        </li>`
                 } )
 
                 var emailList = `
-                    <ul class="cf-edit-system-user-email-list">
-                        ${listItem}
-                    </ul>
+                    <div class="cf-mentioned-user-popup">
+                        <ul class="cf-edit-system-user-email-list">
+                            ${listItem}
+                        </ul>
+                    </div>
                 `;
 
                 $( emailList ).insertAfter( _self )
@@ -337,7 +371,8 @@
                                 success: function( res ) {
                                     $( appendIn ).remove(); // Removing previous DOM
                                     var data = JSON.parse( res );
-                                    emailListForEdit( _self, data )
+                                    emailListForEdit( _self, data );
+                                    makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' )
                                 }
                             })
                         }
@@ -346,16 +381,19 @@
             } )
             // Append email in textarea
             $( document.body ).on( 'click', '.cf-edit-system-user-email-list li', function(e) {
-                var cursorPos = $( editTextarea ).prop( 'selectionStart' );
                 e.stopPropagation();
-                var email            = $( this ).text();
+                var email            = $( this ).data('email');
+                var cursorPos        = $( editTextarea ).prop( 'selectionStart' );
                 var trackedStrLength = trackedStr.length - 1; // Calculating length without @
+
                 if( trackedStrLength > 0 ) {
                     email = email.slice( trackedStrLength );
                 }
+
                 var textBeforeEmail  = typedText.substr( 0, cursorPos );
                 var textAfterEmail   = typedText.substr( cursorPos, cursorPos.length )
                 var refinedContent   = `${textBeforeEmail}${email}${textAfterEmail} `;
+
                 $( this ).parents( 'ul' ).prev().val( refinedContent );
                 $( appendIn ).remove();
                 trackedStr = '';
