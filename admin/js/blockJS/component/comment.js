@@ -143,8 +143,8 @@ export default class Comment extends React.Component {
                         }
                         {this.props.userID === owner &&
                             <div className="buttons-wrapper">
-                                <i className="dashicons dashicons-edit" onClick={this.edit}></i>
-                                <i className="dashicons dashicons-trash" onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)}></i>
+                                <i className="dashicons dashicons-edit js-edit-comment" onClick={this.edit}></i>
+                                <i className="dashicons dashicons-trash js-trash-comment" onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)}></i>
                             </div>
                         }
                     </div>
@@ -194,7 +194,7 @@ export default class Comment extends React.Component {
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}
                 </button>
-                <button onClick={this.cancelEdit.bind(this)} className="btn-comment">
+                <button onClick={this.cancelEdit.bind(this)} className="btn-comment js-cancel-comment">
                     {'Cancel'}
                 </button>
             </div>

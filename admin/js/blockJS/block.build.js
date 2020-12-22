@@ -14035,8 +14035,8 @@ var Comment = function (_React$Component) {
                         this.props.userID === owner && wp.element.createElement(
                             'div',
                             { className: 'buttons-wrapper' },
-                            wp.element.createElement('i', { className: 'dashicons dashicons-edit', onClick: this.edit }),
-                            wp.element.createElement('i', { className: 'dashicons dashicons-trash', onClick: index === 0 ? this.resolve.bind(this) : this.remove.bind(this) })
+                            wp.element.createElement('i', { className: 'dashicons dashicons-edit js-edit-comment', onClick: this.edit }),
+                            wp.element.createElement('i', { className: 'dashicons dashicons-trash js-trash-comment', onClick: index === 0 ? this.resolve.bind(this) : this.remove.bind(this) })
                         )
                     ),
                     wp.element.createElement(
@@ -14145,7 +14145,7 @@ var Comment = function (_React$Component) {
                 ),
                 wp.element.createElement(
                     'button',
-                    { onClick: this.cancelEdit.bind(this), className: 'btn-comment' },
+                    { onClick: this.cancelEdit.bind(this), className: 'btn-comment js-cancel-comment' },
                     'Cancel'
                 )
             );

@@ -157,12 +157,21 @@
 
         // Create @mentioning email features
         var createAutoEmailMention = function() {
+            var typedText      = ''
+            var trackedStr     = ''
+            var isEmail        = false;
             var createTextarea = '.shareCommentContainer textarea';
-            var typedText = ''
-            var trackedStr = ''
-            var isEmail = false;
-            var appendIn = '.cf-system-user-email-list'
-            var keysToAvoid = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
+            var appendIn       = '.cf-system-user-email-list';
+            var editLink       = '.comment-actions .buttons-wrapper .js-edit-comment';
+            var cancelComment  = '.js-cancel-comment';
+            var keysToAvoid    = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
+
+            // Remove emails list on edit link click
+            $( document.body ).on( 'click', editLink, function(e) {
+                $( appendIn ).remove();
+            } )
+
+            // Triggering textarea keyup event
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( this )
                 typedText = _self.val()
@@ -294,12 +303,21 @@
 
         // Edit @mentioning email features
         var editAutoEmailMention = function() {
-            var editTextarea = '.commentContainer .commentText textarea';
-            var typedText = ''
-            var trackedStr = ''
-            var isEmail = false;
-            var appendIn = '.cf-edit-system-user-email-list'
-            var keysToAvoid = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
+            var typedText     = ''
+            var trackedStr    = ''
+            var isEmail       = false;
+            var editTextarea  = '.commentContainer .commentText textarea';
+            var editLink      = '.comment-actions .buttons-wrapper .js-edit-comment';
+            var cancelComment = '.js-cancel-comment';
+            var appendIn      = '.cf-edit-system-user-email-list'
+            var keysToAvoid   = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
+
+            // Remove email list on edit link or cancel button click
+            $( document.body ).on( 'click', `${editLink}, ${cancelComment}`, function( e ) {
+                $( appendIn ).remove();
+            } )
+
+            // Triggering Textarea keyup event
             $( document.body ).on( 'keyup', editTextarea, function(e) {
                 var _self = $( this )
                 typedText = _self.val()
