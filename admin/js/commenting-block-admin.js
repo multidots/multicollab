@@ -381,9 +381,7 @@
             } )
             // Append email in textarea
             $( document.body ).on( 'click', '.cf-edit-system-user-email-list li', function(e) {
-                // e.stopPropagation();
                 var email            = $( this ).data('email');
-                console.log( email )
                 var cursorPos        = $( editTextarea ).prop( 'selectionStart' );
                 var trackedStrLength = trackedStr.length - 1; // Calculating length without @
 
