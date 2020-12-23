@@ -103,8 +103,9 @@ class Commenting_block_Admin {
 		$userID    = $curr_user->ID;
 		$userName  = $curr_user->display_name;
 		$userURL   = get_avatar_url( $userID );
+		$userRole  = get_userdata($userID)->roles[0];
 
-		echo wp_json_encode( array( 'id' => $userID, 'name' => $userName, 'url' => $userURL ) );
+		echo wp_json_encode( array( 'id' => $userID, 'name' => $userName, 'role' => $userRole, 'url' => $userURL ) );
 		wp_die();
 
 	}
@@ -859,6 +860,7 @@ class Commenting_block_Admin {
 		foreach ( $comments as $t => $val ) {
 			$user_info   = get_userdata( $val['userData'] );
 			$username    = $user_info->display_name;
+			$user_role   = implode( ', ', $user_info->roles );
 			$profile_url = get_avatar_url( $user_info->user_email );
 			$thread      = $val['thread'];
 			$cstatus     = isset( $val['status'] ) ? $val['status'] : '';
@@ -871,6 +873,7 @@ class Commenting_block_Admin {
 				array_push( $userDetails,
 					[
 						'userName'    => $username,
+						'userRole'    => $user_role,
 						'profileURL'  => $profile_url,
 						'dtTime'      => $date,
 						'thread'      => $thread,
@@ -904,11 +907,16 @@ class Commenting_block_Admin {
 		// Fetch out all user's email
 		$email_list   = [];
 		$system_users = $users->get_results();
+
 		foreach ( $system_users as $user ) {
 			$email_list[] = [
-				'display_name' => $user->display_name,
-				'user_email'   => $user->user_email,
-				'avatar'       => get_avatar_url( $user->ID, [ 'size' => '40' ] )
+				'ID'                => $user->ID,
+				'role'              => implode( ', ', $user->roles ),
+				'display_name'      => $user->display_name,
+				'user_email'        => $user->user_email,
+				'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
+				'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
+				'edit_others_posts' => $user->allcaps['edit_others_posts'],
 			];
 		}
 
@@ -927,8 +935,8 @@ class Commenting_block_Admin {
 		$niddle = substr( $niddle, 1 );
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$users = new WP_User_Query([
-				'search'         => '*' . $niddle . '*',
-				'search_columns' => ['user_email']
+				'search'         => $niddle . '*',
+				'search_columns' => ['display_name', 'user_email']
 			]);
 
 			// Fetch out matched user's email
@@ -936,9 +944,13 @@ class Commenting_block_Admin {
 			$system_users = $users->get_results();
 			foreach ( $system_users as $user ) {
 				$email_list[] = [
-					'display_name' => $user->display_name,
-					'user_email'   => $user->user_email,
-					'avatar'       => get_avatar_url( $user->ID, [ 'size' => '40' ] )
+					'ID'                => $user->ID,
+					'role'              => implode( ', ', $user->roles ),
+					'display_name'      => $user->display_name,
+					'user_email'        => $user->user_email,
+					'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
+					'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
+					'edit_others_posts' => $user->allcaps['edit_others_posts'],
 				];
 			}
 			$response = $email_list;

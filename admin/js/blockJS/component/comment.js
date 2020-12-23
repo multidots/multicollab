@@ -155,7 +155,7 @@ export default class Comment extends React.Component {
                         </div>
                         }
                         <div className="commenter-name-time">
-                            <div className="commenter-name">{this.props.userName}</div>
+                            <div className="commenter-name">{this.props.userName} <small>({ this.props.userRole })</small></div>
                             <div className="comment-time">{this.props.dateTime}</div>
                         </div>
                     </div>

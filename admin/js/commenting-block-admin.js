@@ -123,7 +123,7 @@
                         <li data-email="${user.user_email}">
                             <img src="${user.avatar}" alt="${user.display_name}" />
                             <div class="cf-user-info">
-                                <p class="cf-user-display-name">${user.display_name}</p>
+                                <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">(${user.role})</small></p>
                                 <p class="cf-user-email">${user.user_email}</p>
                             </div>
                         </li>`
@@ -280,13 +280,13 @@
             if( data.length > 0 ) {
                 data.forEach( function( user ) {
                     listItem += `
-                        <li data-email="${user.user_email}">
-                            <img src="${user.avatar}" alt="${user.display_name}" />
-                            <div class="cf-user-info">
-                                <p class="cf-user-display-name">${user.display_name}</p>
-                                <p class="cf-user-email">${user.user_email}</p>
-                            </div>
-                        </li>`
+                    <li data-email="${user.user_email}">
+                        <img src="${user.avatar}" alt="${user.display_name}" />
+                        <div class="cf-user-info">
+                            <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">(${user.role})</small></p>
+                            <p class="cf-user-email">${user.user_email}</p>
+                        </div>
+                    </li>`
                 } )
 
                 var emailList = `
@@ -482,7 +482,8 @@
         // The function wp.data.select("core").getCurrentUser() is not
         // defined for v5.2.2, so getting data from PHP.
         try {
-            wp.data.select("core").getCurrentUser().id;
+            let userID = wp.data.select("core").getCurrentUser().id;
+            wp.data.select("core").getUser(userID).roles[0]; // This needs to be loaded as we need user role to show
         } catch (e) {
 
             // Fetch User details from AJAX.
@@ -492,6 +493,7 @@
                 user = JSON.parse(user);
                 localStorage.setItem("userID", user.id);
                 localStorage.setItem("userName", user.name);
+                localStorage.setItem("userRole", user.role);
                 localStorage.setItem("userURL", user.url);
             });
         }

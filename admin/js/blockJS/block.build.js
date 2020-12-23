@@ -13561,20 +13561,24 @@ var Board = function (_React$Component) {
 
             var userID = '';
             var userName = '';
+            var userRole = '';
             var userProfile = '';
             try {
                 userID = wp.data.select("core").getCurrentUser().id;
                 userName = wp.data.select("core").getCurrentUser().name;
+                userRole = wp.data.select("core").getUser(userID).roles[0];
                 userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
                 userProfile = userProfile[Object.keys(userProfile)[1]];
             } catch (e) {
                 userID = localStorage.getItem("userID");
                 userName = localStorage.getItem("userName");
+                userRole = localStorage.getItem("userRole");
                 userProfile = localStorage.getItem("userURL");
             }
 
             var newArr = {};
             newArr['userName'] = userName;
+            newArr['userRole'] = userRole;
             newArr['profileURL'] = userProfile;
             newArr['dtTime'] = dateTime;
             newArr['thread'] = newText;
@@ -13615,13 +13619,16 @@ var Board = function (_React$Component) {
 
                 var userID = '';
                 var userName = '';
+                var userRole = '';
                 var userProfile = '';
                 try {
                     userID = wp.data.select("core").getCurrentUser().id;
+                    userRole = wp.data.select("core").getUser(userID).roles[0];
                     userName = wp.data.select("core").getCurrentUser().name;
                 } catch (e) {
                     userID = localStorage.getItem("userID");
                     userName = localStorage.getItem("userName");
+                    userRole = localStorage.getItem("userRole");
                 }
 
                 if ('1' === localStorage.getItem("showAvatars")) {
@@ -13637,6 +13644,7 @@ var Board = function (_React$Component) {
                 newArr['thread'] = newText;
                 newArr['commentedOnText'] = undefined !== this.commentedOnText ? this.commentedOnText : '';
                 newArr['userName'] = userName;
+                newArr['userRole'] = userRole;
                 newArr['profileURL'] = userProfile;
                 newArr['status'] = 'draft reverted_back';
 
@@ -13691,6 +13699,7 @@ var Board = function (_React$Component) {
 
 
             var username = void 0,
+                userRole = void 0,
                 postedTime = void 0,
                 postedComment = void 0,
                 profileURL = void 0,
@@ -13701,6 +13710,8 @@ var Board = function (_React$Component) {
             Object.keys(text).map(function (i) {
                 if ('userName' === i) {
                     username = text[i];
+                } else if ('userRole' === i) {
+                    userRole = text[i];
                 } else if ('dtTime' === i) {
                     postedTime = text[i];
                 } else if ('thread' === i) {
@@ -13726,6 +13737,7 @@ var Board = function (_React$Component) {
                     removeCommentFromBoard: this.removeComment,
                     updateCommentFromBoard: this.updateComment,
                     userName: username,
+                    userRole: userRole,
                     dateTime: postedTime,
                     profileURL: profileURL,
                     userID: userID,
@@ -14053,7 +14065,15 @@ var Comment = function (_React$Component) {
                             wp.element.createElement(
                                 'div',
                                 { className: 'commenter-name' },
-                                this.props.userName
+                                this.props.userName,
+                                ' ',
+                                wp.element.createElement(
+                                    'small',
+                                    null,
+                                    '(',
+                                    this.props.userRole,
+                                    ')'
+                                )
                             ),
                             wp.element.createElement(
                                 'div',

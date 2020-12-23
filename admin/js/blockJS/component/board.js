@@ -130,20 +130,24 @@ export default class Board extends React.Component {
 
         var userID = '';
         var userName = '';
+        var userRole = '';
         var userProfile = '';
         try {
             userID = wp.data.select("core").getCurrentUser().id;
             userName = wp.data.select("core").getCurrentUser().name;
+            userRole = wp.data.select("core").getUser(userID).roles[0];
             userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
             userProfile = userProfile[Object.keys(userProfile)[1]];
         } catch (e) {
             userID = localStorage.getItem("userID");
             userName = localStorage.getItem("userName");
+            userRole = localStorage.getItem("userRole");
             userProfile = localStorage.getItem("userURL");
         }
 
         var newArr = {};
         newArr['userName'] = userName;
+        newArr['userRole'] = userRole;
         newArr['profileURL'] = userProfile;
         newArr['dtTime'] = dateTime;
         newArr['thread'] = newText;
@@ -182,13 +186,16 @@ export default class Board extends React.Component {
 
             var userID = '';
             var userName = '';
+            var userRole = '';
             var userProfile = '';
             try {
                 userID = wp.data.select("core").getCurrentUser().id;
+                userRole = wp.data.select("core").getUser(userID).roles[0];
                 userName = wp.data.select("core").getCurrentUser().name;
             } catch (e) {
                 userID = localStorage.getItem("userID");
                 userName = localStorage.getItem("userName");
+                userRole = localStorage.getItem("userRole");
             }
 
             if( '1' === localStorage.getItem("showAvatars") ) {
@@ -204,6 +211,7 @@ export default class Board extends React.Component {
             newArr['thread'] = newText;
             newArr['commentedOnText'] = undefined !== this.commentedOnText ? this.commentedOnText : '';
             newArr['userName'] = userName;
+            newArr['userRole'] = userRole;
             newArr['profileURL'] = userProfile;
             newArr['status'] = 'draft reverted_back';
 
@@ -255,10 +263,12 @@ export default class Board extends React.Component {
 
         const {lastVal, onChanged, selectedText} = this.props;
 
-        let username, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft;
+        let username, userRole, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft;
         Object.keys(text).map(i => {
             if ('userName' === i) {
                 username = text[i];
+            } else if ('userRole' === i) {
+                userRole = text[i];
             } else if ('dtTime' === i) {
                 postedTime = text[i];
             } else if ('thread' === i) {
@@ -284,6 +294,7 @@ export default class Board extends React.Component {
                 removeCommentFromBoard={this.removeComment}
                 updateCommentFromBoard={this.updateComment}
                 userName={username}
+                userRole={userRole}
                 dateTime={postedTime}
                 profileURL={profileURL}
                 userID={userID}
