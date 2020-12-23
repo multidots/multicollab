@@ -936,7 +936,7 @@ class Commenting_block_Admin {
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$users = new WP_User_Query([
 				'search'         => $niddle . '*',
-				'search_columns' => ['display_name', 'user_email']
+				'search_columns' => ['user_email']
 			]);
 
 			// Fetch out matched user's email
