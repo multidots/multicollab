@@ -83,7 +83,7 @@ export default class Board extends React.Component {
         const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
         if( null !== blockAttributes ) {
 
-            const findAttributes = ['content', 'citation', 'caption', 'value'];
+            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
             jQuery(findAttributes).each( function (i, attrb) {
                 var content = blockAttributes[attrb];
                 if( undefined !== content && -1 !== content.indexOf(elIDRemove) ) {
@@ -119,6 +119,24 @@ export default class Board extends React.Component {
                                     wp.data.dispatch('core/editor').updateBlock(clientId, {
                                         attributes: {
                                             caption: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'values') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            values: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'fileName') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            fileName: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'text') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            text: finalContent
                                         }
                                     });
                                 }
@@ -338,6 +356,7 @@ export default class Board extends React.Component {
         jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
         jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
         jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+        jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
 
         const {datatext, onChanged, lastVal} = this.props;
         const name = 'multidots/comment';
