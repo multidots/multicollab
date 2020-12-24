@@ -1219,3 +1219,7 @@ body.hide-comments .block-editor-writing-flow {
     text-decoration: underline;
     color: #006799;
 }
+.comment-flash {
+    background-color: rgba(252,239,69,0.2);
+    transition: all 0.3s ease-in-out;
+}

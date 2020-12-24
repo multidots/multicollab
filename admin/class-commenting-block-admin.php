@@ -393,28 +393,12 @@ class Commenting_block_Admin {
 			$time_format       = get_option( 'time_format' );
 			wp_localize_script( 'content-collaboration-inline-commenting', 'suggestionBlock', array( 'userRole' => $current_user_role, 'dateFormat' => $date_format, 'timeFormat' => $time_format ) );
 
+			wp_localize_script( $this->plugin_name, 'adminLocalizer', [
+				'comment_id' => isset( $_GET['comment_id'] ) ? $_GET['comment_id'] : null
+			] );
+
 			wp_enqueue_script( 'jquery-ui-draggable' );
 			wp_enqueue_script( 'jquery-ui-droppable' );
-		}
-
-	}
-
-	/**
-	 * Sent email to the commented recipients
-	 *
-	 * @param string $message
-	 * @return void
-	 */
-	public function cf_sent_email_to_commented_users( $message ) {
-		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
-		preg_match_all( $pattern, $message, $matches );
-
-		if ( ! empty( $matches[0] ) ) {
-			$to        = $matches[0];
-			$subject   = 'You have been mentioned';
-			$body      = $message;
-			$headers[] = 'Content-Type: text/html; charset=UTF-8';
-			wp_mail( $to, $subject, $body );
 		}
 
 	}
@@ -433,13 +417,95 @@ class Commenting_block_Admin {
 	}
 
 	/**
+	 * Sent email to the commented recipients
+	 *
+	 * @param array $args
+	 * @return void
+	 */
+	public function cf_sent_email_to_commented_users( $args ) {
+		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
+		preg_match_all( $pattern, $args['thread'], $matches );
+
+		// Making email address linkable in list of comments
+		$open_comment_count = count( $args['list_of_comments'] );
+
+		if( ! empty( $args['list_of_comments'] ) ) {
+			$comment_list_html = '<ul>';
+			foreach( $args['list_of_comments'] as $comment ) {
+				$comment['thread'] = $this->convert_str_to_email($comment['thread']);
+				$comment_list_html .= "
+					<li>
+						<div class=''>
+							<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
+							<div class=''>
+								<p class=''>{$comment['userName']}</p>
+								<p class=''>{$comment['thread']}</p>
+							</div>
+							<a href='{$args['post_edit_link']}&comment_id={$comment['timestamp']}' target='_blank'>View Comment</a>
+						</div>
+					</li>
+				";
+			}
+			$comment_list_html .= '</ul>';
+		}
+
+		// Make email address linkable in email body
+		$args['thread'] = $this->convert_str_to_email( $args['thread'] );
+
+		$template = "
+			<style>
+				.comment-box{-webkit-box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);border:1px solid #E2E4E7;border-radius:5px;background:#fff;padding:20px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:600px;width:70%;font-family:Arial,serif;margin:40px 0 0;}
+				.comment-box .comment-box-header{padding-bottom:15px;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #ccc;margin-bottom:15px;}
+				.comment-box .comment-box-header p{margin:15px 0;}
+				.comment-box .comment-box-header a{color:#0073aa;text-decoration:none;display:inline-block;padding:5px 7px 4px;border:1px solid #ccc;border-radius:5px;}
+				.comment-box .comment-box-header a:hover{text-decoration:underline;color:#006799;}
+				.comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-header:last-child{margin-bottom:0;}
+				.comment-header .avtar{width:40px;margin-right:10px;}
+				.comment-header .avtar img{max-width:100%;border-radius:50%;}
+				.comment-header .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
+				.comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-header .commenter-name-time .commenter-name{font-size:16px;font-weight:600;font-family:Arial,serif;margin-right:10px;}
+				.comment-header .commenter-name-time .comment-time{font-size:12px;font-weight:400;font-family:Arial,serif;color:#808080;}
+				.comment-header .comment{font-family:Arial,serif;font-size:14px;}
+			</style>
+			<div class='comment-box'>
+				<div class='comment-box-header'>
+					<p>{$args['commenter']} - mentioned you in a comment in the following page.</p>
+					<h2><a href='{$args['post_edit_link']}' class='comment-page-title' target='_blank'>{$args['post_title']}</a></h2>
+					<p>Open - {$open_comment_count} Comment(s)</p>
+				</div>
+				<div class='comment-box-body'>
+					<h4 class=''>{Icon} {$args['thread']} </h4>
+					<p>{$args['commented_text']}</p>
+					{$comment_list_html}
+				</div>
+			</div>
+		";
+
+		// Limit the page and site titles for Subject.
+		$post_title = $this->cf_limit_characters( $args['post_title'], 30 );
+		$site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
+
+		if ( ! empty( $matches[0] ) ) {
+			$to        = $matches[0];
+			$subject   = "New Comment - {$post_title} - {$site_name}";
+			$body      = $template;
+			$headers[] = 'Content-Type: text/html; charset=UTF-8';
+			wp_mail( $to, $subject, $body );
+		}
+
+	}
+
+	/**
 	 * Add Comment function.
 	 */
 	public function cf_add_comment() {
 
-		$commentList = filter_input( INPUT_POST, "commentList" );
-		$commentList = html_entity_decode( $commentList );
-		$commentList = json_decode( $commentList, true );
+		$commentList      = filter_input( INPUT_POST, "commentList" );
+		$commentList      = html_entity_decode( $commentList );
+		$commentList      = json_decode( $commentList, true );
+		$list_of_comments = $commentList;
 
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$arr             = array();
@@ -491,7 +557,17 @@ class Commenting_block_Admin {
 		echo wp_json_encode( array( 'dtTime' => $dtTime, 'timestamp' => $timestamp ) );
 
 		// Sending email
-		$this->cf_sent_email_to_commented_users( $commentList['thread'] );
+		$this->cf_sent_email_to_commented_users( [
+			'site_name'        => get_bloginfo( 'name' ),
+			'commenter'        => $commentList['userName'],
+			'thread'           => $commentList['thread'],
+			'post_title'       => get_the_title( $current_post_id ),
+			'post_edit_link'   => get_edit_post_link( $current_post_id ),
+			'open_count'       => '',
+			'resolved_count'   => '',
+			'commented_text'   => $commentList['commentedOnText'],
+			'list_of_comments' => $list_of_comments
+		] );
 		wp_die();
 	}
 
@@ -680,7 +756,7 @@ class Commenting_block_Admin {
 
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
 		// Sending email
-		$this->cf_sent_email_to_commented_users( $edited_comment['thread'] );
+		// $this->cf_sent_email_to_commented_users( $edited_comment['thread'] );
 		wp_die();
 	}
 
@@ -835,6 +911,7 @@ class Commenting_block_Admin {
 		register_rest_route( 'cf', 'cf-get-comments-api', array(
 				'methods'  => 'GET',
 				'callback' => array( $this, 'cf_get_comments' ),
+				'permission_callback' => '__return_true'
 			)
 		);
 	}

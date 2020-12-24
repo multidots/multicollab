@@ -29,7 +29,6 @@
      * Although scripts in the WordPress core, Plugins and Themes may be
      * practising this, we should strive to set a better example in our own work.
      */
-
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
 
@@ -418,6 +417,21 @@
         }
         editAutoEmailMention();
 
+        // Open comment box when user redirect from email
+        var openComment = function() {
+            var commentedId = adminLocalizer.comment_id
+            $( window ).load( function() {
+                setTimeout( function() {
+                    $( `#${commentedId} .js-edit-comment` ).trigger( 'click' );
+                    $( `#${commentedId}` ).addClass( 'comment-flash' );
+                }, 2000 )
+                setTimeout( function() {
+                    $( `#${commentedId}` ).removeClass( 'comment-flash' );
+                }, 4000 )
+            } )
+        }
+        openComment();
+
         // History Toggle
         $(document).on('click', '#history-toggle', function () {
             $('#custom-history-popup, #history-toggle').toggleClass('active');
@@ -484,6 +498,7 @@
         try {
             let userID = wp.data.select("core").getCurrentUser().id;
             wp.data.select("core").getUser(userID).roles[0]; // This needs to be loaded as we need user role to show
+
         } catch (e) {
 
             // Fetch User details from AJAX.
