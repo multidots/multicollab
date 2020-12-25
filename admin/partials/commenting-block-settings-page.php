@@ -4,8 +4,8 @@
  */
 
 // Get settings.
-$cf_admin_notif = get_option( 'cf_admin_notif' );
 $activated      = filter_input( INPUT_GET, "activated", FILTER_SANITIZE_STRING );
+$cf_admin_notif = get_option( 'cf_admin_notif' );
 ?>
 <div class="cf-plugin-settings">
     <h2>Editorial Comments Settings</h2>
@@ -22,7 +22,7 @@ $activated      = filter_input( INPUT_GET, "activated", FILTER_SANITIZE_STRING )
                             <h2 id="cf-greetings">Thank you for installing Google Doc-Style Editorial Commenting Plugin.</h2>
 						<?php endif; ?>
                         <div id="cf-video">
-
+                            <iframe width="970" height="545.63" src="https://www.youtube-nocookie.com/embed/rDdgh_u8oVQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <div id="cf-links">
                             <a href="https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/?demo=start" class="cf-link" target="_blank" id="cf-demo">Live Demo</a>
