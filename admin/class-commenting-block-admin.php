@@ -88,7 +88,7 @@ class Commenting_block_Admin {
 	 * @since 1.0.0
 	 */
 	public function cf_settings_callback() {
-		require_once( plugin_dir_path( __FILE__ ) . 'partials/settings-page.php' );
+		require_once( plugin_dir_path( __FILE__ ) . 'partials/commenting-block-settings-page.php' );
 	}
 
 	/**
@@ -699,16 +699,13 @@ class Commenting_block_Admin {
 	 * Save settings of the plugin.
 	 */
 	public function cf_save_settings() {
-		$form_data      = filter_input( INPUT_POST, "formData", FILTER_REQUIRE_ARRAY );
-		$cf_admin_notif = $form_data['cf_admin_notif'];
+		$form_data = array();
+		parse_str(filter_input( INPUT_POST, "formData", FILTER_SANITIZE_STRING ), $form_data);
 
-		if ( isset( $cf_admin_notif ) && ! empty( $cf_admin_notif ) ) {
-			$cf_admin_notif = rtrim( $cf_admin_notif, '/' ) . '/';
-			update_option( 'cf_admin_notif', $cf_admin_notif );
+		update_option( 'cf_admin_notif', $form_data['cf_admin_notif'] );
 
-			return 'saved';
-		}
-		return false;
+		echo 'saved';
+		wp_die();
 	}
 
 	/**

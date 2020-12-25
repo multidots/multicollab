@@ -32,14 +32,14 @@ $activated      = filter_input( INPUT_GET, "activated", FILTER_SANITIZE_STRING )
                     <div id="cf-settings" class="cf-tab-inner">
                         <h2>Notification Setting</h2>
                         <div id="cf-notice">
-                            <div class="cf-notice notice notice-success">
-                                <p><?php _e( 'Settings Saved!', 'content-collaboration-inline-commenting' ); ?></p>
+                            <div class="cf-success notice notice-success" style="display: none">
+                                <p><?php _e( 'Settings saved!', 'content-collaboration-inline-commenting' ); ?></p>
                             </div>
                         </div>
                         <table class="cf-settings-table">
                             <tr>
                                 <th>
-                                    <input type="checkbox" name="cf_admin_notif" <?php selected( '1', $cf_admin_notif ); ?> value="<?php echo esc_attr( $cf_admin_notif ); ?>" class="regular-text"/>
+                                    <input type="checkbox" name="cf_admin_notif" id="cf_admin_notif" <?php echo '1' === $cf_admin_notif ? 'checked' : '' ?> value="1" class="regular-text"/>
                                 </th>
                                 <td>
                                     <label for="cf_admin_notif">All types of new comments send an email notification to an administrator. If you do not mention "administrator" in the comment still get an email notification</label>

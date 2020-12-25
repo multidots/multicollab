@@ -31,7 +31,7 @@
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
 
-    // Ready.
+    // Document Ready.
     $(document).ready(function () {
 
         // Settings page tabs toggle.
@@ -44,22 +44,17 @@
         // Save Settings.
         $('#cf-settings-form').on('submit', function (e){
             e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
             const settingsData = {
                 'action': 'cf_save_settings',
                 'formData': $(this).serialize()
             };
-            $.post(formData, settingsData, function (response) {
-                if( 'saved' === response ) {
-                    $('#cf-notice #cf-success').show();
-                    setTimeout(function () {
-                        $('#cf-notice #cf-success').hide();
-                    }, 3000);
-                } else {
-                    $('#cf-notice #cf-error').show();
-                    setTimeout(function () {
-                        $('#cf-notice #cf-error').hide();
-                    }, 3000);
-                }
+            $.post(ajaxurl, settingsData, function () {
+                $('#cf-settings-form').find('[type="submit"]').removeClass('loading');
+                $('#cf-notice .cf-success').slideDown(300);
+                setTimeout(function () {
+                    $('#cf-notice .cf-success').slideUp(300);
+                }, 3000);
             });
         });
 
