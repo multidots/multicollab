@@ -165,6 +165,7 @@ class Commenting_block {
 		$this->loader->add_action( 'wp_ajax_cf_resolve_thread', $plugin_admin,'cf_resolve_thread' );
 		$this->loader->add_action( 'wp_ajax_cf_reset_drafts_meta', $plugin_admin,'cf_reset_drafts_meta' );
 		$this->loader->add_action( 'wp_ajax_cf_store_in_localstorage', $plugin_admin,'cf_store_in_localstorage' );
+		$this->loader->add_action( 'wp_ajax_cf_save_settings', $plugin_admin,'cf_save_settings' );
 		$this->loader->add_action( 'wp_ajax_cf_merge_draft_stacks', $plugin_admin,'cf_merge_draft_stacks' );
 		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'cf_rest_api' );
 	}
@@ -225,4 +226,16 @@ class Commenting_block {
 		return $this->version;
 	}
 
+	/**
+	 * Plugin Setup (On Activation)
+	 *
+	 * @package MYS Modules
+	 * @since 1.0.0
+	 */
+	static function cf_redirect_on_activate( $plugin = false ) {
+		if ( COMMENTING_BLOCK_BASE === $plugin ) {
+			wp_redirect( esc_url( admin_url( 'admin.php?page=editorial-comments&activated=1' ) ) );
+			exit();
+		}
+	}
 }

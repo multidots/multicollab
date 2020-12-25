@@ -39,6 +39,7 @@ define( 'COMMENTING_BLOCK_VERSION', '1.0.3' );
 // Define constants.
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
 define( 'COMMENTING_BLOCK_DIR', plugin_dir_path( __FILE__ ) );
+define( 'COMMENTING_BLOCK_BASE', plugin_basename( __FILE__ ) );
 
 /**
  * The code that runs during plugin activation.
@@ -83,3 +84,10 @@ function run_commenting_block() {
 
 }
 run_commenting_block();
+
+/**
+ * Redirect after plugin activation.
+ *
+ * @since 1.0.4
+ */
+add_action( 'activated_plugin', array( 'Commenting_block', 'cf_redirect_on_activate' ) );

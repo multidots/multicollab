@@ -57,6 +57,38 @@ class Commenting_block_Admin {
 
 		// Allow caps for Multisite environment.
 		add_filter( 'map_meta_cap', array( $this, 'cf_add_unfiltered_html_capability_to_users' ), 1, 3 );
+
+		// Action to add setting page.
+		add_action( 'admin_menu', array( $this, 'cf_add_setting_page' ) );
+	}
+
+	/**
+	 * Add Setting Page.
+	 *
+	 * @since 1.0.0
+	 */
+	public function cf_add_setting_page() {
+
+		$settings_title = 'Editorial Comments';
+
+		//Adding a new admin page for MYS
+		add_menu_page(
+			__( esc_html( $settings_title ), 'content-collaboration-inline-commenting' ),
+			__( esc_html( $settings_title ), 'content-collaboration-inline-commenting' ),
+			'manage_options',
+			'editorial-comments',
+			array( $this, 'cf_settings_callback' ),
+			COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg'
+		);
+	}
+
+	/**
+	 * My setting page callback function.
+	 *
+	 * @since 1.0.0
+	 */
+	public function cf_settings_callback() {
+		require_once( plugin_dir_path( __FILE__ ) . 'partials/settings-page.php' );
 	}
 
 	/**
@@ -366,7 +398,7 @@ class Commenting_block_Admin {
 		 */
 
 		$screen = get_current_screen();
-		if ( $screen->is_block_editor ) {
+		if ( $screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base ) {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/commenting-block-admin.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'content-collaboration-inline-commenting', plugin_dir_url( __FILE__ ) . 'js/blockJS/block.build.js', array(
 				'jquery',
@@ -664,6 +696,22 @@ class Commenting_block_Admin {
 	}
 
 	/**
+	 * Save settings of the plugin.
+	 */
+	public function cf_save_settings() {
+		$form_data      = filter_input( INPUT_POST, "formData", FILTER_REQUIRE_ARRAY );
+		$cf_admin_notif = $form_data['cf_admin_notif'];
+
+		if ( isset( $cf_admin_notif ) && ! empty( $cf_admin_notif ) ) {
+			$cf_admin_notif = rtrim( $cf_admin_notif, '/' ) . '/';
+			update_option( 'cf_admin_notif', $cf_admin_notif );
+
+			return 'saved';
+		}
+		return false;
+	}
+
+	/**
 	 * Save important details in a localstorage.
 	 */
 	public function cf_store_in_localstorage() {
@@ -683,7 +731,7 @@ class Commenting_block_Admin {
 	 * Reset Drafts meta.
 	 */
 	public function cf_reset_drafts_meta() {
-		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );;
+		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 
 		$changed = 0;
 

@@ -34,6 +34,36 @@
     // Ready.
     $(document).ready(function () {
 
+        // Settings page tabs toggle.
+        $(document).on('click', '.cf-tabs span', function () {
+            const tabID = $(this).data('id');
+            $('.cf-tab-inner').hide();
+            $('#' + tabID).show();
+        });
+
+        // Save Settings.
+        $('#cf-settings-form').on('submit', function (e){
+            e.preventDefault();
+            const settingsData = {
+                'action': 'cf_save_settings',
+                'formData': $(this).serialize()
+            };
+            $.post(formData, settingsData, function (response) {
+                if( 'saved' === response ) {
+                    $('#cf-notice #cf-success').show();
+                    setTimeout(function () {
+                        $('#cf-notice #cf-success').hide();
+                    }, 3000);
+                } else {
+                    $('#cf-notice #cf-error').show();
+                    setTimeout(function () {
+                        $('#cf-notice #cf-error').hide();
+                    }, 3000);
+                }
+            });
+        });
+
+
         // Save show_avatar option in a localstorage.
         var data = {
             'action': 'cf_store_in_localstorage'
