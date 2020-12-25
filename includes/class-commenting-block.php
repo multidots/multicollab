@@ -233,8 +233,12 @@ class Commenting_block {
 	 * @since 1.0.0
 	 */
 	static function cf_redirect_on_activate( $plugin = false ) {
+
 		if ( COMMENTING_BLOCK_BASE === $plugin ) {
-			wp_redirect( esc_url( admin_url( 'admin.php?page=editorial-comments&activated=1' ) ) );
+			wp_redirect( add_query_arg( array(
+				'activated' => 1,
+				'page'      => 'editorial-comments'
+			), admin_url( 'admin.php' ) ) );
 			exit();
 		}
 	}

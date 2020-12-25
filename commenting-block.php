@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Gutenberg Commenting Feature
  * Description:       This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
- * Version:           1.0.0
+ * Version:           1.0.5
  * Author:            multidots
  * Author URI:        https://www.multidots.com/
  * License:           GPL-2.0+
@@ -29,12 +29,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
-define( 'COMMENTING_BLOCK_VERSION', '1.0.3' );
+// Plugin version.
+define( 'COMMENTING_BLOCK_VERSION', '1.0.5' );
 
 // Define constants.
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
