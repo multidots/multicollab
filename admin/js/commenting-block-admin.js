@@ -245,4 +245,10 @@
         }
     });
 
+    $(document).on('click', '.cf-tabs-main .cf-tabs .cf-tab-item', function (e) {
+        var getTabID = $(this).attr('data-id');
+        $(this).parent().addClass('cf-tab-active').siblings().removeClass('cf-tab-active');
+        $('#'+getTabID).addClass('cf-tab-active').show().siblings().removeClass('cf-tab-active').hide();
+    });
+
 })(jQuery);
