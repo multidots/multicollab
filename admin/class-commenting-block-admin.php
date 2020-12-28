@@ -154,6 +154,11 @@ class Commenting_block_Admin {
 
 				if ( ! empty( $comments ) && is_array( $comments ) ) {
 
+					$current_comment = end( $comments );
+
+					$count_resolved_comment = count( $current_drafts['resolved'] );
+					$count_open_comment     = count( $comments ) - $count_resolved_comment;
+
 					$users_emails = array();
 
 					$headers = array( 'Content-Type: text/html; charset=UTF-8' );
@@ -177,7 +182,12 @@ class Commenting_block_Admin {
 					';
 					$html    .= '<div class="comment-box"><div class="comment-box-header">';
 					$html    .= '<p>';
-					$html    .= esc_html( $current_user_display_name ) . __( ' has resolved the following thread.', 'content-collaboration-inline-commenting' );
+					$html    .= '<span class="commenter-name">' .esc_html( $current_user_display_name ) .'</span>' . __( ' has resolved the following thread.', 'content-collaboration-inline-commenting' );
+					$html 	 .= '
+						<p class="open-comment">Open - '.$count_open_comment.' Comment(s)</p>
+						<p class="resolve-comment">Resolved - '.$count_resolved_comment.' Comment(s)</p>
+					';
+					$html    .= '<p class="">{Icon} '.$this->convert_str_to_email( $current_comment['thread'] ).'</p>';
 					$html    .= '</p><a href="' . esc_url( $p_link ) . '" class="comment-page-title">' . esc_html( $p_title ) . '</a></div>';
 					$html    .= '<div class="comment-box-body">';
 					foreach ( $comments as $timestamp => $arr ) {
@@ -187,7 +197,7 @@ class Commenting_block_Admin {
 							$users_emails[] = $user_info->user_email;
 							$profile_url    = get_avatar_url( $user_info->user_email );
 							$date           = gmdate( $time_format . ' ' . $date_format, $timestamp );
-							$text_comment   = $arr['thread'];
+							$text_comment   = $this->convert_str_to_email( $arr['thread'] );
 							$cstatus        = $arr['status'];
 							$draft          = 'draft' === $cstatus ? '(draft)' : '';
 
@@ -198,7 +208,7 @@ class Commenting_block_Admin {
 												<div class='commenter-name'>" . esc_html( $username ) . "</div>
 												<div class='comment-time'>" . esc_html( $date ) . "</div>
 											</div>
-											<div class='comment'>" . __( '<strong>Comment</strong>', 'content-collaboration-inline-commenting' ) . ": " . esc_html( $text_comment ) . " " . esc_html( $draft ) . "
+											<div class='comment'>" . __( '<strong>Comment</strong>', 'content-collaboration-inline-commenting' ) . ": " . $text_comment . " " . esc_html( $draft ) . "
 											</div>
 										</div>
 									 </div>";
@@ -486,10 +496,10 @@ class Commenting_block_Admin {
 		$site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
 
 		if ( ! empty( $matches[0] ) ) {
-			$to        = $matches[0];
-			$subject   = "New Comment - {$post_title} - {$site_name}";
-			$body      = $template;
-			$headers[] = 'Content-Type: text/html; charset=UTF-8';
+			$to      = $matches[0];
+			$subject = "New Comment - {$post_title} - {$site_name}";
+			$body    = $template;
+			$headers = 'Content-Type: text/html; charset=UTF-8';
 			wp_mail( $to, $subject, $body );
 		}
 
