@@ -446,10 +446,10 @@ class Commenting_block_Admin {
 						<div class=''>
 							<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
 							<div class=''>
-								<p class=''>{$comment['userName']}</p>
-								<p class=''>{$comment['thread']}</p>
+								<p class='author-name'>{$comment['userName']}</p>
+								<p class='author-comment'>{$comment['thread']}</p>
 							</div>
-							<a href='{$args['post_edit_link']}&comment_id={$comment['timestamp']}' target='_blank'>View Comment</a>
+							<a href='{$args['post_edit_link']}&comment_id={$comment['timestamp']}' target='_blank'>View</a>
 						</div>
 					</li>
 				";
@@ -481,10 +481,10 @@ class Commenting_block_Admin {
 				<div class='comment-box-header'>
 					<p>{$args['commenter']} - mentioned you in a comment in the following page.</p>
 					<h2><a href='{$args['post_edit_link']}' class='comment-page-title' target='_blank'>{$args['post_title']}</a></h2>
-					<p>Open - {$open_comment_count} Comment(s)</p>
+					<p class='open-comment'>Open - {$open_comment_count} Comment(s)</p>
 				</div>
 				<div class='comment-box-body'>
-					<h4 class=''>{Icon} {$args['thread']} </h4>
+					<p class='latest-comment'>{Icon} {$args['thread']} </p>
 					<p>{$args['commented_text']}</p>
 					{$comment_list_html}
 				</div>
@@ -500,7 +500,7 @@ class Commenting_block_Admin {
 			$subject = "New Comment - {$post_title} - {$site_name}";
 			$body    = $template;
 			$headers = 'Content-Type: text/html; charset=UTF-8';
-			wp_mail( $to, $subject, $body );
+			wp_mail( $to, $subject, $body, $headers );
 		}
 
 	}
