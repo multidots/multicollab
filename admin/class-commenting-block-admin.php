@@ -60,6 +60,55 @@ class Commenting_block_Admin {
 
 		// Action to add setting page.
 		add_action( 'admin_menu', array( $this, 'cf_add_setting_page' ) );
+
+		// Adding new column to the posts list.
+		add_filter('manage_posts_columns', array( $this, 'cf_columns_head' ) );
+		add_filter('manage_pages_columns', array( $this, 'cf_columns_head' ) );
+
+		// Adding content in a column of posts list.
+		add_action('manage_posts_custom_column', array( $this, 'cf_columns_content') , 10, 2 );
+		add_action('manage_pages_custom_column', array( $this, 'cf_columns_content') , 10, 2 );
+	}
+
+	/**
+	 * Update columns of the posts list.
+	 *
+	 * @param array $defaults List of default columns.
+	 *
+	 * @return array mixed Updated list of default columns.
+	 */
+	public function cf_columns_head($defaults) {
+		$defaults['cb_comments_status'] = 'Resolved/Total Comments';
+		return $defaults;
+	}
+
+	/**
+	 * Add content in a new column of the posts list.
+	 *
+	 * @param string $column_name Column name.
+	 * @param int $post_ID Post ID.
+	 */
+	public function cf_columns_content( $column_name, $post_ID ) {
+
+		if ( $column_name === 'cb_comments_status' ) {
+
+			$content = get_the_content( $post_ID );
+
+			$metas = get_post_meta( $post_ID );
+			$resolved_count = $unresolved_count = 0;
+
+			foreach( $metas as $key => $val ) {
+				if( substr($key, 0, 3) === '_el' ) {
+					$key = str_replace('_el', '', $key);
+					if( strpos($val[0], 'resolved') === false && strpos($content, $key) !== false ) {
+						$unresolved_count++;
+					} else {
+						$resolved_count++;
+					}
+				}
+			}
+			echo esc_html( "$unresolved_count/$resolved_count" );
+		}
 	}
 
 	/**
