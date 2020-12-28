@@ -273,6 +273,16 @@
         }
         createAutoEmailMention();
 
+        // User Assign Function
+        var assignThisToUser = function() {
+            var mentionEmail = '.cf-system-user-email-list li';
+            $( document.body ).on( 'click', mentionEmail, function(e) {
+                var thisEmail = $( this ).data( 'email' );
+                console.log(thisEmail)
+            } )
+        }
+        assignThisToUser();
+
         // Email List Template Function
         var emailListForEdit = function( _self, data ) {
             var listItem = '';

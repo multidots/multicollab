@@ -116,7 +116,6 @@ class Commenting_block_Admin {
 	 * @param string $update Status of the update.
 	 */
 	public function cf_post_status_changes( $post_ID, $post, $update ) {
-
 		$p_content  = is_object( $post ) ? $post->post_content : $post;
 		$p_link     = get_edit_post_link( $post_ID );
 		$p_title    = get_the_title( $post_ID );
@@ -160,20 +159,20 @@ class Commenting_block_Admin {
 					$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 					$html    = '
 					<style>
-					.comment-box{-webkit-box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);border:1px solid #E2E4E7;border-radius:5px;background:#fff;padding:20px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:600px;width:70%;font-family:Arial,serif;margin:40px 0 0;}
-					.comment-box .comment-box-header{padding-bottom:15px;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #ccc;margin-bottom:15px;}
-					.comment-box .comment-box-header p{margin:15px 0;}
-					.comment-box .comment-box-header a{color:#0073aa;text-decoration:none;display:inline-block;padding:5px 7px 4px;border:1px solid #ccc;border-radius:5px;}
-					.comment-box .comment-box-header a:hover{text-decoration:underline;color:#006799;}
-					.comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-					.comment-header:last-child{margin-bottom:0;}
-					.comment-header .avtar{width:40px;margin-right:10px;}
-					.comment-header .avtar img{max-width:100%;border-radius:50%;}
-					.comment-header .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-					.comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-					.comment-header .commenter-name-time .commenter-name{font-size:16px;font-weight:600;font-family:Arial,serif;margin-right:10px;}
-					.comment-header .commenter-name-time .comment-time{font-size:12px;font-weight:400;font-family:Arial,serif;color:#808080;}
-					.comment-header .comment{font-family:Arial,serif;font-size:14px;}
+						.comment-box{-webkit-box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);border:1px solid #E2E4E7;border-radius:5px;background:#fff;padding:20px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:600px;width:70%;font-family:Arial,serif;margin:40px 0 0;}
+						.comment-box .comment-box-header{padding-bottom:15px;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #ccc;margin-bottom:15px;}
+						.comment-box .comment-box-header p{margin:15px 0;}
+						.comment-box .comment-box-header a{color:#0073aa;text-decoration:none;display:inline-block;padding:5px 7px 4px;border:1px solid #ccc;border-radius:5px;}
+						.comment-box .comment-box-header a:hover{text-decoration:underline;color:#006799;}
+						.comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-header:last-child{margin-bottom:0;}
+						.comment-header .avtar{width:40px;margin-right:10px;}
+						.comment-header .avtar img{max-width:100%;border-radius:50%;}
+						.comment-header .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
+						.comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-header .commenter-name-time .commenter-name{font-size:16px;font-weight:600;font-family:Arial,serif;margin-right:10px;}
+						.comment-header .commenter-name-time .comment-time{font-size:12px;font-weight:400;font-family:Arial,serif;color:#808080;}
+						.comment-header .comment{font-family:Arial,serif;font-size:14px;}
 					</style>
 					';
 					$html    .= '<div class="comment-box"><div class="comment-box-header">';
@@ -182,7 +181,6 @@ class Commenting_block_Admin {
 					$html    .= '</p><a href="' . esc_url( $p_link ) . '" class="comment-page-title">' . esc_html( $p_title ) . '</a></div>';
 					$html    .= '<div class="comment-box-body">';
 					foreach ( $comments as $timestamp => $arr ) {
-
 						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
 							$user_info      = get_userdata( $arr['userData'] );
 							$username       = $user_info->display_name;
