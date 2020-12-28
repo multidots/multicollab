@@ -596,7 +596,7 @@ $(window).on('load', function () {
     var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
     commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
 
-    var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+    var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
     var loadIcons = setInterval(function () {
@@ -694,6 +694,7 @@ function fetchComments() {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 }
                 if (loadAttempts >= 10) {
                     clearInterval(loadComments);
@@ -769,6 +770,9 @@ function bring_back_comments() {
                 });
             });
         }
+
+        // Update unresolved comments count.
+        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
     });
 
     return false;
@@ -839,8 +843,6 @@ var mdComment = {
 
             _this.onToggle = _this.onToggle.bind(_this);
             _this.getSelectedText = _this.getSelectedText.bind(_this);
-            _this.removeSuggestion = _this.removeSuggestion.bind(_this);
-            _this.hidethread = _this.hidethread.bind(_this);
             _this.floatComments = _this.floatComments.bind(_this);
             _this.removeTag = _this.removeTag.bind(_this);
 
@@ -956,6 +958,7 @@ var mdComment = {
                 var referenceNode = document.getElementById('md-span-comments');
 
                 referenceNode.appendChild(newNode);
+                $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
                 onChange(toggleFormat(value, { type: name }), __WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(wp.element.createElement(__WEBPACK_IMPORTED_MODULE_0__component_board__["a" /* default */], { datatext: currentTime, onChanged: onChange, lastVal: value, freshBoard: 1, commentedOnText: commentedOnText }), document.getElementById(currentTime)));
 
@@ -1010,7 +1013,7 @@ var mdComment = {
                                 $('[datatext="' + selectedText + '"]').css('background', 'transparent');
                             }
                         }
-
+                        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                         $('#' + selectedText).addClass('has_text').show();
                     });
 
@@ -1023,12 +1026,14 @@ var mdComment = {
                         if (selectedText !== latestBoard) {
                             this.removeTag(latestBoard);
                             $('#' + latestBoard).remove();
+                            $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                         }
                     }
 
                     // Just hide these popups and only display on CTRLz
                     $('#md-span-comments .cls-board-outer:not(.has_text):not([data-sid])').each(function () {
                         $(this).hide();
+                        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                     });
 
                     // Adding lastVal and onChanged props to make it deletable,
@@ -1071,20 +1076,6 @@ var mdComment = {
                     $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
                     $('#' + selectedText).offset({ top: $('[datatext="' + selectedText + '"]').offset().top });
                 }
-            }
-        }, {
-            key: 'removeSuggestion',
-            value: function removeSuggestion() {
-                var _props3 = this.props,
-                    onChange = _props3.onChange,
-                    value = _props3.value;
-
-                onChange(removeFormat(value, name));
-            }
-        }, {
-            key: 'hidethread',
-            value: function hidethread() {
-                $('.cls-board-outer').removeClass('is_active');
             }
         }, {
             key: 'render',
@@ -1709,9 +1700,9 @@ var Comment = function (_React$Component) {
                     'currentPostID': CurrentPostID,
                     'metaId': elID
                 };
-                // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                 jQuery.post(ajaxurl, data, function () {
                     jQuery('#' + elIDRemove).remove();
+                    jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
                 });
 
                 // Remove Tag.

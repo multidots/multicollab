@@ -17,7 +17,7 @@ $(window).on('load', function () {
     var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
     commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
 
-    const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+    const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
     const loadIcons = setInterval(function () {
@@ -121,6 +121,7 @@ function fetchComments() {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 }
                 if (loadAttempts >= 10) {
                     clearInterval(loadComments);
@@ -198,6 +199,8 @@ function bring_back_comments() {
             });
         }
 
+        // Update unresolved comments count.
+        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
     });
 
     return false;
@@ -263,8 +266,6 @@ const mdComment = {
 
             this.onToggle = this.onToggle.bind(this);
             this.getSelectedText = this.getSelectedText.bind(this);
-            this.removeSuggestion = this.removeSuggestion.bind(this);
-            this.hidethread = this.hidethread.bind(this);
             this.floatComments = this.floatComments.bind(this);
             this.removeTag = this.removeTag.bind(this);
 
@@ -372,6 +373,7 @@ const mdComment = {
             var referenceNode = document.getElementById('md-span-comments');
 
             referenceNode.appendChild(newNode);
+            $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
             onChange(toggleFormat(value, {type: name}),
                 ReactDOM.render(
@@ -400,8 +402,7 @@ const mdComment = {
                 jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
             }
 
-            var referenceNode = document.getElementById('md-span-comments');
-
+            const referenceNode = document.getElementById('md-span-comments');
 
             // Remove tags if selected tag ID exist in 'remove-comment' attribute of body.
             let removedComments = $('body').attr('remove-comment');
@@ -433,7 +434,7 @@ const mdComment = {
                             $('[datatext="' + selectedText + '"]').css('background', 'transparent');
                         }
                     }
-
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                     $('#' + selectedText).addClass('has_text').show();
                 });
 
@@ -446,12 +447,14 @@ const mdComment = {
                     if (selectedText !== latestBoard) {
                         this.removeTag(latestBoard);
                         $('#' + latestBoard).remove();
+                        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                     }
                 }
 
                 // Just hide these popups and only display on CTRLz
                 $('#md-span-comments .cls-board-outer:not(.has_text):not([data-sid])').each(function () {
                     $(this).hide();
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 });
 
                 // Adding lastVal and onChanged props to make it deletable,
@@ -496,16 +499,6 @@ const mdComment = {
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
                 $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
             }
-        }
-
-        removeSuggestion() {
-            const {onChange, value} = this.props;
-            onChange(removeFormat(value, name));
-        }
-
-        hidethread() {
-            $('.cls-board-outer').removeClass('is_active');
-
         }
 
         render() {

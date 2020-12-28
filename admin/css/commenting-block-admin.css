@@ -374,6 +374,14 @@ span.user-name {
     color: #4B1BCE;
 }
 
+#history-toggle:before {
+    content: attr(data-count);
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    color: red;
+}
+
 .block-editor-editor-skeleton__body {
     position: relative;
 }

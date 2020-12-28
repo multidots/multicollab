@@ -62,12 +62,12 @@ class Commenting_block_Admin {
 		add_action( 'admin_menu', array( $this, 'cf_add_setting_page' ) );
 
 		// Adding new column to the posts list.
-		add_filter('manage_posts_columns', array( $this, 'cf_columns_head' ) );
-		add_filter('manage_pages_columns', array( $this, 'cf_columns_head' ) );
+		add_filter( 'manage_posts_columns', array( $this, 'cf_columns_head' ) );
+		add_filter( 'manage_pages_columns', array( $this, 'cf_columns_head' ) );
 
 		// Adding content in a column of posts list.
-		add_action('manage_posts_custom_column', array( $this, 'cf_columns_content') , 10, 2 );
-		add_action('manage_pages_custom_column', array( $this, 'cf_columns_content') , 10, 2 );
+		add_action( 'manage_posts_custom_column', array( $this, 'cf_columns_content' ), 10, 2 );
+		add_action( 'manage_pages_custom_column', array( $this, 'cf_columns_content' ), 10, 2 );
 	}
 
 	/**
@@ -77,8 +77,9 @@ class Commenting_block_Admin {
 	 *
 	 * @return array mixed Updated list of default columns.
 	 */
-	public function cf_columns_head($defaults) {
-		$defaults['cb_comments_status'] = 'Resolved/Total Comments';
+	public function cf_columns_head( $defaults ) {
+		$defaults['cb_comments_status'] = 'Comments Count';
+
 		return $defaults;
 	}
 
@@ -94,16 +95,16 @@ class Commenting_block_Admin {
 
 			$content = get_the_content( $post_ID );
 
-			$metas = get_post_meta( $post_ID );
+			$metas          = get_post_meta( $post_ID );
 			$resolved_count = $unresolved_count = 0;
 
-			foreach( $metas as $key => $val ) {
-				if( substr($key, 0, 3) === '_el' ) {
-					$key = str_replace('_el', '', $key);
-					if( strpos($val[0], 'resolved') === false && strpos($content, $key) !== false ) {
-						$unresolved_count++;
+			foreach ( $metas as $key => $val ) {
+				if ( substr( $key, 0, 3 ) === '_el' ) {
+					$key = str_replace( '_el', '', $key );
+					if ( strpos( $val[0], 'resolved' ) === false && strpos( $content, $key ) !== false ) {
+						$unresolved_count ++;
 					} else {
-						$resolved_count++;
+						$resolved_count ++;
 					}
 				}
 			}
@@ -749,7 +750,7 @@ class Commenting_block_Admin {
 	 */
 	public function cf_save_settings() {
 		$form_data = array();
-		parse_str(filter_input( INPUT_POST, "formData", FILTER_SANITIZE_STRING ), $form_data);
+		parse_str( filter_input( INPUT_POST, "formData", FILTER_SANITIZE_STRING ), $form_data );
 
 		update_option( 'cf_admin_notif', $form_data['cf_admin_notif'] );
 

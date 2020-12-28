@@ -64,9 +64,9 @@ export default class Comment extends React.Component {
                 'currentPostID': CurrentPostID,
                 'metaId': elID
             };
-            // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function () {
                 jQuery('#' + elIDRemove).remove();
+                jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
             });
 
             // Remove Tag.
