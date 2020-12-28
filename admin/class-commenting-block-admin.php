@@ -554,6 +554,9 @@ class Commenting_block_Admin {
 		}
 		update_post_meta( $current_post_id, $metaId, $superCareerData );
 
+		$lastIndex = count($list_of_comments) - 1;
+		$list_of_comments[$lastIndex]['timestamp'] = $timestamp;
+
 		echo wp_json_encode( array( 'dtTime' => $dtTime, 'timestamp' => $timestamp ) );
 
 		// Sending email
@@ -566,7 +569,7 @@ class Commenting_block_Admin {
 			'open_count'       => '',
 			'resolved_count'   => '',
 			'commented_text'   => $commentList['commentedOnText'],
-			'list_of_comments' => $list_of_comments
+			'list_of_comments' => $list_of_comments,
 		] );
 		wp_die();
 	}
