@@ -168,6 +168,7 @@ class Commenting_block {
 		$this->loader->add_action( 'wp_ajax_cf_merge_draft_stacks', $plugin_admin,'cf_merge_draft_stacks' );
 		$this->loader->add_action( 'wp_ajax_cf_get_user_email_list', $plugin_admin, 'cf_get_user_email_list' );
 		$this->loader->add_action( 'wp_ajax_cf_get_matched_user_email_list', $plugin_admin, 'cf_get_matched_user_email_list' );
+		$this->loader->add_action( 'wp_ajax_cf_get_assignable_user_list', $plugin_admin, 'cf_get_assignable_user_list' );
 		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'cf_rest_api' );
 	}
 

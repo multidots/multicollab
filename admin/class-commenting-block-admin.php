@@ -495,12 +495,24 @@ class Commenting_block_Admin {
 		$post_title = $this->cf_limit_characters( $args['post_title'], 30 );
 		$site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
 
+		if( ! empty( $args['assign_to'] ) ) {
+			$key = array_search( $args['assign_to'], $matches[0] );
+			unset($matches[0][$key]);
+		}
 		if ( ! empty( $matches[0] ) ) {
 			$to      = $matches[0];
 			$subject = "New Comment - {$post_title} - {$site_name}";
 			$body    = $template;
 			$headers = 'Content-Type: text/html; charset=UTF-8';
 			wp_mail( $to, $subject, $body, $headers );
+		}
+
+		if( ! empty( $args['assign_to'] ) ) {
+			$assign_to      = $args['assign_to'];
+			$assign_subject = "Assgined to you";
+			$assign_body    = $template;
+			$headers = 'Content-Type: text/html; charset=UTF-8';
+			wp_mail( $assign_to, $assign_subject, $assign_body, $headers );
 		}
 
 	}
@@ -514,6 +526,11 @@ class Commenting_block_Admin {
 		$commentList      = html_entity_decode( $commentList );
 		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
+
+		// Get the assigned User Email
+		$assignTo 	      = intval( $_POST['assignTo'] ); // get the assign to value
+		$user_data        = get_user_by( 'ID', $assignTo );
+		$user_email       = $user_data->user_email;
 
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$arr             = array();
@@ -578,6 +595,7 @@ class Commenting_block_Admin {
 			'resolved_count'   => '',
 			'commented_text'   => $commentList['commentedOnText'],
 			'list_of_comments' => $list_of_comments,
+			'assign_to'        => $user_email
 		] );
 		wp_die();
 	}
@@ -1051,5 +1069,37 @@ class Commenting_block_Admin {
 		wp_die();
 	}
 
+	/**
+	 * Get the list of assignable users
+	 *
+	 * @return void
+	 */
+	public function cf_get_assignable_user_list() {
 
+		if( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
+			return;
+		}
+
+		$content = sanitize_textarea_field( $_POST['content'] );
+		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
+		preg_match_all( $pattern, $content, $matches );
+
+		$user_emails = array_unique( $matches[0] ); // Remove duplicate entries if any
+
+		$results = [];
+		if( count( $user_emails ) > 0 ) {
+			foreach( $user_emails as $user_email ) {
+				$user_data = get_user_by( 'email', $user_email );
+				$results[] = [
+					'ID'           => $user_data->ID,
+					'display_name' => $user_data->display_name,
+					'user_email'   => $user_data->user_email,
+					'avatar'       => get_avatar_url( $user_data->ID ),
+				];
+			}
+		}
+
+		echo wp_json_encode( $results );
+		wp_die();
+	}
 }

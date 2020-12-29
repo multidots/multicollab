@@ -1158,7 +1158,8 @@ body.hide-comments .block-editor-writing-flow {
 }
 
 /* Email Mentioning Popup */
-.cf-mentioned-user-popup {
+.cf-mentioned-user-popup,
+.cf-assignable-list-popup {
     display: block;
     width: 87%;
     height: auto;
@@ -1167,11 +1168,13 @@ body.hide-comments .block-editor-writing-flow {
     background: #fff;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
-.cf-mentioned-user-popup ul {
+.cf-mentioned-user-popup ul,
+.cf-assignable-list-popup ul {
     padding: 0 !important;
     margin: 0 !important;
 }
-.cf-mentioned-user-popup ul li {
+.cf-mentioned-user-popup ul li,
+.cf-assignable-list-popup ul li {
     list-style: none;
     display: flex;
     justify-content: flex-start;
@@ -1180,22 +1183,27 @@ body.hide-comments .block-editor-writing-flow {
     border-bottom: 1px solid rgba(0,0,0,0.1);
     transition: all 0.3s ease-in-out;
 }
-.cf-mentioned-user-popup ul li:hover {
+.cf-mentioned-user-popup ul li:hover,
+.cf-assignable-list-popup ul li:hover {
     background-color: rgba( 0,0,0,0.05 );
 }
-.cf-mentioned-user-popup ul li:last-child {
+.cf-mentioned-user-popup ul li:last-child,
+.cf-assignable-list-popup ul li:last-child {
     border-bottom: 0px;
 }
-.cf-mentioned-user-popup ul li img {
+.cf-mentioned-user-popup ul li img,
+.cf-assignable-list-popup ul li img {
     width: 32px;
     height: 32px;
     border-radius: 50%;
 }
-.cf-mentioned-user-popup ul li .cf-user-info {
+.cf-mentioned-user-popup ul li .cf-user-info,
+.cf-assignable-list-popup ul li .cf-user-info {
     display: block;
     padding-left: 10px;
 }
-.cf-mentioned-user-popup ul li .cf-user-info .cf-user-display-name {
+.cf-mentioned-user-popup ul li .cf-user-info .cf-user-display-name,
+.cf-assignable-list-popup ul li .cf-user-info .cf-user-display-name {
     color: rgb(60, 64, 67);
     font-size: 14px;
     font-weight: 400;
@@ -1203,7 +1211,8 @@ body.hide-comments .block-editor-writing-flow {
     text-transform: capitalize;
     margin: 5px 0px 0px 0px !important;
 }
-.cf-mentioned-user-popup ul li .cf-user-info .cf-user-email {
+.cf-mentioned-user-popup ul li .cf-user-info .cf-user-email,
+.cf-assignable-list-popup ul li .cf-user-info .cf-user-email {
     margin: 0px 0px 5px 0px !important;
     font-size: 12px;
     font-weight: 400;
@@ -1222,4 +1231,11 @@ body.hide-comments .block-editor-writing-flow {
 .comment-flash {
     background-color: rgba(252,239,69,0.2);
     transition: all 0.3s ease-in-out;
+}
+.cf-assign-to {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px 0;
 }

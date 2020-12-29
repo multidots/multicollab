@@ -119,7 +119,7 @@
             if( data.length > 0 ) {
                 data.forEach( function( user ) {
                     listItem += `
-                        <li data-email="${user.user_email}">
+                        <li data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}">
                             <img src="${user.avatar}" alt="${user.display_name}" />
                             <div class="cf-user-info">
                                 <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">(${user.role})</small></p>
@@ -156,18 +156,20 @@
 
         // Create @mentioning email features
         var createAutoEmailMention = function() {
-            var typedText      = ''
-            var trackedStr     = ''
-            var isEmail        = false;
-            var createTextarea = '.shareCommentContainer textarea';
-            var appendIn       = '.cf-system-user-email-list';
-            var editLink       = '.comment-actions .buttons-wrapper .js-edit-comment';
-            var cancelComment  = '.js-cancel-comment';
-            var keysToAvoid    = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
+            var typedText       = ''
+            var trackedStr      = ''
+            var isEmail         = false;
+            var createTextarea  = '.shareCommentContainer textarea';
+            var appendIn        = '.cf-mentioned-user-popup';
+            var assignablePopup = '.cf-assignable-list-popup';
+            var editLink        = '.comment-actions .buttons-wrapper .js-edit-comment';
+            var cancelComment   = '.js-cancel-comment';
+            var keysToAvoid     = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
 
             // Remove emails list on edit link click
             $( document.body ).on( 'click', editLink, function(e) {
                 $( appendIn ).remove();
+                $( assignablePopup ).remove();
             } )
 
             // Triggering textarea keyup event
@@ -178,6 +180,7 @@
                 // If textarea is blank then remove email list
                 if( '' == typedText ) {
                     $( appendIn ).remove();
+                    $( assignablePopup ).remove();
                 }
 
                 // Handeling space. As if someone type space has no intension to write email.
@@ -207,6 +210,8 @@
                             beforeSend: function() {},
                             success: function( res ) {
                                 $( appendIn ).remove(); // Remove previous DOM
+                                $( assignablePopup ).remove(); // Remove previous DOM
+                                $( assignablePopup ).remove();
                                 var data = JSON.parse( res );
                                 emailList( _self, data )
                             }
@@ -242,6 +247,7 @@
                                 beforeSend: function() {},
                                 success: function( res ) {
                                     $( appendIn ).remove(); // Removing previous DOM
+                                    $( assignablePopup ).remove(); // Removing previous DOM
                                     var data = JSON.parse( res );
                                     emailList( _self, data )
                                     makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' )
@@ -268,6 +274,7 @@
 
                 $( createTextarea ).val( refinedContent );
                 $( appendIn ).remove();
+                $( assignablePopup ).remove();
                 trackedStr = '';
             } )
         }
@@ -275,13 +282,116 @@
 
         // User Assign Function
         var assignThisToUser = function() {
-            var mentionEmail = '.cf-system-user-email-list li';
-            $( document.body ).on( 'click', mentionEmail, function(e) {
-                var thisEmail = $( this ).data( 'email' );
-                console.log(thisEmail)
+            var appendTo          = '.shareCommentContainer textarea';
+            var mentionedEmail    = '.cf-system-user-email-list li';
+            var assignableEmail   = '.cf-assignable-list li';
+            var checkBoxContainer = '.cf-assign-to';
+
+            // On Suggested Email Click
+            $( document.body ).on( 'click', mentionedEmail, function(e) {
+                var thisEmail       = $( this ).data( 'email' );
+                var thisUserId      = $( this ).data( 'user-id' );
+                var thisDisplayName = $( this ).data( 'display-name' );
+                var checkbox        = `
+                <div class="cf-assign-to">
+                    <label for="cf-assign-to-user">
+                        <input id="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
+                    </label>
+                    <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
+                </div>`;
+
+                if( $( checkBoxContainer ).length ) {
+                    $( checkBoxContainer ).remove();
+                }
+                $( checkbox ).insertAfter( appendTo );
+            } )
+
+            // On Assignable Email Click
+            $( document.body ).on( 'click', assignableEmail, function(e) {
+                e.preventDefault();
+                var appendTo        = '.cf-assign-to';
+                var assignablePopup = '.cf-assignable-list-popup';
+                var thisEmail       = $( this ).data( 'email' );
+                var thisUserId      = $( this ).data( 'user-id' );
+                var thisDisplayName = $( this ).data( 'display-name' );
+                var checkbox = `
+                <label for="cf-assign-to-user">
+                    <input id="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
+                </label>
+                <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
+                `;
+
+                $( appendTo ).html('').append( checkbox );
+                $( assignablePopup ).remove();
             } )
         }
         assignThisToUser();
+
+        // Asignable Email List Template
+        var assignalbeList = function( _self, data ) {
+            var listItem = ''
+            if( data.length > 0 ) {
+                data.forEach( function( user ) {
+                    listItem += `
+                    <li data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}">
+                        <img src="${user.avatar}" alt="${user.display_name}" />
+                        <div class="cf-user-info">
+                            <p class="cf-user-display-name">${user.display_name}</p>
+                            <p class="cf-user-email">${user.email}</p>
+                        </div>
+                    </li>
+                    `
+                } )
+            }
+            var assignListTemplate = `
+                <div class="cf-assignable-list-popup">
+                    <ul class="cf-assignable-list">
+                        ${listItem}
+                    </li>
+                </div>
+            `;
+
+            $( assignListTemplate ).insertAfter( _self )
+        }
+
+        // Show Assiganable Email List
+        var showAssingableEmailList = function() {
+            var triggerLink = '.js-cf-show-assign-list';
+            var textarea    = '.shareCommentContainer textarea';
+            var appendTo    = '.shareCommentContainer .cf-assign-to';
+            $( document.body ).on( 'click', triggerLink, function(e) {
+                e.preventDefault();
+                var content = $( textarea ).val();
+                $( this ).removeClass( 'js-cf-show-assign-list' ).addClass( 'js-cf-hide-assign-list' )
+                // Send Ajax Request
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'post',
+                    data: {
+                        action: 'cf_get_assignable_user_list',
+                        content: content
+                    },
+                    beforeSend: function() {},
+                    success: function( res ) {
+                        var data = JSON.parse( res )
+                        assignalbeList( appendTo, data )
+                    }
+                })
+            } )
+        }
+        showAssingableEmailList();
+
+        // Hide Assignable Email list
+        var hideAssignableEmailList = function() {
+            var triggerLink         = '.js-cf-hide-assign-list';
+            var assignableListPopup = '.cf-assignable-list-popup';
+            $( document.body ).on( 'click', triggerLink, function(e) {
+                e.preventDefault();
+                $( assignableListPopup ).remove();
+                $( this ).removeClass( 'js-cf-hide-assign-list' ).addClass( 'js-cf-show-assign-list' );
+            } )
+        }
+        hideAssignableEmailList();
 
         // Email List Template Function
         var emailListForEdit = function( _self, data ) {
@@ -318,7 +428,7 @@
             var editTextarea  = '.commentContainer .commentText textarea';
             var editLink      = '.comment-actions .buttons-wrapper .js-edit-comment';
             var cancelComment = '.js-cancel-comment';
-            var appendIn      = '.cf-edit-system-user-email-list'
+            var appendIn      = '.cf-mentioned-user-popup'
             var keysToAvoid   = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
 
             // Remove email list on edit link or cancel button click

@@ -13654,11 +13654,16 @@ var Board = function (_React$Component) {
 
                 var el = currentTextID.substring(3);
                 var metaId = '_' + el;
+                var assignTo = '';
+                if (jQuery('#cf-assign-to-user').is(':checked')) {
+                    assignTo = jQuery('#cf-assign-to-user').val();
+                }
                 var data = {
                     'action': 'cf_add_comment',
                     'currentPostID': CurrentPostID,
                     'commentList': JSON.stringify(arr),
-                    'metaId': metaId
+                    'metaId': metaId,
+                    'assignTo': assignTo
                 };
 
                 jQuery('#' + el + ' .shareCommentContainer').addClass('loading');
@@ -13686,6 +13691,9 @@ var Board = function (_React$Component) {
 
                     // Flushing the text from the textarea
                     jQuery('#' + currentTextID).val('').focus();
+
+                    // Remove assign checkbox
+                    jQuery('.cf-assign-to').remove();
                 });
             } else alert("Please write a comment to share!");
         }
