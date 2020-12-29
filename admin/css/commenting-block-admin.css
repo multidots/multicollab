@@ -435,6 +435,12 @@ span.user-name {
     width: calc(100% - 130px);
 }
 
+#cf-column-img, .column-cb_comments_status .sorting-indicator {
+    top: 4px;
+    position: relative;
+    left: -2px;
+}
+
 .comment-header .commenter-name-time .commenter-name {
     font-size: 15px;
     line-height: 1;

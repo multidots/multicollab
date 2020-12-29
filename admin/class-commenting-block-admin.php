@@ -68,6 +68,40 @@ class Commenting_block_Admin {
 		// Adding content in a column of posts list.
 		add_action( 'manage_posts_custom_column', array( $this, 'cf_columns_content' ), 10, 2 );
 		add_action( 'manage_pages_custom_column', array( $this, 'cf_columns_content' ), 10, 2 );
+
+		// Make custom comments columns sortable.
+		add_filter( 'manage_edit-post_sortable_columns', array( $this, 'cf_sortable_comments_column' ) );
+		add_filter( 'manage_edit-page_sortable_columns', array( $this, 'cf_sortable_comments_column' ) );
+
+		// Set query to sort.
+		add_action( 'pre_get_posts', array( $this, 'cf_sort_custom_column_query' ) );
+	}
+
+	public function cf_sortable_comments_column( $columns ) {
+		$columns['cb_comments_status'] = 'sort_by_cf_comments';
+
+		return $columns;
+	}
+
+	function cf_sort_custom_column_query( $query ) {
+		$orderby = $query->get( 'orderby' );
+
+		if ( 'sort_by_cf_comments' == $orderby ) {
+
+			$meta_query = array(
+				'relation' => 'OR',
+				array(
+					'key'     => 'open_cf_count',
+					'compare' => 'NOT EXISTS', // see note above
+				),
+				array(
+					'key' => 'open_cf_count',
+				),
+			);
+
+			$query->set( 'meta_query', $meta_query );
+			$query->set( 'orderby', 'meta_value' );
+		}
 	}
 
 	/**
@@ -78,7 +112,7 @@ class Commenting_block_Admin {
 	 * @return array mixed Updated list of default columns.
 	 */
 	public function cf_columns_head( $defaults ) {
-		$defaults['cb_comments_status'] = 'Comments Count';
+		$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg" width=17/>' . ' Editorial Comments';
 
 		return $defaults;
 	}
@@ -93,23 +127,42 @@ class Commenting_block_Admin {
 
 		if ( $column_name === 'cb_comments_status' ) {
 
-			$content = get_the_content( $post_ID );
-
-			$metas          = get_post_meta( $post_ID );
-			$resolved_count = $unresolved_count = 0;
-
-			foreach ( $metas as $key => $val ) {
-				if ( substr( $key, 0, 3 ) === '_el' ) {
-					$key = str_replace( '_el', '', $key );
-					if ( strpos( $val[0], 'resolved' ) === false && strpos( $content, $key ) !== false ) {
-						$unresolved_count ++;
-					} else {
-						$resolved_count ++;
-					}
-				}
+			$comment_counts = $this->cf_get_comment_counts( $post_ID );
+			if ( 0 !== $comment_counts['total_counts'] ) {
+				echo '<a href="' . esc_url( get_edit_post_link( $post_ID ) ) . '">' . esc_html( $comment_counts['open_counts'] . '/' . $comment_counts['total_counts'] ) . '</a>';
+			} else {
+				echo '-';
 			}
-			echo esc_html( "$unresolved_count/$resolved_count" );
 		}
+	}
+
+	public function cf_get_comment_counts( $post_ID, $content = '', $metas = array() ) {
+
+		$metas       = 0 === count( $metas ) ? get_post_meta( $post_ID ) : $metas;
+		$content     = empty( $content ) ? get_the_content( $post_ID ) : $content;
+		$total_count = $open_counts = 0;
+
+		foreach ( $metas as $key => $val ) {
+			if ( substr( $key, 0, 3 ) === '_el' ) {
+				$key = str_replace( '_el', '', $key );
+				if ( strpos( $val[0], 'resolved' ) === false && strpos( $content, $key ) !== false ) {
+					$open_counts ++;
+				}
+				$total_count ++;
+			}
+		}
+
+		// Confirm open counts with the meta value, if not
+		// matched, update it. Just for double confirmation.
+		$open_cf_count = $metas['open_cf_count'][0];
+		if( (int) $open_cf_count !== $open_counts ) {
+			update_post_meta( $post_ID, 'open_cf_count', $open_counts );
+		}
+
+		$comment_counts['open_counts']  = $open_counts;
+		$comment_counts['total_counts'] = $total_count;
+
+		return $comment_counts;
 	}
 
 	/**
@@ -198,13 +251,15 @@ class Commenting_block_Admin {
 	 */
 	public function cf_post_status_changes( $post_ID, $post, $update ) {
 
+		$metas = get_post_meta( $post_ID );
+
 		$p_content  = is_object( $post ) ? $post->post_content : $post;
 		$p_link     = get_edit_post_link( $post_ID );
 		$p_title    = get_the_title( $post_ID );
 		$site_title = get_bloginfo( 'name' );
 
 		// Publish drafts from the 'current_drafts' stack.
-		$current_drafts = get_post_meta( $post_ID, 'current_drafts', true );
+		$current_drafts = $metas['current_drafts'][0];
 		$current_drafts = maybe_unserialize( $current_drafts );
 
 		$date_format = get_option( 'date_format' );
@@ -222,7 +277,7 @@ class Commenting_block_Admin {
 			$current_user_display_name = $curr_user->display_name;
 
 			foreach ( $resolved_drafts as $el ) {
-				$prev_state                       = get_post_meta( $post_ID, $el, true );
+				$prev_state                       = $metas[ $el ][0];
 				$prev_state                       = maybe_unserialize( $prev_state );
 				$prev_state['resolved']           = 'true';
 				$prev_state['resolved_timestamp'] = $current_timestamp;
@@ -230,7 +285,7 @@ class Commenting_block_Admin {
 				update_post_meta( $post_ID, $el, $prev_state );
 
 				// Send Email.
-				$comments = get_post_meta( $post_ID, "$el", true );
+				$comments = $metas[ $el ][0];
 				$comments = maybe_unserialize( $comments );
 				$comments = isset( $comments['comments'] ) ? $comments['comments'] : '';
 
@@ -318,7 +373,7 @@ class Commenting_block_Admin {
 				 */
 				$elid = str_replace( '_', '', $el );
 				if ( strpos( $p_content, $elid ) !== false ) {
-					$prev_state = get_post_meta( $post_ID, $el, true );
+					$prev_state = $metas[ $el ][0];
 					$prev_state = maybe_unserialize( $prev_state );
 					foreach ( $drafts as $d ) {
 						$prev_state['comments'][ $d ]['status'] = 'publish';
@@ -333,7 +388,7 @@ class Commenting_block_Admin {
 			$edited_drafts = $current_drafts['edited'];
 
 			foreach ( $edited_drafts as $el => $timestamps ) {
-				$prev_state = get_post_meta( $post_ID, $el, true );
+				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
 
 				foreach ( $timestamps as $t ) {
@@ -359,7 +414,7 @@ class Commenting_block_Admin {
 			$deleted_drafts = $current_drafts['deleted'];
 
 			foreach ( $deleted_drafts as $el => $timestamps ) {
-				$prev_state = get_post_meta( $post_ID, $el, true );
+				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
 
 				foreach ( $timestamps as $t ) {
@@ -377,12 +432,12 @@ class Commenting_block_Admin {
 		update_post_meta( $post_ID, 'current_drafts', '' );
 
 		// New Comments from past should be moved to 'permanent_drafts'.
-		$permanent_drafts = get_post_meta( $post_ID, 'permanent_drafts', true );
+		$permanent_drafts = $metas['permanent_drafts'][0];
 		$permanent_drafts = maybe_unserialize( $permanent_drafts );
 		if ( isset( $permanent_drafts['comments'] ) && 0 !== count( $permanent_drafts['comments'] ) ) {
 			$permanent_drafts = $permanent_drafts['comments'];
 			foreach ( $permanent_drafts as $el => $drafts ) {
-				$prev_state = get_post_meta( $post_ID, $el, true );
+				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
 				foreach ( $drafts as $d ) {
 					$prev_state['comments'][ $d ]['status'] = 'permanent_draft';
@@ -393,6 +448,10 @@ class Commenting_block_Admin {
 
 		// Flush Permanent Drafts Stack.
 		update_post_meta( $post_ID, 'permanent_drafts', '' );
+
+		// Update open comments count.
+		$comment_counts = $this->cf_get_comment_counts( $post_ID, $p_content, $metas );
+		update_post_meta( $post_ID, 'open_cf_count', $comment_counts['open_counts'] );
 	}
 
 	/**
