@@ -528,9 +528,12 @@ class Commenting_block_Admin {
 		$list_of_comments = $commentList;
 
 		// Get the assigned User Email
-		$assignTo 	      = intval( $_POST['assignTo'] ); // get the assign to value
-		$user_data        = get_user_by( 'ID', $assignTo );
-		$user_email       = $user_data->user_email;
+		$user_email = '';
+		$assign_to  = intval( $_POST['assignTo'] ); // get the assign to value
+		if( isset( $assign_to ) && $assign_to > 0 ) {
+			$user_data  = get_user_by( 'ID', $assign_to );
+			$user_email = $user_data->user_email;
+		}
 
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$arr             = array();
@@ -570,10 +573,12 @@ class Commenting_block_Admin {
 
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 			$superCareerData['comments'][ $timestamp ] = $arr;
+			$superCareerData['assigned_to']            = $assign_to;
 		} else {
 			$superCareerData                           = array();
 			$superCareerData['comments'][ $timestamp ] = $arr;
 			$superCareerData['commentedOnText']        = $commentList['commentedOnText'];
+			$superCareerData['assigned_to']            = $assign_to;
 
 			update_post_meta( $current_post_id, 'th' . $metaId, get_current_user_id() );
 		}
