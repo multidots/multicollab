@@ -377,9 +377,16 @@ span.user-name {
 #history-toggle:before {
     content: attr(data-count);
     position: absolute;
-    top: 2px;
-    right: 5px;
-    color: red;
+    top: 0px;
+    left: 17px;
+    background: #f02849;
+    color: #FFFFFF;
+    padding: 2px 5px;
+    border-radius: 10px;
+    border: 2px solid #FFF;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 20px;
 }
 
 .block-editor-editor-skeleton__body {
@@ -399,6 +406,11 @@ span.user-name {
 
 .comment-header .buttons-holder.is_active .buttons-wrapper {
     display: block;
+}
+
+/*tem css*/
+.cls-board-outer.locked {
+    background: #cacaed;
 }
 
 .buttons-opner {

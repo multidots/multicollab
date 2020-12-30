@@ -34,6 +34,20 @@
     // Document Ready.
     $(document).ready(function () {
 
+        $(document).on('click', '.block-editor-block-list__layout .wp-block', function () {
+
+            if($('.cls-board-outer').hasClass('locked')) {
+
+                // Reset Comments Float. This will reset the positions of all comments.
+                $('#md-span-comments .cls-board-outer').css('opacity', '1');
+                $('#md-span-comments .cls-board-outer').removeClass('focus');
+                $('#md-span-comments .cls-board-outer').removeAttr('style');
+
+                $('.cls-board-outer').removeClass('locked');
+            }
+
+        });
+
         // Settings page tabs toggle.
         $(document).on('click', '.cf-tabs span', function () {
             const tabID = $(this).data('id');
@@ -128,13 +142,19 @@
 
             const dataid = $(this).attr('data-id');
 
+
             // Trigger card click to focus.
             $('#' + dataid).trigger('click');
+
+            // Focus and Lock the popup to prevent on hover issue.
+            $('.cls-board-outer').removeClass('locked');
+            $('#' + dataid).addClass('locked');
 
             $('[datatext="' + dataid + '"]').addClass('focus');
             setTimeout(function () {
                 $('[datatext="' + dataid + '"]').removeClass('focus');
             }, 1500);
+
         });
 
         $('.shareCommentContainer textarea').on('click', function () {

@@ -972,17 +972,29 @@ var mdComment = {
                     value = _props2.value,
                     activeAttributes = _props2.activeAttributes;
 
-                // Ignore unnecessary event calls on hover.
+                // Prevent on locked mode + fix for unnecessary calls on hover.
 
+                if ($('.cls-board-outer').hasClass('locked')
+                /*&& ( activeAttributes.datatext === $('.cls-board-outer.locked').attr('id') || undefined === activeAttributes.datatext )*/
+                ) {
+                        return;
+                    }
+
+                // Ignore unnecessary event calls on hover.
                 if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
                     return;
                 }
 
+                console.dir(this.props);
+
                 // Reset Comments Float only if the selected text has no comments on it.
                 if (undefined === activeAttributes.datatext) {
-                    jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-                    jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-                    jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+                    $('#md-span-comments .cls-board-outer').css('opacity', '1');
+                    $('#md-span-comments .cls-board-outer').removeClass('focus');
+                    $('#md-span-comments .cls-board-outer').removeAttr('style');
+
+                    //ne_pending remove the attr true
+                    $('mdspan').removeAttr('data-rich-text-format-boundary');
                 }
 
                 var referenceNode = document.getElementById('md-span-comments');
@@ -1044,36 +1056,33 @@ var mdComment = {
                     }
 
                     // Removing dark highlights from other texts,
-                    // only if current active text has a attribute,
+                    // only if current active text has an attribute,
                     // and no 'focus' class active on mdspan tag.
                     // This condition prevents thread popup flickering
                     // when navigating through the activity center.
-                    if (1 === $('mdspan[datatext="' + selectedText + '"][data-rich-text-format-boundary]').length && !$('mdspan').hasClass('focus')) {
+                    //if (1 === $('mdspan[datatext="' + selectedText + '"][data-rich-text-format-boundary]').length && !$('mdspan').hasClass('focus')) {
 
-                        // Adding focus on selected text's popup.
-                        $('.cls-board-outer').removeClass('focus');
-                        $('#' + selectedText + '.cls-board-outer').addClass('focus');
+                    // Adding focus on selected text's popup.
+                    $('.cls-board-outer').removeClass('focus');
+                    $('#' + selectedText + '.cls-board-outer').addClass('focus');
 
-                        $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
+                    $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
-                        // Float comments column.
-                        if (undefined !== selectedText) {
-                            //Active comment tab
-                            if (!$('#md-tabs .comment').hasClass('active')) {
-                                $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
-                                $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
-                            }
-                            this.floatComments(selectedText);
-                        }
-                    }
+                    // Float comments column.
+                    this.floatComments(selectedText);
+
+                    //}
                 }
             }
         }, {
             key: 'floatComments',
             value: function floatComments(selectedText) {
                 if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
+
                     $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                     $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
+
+                    $('#md-span-comments .cls-board-outer').css('top', 0);
                     $('#' + selectedText).offset({ top: $('[datatext="' + selectedText + '"]').offset().top });
                 }
             }
