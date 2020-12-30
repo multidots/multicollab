@@ -408,9 +408,8 @@ span.user-name {
     display: block;
 }
 
-/*tem css*/
 .cls-board-outer.locked {
-    background: #cacaed;
+    background: #f2f2fa;
 }
 
 .buttons-opner {
