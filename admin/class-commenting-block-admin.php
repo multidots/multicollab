@@ -1002,7 +1002,7 @@ class Commenting_block_Admin {
 			'ID'           => $user_data->ID,
 			'display_name' => $user_data->display_name,
 			'user_email'   => $user_data->user_email,
-			'avatar'       => get_avatar_url( $user_data->ID )
+			'avatar'       => get_avatar_url( $user_data->ID, [ 'size' => 32 ] )
 		];
 
 		$data                    = array();

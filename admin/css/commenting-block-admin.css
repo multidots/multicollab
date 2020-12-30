@@ -1239,3 +1239,27 @@ body.hide-comments .block-editor-writing-flow {
     width: 100%;
     margin: 10px 0;
 }
+.cf-board-assigned-to {
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 0;
+}
+.cf-board-assigned-to .assigned-user-details {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 20px;
+    background-color: rgb(232, 240, 254);
+    color: rgb(60, 64, 67);
+}
+.cf-board-assigned-to .assigned-user-details .user-avatar img {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.cf-board-assigned-to .assigned-user-details .user-info p.display-name {
+    margin: 0px;
+    line-height: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}

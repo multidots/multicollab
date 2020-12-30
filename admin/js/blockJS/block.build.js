@@ -13459,11 +13459,13 @@ var Board = function (_React$Component) {
             wp.apiFetch({ path: 'cf/cf-get-comments-api/?currentPostID=' + currentPostID + '&elID=' + metaselectedText }).then(function (fps) {
                 var userDetails = fps.userDetails,
                     resolved = fps.resolved,
-                    commentedOnText = fps.commentedOnText;
+                    commentedOnText = fps.commentedOnText,
+                    assignedTo = fps.assignedTo;
 
                 // Update the 'commented on text' if not having value.
 
                 _this2.commentedOnText = undefined !== _this2.commentedOnText ? _this2.commentedOnText : commentedOnText;
+                _this2.assignedTo = assignedTo;
 
                 if ('true' === resolved || 0 === userDetails.length) {
                     var elIDRemove = selectedText;
@@ -13793,10 +13795,38 @@ var Board = function (_React$Component) {
             var datatext = this.props.datatext;
 
             var buttonText = 1 === this.hasComments && 1 !== this.props.freshBoard ? 'Reply' : 'Comment';
+            var assignedTo = this.assignedTo;
 
             return wp.element.createElement(
                 'div',
                 { className: 'board ' + (undefined === this.hasComments && this.currentUserProfile && 'fresh-board') },
+                undefined !== assignedTo && wp.element.createElement(
+                    'div',
+                    { className: 'cf-board-assigned-to' },
+                    wp.element.createElement(
+                        'div',
+                        { className: 'assigned-user-details' },
+                        wp.element.createElement(
+                            'div',
+                            { className: 'user-avatar' },
+                            wp.element.createElement('img', { src: assignedTo.avatar, alt: assignedTo.display_name })
+                        ),
+                        wp.element.createElement(
+                            'div',
+                            { className: 'user-info' },
+                            wp.element.createElement(
+                                'span',
+                                { 'class': 'badge' },
+                                'Assigned to'
+                            ),
+                            wp.element.createElement(
+                                'p',
+                                { className: 'display-name' },
+                                assignedTo.display_name
+                            )
+                        )
+                    )
+                ),
                 wp.element.createElement(
                     'div',
                     { className: 'boardTop' },

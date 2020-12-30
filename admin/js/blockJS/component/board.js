@@ -35,10 +35,11 @@ export default class Board extends React.Component {
         if (1 !== this.props.freshBoard) {
             wp.apiFetch({path: 'cf/cf-get-comments-api/?currentPostID=' + currentPostID + '&elID=' + metaselectedText}).then(fps => {
 
-                const {userDetails, resolved, commentedOnText} = fps;
+                const {userDetails, resolved, commentedOnText, assignedTo} = fps;
 
                 // Update the 'commented on text' if not having value.
                 this.commentedOnText = undefined !== this.commentedOnText ? this.commentedOnText : commentedOnText;
+                this.assignedTo = assignedTo;
 
                 if ('true' === resolved || 0 === userDetails.length) {
                     let elIDRemove = selectedText;
@@ -344,9 +345,23 @@ export default class Board extends React.Component {
     render() {
         const {datatext} = this.props;
         const buttonText = 1 === this.hasComments && 1 !== this.props.freshBoard ? 'Reply' : 'Comment';
+        const assignedTo = this.assignedTo
 
         return (
             <div className={`board ${undefined === this.hasComments && this.currentUserProfile && 'fresh-board'}`}>
+                { undefined !== assignedTo &&
+                    <div className="cf-board-assigned-to">
+                        <div className="assigned-user-details">
+                            <div className="user-avatar">
+                                <img src={ assignedTo.avatar } alt={assignedTo.display_name} />
+                            </div>
+                            <div className="user-info">
+                                <span class="badge">Assigned to</span>
+                                <p className="display-name">{ assignedTo.display_name }</p>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div className="boardTop">
                     {
                         this.state.comments && this.state.comments.map((item, index) => {
