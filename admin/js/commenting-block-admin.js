@@ -165,7 +165,7 @@
             var editLink        = '.comment-actions .buttons-wrapper .js-edit-comment';
             var cancelComment   = '.js-cancel-comment';
             var keysToAvoid     = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
-
+            var currentPostID   = $( '#post_ID' ).val();
             // Remove emails list on edit link click
             $( document.body ).on( 'click', editLink, function(e) {
                 $( appendIn ).remove();
@@ -176,7 +176,6 @@
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( this )
                 typedText = _self.val()
-
                 // If textarea is blank then remove email list
                 if( '' == typedText ) {
                     $( appendIn ).remove();
@@ -206,6 +205,7 @@
                             type: 'post',
                             data: {
                                 action: 'cf_get_user_email_list',
+                                postID: currentPostID
                             },
                             beforeSend: function() {},
                             success: function( res ) {
@@ -242,7 +242,8 @@
                                 type: 'post',
                                 data: {
                                     action: 'cf_get_matched_user_email_list',
-                                    niddle: trackedStr
+                                    niddle: trackedStr,
+                                    postID: currentPostID
                                 },
                                 beforeSend: function() {},
                                 success: function( res ) {

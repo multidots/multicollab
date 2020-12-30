@@ -996,10 +996,20 @@ class Commenting_block_Admin {
 			}
 		}
 
+		// Get assigned useer data
+		$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
+		$assigned_to = [
+			'ID'           => $user_data->ID,
+			'display_name' => $user_data->display_name,
+			'user_email'   => $user_data->user_email,
+			'avatar'       => get_avatar_url( $user_data->ID )
+		];
+
 		$data                    = array();
 		$data['userDetails']     = $userDetails;
-		$data['resolved']        = 'true' === $superCareerData['resolved'] ? 'true' : 'false';
+		$data['resolved']        = 'true' === $superCareerData['resolved'] ? 'true': 'false';
 		$data['commentedOnText'] = $superCareerData['commentedOnText'];
+		$data['assignedTo']      = $assigned_to;
 
 		return rest_ensure_response( $data );
 
@@ -1009,26 +1019,34 @@ class Commenting_block_Admin {
 	 * Fetch User Email List
 	 */
 	public function cf_get_user_email_list() {
+		// Get the current post id if not present then return
+		$post_id = isset( $_POST['postID'] ) ? intval( $_POST['postID'] ) : '';
+		if( empty( $post_id ) ) {
+			return;
+		}
+
 		// WP User Query
-		$args = [
-			'number' => 10
-		];
-		$users = new WP_User_Query( $args );
+		$users = new WP_User_Query([
+			'number' => 10,
+			'role__not_in' => 'Subscriber'
+		]);
 
 		// Fetch out all user's email
 		$email_list   = [];
 		$system_users = $users->get_results();
 
 		foreach ( $system_users as $user ) {
-			$email_list[] = [
-				'ID'                => $user->ID,
-				'role'              => implode( ', ', $user->roles ),
-				'display_name'      => $user->display_name,
-				'user_email'        => $user->user_email,
-				'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
-				'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
-				'edit_others_posts' => $user->allcaps['edit_others_posts'],
-			];
+			if( $user->has_cap( 'edit_post', $post_id ) ) {
+				$email_list[] = [
+					'ID'                => $user->ID,
+					'role'              => implode( ', ', $user->roles ),
+					'display_name'      => $user->display_name,
+					'user_email'        => $user->user_email,
+					'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
+					'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
+					'edit_others_posts' => $user->allcaps['edit_others_posts'],
+				];
+			}
 		}
 
 		// Sending Response
@@ -1042,27 +1060,35 @@ class Commenting_block_Admin {
 	 */
 	public function cf_get_matched_user_email_list() {
 		global $wpdb;
+		// Get the current post id if not present then return
+		$post_id = isset( $_POST['postID'] ) ? intval( $_POST['postID'] ) : '';
+		if( empty( $post_id ) ) {
+			return;
+		}
 		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
 		$niddle = substr( $niddle, 1 );
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$users = new WP_User_Query([
 				'search'         => $niddle . '*',
-				'search_columns' => ['user_email']
+				'search_columns' => ['user_email'],
+				'role__not_in'   => 'Subscriber'
 			]);
 
 			// Fetch out matched user's email
 			$email_list   = [];
 			$system_users = $users->get_results();
 			foreach ( $system_users as $user ) {
-				$email_list[] = [
-					'ID'                => $user->ID,
-					'role'              => implode( ', ', $user->roles ),
-					'display_name'      => $user->display_name,
-					'user_email'        => $user->user_email,
-					'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
-					'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
-					'edit_others_posts' => $user->allcaps['edit_others_posts'],
-				];
+				if( $user->has_cap( 'edit_post', $post_id ) ) {
+					$email_list[] = [
+						'ID'                => $user->ID,
+						'role'              => implode( ', ', $user->roles ),
+						'display_name'      => $user->display_name,
+						'user_email'        => $user->user_email,
+						'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
+						'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
+						'edit_others_posts' => $user->allcaps['edit_others_posts'],
+					];
+				}
 			}
 			$response = $email_list;
 		} else if ( '@' === $niddle ) {
