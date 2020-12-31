@@ -77,13 +77,25 @@ class Commenting_block_Admin {
 		add_action( 'pre_get_posts', array( $this, 'cf_sort_custom_column_query' ) );
 	}
 
+	/**
+	 * Make custom comments columns sortable.
+	 *
+	 * @param array $columns List of columns.
+	 *
+	 * @return mixed Updated list of columns.
+	 */
 	public function cf_sortable_comments_column( $columns ) {
 		$columns['cb_comments_status'] = 'sort_by_cf_comments';
 
 		return $columns;
 	}
 
-	function cf_sort_custom_column_query( $query ) {
+	/**
+	 * Set query to sort.
+	 *
+	 * @param objet $query Query object.
+	 */
+	public function cf_sort_custom_column_query( $query ) {
 		$orderby = $query->get( 'orderby' );
 
 		if ( 'sort_by_cf_comments' == $orderby ) {
@@ -136,6 +148,15 @@ class Commenting_block_Admin {
 		}
 	}
 
+	/**
+	 * Counts opened comment and total comments in the post/page.
+	 *
+	 * @param int $post_ID Post ID.
+	 * @param string $content Content of the post/page.
+	 * @param array $metas Array of all meta.
+	 *
+	 * @return array Details of the open and total comments.
+	 */
 	public function cf_get_comment_counts( $post_ID, $content = '', $metas = array() ) {
 
 		$metas       = 0 === count( $metas ) ? get_post_meta( $post_ID ) : $metas;
@@ -168,7 +189,6 @@ class Commenting_block_Admin {
 	/**
 	 * Add Setting Page.
 	 *
-	 * @since 1.0.0
 	 */
 	public function cf_add_setting_page() {
 
@@ -186,9 +206,8 @@ class Commenting_block_Admin {
 	}
 
 	/**
-	 * My setting page callback function.
+	 * Plugin setting page callback function.
 	 *
-	 * @since 1.0.0
 	 */
 	public function cf_settings_callback() {
 		require_once( plugin_dir_path( __FILE__ ) . 'partials/commenting-block-settings-page.php' );
@@ -201,9 +220,9 @@ class Commenting_block_Admin {
 	 * @param string $cap Cap in a loop.
 	 * @param int $user_id User ID.
 	 *
-	 * @return array
+	 * @return array Caps.
 	 */
-	function cf_add_unfiltered_html_capability_to_users( $caps, $cap, $user_id ) {
+	public function cf_add_unfiltered_html_capability_to_users( $caps, $cap, $user_id ) {
 		if ( 'unfiltered_html' === $cap && ( user_can( $user_id, 'administrator' ) || user_can( $user_id, 'editor' ) || user_can( $user_id, 'author' ) || user_can( $user_id, 'contributor' ) ) ) {
 			$caps = array( 'unfiltered_html' );
 		}
