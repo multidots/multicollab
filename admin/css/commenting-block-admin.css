@@ -158,6 +158,11 @@ mdspan {
     background: #fa9f77;
 }
 
+span.dashicon.dashicons.dashicons-admin-comments {
+    min-width: 24px;
+    margin-right: 8px;
+}
+
 .cls-board-outer .board .commentContainer .commentText {
     width: 100%;
     font-size: 13px;
