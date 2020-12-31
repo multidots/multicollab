@@ -155,7 +155,7 @@ class Commenting_block_Admin {
 		// Confirm open counts with the meta value, if not
 		// matched, update it. Just for double confirmation.
 		$open_cf_count = $metas['open_cf_count'][0];
-		if( (int) $open_cf_count !== $open_counts ) {
+		if ( (int) $open_cf_count !== $open_counts ) {
 			update_post_meta( $post_ID, 'open_cf_count', $open_counts );
 		}
 
@@ -971,12 +971,11 @@ class Commenting_block_Admin {
 		$time_format = get_option( 'time_format' );
 
 		foreach ( $comments as $t => $val ) {
-			$user_info   = get_userdata( $val['userData'] );
-			$username    = $user_info->display_name;
-			$profile_url = get_avatar_url( $user_info->user_email );
-			$thread      = $val['thread'];
-			$cstatus     = isset( $val['status'] ) ? $val['status'] : '';
-
+			$user_info    = get_userdata( $val['userData'] );
+			$username     = $user_info->display_name;
+			$profile_url  = get_avatar_url( $user_info->user_email );
+			$thread       = $val['thread'];
+			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
 			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
 
 			$date = gmdate( $time_format . ' ' . $date_format, $t );

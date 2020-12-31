@@ -123,7 +123,7 @@ mdspan {
     background: #eee9e99e;
 }
 
-.cls-board-outer .board .commentContainer.draft {
+.cls-board-outer .board .commentContainer.draft, .cls-board-outer .board .commentContainer.permanent_draft {
     display: none;
     background: none;
 }
