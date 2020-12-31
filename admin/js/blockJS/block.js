@@ -284,12 +284,12 @@ const mdComment = {
             const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
 
             const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            if( null !== blockAttributes ) {
+            if (null !== blockAttributes) {
 
-                const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
-                jQuery(findAttributes).each( function (i, attrb) {
+                const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+                jQuery(findAttributes).each(function (i, attrb) {
                     var content = blockAttributes[attrb];
-                    if( undefined !== content && -1 !== content.indexOf(elIDRemove) ) {
+                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
 
                         if ('' !== content) {
                             let tempDiv = document.createElement('div');
@@ -342,6 +342,12 @@ const mdComment = {
                                                 text: finalContent
                                             }
                                         });
+                                    } else if (attrb === 'downloadButtonText') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                downloadButtonText: finalContent
+                                            }
+                                        });
                                     }
                                     break;
                                 }
@@ -391,7 +397,7 @@ const mdComment = {
             const {onChange, value, activeAttributes} = this.props;
 
             // Prevent on locked mode + fix for unnecessary calls on hover.
-            if( $('.cls-board-outer').hasClass('locked')
+            if ($('.cls-board-outer').hasClass('locked')
                 /*&& ( activeAttributes.datatext === $('.cls-board-outer.locked').attr('id') || undefined === activeAttributes.datatext )*/
             ) {
                 return;
@@ -486,18 +492,15 @@ const mdComment = {
                 // and no 'focus' class active on mdspan tag.
                 // This condition prevents thread popup flickering
                 // when navigating through the activity center.
-                //if (1 === $('mdspan[datatext="' + selectedText + '"][data-rich-text-format-boundary]').length && !$('mdspan').hasClass('focus')) {
 
-                    // Adding focus on selected text's popup.
-                    $('.cls-board-outer').removeClass('focus');
-                    $('#' + selectedText + '.cls-board-outer').addClass('focus');
+                // Adding focus on selected text's popup.
+                $('.cls-board-outer').removeClass('focus');
+                $('#' + selectedText + '.cls-board-outer').addClass('focus');
 
-                    $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
+                $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
-                    // Float comments column.
-                    this.floatComments(selectedText);
-
-                //}
+                // Float comments column.
+                this.floatComments(selectedText);
             }
         }
 

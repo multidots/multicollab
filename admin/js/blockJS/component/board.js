@@ -81,12 +81,12 @@ export default class Board extends React.Component {
         const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
 
         const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-        if( null !== blockAttributes ) {
+        if (null !== blockAttributes) {
 
-            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
-            jQuery(findAttributes).each( function (i, attrb) {
+            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+            jQuery(findAttributes).each(function (i, attrb) {
                 var content = blockAttributes[attrb];
-                if( undefined !== content && -1 !== content.indexOf(elIDRemove) ) {
+                if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
 
                     if ('' !== content) {
                         let tempDiv = document.createElement('div');
@@ -137,6 +137,12 @@ export default class Board extends React.Component {
                                     wp.data.dispatch('core/editor').updateBlock(clientId, {
                                         attributes: {
                                             text: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'downloadButtonText') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            downloadButtonText: finalContent
                                         }
                                     });
                                 }

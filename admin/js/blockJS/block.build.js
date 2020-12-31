@@ -866,7 +866,7 @@ var mdComment = {
                 var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
                 if (null !== blockAttributes) {
 
-                    var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
+                    var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
                     jQuery(findAttributes).each(function (i, attrb) {
                         var content = blockAttributes[attrb];
                         if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
@@ -920,6 +920,12 @@ var mdComment = {
                                             wp.data.dispatch('core/editor').updateBlock(clientId, {
                                                 attributes: {
                                                     text: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'downloadButtonText') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    downloadButtonText: finalContent
                                                 }
                                             });
                                         }
@@ -1060,7 +1066,6 @@ var mdComment = {
                     // and no 'focus' class active on mdspan tag.
                     // This condition prevents thread popup flickering
                     // when navigating through the activity center.
-                    //if (1 === $('mdspan[datatext="' + selectedText + '"][data-rich-text-format-boundary]').length && !$('mdspan').hasClass('focus')) {
 
                     // Adding focus on selected text's popup.
                     $('.cls-board-outer').removeClass('focus');
@@ -1070,8 +1075,6 @@ var mdComment = {
 
                     // Float comments column.
                     this.floatComments(selectedText);
-
-                    //}
                 }
             }
         }, {
@@ -1229,7 +1232,7 @@ var Board = function (_React$Component) {
             var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
             if (null !== blockAttributes) {
 
-                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
+                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
                 jQuery(findAttributes).each(function (i, attrb) {
                     var content = blockAttributes[attrb];
                     if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
@@ -1283,6 +1286,12 @@ var Board = function (_React$Component) {
                                         wp.data.dispatch('core/editor').updateBlock(clientId, {
                                             attributes: {
                                                 text: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'downloadButtonText') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                downloadButtonText: finalContent
                                             }
                                         });
                                     }
@@ -1729,7 +1738,7 @@ var Comment = function (_React$Component) {
             var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
             if (null !== blockAttributes) {
 
-                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
+                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
                 jQuery(findAttributes).each(function (i, attrb) {
                     var content = blockAttributes[attrb];
                     if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
@@ -1783,6 +1792,12 @@ var Comment = function (_React$Component) {
                                         wp.data.dispatch('core/editor').updateBlock(clientId, {
                                             attributes: {
                                                 text: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'downloadButtonText') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                downloadButtonText: finalContent
                                             }
                                         });
                                     }
