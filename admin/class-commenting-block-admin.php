@@ -93,7 +93,7 @@ class Commenting_block_Admin {
 	/**
 	 * Set query to sort.
 	 *
-	 * @param objet $query Query object.
+	 * @param object $query Query object.
 	 */
 	public function cf_sort_custom_column_query( $query ) {
 		$orderby = $query->get( 'orderby' );
