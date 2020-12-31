@@ -124,8 +124,8 @@ mdspan {
 }
 
 .cls-board-outer .board .commentContainer.draft {
-    /* display: none;
-    background: none; */
+    display: none;
+    background: none;
 }
 
 .cls-board-outer .board .commentContainer.draft.reverted_back {

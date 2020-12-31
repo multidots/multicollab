@@ -13657,8 +13657,8 @@ var Board = function (_React$Component) {
                 var el = currentTextID.substring(3);
                 var metaId = '_' + el;
                 var assignTo = '';
-                if (jQuery('#cf-assign-to-user').is(':checked')) {
-                    assignTo = jQuery('#cf-assign-to-user').val();
+                if (jQuery('#' + el + ' .cf-assign-to-user').is(':checked')) {
+                    assignTo = jQuery('#' + el + ' .cf-assign-to-user').val();
                 }
                 var data = {
                     'action': 'cf_add_comment',
@@ -13681,6 +13681,15 @@ var Board = function (_React$Component) {
                     }
                     arr[arr.length - 1]['dtTime'] = data.dtTime;
                     arr[arr.length - 1]['timestamp'] = data.timestamp;
+
+                    // Updating the assinged user info
+                    if (null !== data.assignedTo.ID) {
+                        var assingedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + data.assignedTo.display_name + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
+                        if (jQuery('#' + el + ' .cf-board-assigned-to').length) {
+                            jQuery('#' + el + ' .cf-board-assigned-to').remove();
+                        }
+                        jQuery(assingedUserDetails).insertBefore('#' + el + ' .boardTop');
+                    }
 
                     // Update hasComment prop for dynamic button text.
                     _this.hasComments = 1;
@@ -13796,11 +13805,10 @@ var Board = function (_React$Component) {
 
             var buttonText = 1 === this.hasComments && 1 !== this.props.freshBoard ? 'Reply' : 'Comment';
             var assignedTo = this.assignedTo;
-
             return wp.element.createElement(
                 'div',
                 { className: 'board ' + (undefined === this.hasComments && this.currentUserProfile && 'fresh-board') },
-                undefined !== assignedTo && wp.element.createElement(
+                undefined !== assignedTo && null !== assignedTo && wp.element.createElement(
                     'div',
                     { className: 'cf-board-assigned-to' },
                     wp.element.createElement(
@@ -13809,7 +13817,7 @@ var Board = function (_React$Component) {
                         wp.element.createElement(
                             'div',
                             { className: 'user-avatar' },
-                            wp.element.createElement('img', { src: assignedTo.avatar, alt: assignedTo.display_name })
+                            wp.element.createElement('img', { src: this.assignedTo.avatar, alt: this.assignedTo.display_name })
                         ),
                         wp.element.createElement(
                             'div',
@@ -13822,7 +13830,7 @@ var Board = function (_React$Component) {
                             wp.element.createElement(
                                 'p',
                                 { className: 'display-name' },
-                                assignedTo.display_name
+                                this.assignedTo.display_name
                             )
                         )
                     )

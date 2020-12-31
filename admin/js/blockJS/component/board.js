@@ -223,8 +223,8 @@ export default class Board extends React.Component {
             var el = currentTextID.substring(3);
             var metaId = '_' + el;
             var assignTo = '';
-            if( jQuery( '#cf-assign-to-user' ).is(':checked') ) {
-                assignTo = jQuery( '#cf-assign-to-user' ).val()
+            if( jQuery( '#'+el+' .cf-assign-to-user' ).is(':checked') ) {
+                assignTo = jQuery( '#'+el+' .cf-assign-to-user' ).val()
             }
             var data = {
                 'action': 'cf_add_comment',
@@ -247,6 +247,27 @@ export default class Board extends React.Component {
                 }
                 arr[arr.length - 1]['dtTime'] = data.dtTime;
                 arr[arr.length - 1]['timestamp'] = data.timestamp;
+
+                // Updating the assinged user info
+                if( null !== data.assignedTo.ID ) {
+                    var assingedUserDetails = `
+                        <div class="cf-board-assigned-to">
+                            <div class="assigned-user-details">
+                                <div class="user-avatar">
+                                    <img src="${data.assignedTo.avatar}" alt="${data.assignedTo.display_name}" />
+                                </div>
+                                <div class="user-info">
+                                    <span class="badge">Assigned to</span>
+                                    <p class="display-name">${data.assignedTo.display_name}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    if( jQuery( `#${el} .cf-board-assigned-to` ).length ) {
+                        jQuery( `#${el} .cf-board-assigned-to` ).remove();
+                    }
+                    jQuery( assingedUserDetails ).insertBefore( `#${el} .boardTop` )
+                }
 
                 // Update hasComment prop for dynamic button text.
                 _this.hasComments = 1;
@@ -346,18 +367,17 @@ export default class Board extends React.Component {
         const {datatext} = this.props;
         const buttonText = 1 === this.hasComments && 1 !== this.props.freshBoard ? 'Reply' : 'Comment';
         const assignedTo = this.assignedTo
-
         return (
             <div className={`board ${undefined === this.hasComments && this.currentUserProfile && 'fresh-board'}`}>
-                { undefined !== assignedTo &&
+                { undefined !== assignedTo && null !== assignedTo &&
                     <div className="cf-board-assigned-to">
                         <div className="assigned-user-details">
                             <div className="user-avatar">
-                                <img src={ assignedTo.avatar } alt={assignedTo.display_name} />
+                                <img src={ this.assignedTo.avatar } alt={this.assignedTo.display_name} />
                             </div>
                             <div className="user-info">
                                 <span class="badge">Assigned to</span>
-                                <p className="display-name">{ assignedTo.display_name }</p>
+                                <p className="display-name">{ this.assignedTo.display_name }</p>
                             </div>
                         </div>
                     </div>

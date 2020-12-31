@@ -587,7 +587,20 @@ class Commenting_block_Admin {
 		$lastIndex = count($list_of_comments) - 1;
 		$list_of_comments[$lastIndex]['timestamp'] = $timestamp;
 
-		echo wp_json_encode( array( 'dtTime' => $dtTime, 'timestamp' => $timestamp ) );
+		// Get assigned useer data
+		$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
+		$assigned_to = [
+			'ID'           => $user_data->ID,
+			'display_name' => $user_data->display_name,
+			'user_email'   => $user_data->user_email,
+			'avatar'       => get_avatar_url( $user_data->ID, [ 'size' => 32 ] )
+		];
+
+		echo wp_json_encode( array(
+			'dtTime'     => $dtTime,
+			'timestamp'  => $timestamp,
+			'assignedTo' => $assigned_to
+		) );
 
 		// Sending email
 		$this->cf_sent_email_to_commented_users( [
@@ -997,13 +1010,17 @@ class Commenting_block_Admin {
 		}
 
 		// Get assigned useer data
-		$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
-		$assigned_to = [
-			'ID'           => $user_data->ID,
-			'display_name' => $user_data->display_name,
-			'user_email'   => $user_data->user_email,
-			'avatar'       => get_avatar_url( $user_data->ID, [ 'size' => 32 ] )
-		];
+		if( $superCareerData['assigned_to'] > 0 ) {
+			$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
+			$assigned_to = [
+				'ID'           => $user_data->ID,
+				'display_name' => $user_data->display_name,
+				'user_email'   => $user_data->user_email,
+				'avatar'       => get_avatar_url( $user_data->ID, [ 'size' => 32 ] )
+			];
+		} else {
+			$assign_to = null;
+		}
 
 		$data                    = array();
 		$data['userDetails']     = $userDetails;
