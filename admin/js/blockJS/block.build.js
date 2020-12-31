@@ -1602,6 +1602,16 @@ var Board = function (_React$Component) {
                         'button',
                         { onClick: this.cancelComment, className: 'btn btn-cancel' },
                         'Cancel'
+                    ),
+                    wp.element.createElement(
+                        'a',
+                        { href: 'javascript:void(0)', id: 'cf-upload-media' },
+                        'Upload Media'
+                    ),
+                    wp.element.createElement(
+                        'a',
+                        { href: 'javascript:void(0)', id: 'cf-remove-media' },
+                        'remove'
                     )
                 )
             );

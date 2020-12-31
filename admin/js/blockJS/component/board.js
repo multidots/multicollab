@@ -410,6 +410,8 @@ export default class Board extends React.Component {
                     <textarea id={"txt" + datatext} placeholder="Write a comment.."></textarea>
                     <button onClick={this.addNewComment} className="btn btn-success">{buttonText}</button>
                     <button onClick={this.cancelComment} className="btn btn-cancel">Cancel</button>
+                    <a href='javascript:void(0)' id='cf-upload-media'>Upload Media</a>
+                    <a href='javascript:void(0)' id='cf-remove-media'>remove</a>
                 </div>
             </div>
         );

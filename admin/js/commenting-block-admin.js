@@ -34,6 +34,39 @@
     // Document Ready.
     $(document).ready(function () {
 
+        // on upload button click
+        $('body').on( 'click', '#cf-upload-media', function(e){
+
+            e.preventDefault();
+
+            var button = $(this),
+                custom_uploader = wp.media({
+                    title: 'Insert image',
+                    library : {
+                        // uploadedTo : wp.media.view.settings.post.id, // attach to the current post?
+                        type : 'image'
+                    },
+                    button: {
+                        text: 'Use this image' // button label text
+                    },
+                    multiple: false
+                }).on('select', function() { // it also has "open" and "close" events
+                    var attachment = custom_uploader.state().get('selection').first().toJSON();
+                    button.html('<img src="' + attachment.url + '">').next().val(attachment.id).next().show();
+                }).open();
+
+        });
+
+        // on remove button click
+        $('body').on('click', '#cf-remove-media', function(e){
+
+            e.preventDefault();
+
+            var button = $(this);
+            button.next().val(''); // emptying the hidden field
+            button.hide().prev().html('Upload image');
+        });
+
         // If thread focused via an activity center,
         // it is in lock mode, so clicking any para
         // would unlock it.
