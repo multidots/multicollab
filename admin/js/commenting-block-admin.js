@@ -34,7 +34,10 @@
     // Document Ready.
     $(document).ready(function () {
 
-        $(document).on('click', '.block-editor-block-list__layout .wp-block', function () {
+        // If thread focused via an activity center,
+        // it is in lock mode, so clicking any para
+        // would unlock it.
+        $(document).on('click', '.block-editor-block-list__layout .wp-block', function (e) {
 
             if($('.cls-board-outer').hasClass('locked')) {
 
@@ -43,9 +46,13 @@
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
 
+                if( e.target.localName === 'mdspan' ) {
+                    const dataid = $(e.target).attr('datatext');
+                    // Trigger card click to focus.
+                    $('#' + dataid).trigger('click');
+                }
                 $('.cls-board-outer').removeClass('locked');
             }
-
         });
 
         // Settings page tabs toggle.
@@ -74,7 +81,7 @@
 
 
         // Save show_avatar option in a localstorage.
-        var data = {
+        const data = {
             'action': 'cf_store_in_localstorage'
         };
         $.post(ajaxurl, data, function (response) {
