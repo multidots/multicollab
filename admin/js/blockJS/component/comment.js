@@ -164,8 +164,8 @@ export default class Comment extends React.Component {
         // Display the textarea for new comments.
         jQuery('.cls-board-outer.focus .shareCommentContainer').show();
 
-        const {index} = this.props;
-        const commentStatus = this.props.status ? this.props.status : 'draft';
+        const {index, attachmentsData, editedDraft, status, children, timestamp, userID, showAvatars, profileURL, userName, dateTime} = this.props;
+        const commentStatus = status ? status : 'draft';
 
         var owner = '';
         try {
@@ -174,7 +174,7 @@ export default class Comment extends React.Component {
             owner = localStorage.getItem("userID");
         }
 
-        let str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
+        let str = this.state.showEditedDraft ? editedDraft : children;
         let readmoreStr = '';
         const maxLength = 100;
         if(maxLength < str.length) {
@@ -183,16 +183,16 @@ export default class Comment extends React.Component {
         }
 
         return (
-            <div className={"commentContainer " + commentStatus} id={this.props.timestamp}>
+            <div className={"commentContainer " + commentStatus} id={timestamp}>
                 <div className="comment-header">
                     <div className="comment-actions">
                         {index === 0 &&
                             <div className="comment-resolve">
-                                <input id={"resolve_cb_" + this.props.timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
-                                <label htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
+                                <input id={"resolve_cb_" + timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
+                                <label htmlFor={"resolve_cb_" + timestamp + '_' + index}>{'Mark as a Resolved'}</label>
                             </div>
                         }
-                        {this.props.userID === owner &&
+                        {userID === owner &&
                             <div className="buttons-wrapper">
                                 <i className="dashicons dashicons-edit" onClick={this.edit}></i>
                                 <i className="dashicons dashicons-trash" onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)}></i>
@@ -200,14 +200,14 @@ export default class Comment extends React.Component {
                         }
                     </div>
                     <div className="comment-details">
-                        {"1" === this.props.showAvatars &&
-                        <div className="avtar">
-                            <img src={this.props.profileURL} alt="avatar"/>
+                        {"1" === showAvatars &&
+                        <div className="avatar">
+                            <img src={profileURL} alt="avatar"/>
                         </div>
                         }
                         <div className="commenter-name-time">
-                            <div className="commenter-name">{this.props.userName}</div>
-                            <div className="comment-time">{this.props.dateTime}</div>
+                            <div className="commenter-name">{userName}</div>
+                            <div className="comment-time">{dateTime}</div>
                         </div>
                     </div>
                 </div>
@@ -215,23 +215,51 @@ export default class Comment extends React.Component {
                     <span className='readlessTxt readMoreSpan active'>{str} {'' !== readmoreStr && <a className='readmoreComment' href='javascript:void(0)'>show more</a>}</span>
                     <span className='readmoreTxt readMoreSpan'>{readmoreStr} {'' !== readmoreStr && <a className='readlessComment' href='javascript:void(0)'>show less</a>}</span>
                 </div>
+
+                <div id='cf-attachments-outer'>
+                    <div id='cf-attachments'>
+                        {
+                            Object.keys(attachmentsData).map(i => {
+
+                            }
+                        }
+                        {
+                            attachmentsData && attachmentsData.map((item, index) => {
+                                return this.displayComments(item, index);
+                            })
+                        }
+                        <div class="cf-attachment-item" data-id={}>
+                        <img class="cf-attachment-icon" src="' + attachment.icon + '" />
+                        <span class="cf-attachment-title"><a href="' + attachment.url + '" target="_blank">' + attachment.title + '</a> <a href="javascript:void(0)" class="cf-attachment-remove">REMOVE</a></span>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
         );
     }
 
     renderEditingMode() {
 
+        const {attachmentsData, editedDraft, children, timestamp, profileURL, userName, dateTime} = this.props;
+
         // Hide the textarea for new comments.
         jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
 
         return (
-            <div className="commentContainer" id={this.props.timestamp}>
+            <div className="commentContainer" id={timestamp}>
                 <div className="comment-header">
                     <div className="comment-details">
-                        <div className="avtar"><img src={this.props.profileURL} alt="avatar"/></div>
+                        {"1" === showAvatars &&
+                        <div className="avatar">
+                            <img src={profileURL} alt="avatar"/>
+                        </div>
+                        }
                         <div className="commenter-name-time">
-                            <div className="commenter-name">{this.props.userName}</div>
-                            <div className="comment-time">{this.props.dateTime}</div>
+                            <div className="commenter-name">{userName}</div>
+                            <div className="comment-time">{dateTime}</div>
                         </div>
                     </div>
                 </div>
@@ -241,7 +269,7 @@ export default class Comment extends React.Component {
                           this.newText = input;
                       }}
                       onChange={this.handleChange}
-                      defaultValue={this.state.showEditedDraft ? this.props.editedDraft : this.props.children}>
+                      defaultValue={this.state.showEditedDraft ? editedDraft : children}>
                   </textarea>
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
@@ -279,5 +307,6 @@ Comment.propTypes = {
     selectedText: PropTypes.string,
     timestamp: PropTypes.number,
     editedDraft: PropTypes.string,
+    attachmentsData: PropTypes.object,
     children: PropTypes.string,
 };

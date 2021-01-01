@@ -298,13 +298,13 @@ span.dashicon.dashicons.dashicons-admin-comments {
     text-align: center;
 }
 
-.user-avtar {
+.user-avatar {
     margin-right: 15px;
     float: left;
     width: 50px;
 }
 
-.user-avtar img {
+.user-avatar img {
     max-height: 50px;
 }
 
@@ -430,14 +430,14 @@ span.user-name {
     cursor: pointer;
 }
 
-.comment-header .avtar {
+.comment-header .avatar {
     width: 35px;
     margin-right: 10px;
     flex-shrink: 0;
     height: 35px;
 }
 
-.comment-header .avtar img {
+.comment-header .avatar img {
     max-width: 100%;
     border-radius: 50%;
 }

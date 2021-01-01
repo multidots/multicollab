@@ -1127,6 +1127,7 @@ registerFormatType(name, mdComment);
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__comment__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__comment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__comment__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types__ = __webpack_require__(5);
@@ -1478,7 +1479,8 @@ var Board = function (_React$Component) {
                 userID = void 0,
                 status = void 0,
                 cTimestamp = void 0,
-                editedDraft = void 0;
+                editedDraft = void 0,
+                attachmentsData = void 0;
             Object.keys(text).map(function (i) {
                 if ('userName' === i) {
                     username = text[i];
@@ -1496,11 +1498,13 @@ var Board = function (_React$Component) {
                     cTimestamp = text[i];
                 } else if ('editedDraft' === i) {
                     editedDraft = text[i];
+                } else if ('attachmentsData' === i) {
+                    attachmentsData = text[i];
                 }
             });
 
             return wp.element.createElement(
-                __WEBPACK_IMPORTED_MODULE_0__comment__["a" /* default */],
+                __WEBPACK_IMPORTED_MODULE_0__comment__["default"],
                 {
                     key: i,
                     index: i,
@@ -1516,6 +1520,7 @@ var Board = function (_React$Component) {
                     selectedText: selectedText,
                     timestamp: cTimestamp,
                     editedDraft: editedDraft,
+                    attachmentsData: attachmentsData,
                     showAvatars: localStorage.getItem("showAvatars")
                 },
                 postedComment = postedComment ? postedComment : text
@@ -1582,7 +1587,7 @@ var Board = function (_React$Component) {
                             { className: 'comment-details' },
                             wp.element.createElement(
                                 'div',
-                                { className: 'avtar' },
+                                { className: 'avatar' },
                                 wp.element.createElement('img', { src: this.currentUserProfile, alt: 'avatar' })
                             ),
                             wp.element.createElement(
@@ -1650,392 +1655,9 @@ Board.propTypes = {
 
 /***/ }),
 /* 10 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Fragment = wp.element.Fragment;
-
-
-
-
-var Comment = function (_React$Component) {
-    _inherits(Comment, _React$Component);
-
-    function Comment(props) {
-        _classCallCheck(this, Comment);
-
-        var _this = _possibleConstructorReturn(this, (Comment.__proto__ || Object.getPrototypeOf(Comment)).call(this, props));
-
-        _this.edit = _this.edit.bind(_this);
-        _this.save = _this.save.bind(_this);
-        _this.remove = _this.remove.bind(_this);
-        _this.resolve = _this.resolve.bind(_this);
-        _this.cancelEdit = _this.cancelEdit.bind(_this);
-        _this.removeTag = _this.removeTag.bind(_this);
-        _this.state = { editing: false, showEditedDraft: false };
-
-        return _this;
-    }
-
-    _createClass(Comment, [{
-        key: 'componentDidUpdate',
-        value: function componentDidUpdate() {
-            var editedCommentID = this.props.timestamp;
-            var commenttedText = jQuery('#' + editedCommentID + ' textarea').val();
-            jQuery('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
-        }
-    }, {
-        key: 'edit',
-        value: function edit() {
-            this.setState({ editing: true });
-        }
-    }, {
-        key: 'save',
-        value: function save(event) {
-
-            var newText = this.newText.value;
-            if ('' === newText) {
-                alert("Please write a comment to share!");
-                return false;
-            }
-            var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
-            this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, this.props.dateTime, elID);
-
-            this.setState({ editing: false });
-        }
-    }, {
-        key: 'remove',
-        value: function remove(event) {
-
-            if (confirm('Are you sure you want to delete this comment ?')) {
-                var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-                this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
-            }
-        }
-    }, {
-        key: 'resolve',
-        value: function resolve(event) {
-
-            var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-            elID = elID[0].id;
-            var elIDRemove = elID;
-
-            if (confirm('Are you sure you want to resolve this thread ?')) {
-                var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
-                elID = '_' + elID;
-
-                var data = {
-                    'action': 'cf_resolve_thread',
-                    'currentPostID': CurrentPostID,
-                    'metaId': elID
-                };
-                jQuery.post(ajaxurl, data, function () {
-                    jQuery('#' + elIDRemove).remove();
-                    jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
-                });
-
-                // Remove Tag.
-                this.removeTag(elIDRemove);
-            } else {
-                jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
-            }
-        }
-    }, {
-        key: 'removeTag',
-        value: function removeTag(elIDRemove) {
-
-            var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-            var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            if (null !== blockAttributes) {
-
-                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
-                jQuery(findAttributes).each(function (i, attrb) {
-                    var content = blockAttributes[attrb];
-                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                        if ('' !== content) {
-                            var tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = content;
-                            var childElements = tempDiv.getElementsByTagName('mdspan');
-                            for (var _i = 0; _i < childElements.length; _i++) {
-                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
-                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
-                                    var finalContent = tempDiv.innerHTML;
-
-                                    if (attrb === 'content') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                content: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'citation') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                citation: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'value') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                value: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'caption') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                caption: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'values') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                values: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'fileName') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                fileName: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'text') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                text: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'downloadButtonText') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                downloadButtonText: finalContent
-                                            }
-                                        });
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }, {
-        key: 'cancelEdit',
-        value: function cancelEdit() {
-            this.setState({ editing: false });
-        }
-    }, {
-        key: 'renderNormalMode',
-        value: function renderNormalMode() {
-
-            // Display the textarea for new comments.
-            jQuery('.cls-board-outer.focus .shareCommentContainer').show();
-
-            var index = this.props.index;
-
-            var commentStatus = this.props.status ? this.props.status : 'draft';
-
-            var owner = '';
-            try {
-                owner = wp.data.select("core").getCurrentUser().id;
-            } catch (e) {
-                owner = localStorage.getItem("userID");
-            }
-
-            var str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
-            var readmoreStr = '';
-            var maxLength = 100;
-            if (maxLength < str.length) {
-                readmoreStr = str;
-                str = str.substring(0, maxLength) + '...';
-            }
-
-            return wp.element.createElement(
-                'div',
-                { className: "commentContainer " + commentStatus, id: this.props.timestamp },
-                wp.element.createElement(
-                    'div',
-                    { className: 'comment-header' },
-                    wp.element.createElement(
-                        'div',
-                        { className: 'comment-actions' },
-                        index === 0 && wp.element.createElement(
-                            'div',
-                            { className: 'comment-resolve' },
-                            wp.element.createElement('input', { id: "resolve_cb_" + this.props.timestamp + '_' + index, type: 'checkbox', onClick: this.resolve.bind(this), className: 'btn-comment', value: '1' }),
-                            wp.element.createElement(
-                                'label',
-                                { htmlFor: "resolve_cb_" + this.props.timestamp + '_' + index },
-                                'Mark as a Resolved'
-                            )
-                        ),
-                        this.props.userID === owner && wp.element.createElement(
-                            'div',
-                            { className: 'buttons-wrapper' },
-                            wp.element.createElement('i', { className: 'dashicons dashicons-edit', onClick: this.edit }),
-                            wp.element.createElement('i', { className: 'dashicons dashicons-trash', onClick: index === 0 ? this.resolve.bind(this) : this.remove.bind(this) })
-                        )
-                    ),
-                    wp.element.createElement(
-                        'div',
-                        { className: 'comment-details' },
-                        "1" === this.props.showAvatars && wp.element.createElement(
-                            'div',
-                            { className: 'avtar' },
-                            wp.element.createElement('img', { src: this.props.profileURL, alt: 'avatar' })
-                        ),
-                        wp.element.createElement(
-                            'div',
-                            { className: 'commenter-name-time' },
-                            wp.element.createElement(
-                                'div',
-                                { className: 'commenter-name' },
-                                this.props.userName
-                            ),
-                            wp.element.createElement(
-                                'div',
-                                { className: 'comment-time' },
-                                this.props.dateTime
-                            )
-                        )
-                    )
-                ),
-                wp.element.createElement(
-                    'div',
-                    { className: 'commentText' },
-                    wp.element.createElement(
-                        'span',
-                        { className: 'readlessTxt readMoreSpan active' },
-                        str,
-                        ' ',
-                        '' !== readmoreStr && wp.element.createElement(
-                            'a',
-                            { className: 'readmoreComment', href: 'javascript:void(0)' },
-                            'show more'
-                        )
-                    ),
-                    wp.element.createElement(
-                        'span',
-                        { className: 'readmoreTxt readMoreSpan' },
-                        readmoreStr,
-                        ' ',
-                        '' !== readmoreStr && wp.element.createElement(
-                            'a',
-                            { className: 'readlessComment', href: 'javascript:void(0)' },
-                            'show less'
-                        )
-                    )
-                )
-            );
-        }
-    }, {
-        key: 'renderEditingMode',
-        value: function renderEditingMode() {
-            var _this2 = this;
-
-            // Hide the textarea for new comments.
-            jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
-
-            return wp.element.createElement(
-                'div',
-                { className: 'commentContainer', id: this.props.timestamp },
-                wp.element.createElement(
-                    'div',
-                    { className: 'comment-header' },
-                    wp.element.createElement(
-                        'div',
-                        { className: 'comment-details' },
-                        wp.element.createElement(
-                            'div',
-                            { className: 'avtar' },
-                            wp.element.createElement('img', { src: this.props.profileURL, alt: 'avatar' })
-                        ),
-                        wp.element.createElement(
-                            'div',
-                            { className: 'commenter-name-time' },
-                            wp.element.createElement(
-                                'div',
-                                { className: 'commenter-name' },
-                                this.props.userName
-                            ),
-                            wp.element.createElement(
-                                'div',
-                                { className: 'comment-time' },
-                                this.props.dateTime
-                            )
-                        )
-                    )
-                ),
-                wp.element.createElement(
-                    'div',
-                    { className: 'commentText' },
-                    wp.element.createElement('textarea', {
-                        ref: function ref(input) {
-                            _this2.newText = input;
-                        },
-                        onChange: this.handleChange,
-                        defaultValue: this.state.showEditedDraft ? this.props.editedDraft : this.props.children })
-                ),
-                wp.element.createElement(
-                    'button',
-                    { onClick: this.save.bind(this), className: 'btn-comment save-btn' },
-                    'Save'
-                ),
-                wp.element.createElement(
-                    'button',
-                    { onClick: this.cancelEdit.bind(this), className: 'btn-comment' },
-                    'Cancel'
-                )
-            );
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-
-            if (this.state.editing) {
-                return this.renderEditingMode();
-            } else {
-                return this.renderNormalMode();
-            }
-        }
-    }]);
-
-    return Comment;
-}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
-
-// Typecheck.
-
-
-/* harmony default export */ __webpack_exports__["a"] = (Comment);
-Comment.propTypes = {
-    index: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
-    removeCommentFromBoard: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-    updateCommentFromBoard: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-    userName: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-    dateTime: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-    profileURL: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-    userID: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
-    status: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-    lastVal: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
-    onChanged: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
-    selectedText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-    timestamp: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
-    editedDraft: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-    children: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
-};
+throw new Error("Module build failed: SyntaxError: Unexpected token, expected , (225:24)\n\n\u001b[0m \u001b[90m 223 | \u001b[39m\n \u001b[90m 224 | \u001b[39m                            }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 225 | \u001b[39m                        }\n \u001b[90m     | \u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 226 | \u001b[39m                        {\n \u001b[90m 227 | \u001b[39m                            attachmentsData \u001b[33m&&\u001b[39m attachmentsData\u001b[33m.\u001b[39mmap((item\u001b[33m,\u001b[39m index) \u001b[33m=>\u001b[39m {\n \u001b[90m 228 | \u001b[39m                                \u001b[36mreturn\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mdisplayComments(item\u001b[33m,\u001b[39m index)\u001b[33m;\u001b[39m\u001b[0m\n");
 
 /***/ }),
 /* 11 */

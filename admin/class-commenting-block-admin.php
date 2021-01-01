@@ -322,8 +322,8 @@ class Commenting_block_Admin {
 					.comment-box .comment-box-header a:hover{text-decoration:underline;color:#006799;}
 					.comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
 					.comment-header:last-child{margin-bottom:0;}
-					.comment-header .avtar{width:40px;margin-right:10px;}
-					.comment-header .avtar img{max-width:100%;border-radius:50%;}
+					.comment-header .avatar{width:40px;margin-right:10px;}
+					.comment-header .avatar img{max-width:100%;border-radius:50%;}
 					.comment-header .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
 					.comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
 					.comment-header .commenter-name-time .commenter-name{font-size:16px;font-weight:600;font-family:Arial,serif;margin-right:10px;}
@@ -349,7 +349,7 @@ class Commenting_block_Admin {
 							$draft          = 'draft' === $cstatus ? '(draft)' : '';
 
 							$html .= "<div class='comment-header'>
-										<div class='avtar'><img src='" . esc_url( $profile_url ) . "' alt='avatar' /></div>
+										<div class='avatar'><img src='" . esc_url( $profile_url ) . "' alt='avatar' /></div>
 										<div class='comment-details'>
 											<div class='commenter-name-time'>
 												<div class='commenter-name'>" . esc_html( $username ) . "</div>
@@ -729,7 +729,7 @@ class Commenting_block_Admin {
 
 					$html .= "<div class='user-data-row'>";
 					$html .= "<div class='user-data-box'>";
-					$html .= "<div class='user-avtar'><img src='" . esc_url( $c['profileURL'] ) . "'/></div>";
+					$html .= "<div class='user-avatar'><img src='" . esc_url( $c['profileURL'] ) . "'/></div>";
 					$html .= "<div class='user-title'>
 									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span> ";
 
@@ -996,8 +996,8 @@ class Commenting_block_Admin {
 			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
 
 			// Attachments Data
+			$attachmentsData = array();
 			if ( isset( $val['attachmentIDs'] ) && 0 !== count( $val['attachmentIDs'] ) ) {
-				$attachmentsData = array();
 				foreach ( $val['attachmentIDs'] as $attachment_id ) {
 					$attachmentsData['id']    = $attachment_id;
 

@@ -316,7 +316,7 @@ export default class Board extends React.Component {
 
         const {lastVal, onChanged, selectedText} = this.props;
 
-        let username, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft;
+        let username, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft, attachmentsData;
         Object.keys(text).map(i => {
             if ('userName' === i) {
                 username = text[i];
@@ -334,6 +334,8 @@ export default class Board extends React.Component {
                 cTimestamp = text[i];
             } else if ('editedDraft' === i) {
                 editedDraft = text[i];
+            } else if ('attachmentsData' === i) {
+                attachmentsData = text[i];
             }
         });
 
@@ -354,6 +356,7 @@ export default class Board extends React.Component {
                 selectedText={selectedText}
                 timestamp={cTimestamp}
                 editedDraft={editedDraft}
+                attachmentsData={attachmentsData}
                 showAvatars={localStorage.getItem("showAvatars")}
             >{
                 postedComment = postedComment ? postedComment : text
@@ -406,7 +409,7 @@ export default class Board extends React.Component {
                     <div className="commentContainer">
                         <div className="comment-header">
                             <div className="comment-details">
-                                <div className="avtar"><img src={this.currentUserProfile} alt="avatar"/></div>
+                                <div className="avatar"><img src={this.currentUserProfile} alt="avatar"/></div>
                                 <div className="commenter-name-time">
                                     <div className="commenter-name">{this.currentUserName}</div>
                                 </div>
