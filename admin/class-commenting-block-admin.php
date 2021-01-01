@@ -412,16 +412,21 @@ class Commenting_block_Admin {
 
 				foreach ( $timestamps as $t ) {
 
-					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
-					if ( ! empty( $edited_draft ) ) {
-						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
+					$edited_draft_text = $prev_state['comments'][ $t ]['draft_edits']['thread'];
+					$edited_draft_attachments = $prev_state['comments'][ $t ]['draft_edits']['attachmentIDs'];
+					if ( ! empty( $edited_draft_text ) ) {
+						$prev_state['comments'][ $t ]['thread'] = $edited_draft_text;
+					}
+					if ( ! empty( $edited_draft_attachments ) ) {
+						$prev_state['comments'][ $t ]['attachmentIDs'] = $edited_draft_attachments;
 					}
 
 					// Change status to publish.
 					$prev_state['comments'][ $t ]['status'] = 'publish';
 
-					// Remove comment from edited_draft.
+					// Remove old data from edited_draft.
 					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
+					unset( $prev_state['comments'][ $t ]['draft_edits']['attachmentIDs'] );
 
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
@@ -785,6 +790,7 @@ class Commenting_block_Admin {
 
 		$edited_draft           = array();
 		$edited_draft['thread'] = $edited_comment['thread'];
+		$edited_draft['attachmentIDs'] = $edited_comment['attachmentIDs'];
 
 		$commentListOld['comments'][ $old_timestamp ]['draft_edits'] = $edited_draft;
 
@@ -993,7 +999,8 @@ class Commenting_block_Admin {
 			$profile_url  = get_avatar_url( $user_info->user_email );
 			$thread       = $val['thread'];
 			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
-			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
+			$edited_draft_text = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
+			$edited_draft_attachments = isset( $val['draft_edits']['attachmentIDs'] ) ? $val['draft_edits']['attachmentIDs'] : '';
 
 			// Attachments Data
 			$attachmentsData = array();
@@ -1029,7 +1036,8 @@ class Commenting_block_Admin {
 						'userData'        => $val['userData'],
 						'status'          => $cstatus,
 						'timestamp'       => $t,
-						'editedDraft'     => $edited_draft,
+						'editedDraftText'     => $edited_draft_text,
+						'editedDraftAttachmentIDs'     => $edited_draft_attachments,
 						'attachmentsData' => $attachmentsData
 					] );
 			}
@@ -1041,7 +1049,5 @@ class Commenting_block_Admin {
 		$data['commentedOnText'] = $superCareerData['commentedOnText'];
 
 		return rest_ensure_response( $data );
-
 	}
-
 }

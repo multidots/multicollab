@@ -164,7 +164,7 @@ export default class Comment extends React.Component {
         // Display the textarea for new comments.
         jQuery('.cls-board-outer.focus .shareCommentContainer').show();
 
-        const {index, attachmentsData, editedDraft, status, children, timestamp, userID, showAvatars, profileURL, userName, dateTime} = this.props;
+        const {index, attachmentsData, editedDraftText, editedDraftAttachmentIDs, status, children, timestamp, userID, showAvatars, profileURL, userName, dateTime} = this.props;
         const commentStatus = status ? status : 'draft';
 
         var owner = '';
@@ -174,7 +174,8 @@ export default class Comment extends React.Component {
             owner = localStorage.getItem("userID");
         }
 
-        let str = this.state.showEditedDraft ? editedDraft : children;
+        let str = this.state.showEditedDraft ? editedDraftText : children;
+        let attachmentsDataIDs = this.state.showEditedDraft ? editedDraftAttachmentIDs : attachmentsData;
         let readmoreStr = '';
         const maxLength = 100;
         if (maxLength < str.length) {
@@ -219,7 +220,7 @@ export default class Comment extends React.Component {
                 <div id='cf-attachments-outer'>
                     <div id='cf-attachments'>
                         {
-                            attachmentsData && attachmentsData.map((item, index) => {
+                            attachmentsDataIDs && attachmentsDataIDs.map((item, index) => {
                                 return (
                                     <div className="cf-attachment-item" data-id={item.id} key={index}>
                                         <img className="cf-attachment-icon" src={item.icon} />
@@ -236,7 +237,8 @@ export default class Comment extends React.Component {
 
     renderEditingMode() {
 
-        const {attachmentsData, editedDraft, children, timestamp, profileURL, userName, dateTime} = this.props;
+        const {attachmentsData, editedDraftText, editedDraftAttachmentIDs, children, timestamp, profileURL, userName, dateTime} = this.props;
+        let attachmentsDataIDs = this.state.showEditedDraft ? editedDraftAttachmentIDs : attachmentsData;
 
         // Hide the textarea for new comments.
         jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
@@ -262,9 +264,29 @@ export default class Comment extends React.Component {
                           this.newText = input;
                       }}
                       onChange={this.handleChange}
-                      defaultValue={this.state.showEditedDraft ? editedDraft : children}>
+                      defaultValue={this.state.showEditedDraft ? editedDraftText : children}>
                   </textarea>
                 </div>
+
+                <div id='cf-attachments-outer'>
+                    <div id='cf-attachments'>
+                        {
+                            attachmentsData && attachmentsData.map((item, index) => {
+                                return (
+                                    <div className="cf-attachment-item" data-id={item.id} key={index}>
+                                        <img className="cf-attachment-icon" src={item.icon} />
+                                        <span className="cf-attachment-title">
+                                            <a href={item.url} target="_blank">{item.title}</a>
+                                            <a href="javascript:void(0)" className="cf-attachment-remove">REMOVE</a>
+                                        </span>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <a href='javascript:void(0)' id='cf-upload-media'>Upload Media</a>
+                </div>
+
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}
                 </button>
@@ -299,7 +321,8 @@ Comment.propTypes = {
     onChanged: PropTypes.func,
     selectedText: PropTypes.string,
     timestamp: PropTypes.number,
-    editedDraft: PropTypes.string,
+    editedDraftText: PropTypes.string,
+    editedDraftAttachmentIDs: PropTypes.object,
     attachmentsData: PropTypes.object,
     children: PropTypes.string,
 };

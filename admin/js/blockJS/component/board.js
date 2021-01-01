@@ -178,11 +178,11 @@ export default class Board extends React.Component {
 
     updateComment(newText, idx, cTimestamp, dateTime, metaID) {
 
-        var arr = this.state.comments;
+        let arr = this.state.comments;
 
-        var userID = '';
-        var userName = '';
-        var userProfile = '';
+        let userID = '';
+        let userName = '';
+        let userProfile = '';
         try {
             userID = wp.data.select("core").getCurrentUser().id;
             userName = wp.data.select("core").getCurrentUser().name;
@@ -194,11 +194,19 @@ export default class Board extends React.Component {
             userProfile = localStorage.getItem("userURL");
         }
 
-        var newArr = {};
+        let attachmentIDs = []
+        if( 0 !== jQuery('.cf-attachment-item', '#' + metaID).length ) {
+            jQuery('.cf-attachment-item', '#' + metaID).each( function () {
+                attachmentIDs.push( $(this).attr('data-id') );
+            })
+        }
+
+        let newArr = {};
         newArr['userName'] = userName;
         newArr['profileURL'] = userProfile;
         newArr['dtTime'] = dateTime;
         newArr['thread'] = newText;
+        newArr['attachmentIDs'] = attachmentIDs;
         newArr['userData'] = userID;
         newArr['index'] = idx;
         newArr['status'] = 'draft reverted_back';
@@ -206,7 +214,7 @@ export default class Board extends React.Component {
         arr[idx] = newArr;
         const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
         metaID = '_' + metaID;
-        var data = {
+        const data = {
             'action': 'cf_update_comment',
             'currentPostID': CurrentPostID,
             'editedComment': JSON.stringify(newArr),
@@ -226,22 +234,22 @@ export default class Board extends React.Component {
 
         const {datatext} = this.props;
 
-        var currentTextID = 'txt' + datatext;
+        const currentTextID = 'txt' + datatext;
 
-        var newText = jQuery('#' + currentTextID).val();
+        const newText = jQuery('#' + currentTextID).val();
 
         let attachmentIDs = []
         if( 0 !== jQuery('.cf-attachment-item', '#' + currentTextID).length ) {
-            jQuery('.cf-attachment-item', '#' + currentTextID).each( function (index, value) {
+            jQuery('.cf-attachment-item', '#' + currentTextID).each( function () {
                 attachmentIDs.push( $(this).attr('data-id') );
             })
         }
 
         if ('' !== newText) {
 
-            var userID = '';
-            var userName = '';
-            var userProfile = '';
+            let userID = '';
+            let userName = '';
+            let userProfile = '';
             try {
                 userID = wp.data.select("core").getCurrentUser().id;
                 userName = wp.data.select("core").getCurrentUser().name;
@@ -257,8 +265,8 @@ export default class Board extends React.Component {
                 userProfile = localStorage.getItem("userURL");
             }
 
-            var arr = this.state.comments;
-            var newArr = {};
+            let arr = this.state.comments;
+            let newArr = {};
             newArr['userData'] = userID;
             newArr['thread'] = newText;
             newArr['attachmentIDs'] = attachmentIDs;
@@ -271,9 +279,9 @@ export default class Board extends React.Component {
 
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
 
-            var el = currentTextID.substring(3);
-            var metaId = '_' + el;
-            var data = {
+            const el = currentTextID.substring(3);
+            const metaId = '_' + el;
+            const data = {
                 'action': 'cf_add_comment',
                 'currentPostID': CurrentPostID,
                 'commentList': JSON.stringify(arr),
@@ -316,7 +324,7 @@ export default class Board extends React.Component {
 
         const {lastVal, onChanged, selectedText} = this.props;
 
-        let username, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft, attachmentsData;
+        let username, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraftText, editedDraftAttachmentIDs, attachmentsData;
         Object.keys(text).map(i => {
             if ('userName' === i) {
                 username = text[i];
@@ -332,10 +340,12 @@ export default class Board extends React.Component {
                 status = text[i];
             } else if ('timestamp' === i) {
                 cTimestamp = text[i];
-            } else if ('editedDraft' === i) {
-                editedDraft = text[i];
+            } else if ('editedDraftText' === i) {
+                editedDraftText = text[i];
             } else if ('attachmentsData' === i) {
                 attachmentsData = text[i];
+            } else if ('editedDraftAttachmentIDs' === i) {
+                editedDraftAttachmentIDs = text[i];
             }
         });
 
@@ -355,7 +365,8 @@ export default class Board extends React.Component {
                 onChanged={onChanged}
                 selectedText={selectedText}
                 timestamp={cTimestamp}
-                editedDraft={editedDraft}
+                editedDraftText={editedDraftText}
+                editedDraftAttachmentIDs={editedDraftAttachmentIDs}
                 attachmentsData={attachmentsData}
                 showAvatars={localStorage.getItem("showAvatars")}
             >{
@@ -424,7 +435,6 @@ export default class Board extends React.Component {
                     <div id='cf-attachments-outer'>
                         <div id='cf-attachments'></div>
                         <a href='javascript:void(0)' id='cf-upload-media'>Upload Media</a>
-                        <a href='javascript:void(0)' id='cf-remove-media'>remove</a>
                     </div>
                 </div>
             </div>

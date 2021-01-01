@@ -1345,11 +1345,19 @@ var Board = function (_React$Component) {
                 userProfile = localStorage.getItem("userURL");
             }
 
+            var attachmentIDs = [];
+            if (0 !== jQuery('.cf-attachment-item', '#' + metaID).length) {
+                jQuery('.cf-attachment-item', '#' + metaID).each(function () {
+                    attachmentIDs.push($(this).attr('data-id'));
+                });
+            }
+
             var newArr = {};
             newArr['userName'] = userName;
             newArr['profileURL'] = userProfile;
             newArr['dtTime'] = dateTime;
             newArr['thread'] = newText;
+            newArr['attachmentIDs'] = attachmentIDs;
             newArr['userData'] = userID;
             newArr['index'] = idx;
             newArr['status'] = 'draft reverted_back';
@@ -1385,7 +1393,7 @@ var Board = function (_React$Component) {
 
             var attachmentIDs = [];
             if (0 !== jQuery('.cf-attachment-item', '#' + currentTextID).length) {
-                jQuery('.cf-attachment-item', '#' + currentTextID).each(function (index, value) {
+                jQuery('.cf-attachment-item', '#' + currentTextID).each(function () {
                     attachmentIDs.push($(this).attr('data-id'));
                 });
             }
@@ -1478,7 +1486,8 @@ var Board = function (_React$Component) {
                 userID = void 0,
                 status = void 0,
                 cTimestamp = void 0,
-                editedDraft = void 0,
+                editedDraftText = void 0,
+                editedDraftAttachmentIDs = void 0,
                 attachmentsData = void 0;
             Object.keys(text).map(function (i) {
                 if ('userName' === i) {
@@ -1495,10 +1504,12 @@ var Board = function (_React$Component) {
                     status = text[i];
                 } else if ('timestamp' === i) {
                     cTimestamp = text[i];
-                } else if ('editedDraft' === i) {
-                    editedDraft = text[i];
+                } else if ('editedDraftText' === i) {
+                    editedDraftText = text[i];
                 } else if ('attachmentsData' === i) {
                     attachmentsData = text[i];
+                } else if ('editedDraftAttachmentIDs' === i) {
+                    editedDraftAttachmentIDs = text[i];
                 }
             });
 
@@ -1518,7 +1529,8 @@ var Board = function (_React$Component) {
                     onChanged: onChanged,
                     selectedText: selectedText,
                     timestamp: cTimestamp,
-                    editedDraft: editedDraft,
+                    editedDraftText: editedDraftText,
+                    editedDraftAttachmentIDs: editedDraftAttachmentIDs,
                     attachmentsData: attachmentsData,
                     showAvatars: localStorage.getItem("showAvatars")
                 },
@@ -1623,11 +1635,6 @@ var Board = function (_React$Component) {
                             'a',
                             { href: 'javascript:void(0)', id: 'cf-upload-media' },
                             'Upload Media'
-                        ),
-                        wp.element.createElement(
-                            'a',
-                            { href: 'javascript:void(0)', id: 'cf-remove-media' },
-                            'remove'
                         )
                     )
                 )
@@ -1851,7 +1858,8 @@ var Comment = function (_React$Component) {
             var _props = this.props,
                 index = _props.index,
                 attachmentsData = _props.attachmentsData,
-                editedDraft = _props.editedDraft,
+                editedDraftText = _props.editedDraftText,
+                editedDraftAttachmentIDs = _props.editedDraftAttachmentIDs,
                 status = _props.status,
                 children = _props.children,
                 timestamp = _props.timestamp,
@@ -1870,7 +1878,8 @@ var Comment = function (_React$Component) {
                 owner = localStorage.getItem("userID");
             }
 
-            var str = this.state.showEditedDraft ? editedDraft : children;
+            var str = this.state.showEditedDraft ? editedDraftText : children;
+            var attachmentsDataIDs = this.state.showEditedDraft ? editedDraftAttachmentIDs : attachmentsData;
             var readmoreStr = '';
             var maxLength = 100;
             if (maxLength < str.length) {
@@ -1960,7 +1969,7 @@ var Comment = function (_React$Component) {
                     wp.element.createElement(
                         'div',
                         { id: 'cf-attachments' },
-                        attachmentsData && attachmentsData.map(function (item, index) {
+                        attachmentsDataIDs && attachmentsDataIDs.map(function (item, index) {
                             return wp.element.createElement(
                                 'div',
                                 { className: 'cf-attachment-item', 'data-id': item.id, key: index },
@@ -1987,15 +1996,17 @@ var Comment = function (_React$Component) {
 
             var _props2 = this.props,
                 attachmentsData = _props2.attachmentsData,
-                editedDraft = _props2.editedDraft,
+                editedDraftText = _props2.editedDraftText,
+                editedDraftAttachmentIDs = _props2.editedDraftAttachmentIDs,
                 children = _props2.children,
                 timestamp = _props2.timestamp,
                 profileURL = _props2.profileURL,
                 userName = _props2.userName,
                 dateTime = _props2.dateTime;
 
-            // Hide the textarea for new comments.
+            var attachmentsDataIDs = this.state.showEditedDraft ? editedDraftAttachmentIDs : attachmentsData;
 
+            // Hide the textarea for new comments.
             jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
 
             return wp.element.createElement(
@@ -2036,7 +2047,41 @@ var Comment = function (_React$Component) {
                             _this2.newText = input;
                         },
                         onChange: this.handleChange,
-                        defaultValue: this.state.showEditedDraft ? editedDraft : children })
+                        defaultValue: this.state.showEditedDraft ? editedDraftText : children })
+                ),
+                wp.element.createElement(
+                    'div',
+                    { id: 'cf-attachments-outer' },
+                    wp.element.createElement(
+                        'div',
+                        { id: 'cf-attachments' },
+                        attachmentsData && attachmentsData.map(function (item, index) {
+                            return wp.element.createElement(
+                                'div',
+                                { className: 'cf-attachment-item', 'data-id': item.id, key: index },
+                                wp.element.createElement('img', { className: 'cf-attachment-icon', src: item.icon }),
+                                wp.element.createElement(
+                                    'span',
+                                    { className: 'cf-attachment-title' },
+                                    wp.element.createElement(
+                                        'a',
+                                        { href: item.url, target: '_blank' },
+                                        item.title
+                                    ),
+                                    wp.element.createElement(
+                                        'a',
+                                        { href: 'javascript:void(0)', className: 'cf-attachment-remove' },
+                                        'REMOVE'
+                                    )
+                                )
+                            );
+                        })
+                    ),
+                    wp.element.createElement(
+                        'a',
+                        { href: 'javascript:void(0)', id: 'cf-upload-media' },
+                        'Upload Media'
+                    )
                 ),
                 wp.element.createElement(
                     'button',
@@ -2082,7 +2127,8 @@ Comment.propTypes = {
     onChanged: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
     selectedText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     timestamp: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
-    editedDraft: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+    editedDraftText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+    editedDraftAttachmentIDs: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
     attachmentsData: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
     children: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
 };
