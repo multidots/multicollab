@@ -1,32 +1,5 @@
 (function ($) {
     'use strict';
-    /**
-     * All of the code for your admin-facing JavaScript source
-     * should reside in this file.
-     *
-     * Note: It has been assumed you will write jQuery code here, so the
-     * $ function reference has been prepared for usage within the scope
-     * of this function.
-     *
-     * This enables you to define handlers, for when the DOM is ready:
-     *
-     * $(function() {
-     *
-     * });
-     *
-     * When the window is loaded:
-     *
-     * $( window ).load(function() {
-     *
-     * });
-     *
-     * ...and/or other possibilities.
-     *
-     * Ideally, it is not considered best practise to attach more than a
-     * single DOM-ready or window-load handler for a particular page.
-     * Although scripts in the WordPress core, Plugins and Themes may be
-     * practising this, we should strive to set a better example in our own work.
-     */
 
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
@@ -41,20 +14,41 @@
 
             var button = $(this),
                 custom_uploader = wp.media({
-                    title: 'Insert image',
-                    library : {
+                    title: 'Insert/Upload file',
+                    /*library : {
                         // uploadedTo : wp.media.view.settings.post.id, // attach to the current post?
                         type : 'image'
-                    },
+                    },*/
                     button: {
-                        text: 'Use this image' // button label text
+                        text: 'Attach' // button label text
                     },
                     multiple: false
                 }).on('select', function() { // it also has "open" and "close" events
                     var attachment = custom_uploader.state().get('selection').first().toJSON();
-                    button.html('<img src="' + attachment.url + '">').next().val(attachment.id).next().show();
+
+                    // attachment.id
+                    // attachment.icon: "http://one.wordpress.test/wp-includes/images/media/document.png"
+                    // mime: "application/pdf"
+                    // filename: "10099953968904004.pdf"
+                    // name: "10099953968904004"
+                    // title: "10099953968904004"
+                    // subtype: "pdf"
+                    // type: "application" // type: "image"
+                    // url: "http://one.wordpress.test/wp-content/uploads/2020/12/10099953968904004.pdf"
+                    //
+
+                    var attachmentHTML = '<div class="cf-attachment-item" data-id="'+ attachment.id +'">';
+                    attachmentHTML += '<img class="cf-attachment-icon" src="' + attachment.icon + '" />';
+                    attachmentHTML += '<span class="cf-attachment-title"><a href="' + attachment.url + '" target="_blank">' + attachment.title + '</a> <a href="javascript:void(0)" class="cf-attachment-remove">REMOVE</a></span>';
+                    attachmentHTML += '</div>';
+
+                    $(this).parent().find('#cf-attachments').append(attachmentHTML);
                 }).open();
 
+        });
+
+        $(document).on('click', '.cf-attachment-remove', function () {
+            $(this).parents('.cf-attachment-item').remove();
         });
 
         // on remove button click
@@ -64,7 +58,7 @@
 
             var button = $(this);
             button.next().val(''); // emptying the hidden field
-            button.hide().prev().html('Upload image');
+            button.hide().prev().html('Attach file');
         });
 
         // If thread focused via an activity center,

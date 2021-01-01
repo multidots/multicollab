@@ -586,9 +586,10 @@ class Commenting_block_Admin {
 		$commentListOld  = get_post_meta( $current_post_id, $metaId, true );
 		$superCareerData = maybe_unserialize( $commentListOld );
 
-		$arr['status']   = 'draft';
-		$arr['userData'] = get_current_user_id();
-		$arr['thread']   = $commentList['thread'];
+		$arr['status']        = 'draft';
+		$arr['userData']      = get_current_user_id();
+		$arr['thread']        = $commentList['thread'];
+		$arr['attachmentIDs'] = $commentList['attachmentIDs'];
 
 		// Update Current Drafts.
 		$current_drafts = get_post_meta( $current_post_id, 'current_drafts', true );
@@ -601,15 +602,12 @@ class Commenting_block_Admin {
 		}
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
 
-		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
-			$superCareerData['comments'][ $timestamp ] = $arr;
-		} else {
-			$superCareerData                           = array();
-			$superCareerData['comments'][ $timestamp ] = $arr;
-			$superCareerData['commentedOnText']        = $commentList['commentedOnText'];
-
-			update_post_meta( $current_post_id, 'th' . $metaId, get_current_user_id() );
+		if ( array_key_exists( 'comments', $superCareerData ) && 0 === count( $superCareerData['comments'] ) ) {
+			$superCareerData                    = array();
+			$superCareerData['commentedOnText'] = $commentList['commentedOnText'];
 		}
+		$superCareerData['comments'][ $timestamp ] = $arr;
+
 		update_post_meta( $current_post_id, $metaId, $superCareerData );
 
 		echo wp_json_encode( array( 'dtTime' => $dtTime, 'timestamp' => $timestamp ) );
@@ -997,19 +995,42 @@ class Commenting_block_Admin {
 			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
 			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
 
+			// Attachments Data
+			if ( isset( $val['attachmentIDs'] ) && 0 !== count( $val['attachmentIDs'] ) ) {
+				$attachmentsData = array();
+				foreach ( $val['attachmentIDs'] as $attachment_id ) {
+					$attachmentsData['id']    = $attachment_id;
+
+					$attachment_metadata = wp_get_attachment_metadata( $attachment_id );
+
+					$fullsize_path = get_attached_file( $attachment_id ); // Full path
+					$filename_only = basename( get_attached_file( $attachment_id ) ); // Just the file name
+
+					$url = wp_get_attachment_url( $attachment_id );
+					$title = get_the_title( $attachment_id );
+
+					echo wp_get_attachment_image( get_the_ID(), array('700', '600'), "", array( "class" => "img-responsive" ) );
+
+					$attachmentsData['title'] = $attachment_id;
+					$attachmentsData['url']   = $attachment_id;
+					$attachmentsData['icon']  = $attachment_id;
+				}
+			}
+
 			$date = gmdate( $time_format . ' ' . $date_format, $t );
 
 			if ( 'deleted' !== $cstatus ) {
 				array_push( $userDetails,
 					[
-						'userName'    => $username,
-						'profileURL'  => $profile_url,
-						'dtTime'      => $date,
-						'thread'      => $thread,
-						'userData'    => $val['userData'],
-						'status'      => $cstatus,
-						'timestamp'   => $t,
-						'editedDraft' => $edited_draft,
+						'userName'        => $username,
+						'profileURL'      => $profile_url,
+						'dtTime'          => $date,
+						'thread'          => $thread,
+						'userData'        => $val['userData'],
+						'status'          => $cstatus,
+						'timestamp'       => $t,
+						'editedDraft'     => $edited_draft,
+						'attachmentsData' => $attachmentsData
 					] );
 			}
 		}

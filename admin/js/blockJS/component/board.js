@@ -230,6 +230,13 @@ export default class Board extends React.Component {
 
         var newText = jQuery('#' + currentTextID).val();
 
+        let attachmentIDs = []
+        if( 0 !== jQuery('.cf-attachment-item', '#' + currentTextID).length ) {
+            jQuery('.cf-attachment-item', '#' + currentTextID).each( function (index, value) {
+                attachmentIDs.push( $(this).attr('data-id') );
+            })
+        }
+
         if ('' !== newText) {
 
             var userID = '';
@@ -254,6 +261,7 @@ export default class Board extends React.Component {
             var newArr = {};
             newArr['userData'] = userID;
             newArr['thread'] = newText;
+            newArr['attachmentIDs'] = attachmentIDs;
             newArr['commentedOnText'] = undefined !== this.commentedOnText ? this.commentedOnText : '';
             newArr['userName'] = userName;
             newArr['profileURL'] = userProfile;
@@ -410,8 +418,11 @@ export default class Board extends React.Component {
                     <textarea id={"txt" + datatext} placeholder="Write a comment.."></textarea>
                     <button onClick={this.addNewComment} className="btn btn-success">{buttonText}</button>
                     <button onClick={this.cancelComment} className="btn btn-cancel">Cancel</button>
-                    <a href='javascript:void(0)' id='cf-upload-media'>Upload Media</a>
-                    <a href='javascript:void(0)' id='cf-remove-media'>remove</a>
+                    <div id='cf-attachments-outer'>
+                        <div id='cf-attachments'></div>
+                        <a href='javascript:void(0)' id='cf-upload-media'>Upload Media</a>
+                        <a href='javascript:void(0)' id='cf-remove-media'>remove</a>
+                    </div>
                 </div>
             </div>
         );

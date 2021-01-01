@@ -1383,6 +1383,13 @@ var Board = function (_React$Component) {
 
             var newText = jQuery('#' + currentTextID).val();
 
+            var attachmentIDs = [];
+            if (0 !== jQuery('.cf-attachment-item', '#' + currentTextID).length) {
+                jQuery('.cf-attachment-item', '#' + currentTextID).each(function (index, value) {
+                    attachmentIDs.push($(this).attr('data-id'));
+                });
+            }
+
             if ('' !== newText) {
 
                 var userID = '';
@@ -1407,6 +1414,7 @@ var Board = function (_React$Component) {
                 var newArr = {};
                 newArr['userData'] = userID;
                 newArr['thread'] = newText;
+                newArr['attachmentIDs'] = attachmentIDs;
                 newArr['commentedOnText'] = undefined !== this.commentedOnText ? this.commentedOnText : '';
                 newArr['userName'] = userName;
                 newArr['profileURL'] = userProfile;
@@ -1604,14 +1612,19 @@ var Board = function (_React$Component) {
                         'Cancel'
                     ),
                     wp.element.createElement(
-                        'a',
-                        { href: 'javascript:void(0)', id: 'cf-upload-media' },
-                        'Upload Media'
-                    ),
-                    wp.element.createElement(
-                        'a',
-                        { href: 'javascript:void(0)', id: 'cf-remove-media' },
-                        'remove'
+                        'div',
+                        { id: 'cf-attachments-outer' },
+                        wp.element.createElement('div', { id: 'cf-attachments' }),
+                        wp.element.createElement(
+                            'a',
+                            { href: 'javascript:void(0)', id: 'cf-upload-media' },
+                            'Upload Media'
+                        ),
+                        wp.element.createElement(
+                            'a',
+                            { href: 'javascript:void(0)', id: 'cf-remove-media' },
+                            'remove'
+                        )
                     )
                 )
             );
