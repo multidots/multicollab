@@ -399,10 +399,10 @@ class Commenting_block_Admin {
 			$current_user_role = $wp_roles->roles[ $curr_user->roles[0] ]['name'];
 			$date_format       = get_option( 'date_format' );
 			$time_format       = get_option( 'time_format' );
+			$comment_id        = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
 			wp_localize_script( 'content-collaboration-inline-commenting', 'suggestionBlock', array( 'userRole' => $current_user_role, 'dateFormat' => $date_format, 'timeFormat' => $time_format ) );
-
 			wp_localize_script( $this->plugin_name, 'adminLocalizer', [
-				'comment_id' => isset( $_GET['comment_id'] ) ? $_GET['comment_id'] : null
+				'comment_id' => isset( $comment_id ) ? $comment_id : null
 			] );
 
 			wp_enqueue_script( 'jquery-ui-draggable' );
@@ -412,22 +412,20 @@ class Commenting_block_Admin {
 	}
 
 	/**
-	 * Convert string to linkable email
+	 * Convert string to linkable email.
 	 *
-	 * @param string $str
+	 * @param string $str Contains the strings that comes from the textarea.
 	 * @return string
 	 */
 	public function convert_str_to_email( $str ) {
 		$mail_pattern = "/([A-z0-9\._-]+\@[A-z0-9_-]+\.)([A-z0-9\_\-\.]{1,}[A-z])/";
-		$formatted = preg_replace( $mail_pattern, '<a href="mailto:$1$2">$1$2</a>', $str );
-
-		return $formatted;
+		return preg_replace( $mail_pattern, '<a href="mailto:$1$2">$1$2</a>', $str );
 	}
 
 	/**
-	 * Sent email to the commented recipients
+	 * Sent email to the commented recipients.
 	 *
-	 * @param array $args
+	 * @param array $args Contains all keys related to send the email.
 	 * @return void
 	 */
 	public function cf_sent_email_to_commented_users( $args ) {
@@ -457,7 +455,7 @@ class Commenting_block_Admin {
 			$comment_list_html .= '</ul>';
 		}
 
-		// Make email address linkable in email body
+		// Make email address linkable in email body.
 		$args['thread'] = $this->convert_str_to_email( $args['thread'] );
 
 		$template = "
@@ -511,10 +509,9 @@ class Commenting_block_Admin {
 			$assign_to      = $args['assign_to'];
 			$assign_subject = "Assgined to you";
 			$assign_body    = $template;
-			$headers = 'Content-Type: text/html; charset=UTF-8';
+			$headers        = 'Content-Type: text/html; charset=UTF-8';
 			wp_mail( $assign_to, $assign_subject, $assign_body, $headers );
 		}
-
 	}
 
 	/**
@@ -527,7 +524,7 @@ class Commenting_block_Admin {
 		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
 
-		// Get the assigned User Email
+		// Get the assigned User Email.
 		$user_email = '';
 		$assign_to  = intval( $_POST['assignTo'] ); // get the assign to value
 		if( isset( $assign_to ) && $assign_to > 0 ) {
@@ -573,21 +570,25 @@ class Commenting_block_Admin {
 
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 			$superCareerData['comments'][ $timestamp ] = $arr;
-			$superCareerData['assigned_to']            = $assign_to;
+			if( $assign_to > 0 ) {
+				$superCareerData['assigned_to']            = $assign_to;
+			}
 		} else {
 			$superCareerData                           = array();
 			$superCareerData['comments'][ $timestamp ] = $arr;
 			$superCareerData['commentedOnText']        = $commentList['commentedOnText'];
-			$superCareerData['assigned_to']            = $assign_to;
+			if( $assign_to > 0 ) {
+				$superCareerData['assigned_to']            = $assign_to;
+			}
 
 			update_post_meta( $current_post_id, 'th' . $metaId, get_current_user_id() );
 		}
 		update_post_meta( $current_post_id, $metaId, $superCareerData );
 
-		$lastIndex = count($list_of_comments) - 1;
-		$list_of_comments[$lastIndex]['timestamp'] = $timestamp;
+		$last_index = count($list_of_comments) - 1;
+		$list_of_comments[$last_index]['timestamp'] = $timestamp;
 
-		// Get assigned useer data
+		// Get assigned user data.
 		$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
 		$assigned_to = [
 			'ID'           => $user_data->ID,
@@ -602,7 +603,7 @@ class Commenting_block_Admin {
 			'assignedTo' => $assigned_to
 		) );
 
-		// Sending email
+		// Sending email.
 		$this->cf_sent_email_to_commented_users( [
 			'site_name'        => get_bloginfo( 'name' ),
 			'commenter'        => $commentList['userName'],
@@ -802,8 +803,6 @@ class Commenting_block_Admin {
 		$current_drafts['edited'][ $metaId ][] = $old_timestamp;
 
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
-		// Sending email
-		// $this->cf_sent_email_to_commented_users( $edited_comment['thread'] );
 		wp_die();
 	}
 
@@ -1009,7 +1008,7 @@ class Commenting_block_Admin {
 			}
 		}
 
-		// Get assigned useer data
+		// Get assigned user data
 		if( $superCareerData['assigned_to'] > 0 ) {
 			$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
 			$assigned_to = [
@@ -1033,22 +1032,22 @@ class Commenting_block_Admin {
 	}
 
 	/**
-	 * Fetch User Email List
+	 * Fetch User Email List.
 	 */
 	public function cf_get_user_email_list() {
-		// Get the current post id if not present then return
+		// Get the current post id if not present then return.
 		$post_id = isset( $_POST['postID'] ) ? intval( $_POST['postID'] ) : '';
 		if( empty( $post_id ) ) {
 			return;
 		}
 
-		// WP User Query
+		// WP User Query.
 		$users = new WP_User_Query([
 			'number' => 10,
 			'role__not_in' => 'Subscriber'
 		]);
 
-		// Fetch out all user's email
+		// Fetch out all user's email.
 		$email_list   = [];
 		$system_users = $users->get_results();
 
@@ -1066,18 +1065,17 @@ class Commenting_block_Admin {
 			}
 		}
 
-		// Sending Response
+		// Sending Response.
 		$response = $email_list;
 		echo wp_json_encode( $response );
 		wp_die();
 	}
 
 	/**
-	 * Fetch Matched User Email List
+	 * Fetch Matched User Email List.
 	 */
 	public function cf_get_matched_user_email_list() {
-		global $wpdb;
-		// Get the current post id if not present then return
+		// Get the current post id if not present then return.
 		$post_id = isset( $_POST['postID'] ) ? intval( $_POST['postID'] ) : '';
 		if( empty( $post_id ) ) {
 			return;
@@ -1091,7 +1089,7 @@ class Commenting_block_Admin {
 				'role__not_in'   => 'Subscriber'
 			]);
 
-			// Fetch out matched user's email
+			// Fetch out matched user's email.
 			$email_list   = [];
 			$system_users = $users->get_results();
 			foreach ( $system_users as $user ) {
@@ -1118,7 +1116,7 @@ class Commenting_block_Admin {
 	}
 
 	/**
-	 * Get the list of assignable users
+	 * Get the list of assignable users.
 	 *
 	 * @return void
 	 */
@@ -1132,7 +1130,7 @@ class Commenting_block_Admin {
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $content, $matches );
 
-		$user_emails = array_unique( $matches[0] ); // Remove duplicate entries if any
+		$user_emails = array_unique( $matches[0] ); // Remove duplicate entries if any.
 
 		$results = [];
 		if( count( $user_emails ) > 0 ) {

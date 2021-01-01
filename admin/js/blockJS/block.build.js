@@ -14062,7 +14062,6 @@ var Comment = function (_React$Component) {
             }
 
             var str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
-            str = str.replace(/([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4})/ig, '<a href="mailto:$1">$1</a>');
 
             var readmoreStr = '';
             var maxLength = 100;
@@ -14070,6 +14069,8 @@ var Comment = function (_React$Component) {
                 readmoreStr = str;
                 str = str.substring(0, maxLength) + '...';
             }
+
+            str = str.replace(/([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4})/ig, '<a href="mailto:$1">$1</a>');
 
             return wp.element.createElement(
                 'div',

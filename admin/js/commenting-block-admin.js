@@ -652,10 +652,7 @@
         // defined for v5.2.2, so getting data from PHP.
         try {
             let userID = wp.data.select("core").getCurrentUser().id;
-            wp.data.select("core").getUser(userID).roles[0]; // This needs to be loaded as we need user role to show
-
         } catch (e) {
-
             // Fetch User details from AJAX.
             jQuery.post(ajaxurl, {
                 'action': 'cf_get_user'

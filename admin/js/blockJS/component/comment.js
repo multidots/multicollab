@@ -122,7 +122,6 @@ export default class Comment extends React.Component {
         }
 
         let str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
-        str     = str.replace( /([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4})/ig, '<a href="mailto:$1">$1</a>' );
 
         let readmoreStr = '';
         const maxLength = 100;
@@ -130,6 +129,8 @@ export default class Comment extends React.Component {
             readmoreStr = str;
             str = str.substring(0, maxLength) + '...';
         }
+
+        str = str.replace( /([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4})/ig, '<a href="mailto:$1">$1</a>' );
 
         return (
             <div className={"commentContainer " + commentStatus} id={this.props.timestamp}>
