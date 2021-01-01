@@ -177,7 +177,7 @@ export default class Comment extends React.Component {
         let str = this.state.showEditedDraft ? editedDraft : children;
         let readmoreStr = '';
         const maxLength = 100;
-        if(maxLength < str.length) {
+        if (maxLength < str.length) {
             readmoreStr = str;
             str = str.substring(0, maxLength) + '...';
         }
@@ -187,16 +187,16 @@ export default class Comment extends React.Component {
                 <div className="comment-header">
                     <div className="comment-actions">
                         {index === 0 &&
-                            <div className="comment-resolve">
-                                <input id={"resolve_cb_" + timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
-                                <label htmlFor={"resolve_cb_" + timestamp + '_' + index}>{'Mark as a Resolved'}</label>
-                            </div>
+                        <div className="comment-resolve">
+                            <input id={"resolve_cb_" + timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1"/>
+                            <label htmlFor={"resolve_cb_" + timestamp + '_' + index}>{'Mark as a Resolved'}</label>
+                        </div>
                         }
                         {userID === owner &&
-                            <div className="buttons-wrapper">
-                                <i className="dashicons dashicons-edit" onClick={this.edit}></i>
-                                <i className="dashicons dashicons-trash" onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)}></i>
-                            </div>
+                        <div className="buttons-wrapper">
+                            <i className="dashicons dashicons-edit" onClick={this.edit}></i>
+                            <i className="dashicons dashicons-trash" onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)}></i>
+                        </div>
                         }
                     </div>
                     <div className="comment-details">
@@ -219,24 +219,17 @@ export default class Comment extends React.Component {
                 <div id='cf-attachments-outer'>
                     <div id='cf-attachments'>
                         {
-                            Object.keys(attachmentsData).map(i => {
-
-                            }
-                        }
-                        {
                             attachmentsData && attachmentsData.map((item, index) => {
-                                return this.displayComments(item, index);
+                                return (
+                                    <div className="cf-attachment-item" data-id={item.id} key={index}>
+                                        <img className="cf-attachment-icon" src={item.icon} />
+                                        <span className="cf-attachment-title"><a href={item.url} target="_blank">{item.title}</a></span>
+                                    </div>
+                                )
                             })
                         }
-                        <div class="cf-attachment-item" data-id={}>
-                        <img class="cf-attachment-icon" src="' + attachment.icon + '" />
-                        <span class="cf-attachment-title"><a href="' + attachment.url + '" target="_blank">' + attachment.title + '</a> <a href="javascript:void(0)" class="cf-attachment-remove">REMOVE</a></span>
-                        </div>
                     </div>
                 </div>
-
-
-
             </div>
         );
     }
