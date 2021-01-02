@@ -42,7 +42,7 @@
                     attachmentHTML += '<span class="cf-attachment-title"><a href="' + attachment.url + '" target="_blank">' + attachment.title + '</a><a href="javascript:void(0)" class="cf-attachment-remove">REMOVE</a></span>';
                     attachmentHTML += '</div>';
 
-                    $(this).parent().find('#cf-attachments').append(attachmentHTML);
+                    $(button).parent().find('#cf-attachments').append(attachmentHTML);
                 }).open();
 
         });

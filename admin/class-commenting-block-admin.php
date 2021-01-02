@@ -1006,21 +1006,11 @@ class Commenting_block_Admin {
 			$attachmentsData = array();
 			if ( isset( $val['attachmentIDs'] ) && 0 !== count( $val['attachmentIDs'] ) ) {
 				foreach ( $val['attachmentIDs'] as $attachment_id ) {
-					$attachmentsData['id']    = $attachment_id;
-
-					$attachment_metadata = wp_get_attachment_metadata( $attachment_id );
-
-					$fullsize_path = get_attached_file( $attachment_id ); // Full path
-					$filename_only = basename( get_attached_file( $attachment_id ) ); // Just the file name
-
-					$url = wp_get_attachment_url( $attachment_id );
-					$title = get_the_title( $attachment_id );
-
-					echo wp_get_attachment_image( get_the_ID(), array('700', '600'), "", array( "class" => "img-responsive" ) );
-
-					$attachmentsData['title'] = $attachment_id;
-					$attachmentsData['url']   = $attachment_id;
-					$attachmentsData['icon']  = $attachment_id;
+					$filename = basename( get_attached_file( $attachmentsData['id'] ) );
+					$fileurl = wp_get_attachment_url( $attachmentsData['id'] );
+					$attachmentsData['title'] = $filename;
+					$attachmentsData['url']   = $fileurl;
+					$attachmentsData['icon']  = $fileurl; // find icon and replace with $fileurl.
 				}
 			}
 

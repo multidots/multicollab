@@ -14,7 +14,11 @@ export default class Comment extends React.Component {
         this.resolve = this.resolve.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
         this.removeTag = this.removeTag.bind(this);
-        this.state = {editing: false, showEditedDraft: false};
+        this.state = {
+            editing: false,
+            showEditedDraft: false,
+            attachmentsDataIDs: []
+        };
 
     }
 
@@ -167,7 +171,7 @@ export default class Comment extends React.Component {
         const {index, attachmentsData, editedDraftText, editedDraftAttachmentIDs, status, children, timestamp, userID, showAvatars, profileURL, userName, dateTime} = this.props;
         const commentStatus = status ? status : 'draft';
 
-        var owner = '';
+        let owner = '';
         try {
             owner = wp.data.select("core").getCurrentUser().id;
         } catch (e) {
@@ -175,7 +179,7 @@ export default class Comment extends React.Component {
         }
 
         let str = this.state.showEditedDraft ? editedDraftText : children;
-        let attachmentsDataIDs = this.state.showEditedDraft ? editedDraftAttachmentIDs : attachmentsData;
+        this.state.attachmentsDataIDs = this.state.showEditedDraft ? editedDraftAttachmentIDs : attachmentsData;
         let readmoreStr = '';
         const maxLength = 100;
         if (maxLength < str.length) {
@@ -220,7 +224,8 @@ export default class Comment extends React.Component {
                 <div id='cf-attachments-outer'>
                     <div id='cf-attachments'>
                         {
-                            attachmentsDataIDs && attachmentsDataIDs.map((item, index) => {
+                            //Object.keys(attachmentsDataIDs).map((index, item) => {
+                            0 !== this.state.attachmentsDataIDs.length && this.state.attachmentsDataIDs.map((item, index) => {
                                 return (
                                     <div className="cf-attachment-item" data-id={item.id} key={index}>
                                         <img className="cf-attachment-icon" src={item.icon} />
@@ -322,7 +327,7 @@ Comment.propTypes = {
     selectedText: PropTypes.string,
     timestamp: PropTypes.number,
     editedDraftText: PropTypes.string,
-    editedDraftAttachmentIDs: PropTypes.object,
-    attachmentsData: PropTypes.object,
+    attachmentsData: PropTypes.array,
+    editedDraftAttachmentIDs: PropTypes.array,
     children: PropTypes.string,
 };

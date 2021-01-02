@@ -1348,7 +1348,7 @@ var Board = function (_React$Component) {
             var attachmentIDs = [];
             if (0 !== jQuery('.cf-attachment-item', '#' + metaID).length) {
                 jQuery('.cf-attachment-item', '#' + metaID).each(function () {
-                    attachmentIDs.push($(this).attr('data-id'));
+                    attachmentIDs.push(jQuery(this).attr('data-id'));
                 });
             }
 
@@ -1392,9 +1392,9 @@ var Board = function (_React$Component) {
             var newText = jQuery('#' + currentTextID).val();
 
             var attachmentIDs = [];
-            if (0 !== jQuery('.cf-attachment-item', '#' + currentTextID).length) {
-                jQuery('.cf-attachment-item', '#' + currentTextID).each(function () {
-                    attachmentIDs.push($(this).attr('data-id'));
+            if (0 !== jQuery('.cf-attachment-item', '#' + datatext).length) {
+                jQuery('.cf-attachment-item', '#' + datatext).each(function () {
+                    attachmentIDs.push(jQuery(this).attr('data-id'));
                 });
             }
 
@@ -1695,7 +1695,11 @@ var Comment = function (_React$Component) {
         _this.resolve = _this.resolve.bind(_this);
         _this.cancelEdit = _this.cancelEdit.bind(_this);
         _this.removeTag = _this.removeTag.bind(_this);
-        _this.state = { editing: false, showEditedDraft: false };
+        _this.state = {
+            editing: false,
+            showEditedDraft: false,
+            attachmentsDataIDs: []
+        };
 
         return _this;
     }
@@ -1879,7 +1883,7 @@ var Comment = function (_React$Component) {
             }
 
             var str = this.state.showEditedDraft ? editedDraftText : children;
-            var attachmentsDataIDs = this.state.showEditedDraft ? editedDraftAttachmentIDs : attachmentsData;
+            this.state.attachmentsDataIDs = this.state.showEditedDraft ? editedDraftAttachmentIDs : attachmentsData;
             var readmoreStr = '';
             var maxLength = 100;
             if (maxLength < str.length) {
@@ -1969,7 +1973,9 @@ var Comment = function (_React$Component) {
                     wp.element.createElement(
                         'div',
                         { id: 'cf-attachments' },
-                        attachmentsDataIDs && attachmentsDataIDs.map(function (item, index) {
+
+                        //Object.keys(attachmentsDataIDs).map((index, item) => {
+                        0 !== this.state.attachmentsDataIDs.length && this.state.attachmentsDataIDs.map(function (item, index) {
                             return wp.element.createElement(
                                 'div',
                                 { className: 'cf-attachment-item', 'data-id': item.id, key: index },
@@ -2128,8 +2134,8 @@ Comment.propTypes = {
     selectedText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     timestamp: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
     editedDraftText: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
-    editedDraftAttachmentIDs: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
-    attachmentsData: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+    attachmentsData: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
+    editedDraftAttachmentIDs: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.array,
     children: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
 };
 

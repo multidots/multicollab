@@ -197,7 +197,7 @@ export default class Board extends React.Component {
         let attachmentIDs = []
         if( 0 !== jQuery('.cf-attachment-item', '#' + metaID).length ) {
             jQuery('.cf-attachment-item', '#' + metaID).each( function () {
-                attachmentIDs.push( $(this).attr('data-id') );
+                attachmentIDs.push( jQuery(this).attr('data-id') );
             })
         }
 
@@ -239,9 +239,9 @@ export default class Board extends React.Component {
         const newText = jQuery('#' + currentTextID).val();
 
         let attachmentIDs = []
-        if( 0 !== jQuery('.cf-attachment-item', '#' + currentTextID).length ) {
-            jQuery('.cf-attachment-item', '#' + currentTextID).each( function () {
-                attachmentIDs.push( $(this).attr('data-id') );
+        if( 0 !== jQuery('.cf-attachment-item', '#' + datatext).length ) {
+            jQuery('.cf-attachment-item', '#' + datatext).each( function () {
+                attachmentIDs.push( jQuery(this).attr('data-id') );
             })
         }
 
