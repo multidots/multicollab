@@ -181,7 +181,8 @@ export default class Board extends React.Component {
 
         var currentTextID = 'txt' + datatext;
 
-        var newText = jQuery('#' + currentTextID).val();
+        // var newText = jQuery('#' + currentTextID).val();
+        var newText = jQuery('#' + currentTextID).html();
 
         if ('' !== newText) {
 
@@ -279,7 +280,7 @@ export default class Board extends React.Component {
                 _this.setState({comments: arr});
 
                 // Flushing the text from the textarea
-                jQuery('#' + currentTextID).val('').focus();
+                jQuery('#' + currentTextID).html('').focus();
 
                 // Remove assign checkbox
                 jQuery( '.cf-assign-to' ).remove();
@@ -376,7 +377,7 @@ export default class Board extends React.Component {
                                 <img src={ this.assignedTo.avatar } alt={this.assignedTo.display_name} />
                             </div>
                             <div className="user-info">
-                                <span class="badge">Assigned to</span>
+                                <span className="badge">Assigned to</span>
                                 <p className="display-name">{ this.assignedTo.display_name }</p>
                             </div>
                         </div>
@@ -402,7 +403,8 @@ export default class Board extends React.Component {
                     </div>
                 }
                 <div className="shareCommentContainer">
-                    <textarea id={"txt" + datatext} placeholder="Comment or add others with @"></textarea>
+                    {/* <textarea id={"txt" + datatext} placeholder="Comment or add others with @"></textarea> */}
+                    <div contentEditable="true" suppressContentEditableWarning={true} className="cf-share-comment js-cf-share-comment" id={"txt" + datatext}></div>
                     <button onClick={this.addNewComment} className="btn btn-success">{buttonText}</button>
                     <button onClick={this.cancelComment} className="btn btn-cancel">Cancel</button>
                 </div>

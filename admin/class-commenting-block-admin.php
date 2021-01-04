@@ -1056,7 +1056,8 @@ class Commenting_block_Admin {
 				$email_list[] = [
 					'ID'                => $user->ID,
 					'role'              => implode( ', ', $user->roles ),
-					'display_name'      => $user->display_name,
+					'display_name'      => $user->first_name,
+					'full_name'         => "{$user->first_name} {$user->last_name}",
 					'user_email'        => $user->user_email,
 					'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
 					'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
@@ -1085,7 +1086,7 @@ class Commenting_block_Admin {
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$users = new WP_User_Query([
 				'search'         => $niddle . '*',
-				'search_columns' => ['user_email'],
+				'search_columns' => ['display_name'],
 				'role__not_in'   => 'Subscriber'
 			]);
 
@@ -1097,10 +1098,10 @@ class Commenting_block_Admin {
 					$email_list[] = [
 						'ID'                => $user->ID,
 						'role'              => implode( ', ', $user->roles ),
-						'display_name'      => $user->display_name,
+						'display_name'      => $user->first_name,
+						'full_name'         => "{$user->first_name} {$user->last_name}",
 						'user_email'        => $user->user_email,
 						'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
-						'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
 						'edit_others_posts' => $user->allcaps['edit_others_posts'],
 					];
 				}
@@ -1126,7 +1127,8 @@ class Commenting_block_Admin {
 			return;
 		}
 
-		$content = sanitize_textarea_field( $_POST['content'] );
+		$content = $_POST['content'];
+
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $content, $matches );
 

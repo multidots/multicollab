@@ -27,6 +27,12 @@ export default class Comment extends React.Component {
 
     edit() {
         this.setState({editing: true})
+        // Handling edited value.
+        var editedValue     = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
+        var editedContainer = '#edit-' + this.props.timestamp;
+        setTimeout( function() {
+            jQuery( editedContainer ).html( editedValue )
+        }, 500 )
     }
 
     save(event) {
@@ -124,13 +130,14 @@ export default class Comment extends React.Component {
         let str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
 
         let readmoreStr = '';
-        const maxLength = 100;
+        const maxLength = 300;
         if(maxLength < str.length) {
             readmoreStr = str;
             str = str.substring(0, maxLength) + '...';
         }
 
-        str = str.replace( /([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4})/ig, '<a href="mailto:$1">$1</a>' );
+        // Removing contenteditable attr from the link.
+        str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' );
 
         return (
             <div className={"commentContainer " + commentStatus} id={this.props.timestamp}>
@@ -184,13 +191,18 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                  <textarea
-                        ref={(input) => {
-                            this.newText = input;
-                        }}
-                        onChange={this.handleChange}
-                        defaultValue={ refinedString }>
-                  </textarea>
+                    {/* <textarea
+                            ref={(input) => {
+                                this.newText = input;
+                            }}
+                            onChange={this.handleChange}
+                            defaultValue={ refinedString }>
+                    </textarea> */}
+                    <div
+                        contentEditable="true"
+                        id={`edit-${this.props.timestamp}`}
+                        className="cf-share-comment js-cf-edit-comment">
+                    </div>
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}

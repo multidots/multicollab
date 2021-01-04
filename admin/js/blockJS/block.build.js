@@ -13615,7 +13615,8 @@ var Board = function (_React$Component) {
 
             var currentTextID = 'txt' + datatext;
 
-            var newText = jQuery('#' + currentTextID).val();
+            // var newText = jQuery('#' + currentTextID).val();
+            var newText = jQuery('#' + currentTextID).html();
 
             if ('' !== newText) {
 
@@ -13701,7 +13702,7 @@ var Board = function (_React$Component) {
                     _this.setState({ comments: arr });
 
                     // Flushing the text from the textarea
-                    jQuery('#' + currentTextID).val('').focus();
+                    jQuery('#' + currentTextID).html('').focus();
 
                     // Remove assign checkbox
                     jQuery('.cf-assign-to').remove();
@@ -13824,7 +13825,7 @@ var Board = function (_React$Component) {
                             { className: 'user-info' },
                             wp.element.createElement(
                                 'span',
-                                { 'class': 'badge' },
+                                { className: 'badge' },
                                 'Assigned to'
                             ),
                             wp.element.createElement(
@@ -13871,7 +13872,7 @@ var Board = function (_React$Component) {
                 wp.element.createElement(
                     'div',
                     { className: 'shareCommentContainer' },
-                    wp.element.createElement('textarea', { id: "txt" + datatext, placeholder: 'Comment or add others with @' }),
+                    wp.element.createElement('div', { contentEditable: 'true', suppressContentEditableWarning: true, className: 'cf-share-comment js-cf-share-comment', id: "txt" + datatext }),
                     wp.element.createElement(
                         'button',
                         { onClick: this.addNewComment, className: 'btn btn-success' },
@@ -13959,6 +13960,12 @@ var Comment = function (_React$Component) {
         key: 'edit',
         value: function edit() {
             this.setState({ editing: true });
+            // Handling edited value.
+            var editedValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
+            var editedContainer = '#edit-' + this.props.timestamp;
+            setTimeout(function () {
+                jQuery(editedContainer).html(editedValue);
+            }, 500);
         }
     }, {
         key: 'save',
@@ -14064,13 +14071,14 @@ var Comment = function (_React$Component) {
             var str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
 
             var readmoreStr = '';
-            var maxLength = 100;
+            var maxLength = 300;
             if (maxLength < str.length) {
                 readmoreStr = str;
                 str = str.substring(0, maxLength) + '...';
             }
 
-            str = str.replace(/([a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4})/ig, '<a href="mailto:$1">$1</a>');
+            // Removing contenteditable attr from the link.
+            str = str.replace(/contenteditable=\"false\"/ig, 'data-edit="false"');
 
             return wp.element.createElement(
                 'div',
@@ -14161,8 +14169,6 @@ var Comment = function (_React$Component) {
     }, {
         key: 'renderEditingMode',
         value: function renderEditingMode() {
-            var _this2 = this;
-
             var textareaValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
             var refinedString = textareaValue.replace(/<[^>]+>/g, '');
             return wp.element.createElement(
@@ -14198,12 +14204,10 @@ var Comment = function (_React$Component) {
                 wp.element.createElement(
                     'div',
                     { className: 'commentText' },
-                    wp.element.createElement('textarea', {
-                        ref: function ref(input) {
-                            _this2.newText = input;
-                        },
-                        onChange: this.handleChange,
-                        defaultValue: refinedString })
+                    wp.element.createElement('div', {
+                        contentEditable: 'true',
+                        id: 'edit-' + this.props.timestamp,
+                        className: 'cf-share-comment js-cf-edit-comment' })
                 ),
                 wp.element.createElement(
                     'button',
