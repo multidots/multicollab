@@ -179,7 +179,7 @@
                 const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
 
                 // Fetch comments from db.
-                var data = {
+                const data = {
                     'action': 'cf_comments_history',
                     'currentPostID': CurrentPostID,
                     'limit': 10,
