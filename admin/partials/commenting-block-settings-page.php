@@ -58,7 +58,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                                         </div>
                                         <label for="cf_admin_notif">All types of new comments send an email notification to an administrator. If you do not mention "administrator" in the comment still get an email notification</label>
                                     </div>
-                                    <?php  submit_button( "Save Changes" ); ?>
+                                    <?php submit_button( "Save Changes" ); ?>
                                 </div>
                             </div>
                         </div>
