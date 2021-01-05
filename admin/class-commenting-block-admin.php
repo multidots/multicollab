@@ -723,6 +723,11 @@ class Commenting_block_Admin {
 						$commented_on_text = substr( $commented_on_text, 0, $limit ) . '...';
 					}
 					$c['thread'] = isset( $c['thread'] ) ? $c['thread'] : '';
+					$allowed_tags = [
+							'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
+						]
+					];
+					$c['thread'] = wp_kses( $c['thread'], $allowed_tags );
 					$count ++;
 
 					$html .= "<div class='user-data-row'>";
@@ -737,7 +742,7 @@ class Commenting_block_Admin {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>";
 					}
 
-					$html .= "<div class='user-comment'> " . ( $c['thread'] ) . "</div>
+					$html .= "<div class='user-comment'> " . $c['thread'] . "</div>
 								</div>";
 					$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . "</div>";
 					$html .= "</div>";
@@ -1027,8 +1032,8 @@ class Commenting_block_Admin {
 	 */
 	public function cf_get_user_email_list() {
 		// Get the current post id if not present then return.
-		$post_id = isset( $_POST['postID'] ) ? intval( $_POST['postID'] ) : '';
-		if( empty( $post_id ) ) {
+		$post_id = filter_input( INPUT_POST, 'postID', FILTER_SANITIZE_NUMBER_INT );
+		if( $post_id <= 0 ) {
 			return;
 		}
 
@@ -1068,11 +1073,11 @@ class Commenting_block_Admin {
 	 */
 	public function cf_get_matched_user_email_list() {
 		// Get the current post id if not present then return.
-		$post_id = isset( $_POST['postID'] ) ? intval( $_POST['postID'] ) : '';
-		if( empty( $post_id ) ) {
+		$post_id = filter_input( INPUT_POST, 'postID', FILTER_SANITIZE_NUMBER_INT );
+		if( $post_id <= 0 ) {
 			return;
 		}
-		$niddle = isset( $_POST['niddle'] ) ? sanitize_text_field( $_POST['niddle'] ) : '';
+		$niddle = filter_input( INPUT_POST, 'niddle', FILTER_SANITIZE_STRING );
 		$niddle = substr( $niddle, 1 );
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$users = new WP_User_Query([
@@ -1117,8 +1122,13 @@ class Commenting_block_Admin {
 		if( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
 			return;
 		}
+		$content      = $_POST['content'];
+		$allowed_tags = [
+				'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
+			]
+		];
 
-		$content = $_POST['content'];
+		$content = wp_kses( $content, $allowed_tags );
 
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $content, $matches );
