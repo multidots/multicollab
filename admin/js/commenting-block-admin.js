@@ -113,7 +113,7 @@
             $(this).parent().addClass('hovered');
         });
 
-        // Email List Template Function
+        // Email List Template Function.
         var emailList = function( appendTo, data ) {
             var listItem = '';
             if( data.length > 0 ) {
@@ -125,7 +125,7 @@
                                 <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">(${user.role})</small></p>
                                 <p class="cf-user-email">${user.user_email}</p>
                             </div>
-                        </li>`
+                        </li>`;
                 } )
 
                 var emailList = `
@@ -136,12 +136,12 @@
                     </div>
                 `;
 
-                $( emailList ).insertAfter( appendTo )
+                $( emailList ).insertAfter( appendTo );
             }
         }
 
 
-        // Make matched text highlighted
+        // Make matched text highlighted.
         var makeMatchedTextHighlighted = function( term, markEmail, markName ) {
 
             var term       = term.substring(1);
@@ -158,7 +158,7 @@
         var ie = ( typeof document.selection != "undefined" && document.selection.type != "Control" ) && true;
         var w3 = ( typeof window.getSelection != "undefined" ) && true;
         var cursorPos = 0;
-        var range = '';
+        var range     = '';
         var getCaretPosition = function( element ) {
             var caretOffset = 0;
             if ( w3 ) {
@@ -180,21 +180,21 @@
             return caretOffset;
         }
 
-        // Insert Display Name
+        // Insert Display Name.
         var insertDisplayName = function( setRange, email, fullName, displayName ) {
             var anchor = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
-            anchor.setAttribute( 'href', `mailto:${email}` )
+            anchor.setAttribute( 'href', `mailto:${email}` );
             anchor.setAttribute( 'title', fullName );
             anchor.setAttribute( 'data-email', email );
             anchor.setAttribute( 'class', 'js-mentioned' );
         
             var anchorContent = document.createTextNode( displayName );
-            anchor.appendChild( anchorContent )
-            setRange.insertNode( anchor )
+            anchor.appendChild( anchorContent );
+            setRange.insertNode( anchor );
         }
 
-        // Create @mentioning email features
+        // Create @mentioning email features.
         var createAutoEmailMention = function() {
             var el              = '';
             var currentBoardID   = '';
@@ -210,7 +210,7 @@
             var parentBoardClass = '.cls-board-outer';
             var editTextarea     = '.commentContainer .commentText textarea';
             var mood             = 'create';
-            // Grab the current board ID
+            // Grab the current board ID.
             $( document.body ).on( 'click', parentBoardClass, function(e) {
                 el              = $( this ).attr( 'id' );
                 currentBoardID  = `#${el}`;
@@ -229,72 +229,72 @@
                     appendIn        = `${currentBoardID} .cf-mentioned-user-popup`;
                     assignablePopup = `${currentBoardID} .cf-assignable-list-popup`;
                     editLink        = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
-                    mood            = 'create'
+                    mood            = 'create';
                     if( 'create' === mood ) {
                         createTextarea  = `${currentBoardID} .js-cf-share-comment`;
                     }
                 } )
             }
             $( document.body ).on( 'focus keyup', '.js-cf-edit-comment', function(e) {
-                el   = $( this ).parents( parentBoardClass ).attr( 'id' );
                 mood = 'edit';
+                el   = $( this ).parents( parentBoardClass ).attr( 'id' );
                 if( 'edit' === mood ) {
                     createTextarea  = `${currentBoardID} .js-cf-edit-comment`;
                 }
             } )
-            // Remove emails list on edit link click
+            // Remove emails list on edit link click.
             $( document.body ).on( 'click', editLink, function(e) {
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
             } )
-            // Triggering textarea keyup event
+            // Triggering textarea keyup event.
             $( document.body ).on( 'keyup', createTextarea, function(e) {
-                var _self = $( createTextarea )
-                typedText = _self.val()
-                // If textarea is blank then remove email list
+                var _self = $( createTextarea );
+                typedText = _self.val();
+                // If textarea is blank then remove email list.
                 if( '' == typedText ) {
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                 }
 
                 // Handeling space. As if someone type space has no intension to write email.
-                // So we make isEmail false and trackedStr to blank
+                // So we make isEmail false and trackedStr to blank.
                 if( '' === e.key || ' ' === e.key ) {
                     isEmail = false;
                     trackedStr = '';
                 }
 
-                // Get current cursor position
+                // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
                 cursorPos = getCaretPosition(el);
                 if( '@' === e.key && true === e.shiftKey ) {
-                    var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2, 2 )
+                    var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2, 2 );
 
                     if(
                         ' @' == prevCharOfEmailSymbol
                         || '' == prevCharOfEmailSymbol
                         || '@' == prevCharOfEmailSymbol
-                    ) { // meaning @ is typed at the begining or as independent
-                        // fetch the all email list
-                        isEmail = true
+                    ) { // meaning @ is typed at the begining or as independent.
+                        // Fetch all email list.
+                        isEmail = true;
                         $.ajax({
                             url: ajaxurl,
                             type: 'post',
                             data: {
                                 action: 'cf_get_user_email_list',
-                                postID: currentPostID
+                                postID: currentPostID,
                             },
                             beforeSend: function() {},
                             success: function( res ) {
-                                $( appendIn ).remove(); // Remove previous DOM
-                                $( assignablePopup ).remove(); // Remove previous DOM
+                                $( appendIn ).remove(); // Remove previous DOM.
+                                $( assignablePopup ).remove(); // Remove previous DOM.
                                 $( assignablePopup ).remove();
                                 var data = JSON.parse( res );
-                                emailList( createTextarea, data )
+                                emailList( createTextarea, data );
                             }
                         })
-                    } else { // Meaning @ is typed inside an email address
-                        // do nothing
+                    } else { // Meaning @ is typed inside an email address.
+                        // do nothing.
                     }
                 }
 
@@ -307,27 +307,27 @@
                     }
                     if( ! keysToAvoid.find( checkKeys ) ) {
                         if( 'Backspace' === e.key ) {
-                            trackedStr = trackedStr.slice( 0, -1 )
+                            trackedStr = trackedStr.slice( 0, -1 );
                         } else {
-                            trackedStr += e.key
+                            trackedStr += e.key;
                         }
 
                         if( '@' !== trackedStr ) {
-                            // Sending Ajax Call to get the matched email list(s)
+                            // Sending Ajax Call to get the matched email list(s).
                             $.ajax({
                                 url: ajaxurl,
                                 type: 'post',
                                 data: {
                                     action: 'cf_get_matched_user_email_list',
                                     niddle: trackedStr,
-                                    postID: currentPostID
+                                    postID: currentPostID,
                                 },
                                 success: function( res ) {
                                     $( appendIn ).remove(); // Removing previous DOM.
                                     $( assignablePopup ).remove(); // Removing previous DOM.
                                     var data = JSON.parse( res );
-                                    emailList( createTextarea, data )
-                                    makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' )
+                                    emailList( createTextarea, data );
+                                    makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' );
                                 }
                             })
 
@@ -411,9 +411,9 @@
         }
         assignThisToUser();
 
-        // Asignable Email List Template
+        // Asignable Email List Template.
         var assignalbeList = function( _self, data ) {
-            var listItem = ''
+            var listItem = '';
             if( data.length > 0 ) {
                 data.forEach( function( user ) {
                     listItem += `
@@ -424,7 +424,7 @@
                             <p class="cf-user-email">${user.user_email}</p>
                         </div>
                     </li>
-                    `
+                    `;
                 } )
             }
             var assignListTemplate = `
@@ -435,7 +435,7 @@
                 </div>
             `;
 
-            $( assignListTemplate ).insertAfter( _self )
+            $( assignListTemplate ).insertAfter( _self );
         }
         // Show Assiganable Email List
         var showAssingableEmailList = function() {
@@ -457,7 +457,7 @@
                     type: 'post',
                     data: {
                         action: 'cf_get_assignable_user_list',
-                        content: content
+                        content: content,
                     },
                     beforeSend: function() {},
                     success: function( res ) {
@@ -485,17 +485,17 @@
         }
         hideAssignableEmailList();
 
-        // Open comment box when user redirect from email
+        // Open comment box when user redirect from email.
         var openComment = function() {
             var commentedId = adminLocalizer.comment_id;
             $( window ).load( function() {
                 setTimeout( function() {
                     $( `#${commentedId} .js-edit-comment` ).trigger( 'click' );
                     $( `#${commentedId}` ).addClass( 'comment-flash' );
-                }, 2000 )
+                }, 2000 );
                 setTimeout( function() {
                     $( `#${commentedId}` ).removeClass( 'comment-flash' );
-                }, 4000 )
+                }, 4000 );
             } )
         }
         openComment();
@@ -503,13 +503,13 @@
         // Dealing with content-editable console issue.
         var manageContentEditableConsoleIssue = function() {
             console.error = (function() {
-                var error = console.error
-                return function(exception) {
-                    if ((exception + '').indexOf('Warning: A component is `contentEditable`') != 0) {
-                        error.apply(console, arguments)
+                var error = console.error;
+                return function( exception ) {
+                    if ( ( exception + '' ).indexOf( 'Warning: A component is `contentEditable`' ) != 0 ) {
+                        error.apply( console, arguments );
                     }
                 }
-            })()
+            })();
         }
         manageContentEditableConsoleIssue();
 
