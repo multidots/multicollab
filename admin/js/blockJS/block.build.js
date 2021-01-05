@@ -13916,6 +13916,8 @@ Board.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_render_html__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_render_html___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_render_html__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_contenteditable__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_contenteditable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_react_contenteditable__);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -13930,6 +13932,7 @@ var Fragment = wp.element.Fragment;
 
 
 
+
 var Comment = function (_React$Component) {
     _inherits(Comment, _React$Component);
 
@@ -13938,13 +13941,14 @@ var Comment = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Comment.__proto__ || Object.getPrototypeOf(Comment)).call(this, props));
 
+        _this.contentEditable = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createRef();
         _this.edit = _this.edit.bind(_this);
         _this.save = _this.save.bind(_this);
         _this.remove = _this.remove.bind(_this);
         _this.resolve = _this.resolve.bind(_this);
         _this.cancelEdit = _this.cancelEdit.bind(_this);
         _this.removeTag = _this.removeTag.bind(_this);
-        _this.state = { editing: false, showEditedDraft: false };
+        _this.state = { editing: false, showEditedDraft: false, contentHtml: '' };
 
         return _this;
     }
@@ -13970,8 +13974,8 @@ var Comment = function (_React$Component) {
     }, {
         key: 'save',
         value: function save(event) {
-            var newText = this.newText.value;
-
+            var newText = this.state.contentHtml;
+            console.log(newText);
             if ('' === newText) {
                 alert("Please write a comment to share!");
                 return false;
@@ -14069,7 +14073,6 @@ var Comment = function (_React$Component) {
             }
 
             var str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
-
             var readmoreStr = '';
             var maxLength = 300;
             if (maxLength < str.length) {
@@ -14169,8 +14172,8 @@ var Comment = function (_React$Component) {
     }, {
         key: 'renderEditingMode',
         value: function renderEditingMode() {
-            var textareaValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
-            var refinedString = textareaValue.replace(/<[^>]+>/g, '');
+            var _this2 = this;
+
             return wp.element.createElement(
                 'div',
                 { className: 'commentContainer', id: this.props.timestamp },
@@ -14204,10 +14207,16 @@ var Comment = function (_React$Component) {
                 wp.element.createElement(
                     'div',
                     { className: 'commentText' },
-                    wp.element.createElement('div', {
-                        contentEditable: 'true',
+                    wp.element.createElement(__WEBPACK_IMPORTED_MODULE_3_react_contenteditable___default.a, {
+                        innerRef: this.contentEditable,
+                        html: this.state.contentHtml,
+                        disabled: false,
+                        onChange: function onChange(e) {
+                            return _this2.setState({ contentHtml: e.target.value });
+                        },
                         id: 'edit-' + this.props.timestamp,
-                        className: 'cf-share-comment js-cf-edit-comment' })
+                        className: 'cf-share-comment js-cf-edit-comment'
+                    })
                 ),
                 wp.element.createElement(
                     'button',
@@ -50250,6 +50259,242 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __importStar(__webpack_require__(4));
+var fast_deep_equal_1 = __importDefault(__webpack_require__(88));
+var PropTypes = __importStar(__webpack_require__(17));
+function normalizeHtml(str) {
+    return str && str.replace(/&nbsp;|\u202F|\u00A0/g, ' ');
+}
+function replaceCaret(el) {
+    // Place the caret at the end of the element
+    var target = document.createTextNode('');
+    el.appendChild(target);
+    // do not move caret if element was not focused
+    var isTargetFocused = document.activeElement === el;
+    if (target !== null && target.nodeValue !== null && isTargetFocused) {
+        var sel = window.getSelection();
+        if (sel !== null) {
+            var range = document.createRange();
+            range.setStart(target, target.nodeValue.length);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+        if (el instanceof HTMLElement)
+            el.focus();
+    }
+}
+/**
+ * A simple component for an html element with editable contents.
+ */
+var ContentEditable = /** @class */ (function (_super) {
+    __extends(ContentEditable, _super);
+    function ContentEditable() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.lastHtml = _this.props.html;
+        _this.el = typeof _this.props.innerRef === 'function' ? { current: null } : React.createRef();
+        _this.getEl = function () { return (_this.props.innerRef && typeof _this.props.innerRef !== 'function' ? _this.props.innerRef : _this.el).current; };
+        _this.emitChange = function (originalEvt) {
+            var el = _this.getEl();
+            if (!el)
+                return;
+            var html = el.innerHTML;
+            if (_this.props.onChange && html !== _this.lastHtml) {
+                // Clone event with Object.assign to avoid
+                // "Cannot assign to read only property 'target' of object"
+                var evt = Object.assign({}, originalEvt, {
+                    target: {
+                        value: html
+                    }
+                });
+                _this.props.onChange(evt);
+            }
+            _this.lastHtml = html;
+        };
+        return _this;
+    }
+    ContentEditable.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, tagName = _a.tagName, html = _a.html, innerRef = _a.innerRef, props = __rest(_a, ["tagName", "html", "innerRef"]);
+        return React.createElement(tagName || 'div', __assign(__assign({}, props), { ref: typeof innerRef === 'function' ? function (current) {
+                innerRef(current);
+                _this.el.current = current;
+            } : innerRef || this.el, onInput: this.emitChange, onBlur: this.props.onBlur || this.emitChange, onKeyUp: this.props.onKeyUp || this.emitChange, onKeyDown: this.props.onKeyDown || this.emitChange, contentEditable: !this.props.disabled, dangerouslySetInnerHTML: { __html: html } }), this.props.children);
+    };
+    ContentEditable.prototype.shouldComponentUpdate = function (nextProps) {
+        var props = this.props;
+        var el = this.getEl();
+        // We need not rerender if the change of props simply reflects the user's edits.
+        // Rerendering in this case would make the cursor/caret jump
+        // Rerender if there is no element yet... (somehow?)
+        if (!el)
+            return true;
+        // ...or if html really changed... (programmatically, not by user edit)
+        if (normalizeHtml(nextProps.html) !== normalizeHtml(el.innerHTML)) {
+            return true;
+        }
+        // Handle additional properties
+        return props.disabled !== nextProps.disabled ||
+            props.tagName !== nextProps.tagName ||
+            props.className !== nextProps.className ||
+            props.innerRef !== nextProps.innerRef ||
+            !fast_deep_equal_1.default(props.style, nextProps.style);
+    };
+    ContentEditable.prototype.componentDidUpdate = function () {
+        var el = this.getEl();
+        if (!el)
+            return;
+        // Perhaps React (whose VDOM gets outdated because we often prevent
+        // rerendering) did not update the DOM. So we update it manually now.
+        if (this.props.html !== el.innerHTML) {
+            el.innerHTML = this.props.html;
+        }
+        this.lastHtml = this.props.html;
+        replaceCaret(el);
+    };
+    ContentEditable.propTypes = {
+        html: PropTypes.string.isRequired,
+        onChange: PropTypes.func,
+        disabled: PropTypes.bool,
+        tagName: PropTypes.string,
+        className: PropTypes.string,
+        style: PropTypes.object,
+        innerRef: PropTypes.oneOfType([
+            PropTypes.object,
+            PropTypes.func,
+        ])
+    };
+    return ContentEditable;
+}(React.Component));
+exports.default = ContentEditable;
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isArray = Array.isArray;
+var keyList = Object.keys;
+var hasProp = Object.prototype.hasOwnProperty;
+
+module.exports = function equal(a, b) {
+  if (a === b) return true;
+
+  if (a && b && typeof a == 'object' && typeof b == 'object') {
+    var arrA = isArray(a)
+      , arrB = isArray(b)
+      , i
+      , length
+      , key;
+
+    if (arrA && arrB) {
+      length = a.length;
+      if (length != b.length) return false;
+      for (i = length; i-- !== 0;)
+        if (!equal(a[i], b[i])) return false;
+      return true;
+    }
+
+    if (arrA != arrB) return false;
+
+    var dateA = a instanceof Date
+      , dateB = b instanceof Date;
+    if (dateA != dateB) return false;
+    if (dateA && dateB) return a.getTime() == b.getTime();
+
+    var regexpA = a instanceof RegExp
+      , regexpB = b instanceof RegExp;
+    if (regexpA != regexpB) return false;
+    if (regexpA && regexpB) return a.toString() == b.toString();
+
+    var keys = keyList(a);
+    length = keys.length;
+
+    if (length !== keyList(b).length)
+      return false;
+
+    for (i = length; i-- !== 0;)
+      if (!hasProp.call(b, keys[i])) return false;
+
+    for (i = length; i-- !== 0;) {
+      key = keys[i];
+      if (!equal(a[key], b[key])) return false;
+    }
+
+    return true;
+  }
+
+  return a!==a && b!==b;
+};
+
 
 /***/ })
 /******/ ]);

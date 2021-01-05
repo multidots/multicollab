@@ -2,20 +2,21 @@ const {Fragment} = wp.element;
 import React from 'react'
 import PropTypes from 'prop-types';
 import renderHTML from 'react-render-html'
+import ContentEditable from 'react-contenteditable'
 
 export default class Comment extends React.Component {
 
     constructor(props) {
 
         super(props);
-
+        this.contentEditable = React.createRef();
         this.edit = this.edit.bind(this);
         this.save = this.save.bind(this);
         this.remove = this.remove.bind(this);
         this.resolve = this.resolve.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
         this.removeTag = this.removeTag.bind(this);
-        this.state = {editing: false, showEditedDraft: false};
+        this.state = {editing: false, showEditedDraft: false, contentHtml: ''};
 
     }
 
@@ -36,16 +37,16 @@ export default class Comment extends React.Component {
     }
 
     save(event) {
-        var newText = this.newText.value;
-
-        if ('' === newText) {
-            alert("Please write a comment to share!");
+        var newText = this.state.contentHtml;
+        console.log( newText )
+        if ( '' === newText ) {
+            alert( "Please write a comment to share!" );
             return false;
         }
         var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
-        this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, this.props.dateTime, elID);
+        this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
 
-        this.setState({editing: false});
+        this.setState( { editing: false } );
     }
 
     remove(event) {
@@ -127,8 +128,7 @@ export default class Comment extends React.Component {
             owner = localStorage.getItem("userID");
         }
 
-        let str = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
-
+        let str         = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
         let readmoreStr = '';
         const maxLength = 300;
         if(maxLength < str.length) {
@@ -177,8 +177,6 @@ export default class Comment extends React.Component {
     }
 
     renderEditingMode() {
-        let textareaValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
-        let refinedString = textareaValue.replace( /<[^>]+>/g, '' );
         return (
             <div className="commentContainer" id={this.props.timestamp}>
                 <div className="comment-header">
@@ -191,18 +189,14 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                    {/* <textarea
-                            ref={(input) => {
-                                this.newText = input;
-                            }}
-                            onChange={this.handleChange}
-                            defaultValue={ refinedString }>
-                    </textarea> */}
-                    <div
-                        contentEditable="true"
-                        id={`edit-${this.props.timestamp}`}
-                        className="cf-share-comment js-cf-edit-comment">
-                    </div>
+                    <ContentEditable
+                        innerRef={ this.contentEditable }
+                        html={ this.state.contentHtml }
+                        disabled={ false }
+                        onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
+                        id={ `edit-${this.props.timestamp}` }
+                        className="cf-share-comment js-cf-edit-comment"
+                    />
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}

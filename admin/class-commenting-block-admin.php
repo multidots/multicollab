@@ -745,7 +745,7 @@ class Commenting_block_Admin {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>";
 					}
 
-					$html .= "<div class='user-comment'> " . esc_html( $c['thread'] ) . "</div>
+					$html .= "<div class='user-comment'> " . ( $c['thread'] ) . "</div>
 								</div>";
 					$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . "</div>";
 					$html .= "</div>";
@@ -779,7 +779,6 @@ class Commenting_block_Admin {
 
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
-
 		$edited_comment = filter_input( INPUT_POST, "editedComment" );
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );

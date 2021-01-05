@@ -146,19 +146,19 @@ export default class Board extends React.Component {
             userProfile = localStorage.getItem("userURL");
         }
 
-        var newArr = {};
-        newArr['userName'] = userName;
-        newArr['userRole'] = userRole;
+        var newArr           = {};
+        newArr['userName']   = userName;
+        newArr['userRole']   = userRole;
         newArr['profileURL'] = userProfile;
-        newArr['dtTime'] = dateTime;
-        newArr['thread'] = newText;
-        newArr['userData'] = userID;
-        newArr['index'] = idx;
-        newArr['status'] = 'draft reverted_back';
-        newArr['timestamp'] = cTimestamp;
-        arr[idx] = newArr;
-        const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
-        metaID = '_' + metaID;
+        newArr['dtTime']     = dateTime;
+        newArr['thread']     = newText;
+        newArr['userData']   = userID;
+        newArr['index']      = idx;
+        newArr['status']     = 'draft reverted_back';
+        newArr['timestamp']  = cTimestamp;
+        arr[idx]             = newArr;
+        const CurrentPostID  = wp.data.select('core/editor').getCurrentPostId();
+        metaID               = '_' + metaID;
         var data = {
             'action': 'cf_update_comment',
             'currentPostID': CurrentPostID,
