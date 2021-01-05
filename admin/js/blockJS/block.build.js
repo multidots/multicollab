@@ -13739,7 +13739,7 @@ var Board = function (_React$Component) {
                 } else if ('profileURL' === i) {
                     profileURL = text[i];
                 } else if ('userData' === i) {
-                    userID = text[i];
+                    userID = parseInt(text[i], 10);
                 } else if ('status' === i) {
                     status = text[i];
                 } else if ('timestamp' === i) {
