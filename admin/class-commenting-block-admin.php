@@ -432,13 +432,9 @@ class Commenting_block_Admin {
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $args['thread'], $matches );
 
-		// Making email address linkable in list of comments
-		$open_comment_count = count( $args['list_of_comments'] );
-
 		if( ! empty( $args['list_of_comments'] ) ) {
 			$comment_list_html = '<ul>';
 			foreach( $args['list_of_comments'] as $comment ) {
-				$comment['thread'] = $this->convert_str_to_email($comment['thread']);
 				$comment_list_html .= "
 					<li>
 						<div class=''>
@@ -454,9 +450,6 @@ class Commenting_block_Admin {
 			}
 			$comment_list_html .= '</ul>';
 		}
-
-		// Make email address linkable in email body.
-		$args['thread'] = $this->convert_str_to_email( $args['thread'] );
 
 		$template = "
 			<style>
@@ -479,10 +472,8 @@ class Commenting_block_Admin {
 				<div class='comment-box-header'>
 					<p>{$args['commenter']} - mentioned you in a comment in the following page.</p>
 					<h2><a href='{$args['post_edit_link']}' class='comment-page-title' target='_blank'>{$args['post_title']}</a></h2>
-					<p class='open-comment'>Open - {$open_comment_count} Comment(s)</p>
 				</div>
 				<div class='comment-box-body'>
-					<p class='latest-comment'>{Icon} {$args['thread']} </p>
 					<p>{$args['commented_text']}</p>
 					{$comment_list_html}
 				</div>
@@ -497,6 +488,7 @@ class Commenting_block_Admin {
 			$key = array_search( $args['assign_to'], $matches[0] );
 			unset($matches[0][$key]);
 		}
+
 		if ( ! empty( $matches[0] ) ) {
 			$to      = $matches[0];
 			$subject = "New Comment - {$post_title} - {$site_name}";
