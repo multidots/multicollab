@@ -26,7 +26,6 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                                 <?php if ( $activated ) : ?>
                                     <p class="cf-greetings">Thanks for installing Google Doc-Style Editorial Commenting Plugin.</p>
                                 <?php endif; ?>
-                                <p class="cf-greetings">Thanks for installing Google Doc-Style Editorial Commenting Plugin.</p>
                                 <div class="cf-video">
                                     <iframe width="970" height="545.63" src="https://www.youtube-nocookie.com/embed/rDdgh_u8oVQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
