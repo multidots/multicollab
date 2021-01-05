@@ -369,6 +369,12 @@ class Commenting_block_Admin {
 						unset( $users_emails[ $key ] );
 					}
 
+					// Notify Site Admin if setting enabled.
+					$cf_admin_notif = get_option( 'cf_admin_notif' );
+					if ( '1' === $cf_admin_notif ) {
+						$users_emails[] = get_option( 'admin_email');
+					}
+
 					// Limit the page and site titles for Subject.
 					$p_title    = $this->cf_limit_characters( $p_title, 30 );
 					$site_title = $this->cf_limit_characters( $site_title, 20 );

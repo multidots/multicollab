@@ -56,7 +56,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                                             <input type="checkbox" name="cf_admin_notif" class="cf-checkbox" id="cf_admin_notif" <?php echo '1' === $cf_admin_notif ? 'checked' : '' ?> value="1" class="regular-text"/>
                                             <span class="cf-check"></span>
                                         </div>
-                                        <label for="cf_admin_notif">All types of new comments send an email notification to an administrator. If you do not mention "administrator" in the comment still get an email notification</label>
+                                        <label for="cf_admin_notif">Notify site admin (<?php echo esc_html( get_option( 'admin_email') ) ?>) for all new comments even if not mentioned.</label>
                                     </div>
                                     <?php submit_button( "Save Changes" ); ?>
                                 </div>
