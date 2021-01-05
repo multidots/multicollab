@@ -164,20 +164,31 @@ class Commenting_block_Admin {
 					$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 					$html    = '
 					<style>
-						.comment-box{-webkit-box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);border:1px solid #E2E4E7;border-radius:5px;background:#fff;padding:20px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:600px;width:70%;font-family:Arial,serif;margin:40px 0 0;}
-						.comment-box .comment-box-header{padding-bottom:15px;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #ccc;margin-bottom:15px;}
+						.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
+						.comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
+						.comment-box a{color:#4B1BCE;}
+						.comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
 						.comment-box .comment-box-header p{margin:15px 0;}
-						.comment-box .comment-box-header a{color:#0073aa;text-decoration:none;display:inline-block;padding:5px 7px 4px;border:1px solid #ccc;border-radius:5px;}
-						.comment-box .comment-box-header a:hover{text-decoration:underline;color:#006799;}
-						.comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-						.comment-header:last-child{margin-bottom:0;}
-						.comment-header .avtar{width:40px;margin-right:10px;}
-						.comment-header .avtar img{max-width:100%;border-radius:50%;}
-						.comment-header .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-						.comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-						.comment-header .commenter-name-time .commenter-name{font-size:16px;font-weight:600;font-family:Arial,serif;margin-right:10px;}
-						.comment-header .commenter-name-time .comment-time{font-size:12px;font-weight:400;font-family:Arial,serif;color:#808080;}
-						.comment-header .comment{font-family:Arial,serif;font-size:14px;}
+						.comment-box .comment-box-header .comment-page-title{font-size:20px;}
+						.comment-box .comment-box-header a{color:#4B1BCE;text-decoration:underline;display:inline-block;font-size:20px;}
+						.comment-box .comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-box .comment-header:last-child{margin-bottom:0;}
+						.comment-box .avtar{width:40px;margin-right:10px;}
+						.comment-box .avtar img{max-width:100%;border-radius:50%;}
+						.comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
+						.comment-box .comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-box .comment-header .commenter-name{font-size:18px;font-family:Arial,serif;margin-right:10px;}
+						.comment-box .comment-header .commenter-name-time .comment-time{font-size:12px;font-weight:400;font-family:Arial,serif;color:#808080;}
+						.comment-box .author-name{margin:0 0 5px;}
+						.comment-box .comment,
+						.comment-box .author-comment{font-family:Arial,serif;font-size:14px;}
+						.comment-box .comment-box-body{border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
+						.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:15px;}
+						.comment-box .comment-assigned-to{margin-bottom:20px;}
+						.comment-box .comment-assigned-to .commenter-name{color:#4B1BCE;}
+						.comment-box ul{margin:0;padding:0;list-style:none;}
+						.comment-box ul li{margin-bottom:20px;}
+						.comment-box .latest-comment{margin:0 0 15px;}
 					</style>
 					';
 					$html    .= '<div class="comment-box"><div class="comment-box-header">';
@@ -188,7 +199,7 @@ class Commenting_block_Admin {
 						<p class="resolve-comment">Resolved - '.$count_resolved_comment.' Comment(s)</p>
 					';
 					$html    .= '<p class="">{Icon} '.$this->convert_str_to_email( $current_comment['thread'] ).'</p>';
-					$html    .= '</p><a href="' . esc_url( $p_link ) . '" class="comment-page-title">' . esc_html( $p_title ) . '</a></div>';
+					$html    .= '</p><h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
 					$html    .= '<div class="comment-box-body">';
 					foreach ( $comments as $timestamp => $arr ) {
 						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
@@ -437,11 +448,13 @@ class Commenting_block_Admin {
 			foreach( $args['list_of_comments'] as $comment ) {
 				$comment_list_html .= "
 					<li>
-						<div class=''>
-							<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
-							<div class=''>
-								<p class='author-name'>{$comment['userName']}</p>
-								<p class='author-comment'>{$comment['thread']}</p>
+						<div class='comment-header'>
+							<div class='avtar'>
+								<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
+							</div>
+							<div class='comment-details'>
+								<h3 class='author-name'>{$comment['userName']}</h3>
+								<div class='author-comment'>{$comment['thread']}</div>
 							</div>
 							<a href='{$args['post_edit_link']}&comment_id={$comment['timestamp']}' target='_blank'>View</a>
 						</div>
@@ -453,28 +466,41 @@ class Commenting_block_Admin {
 
 		$template = "
 			<style>
-				.comment-box{-webkit-box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);box-shadow:0px 6px 20px 0px rgba(27,29,35,0.1);border:1px solid #E2E4E7;border-radius:5px;background:#fff;padding:20px;-webkit-box-sizing:border-box;box-sizing:border-box;max-width:600px;width:70%;font-family:Arial,serif;margin:40px 0 0;}
-				.comment-box .comment-box-header{padding-bottom:15px;-webkit-box-sizing:border-box;box-sizing:border-box;border-bottom:1px solid #ccc;margin-bottom:15px;}
+				.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
+				.comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
+				.comment-box a{color:#4B1BCE;}
+				.comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
 				.comment-box .comment-box-header p{margin:15px 0;}
-				.comment-box .comment-box-header a{color:#0073aa;text-decoration:none;display:inline-block;padding:5px 7px 4px;border:1px solid #ccc;border-radius:5px;}
-				.comment-box .comment-box-header a:hover{text-decoration:underline;color:#006799;}
-				.comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-header:last-child{margin-bottom:0;}
-				.comment-header .avtar{width:40px;margin-right:10px;}
-				.comment-header .avtar img{max-width:100%;border-radius:50%;}
-				.comment-header .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-				.comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-header .commenter-name-time .commenter-name{font-size:16px;font-weight:600;font-family:Arial,serif;margin-right:10px;}
-				.comment-header .commenter-name-time .comment-time{font-size:12px;font-weight:400;font-family:Arial,serif;color:#808080;}
-				.comment-header .comment{font-family:Arial,serif;font-size:14px;}
+				.comment-box .comment-box-header .comment-page-title{font-size:20px;}
+				.comment-box .comment-box-header a{color:#4B1BCE;text-decoration:underline;display:inline-block;font-size:20px;}
+				.comment-box .comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-box .comment-header:last-child{margin-bottom:0;}
+				.comment-box .avtar{width:40px;margin-right:10px;}
+				.comment-box .avtar img{max-width:100%;border-radius:50%;}
+				.comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
+				.comment-box .comment-header .commenter-name-time{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-box .comment-header .commenter-name{font-size:18px;font-family:Arial,serif;margin-right:10px;}
+				.comment-box .comment-header .commenter-name-time .comment-time{font-size:12px;font-weight:400;font-family:Arial,serif;color:#808080;}
+				.comment-box .author-name{margin:0 0 5px;}
+				.comment-box .comment,
+				.comment-box .author-comment{font-family:Arial,serif;font-size:14px;}
+				.comment-box .comment-box-body{border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
+				.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:15px;}
+				.comment-box .comment-assigned-to{margin-bottom:20px;}
+				.comment-box .comment-assigned-to .commenter-name{color:#4B1BCE;}
+				.comment-box ul{margin:0;padding:0;list-style:none;}
+				.comment-box ul li{margin-bottom:20px;}
+				.comment-box .latest-comment{margin:0 0 15px;}
 			</style>
 			<div class='comment-box'>
 				<div class='comment-box-header'>
-					<p>{$args['commenter']} - mentioned you in a comment in the following page.</p>
-					<h2><a href='{$args['post_edit_link']}' class='comment-page-title' target='_blank'>{$args['post_title']}</a></h2>
+					<p><span class='commenter-name'>{$args['commenter']}</span> - mentioned you in a comment in the following page.</p>
+					<h2 class='comment-page-title'><a href='{$args['post_edit_link']}' target='_blank'>{$args['post_title']}</a></h2>
 				</div>
 				<div class='comment-box-body'>
-					<p>{$args['commented_text']}</p>
+					<h2 class='latest-comment'>{icon} {$args['thread']} </h2>
+					<div class='commented_text'>{$args['commented_text']}</div>
+					<div class='comment-assigned-to'>Assigned to <span class='commenter-name'>John Doe</span></div>
 					{$comment_list_html}
 				</div>
 			</div>
