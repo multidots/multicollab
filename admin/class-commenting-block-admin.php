@@ -116,6 +116,10 @@ class Commenting_block_Admin {
 	 * @param string $update Status of the update.
 	 */
 	public function cf_post_status_changes( $post_ID, $post, $update ) {
+		$allowed_tags = [
+				'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
+			]
+		];
 		$p_content  = is_object( $post ) ? $post->post_content : $post;
 		$p_link     = get_edit_post_link( $post_ID );
 		$p_title    = get_the_title( $post_ID );
@@ -153,15 +157,10 @@ class Commenting_block_Admin {
 				$comments = isset( $comments['comments'] ) ? $comments['comments'] : '';
 
 				if ( ! empty( $comments ) && is_array( $comments ) ) {
-
 					$current_comment = end( $comments );
+					$users_emails    = array();
+					$headers         = array( 'Content-Type: text/html; charset=UTF-8' );
 
-					$count_resolved_comment = count( $current_drafts['resolved'] );
-					$count_open_comment     = count( $comments ) - $count_resolved_comment;
-
-					$users_emails = array();
-
-					$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 					$html    = '
 					<style>
 						.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
@@ -196,23 +195,25 @@ class Commenting_block_Admin {
 					</style>
 					';
 					$html    .= '<div class="comment-box"><div class="comment-box-header">';
+					$html    .= '<p><a href="mailto:'.esc_attr( $current_user_email ).'" class="">'. esc_html( $current_user_display_name ) .'</a> '.__( 'Mentioned you in a comment in the following page', 'content-collaboration-inline-commenting' ).'</p>';
+					$html    .= '<h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
+					$html    .= '<div class="comment-box-body">';
 					$html    .= '<h3>';
 					$html    .= '<span class="icon-resolved">';
 					$html 	 .= '<svg id="Group_19" data-name="Group 19" xmlns="http://www.w3.org/2000/svg" width="40" height="40.001" viewBox="0 0 40 40.001"><path id="Path_6" data-name="Path 6" d="M65.567,45.564a20,20,0,1,0,20,20A20,20,0,0,0,65.567,45.564ZM61.722,75.7l-7.583-7.731L57,65.164l4.753,4.847L73.609,58.151l2.828,2.828Z" transform="translate(-45.567 -45.564)" fill="#6ac359"/></svg>';
-					$html 	 .= '</span><span class="commenter-name">' .esc_html( $current_user_display_name ) .'</span>' . __( ' has resolved the following thread.', 'content-collaboration-inline-commenting' );
-					$html 	 .= '</h3><p class="open-comment">Open - '.$count_open_comment.' Comment(s)</p>';
-					$html 	 .= '<p class="resolve-comment">Resolved - '.$count_resolved_comment.' Comment(s)</p>';
-					$html    .= '<p>' .$this->convert_str_to_email( $current_comment['thread'] ).'</p>';
-					$html    .= '<h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
-					$html    .= '<div class="comment-box-body"><ul>';
+					$html 	 .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
+					$html 	 .= '</h3>';
+					$html    .= "<div class='commented_text'>This is a dummy content</div>";
+					$html    .= '<ul>';
 					foreach ( $comments as $timestamp => $arr ) {
 						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
 							$user_info      = get_userdata( $arr['userData'] );
 							$username       = $user_info->display_name;
+							$user_role      = implode( ', ', $user_info->roles );
 							$users_emails[] = $user_info->user_email;
 							$profile_url    = get_avatar_url( $user_info->user_email );
 							$date           = gmdate( $time_format . ' ' . $date_format, $timestamp );
-							$text_comment   = $this->convert_str_to_email( $arr['thread'] );
+							$text_comment   = wp_kses( $arr['thread'], $allowed_tags );
 							$cstatus        = $arr['status'];
 							$draft          = 'draft' === $cstatus ? '(draft)' : '';
 
@@ -222,15 +223,15 @@ class Commenting_block_Admin {
 											<div class='comment-details'>
 												<div class='commenter-name-role'>
 													<div class='commenter-name'>" . esc_html( $username ) . "</div>
-													<div class='comment-role'>(Author)</div>
+													<div class='comment-role'>( " . esc_html( ucwords( $user_role ) ) . " )</div>
 												</div>
-												<div class='comment'>" . __( '<strong>Comment</strong>', 'content-collaboration-inline-commenting' ) . ": " . $text_comment . " " . esc_html( $draft ) . "
-												</div>
+												<div class='comment'>" . $text_comment . "</div>
 											</div>
 										 </div>
 									   </li>";
 						}
 					}
+					$html .= '<span class="cf-marked-resolved-by">' . __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:'.esc_attr( $current_user_email ).'" title="'.esc_attr( $current_user_display_name ).'" target="_blank"> '. esc_html( $current_user_display_name ) .' </a>' .'</span>';
 					$html .= '</ul></div>'; // .comment-box-body end
 					$html .= '</div>'; // .comment-box end
 
@@ -561,7 +562,7 @@ class Commenting_block_Admin {
 
 		if( ! empty( $args['assign_to'] ) ) {
 			$assign_to      = $args['assign_to'];
-			$assign_subject = "Assgined to you";
+			$assign_subject = "Assgined to you - {$post_title}";
 			$assign_body    = $template;
 			$headers        = 'Content-Type: text/html; charset=UTF-8';
 			wp_mail( $assign_to, $assign_subject, $assign_body, $headers );
