@@ -201,7 +201,7 @@ class Commenting_block_Admin {
 			'manage_options',
 			'editorial-comments',
 			array( $this, 'cf_settings_callback' ),
-			COMMENTING_BLOCK_URL . '/admin/images/commenting-logo-grey.svg'
+			COMMENTING_BLOCK_URL . '/admin/images/menu-icon.svg'
 		);
 	}
 
