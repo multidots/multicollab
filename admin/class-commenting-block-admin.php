@@ -452,19 +452,18 @@ class Commenting_block_Admin {
 		if( ! empty( $args['list_of_comments'] ) ) {
 			$comment_list_html = '<ul>';
 			foreach( $args['list_of_comments'] as $comment ) {
+				$user_role = ucwords( $comment['userRole'] );
 				$comment_list_html .= "
 					<li>
-						<a href='{$args['post_edit_link']}&comment_id={$comment['timestamp']}' target='_blank'>
-							<div class='comment-header'>
-								<div class='avtar'>
-									<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
-								</div>
-								<div class='comment-details'>
-									<h3 class='author-name'>{$comment['userName']}</h3>
-									<div class='author-comment'>{$comment['thread']}</div>
-								</div>
+						<div class='comment-header'>
+							<div class='avtar'>
+								<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
 							</div>
-						</a>
+							<div class='comment-details'>
+								<h3 class='author-name'>{$comment['userName']}</h3> <span class='author-role'>( {$user_role} )</span>
+								<div class='author-comment'>{$comment['thread']}</div>
+							</div>
+						</div>
 					</li>
 				";
 			}
