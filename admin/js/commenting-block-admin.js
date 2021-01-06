@@ -1,5 +1,3 @@
-// const { before } = require("lodash");
-
 (function ($) {
     'use strict';
     /**
@@ -29,14 +27,61 @@
      * Although scripts in the WordPress core, Plugins and Themes may be
      * practising this, we should strive to set a better example in our own work.
      */
+
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
 
-    // Ready.
+    // Document Ready.
     $(document).ready(function () {
 
+        // If thread focused via an activity center,
+        // it is in lock mode, so clicking any para
+        // would unlock it.
+        $(document).on('click', '.block-editor-block-list__layout .wp-block', function (e) {
+
+            if($('.cls-board-outer').hasClass('locked')) {
+
+                // Reset Comments Float. This will reset the positions of all comments.
+                $('#md-span-comments .cls-board-outer').css('opacity', '1');
+                $('#md-span-comments .cls-board-outer').removeClass('focus');
+                $('#md-span-comments .cls-board-outer').removeAttr('style');
+
+                if( e.target.localName === 'mdspan' ) {
+                    const dataid = $(e.target).attr('datatext');
+                    // Trigger card click to focus.
+                    $('#' + dataid).trigger('click');
+                }
+                $('.cls-board-outer').removeClass('locked');
+            }
+        });
+
+        // Settings page tabs toggle.
+        $(document).on('click', '.cf-tabs span', function () {
+            const tabID = $(this).data('id');
+            $('.cf-tab-inner').hide();
+            $('#' + tabID).show();
+        });
+
+        // Save Settings.
+        $('#cf-settings-form').on('submit', function (e){
+            e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_save_settings',
+                'formData': $(this).serialize()
+            };
+            $.post(ajaxurl, settingsData, function () {
+                $('#cf-settings-form').find('[type="submit"]').removeClass('loading');
+                $('#cf-notice .cf-success').slideDown(300);
+                setTimeout(function () {
+                    $('#cf-notice .cf-success').slideUp(300);
+                }, 3000);
+            });
+        });
+
+
         // Save show_avatar option in a localstorage.
-        var data = {
+        const data = {
             'action': 'cf_store_in_localstorage'
         };
         $.post(ajaxurl, data, function (response) {
@@ -46,7 +91,12 @@
         });
 
         // Focus comment popup on click.
-        $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function () {
+        $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function (e) {
+
+            var target = $(e.target), article;
+            if( 'dashicons dashicons-trash' === target[0].className ) {
+                return;
+            }
 
             const _this = $(this);
 
@@ -65,7 +115,11 @@
             _this.offset({top: topOfText});
 
             var scrollTopClass = '';
-            if( 0 !== $('.block-editor-editor-skeleton__content').length ) {
+            if( 0 !== $('.interface-interface-skeleton__content').length ) {
+                // Latest WP Version
+                scrollTopClass = '.interface-interface-skeleton__content';
+
+            } else if( 0 !== $('.block-editor-editor-skeleton__content').length ) {
                 // Latest WP Version
                 scrollTopClass = '.block-editor-editor-skeleton__content';
 
@@ -89,20 +143,21 @@
         });
 
         // Scroll to the commented text and its popup from History Popup.
-        $(document).on('click', '.user-comented-on', function (e) {
-            $('#custom-history-popup, #history-toggle').toggleClass('active');
+        $(document).on('click', '.user-commented-on', function (e) {
+            $('#custom-history-popup, #history-toggle, .custom-buttons').toggleClass('active');
             e.preventDefault();
 
             const dataid = $(this).attr('data-id');
 
-            if (0 !== $("#" + dataid).length) {
-                const topOfPopup = $("#" + dataid).offset().top
-                $('.edit-post-layout__content').animate({
-                    scrollTop: topOfPopup
-                }, 1000);
-            }
 
-            $('#' + dataid + ', [datatext="' + dataid + '"]').addClass('focus');
+            // Trigger card click to focus.
+            $('#' + dataid).trigger('click');
+
+            // Focus and Lock the popup to prevent on hover issue.
+            $('.cls-board-outer').removeClass('locked');
+            $('#' + dataid).addClass('locked');
+
+            $('[datatext="' + dataid + '"]').addClass('focus');
             setTimeout(function () {
                 $('[datatext="' + dataid + '"]').removeClass('focus');
             }, 1500);
@@ -615,6 +670,12 @@
         if ($(e.target).is(".dashicon.dashicons-ellipsis") === false) {
             $(".buttons-holder").removeClass('is_active');
         }
+    });
+
+    $(document).on('click', '.cf-tabs-main .cf-tabs .cf-tab-item', function () {
+        let getTabID = $(this).attr('data-id');
+        $(this).parent().addClass('cf-tab-active').siblings().removeClass('cf-tab-active');
+        $('#'+getTabID).addClass('cf-tab-active').show().siblings().removeClass('cf-tab-active').hide();
     });
 
 })(jQuery);

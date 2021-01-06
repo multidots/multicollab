@@ -12932,7 +12932,7 @@ $(window).on('load', function () {
     var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
     commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
 
-    var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+    var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
     var loadIcons = setInterval(function () {
@@ -13030,6 +13030,7 @@ function fetchComments() {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 }
                 if (loadAttempts >= 10) {
                     clearInterval(loadComments);
@@ -13105,6 +13106,9 @@ function bring_back_comments() {
                 });
             });
         }
+
+        // Update unresolved comments count.
+        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
     });
 
     return false;
@@ -13175,8 +13179,6 @@ var mdComment = {
 
             _this.onToggle = _this.onToggle.bind(_this);
             _this.getSelectedText = _this.getSelectedText.bind(_this);
-            _this.removeSuggestion = _this.removeSuggestion.bind(_this);
-            _this.hidethread = _this.hidethread.bind(_this);
             _this.floatComments = _this.floatComments.bind(_this);
             _this.removeTag = _this.removeTag.bind(_this);
 
@@ -13199,25 +13201,76 @@ var mdComment = {
 
                 var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
                 if (null !== blockAttributes) {
-                    var content = blockAttributes.content;
 
-                    if ('' !== content) {
-                        var tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = content;
-                        var childElements = tempDiv.getElementsByTagName('mdspan');
-                        for (var i = 0; i < childElements.length; i++) {
-                            if (elIDRemove === childElements[i].attributes.datatext.value) {
-                                childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                                var finalContent = tempDiv.innerHTML;
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                    attributes: {
-                                        content: finalContent
+                    var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+                    jQuery(findAttributes).each(function (i, attrb) {
+                        var content = blockAttributes[attrb];
+                        if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                            if ('' !== content) {
+                                var tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = content;
+                                var childElements = tempDiv.getElementsByTagName('mdspan');
+                                for (var _i2 = 0; _i2 < childElements.length; _i2++) {
+                                    if (elIDRemove === childElements[_i2].attributes.datatext.value) {
+                                        childElements[_i2].parentNode.replaceChild(document.createTextNode(childElements[_i2].innerText), childElements[_i2]);
+                                        var finalContent = tempDiv.innerHTML;
+
+                                        if (attrb === 'content') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    content: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'citation') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    citation: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'value') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    value: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'caption') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    caption: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'values') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    values: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'fileName') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    fileName: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'text') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    text: finalContent
+                                                }
+                                            });
+                                        } else if (attrb === 'downloadButtonText') {
+                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                                attributes: {
+                                                    downloadButtonText: finalContent
+                                                }
+                                            });
+                                        }
+                                        break;
                                     }
-                                });
-                                break;
+                                }
                             }
                         }
-                    }
+                    });
                 }
             }
         }, {
@@ -13247,6 +13300,7 @@ var mdComment = {
                 var referenceNode = document.getElementById('md-span-comments');
 
                 referenceNode.appendChild(newNode);
+                $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
                 onChange(toggleFormat(value, { type: name }), __WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(wp.element.createElement(__WEBPACK_IMPORTED_MODULE_0__component_board__["a" /* default */], { datatext: currentTime, onChanged: onChange, lastVal: value, freshBoard: 1, commentedOnText: commentedOnText }), document.getElementById(currentTime)));
 
@@ -13260,16 +13314,26 @@ var mdComment = {
                     value = _props2.value,
                     activeAttributes = _props2.activeAttributes;
 
-                // Ignore unnecessary event calls on hover.
+                // Prevent on locked mode + fix for unnecessary calls on hover.
 
+                if ($('.cls-board-outer').hasClass('locked')) {
+                    return;
+                }
+
+                // Ignore unnecessary event calls on hover.
                 if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
                     return;
                 }
 
-                // Reset Comments Float.
-                jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-                jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-                jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+                // Reset Comments Float only if the selected text has no comments on it.
+                if (undefined === activeAttributes.datatext) {
+                    $('#md-span-comments .cls-board-outer').css('opacity', '1');
+                    $('#md-span-comments .cls-board-outer').removeClass('focus');
+                    $('#md-span-comments .cls-board-outer').removeAttr('style');
+
+                    //ne_pending remove the attr true
+                    $('mdspan').removeAttr('data-rich-text-format-boundary');
+                }
 
                 var referenceNode = document.getElementById('md-span-comments');
 
@@ -13299,7 +13363,7 @@ var mdComment = {
                                 $('[datatext="' + selectedText + '"]').css('background', 'transparent');
                             }
                         }
-
+                        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                         $('#' + selectedText).addClass('has_text').show();
                     });
 
@@ -13312,12 +13376,14 @@ var mdComment = {
                         if (selectedText !== latestBoard) {
                             this.removeTag(latestBoard);
                             $('#' + latestBoard).remove();
+                            $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                         }
                     }
 
                     // Just hide these popups and only display on CTRLz
                     $('#md-span-comments .cls-board-outer:not(.has_text):not([data-sid])').each(function () {
                         $(this).hide();
+                        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                     });
 
                     // Adding lastVal and onChanged props to make it deletable,
@@ -13327,46 +13393,33 @@ var mdComment = {
                         __WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(wp.element.createElement(__WEBPACK_IMPORTED_MODULE_0__component_board__["a" /* default */], { datatext: selectedText, lastVal: value, onChanged: onChange }), document.getElementById(selectedText));
                     }
 
+                    // Removing dark highlights from other texts,
+                    // only if current active text has an attribute,
+                    // and no 'focus' class active on mdspan tag.
+                    // This condition prevents thread popup flickering
+                    // when navigating through the activity center.
+
                     // Adding focus on selected text's popup.
                     $('.cls-board-outer').removeClass('focus');
                     $('#' + selectedText + '.cls-board-outer').addClass('focus');
 
-                    // Removing dark highlights from other texts.
                     $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
                     // Float comments column.
-                    if (undefined !== selectedText) {
-                        //Active comment tab
-                        if (!$('#md-tabs .comment').hasClass('active')) {
-                            $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
-                            $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
-                        }
-                        this.floatComments(selectedText);
-                    }
+                    this.floatComments(selectedText);
                 }
             }
         }, {
             key: 'floatComments',
             value: function floatComments(selectedText) {
                 if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
+
                     $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                     $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
+
+                    $('#md-span-comments .cls-board-outer').css('top', 0);
                     $('#' + selectedText).offset({ top: $('[datatext="' + selectedText + '"]').offset().top });
                 }
-            }
-        }, {
-            key: 'removeSuggestion',
-            value: function removeSuggestion() {
-                var _props3 = this.props,
-                    onChange = _props3.onChange,
-                    value = _props3.value;
-
-                onChange(removeFormat(value, name));
-            }
-        }, {
-            key: 'hidethread',
-            value: function hidethread() {
-                $('.cls-board-outer').removeClass('is_active');
             }
         }, {
             key: 'render',
@@ -13512,25 +13565,76 @@ var Board = function (_React$Component) {
 
             var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
             if (null !== blockAttributes) {
-                var content = blockAttributes.content;
 
-                if ('' !== content) {
-                    var tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content;
-                    var childElements = tempDiv.getElementsByTagName('mdspan');
-                    for (var i = 0; i < childElements.length; i++) {
-                        if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                            var finalContent = tempDiv.innerHTML;
-                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                attributes: {
-                                    content: finalContent
+                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+                jQuery(findAttributes).each(function (i, attrb) {
+                    var content = blockAttributes[attrb];
+                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                        if ('' !== content) {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = content;
+                            var childElements = tempDiv.getElementsByTagName('mdspan');
+                            for (var _i = 0; _i < childElements.length; _i++) {
+                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
+                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
+                                    var finalContent = tempDiv.innerHTML;
+
+                                    if (attrb === 'content') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                content: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'citation') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                citation: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'value') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                value: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'caption') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                caption: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'values') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                values: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'fileName') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                fileName: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'text') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                text: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'downloadButtonText') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                downloadButtonText: finalContent
+                                            }
+                                        });
+                                    }
+                                    break;
                                 }
-                            });
-                            break;
+                            }
                         }
                     }
-                }
+                });
             }
         }
     }, {
@@ -13674,6 +13778,7 @@ var Board = function (_React$Component) {
                 jQuery.post(ajaxurl, data, function (data) {
 
                     jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
+                    jQuery('.fresh-board').removeClass('fresh-board');
 
                     data = jQuery.parseJSON(data);
                     if (undefined !== data.error) {
@@ -13775,13 +13880,19 @@ var Board = function (_React$Component) {
     }, {
         key: 'cancelComment',
         value: function cancelComment() {
+
+            // Reset Comments Float.
+            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
+            jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
+            jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+            jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+
             var _props2 = this.props,
                 datatext = _props2.datatext,
                 onChanged = _props2.onChanged,
                 lastVal = _props2.lastVal;
 
             var name = 'multidots/comment';
-            jQuery('#' + datatext).removeClass('focus');
 
             if (0 === jQuery('#' + datatext + ' .boardTop .commentContainer').length) {
                 onChanged(removeFormat(lastVal, name));
@@ -13991,8 +14102,6 @@ var Comment = function (_React$Component) {
 
             if (confirm('Are you sure you want to delete this comment ?')) {
                 var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-                //	var elID = event.currentTarget.parentElement.parentElement.parentElement.id;
-
                 this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
             }
         }
@@ -14013,15 +14122,15 @@ var Comment = function (_React$Component) {
                     'currentPostID': CurrentPostID,
                     'metaId': elID
                 };
-                // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                 jQuery.post(ajaxurl, data, function () {
                     jQuery('#' + elIDRemove).remove();
+                    jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
                 });
 
                 // Remove Tag.
                 this.removeTag(elIDRemove);
             } else {
-                jQuery('#' + elIDRemove + ' #resolve_cb').prop('checked', false);
+                jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
             }
         }
     }, {
@@ -14032,25 +14141,76 @@ var Comment = function (_React$Component) {
 
             var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
             if (null !== blockAttributes) {
-                var content = blockAttributes.content;
 
-                if ('' !== content) {
-                    var tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content;
-                    var childElements = tempDiv.getElementsByTagName('mdspan');
-                    for (var i = 0; i < childElements.length; i++) {
-                        if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                            var finalContent = tempDiv.innerHTML;
-                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                attributes: {
-                                    content: finalContent
+                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+                jQuery(findAttributes).each(function (i, attrb) {
+                    var content = blockAttributes[attrb];
+                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                        if ('' !== content) {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = content;
+                            var childElements = tempDiv.getElementsByTagName('mdspan');
+                            for (var _i = 0; _i < childElements.length; _i++) {
+                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
+                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
+                                    var finalContent = tempDiv.innerHTML;
+
+                                    if (attrb === 'content') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                content: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'citation') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                citation: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'value') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                value: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'caption') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                caption: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'values') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                values: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'fileName') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                fileName: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'text') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                text: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'downloadButtonText') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                downloadButtonText: finalContent
+                                            }
+                                        });
+                                    }
+                                    break;
                                 }
-                            });
-                            break;
+                            }
                         }
                     }
-                }
+                });
             }
         }
     }, {
@@ -14061,6 +14221,10 @@ var Comment = function (_React$Component) {
     }, {
         key: 'renderNormalMode',
         value: function renderNormalMode() {
+
+            // Display the textarea for new comments.
+            jQuery('.cls-board-outer.focus .shareCommentContainer').show();
+
             var index = this.props.index;
 
             var commentStatus = this.props.status ? this.props.status : 'draft';
@@ -14095,10 +14259,10 @@ var Comment = function (_React$Component) {
                         index === 0 && wp.element.createElement(
                             'div',
                             { className: 'comment-resolve' },
-                            wp.element.createElement('input', { id: 'resolve_cb', type: 'checkbox', onClick: this.resolve.bind(this), className: 'btn-comment', value: '1' }),
+                            wp.element.createElement('input', { id: "resolve_cb_" + this.props.timestamp + '_' + index, type: 'checkbox', onClick: this.resolve.bind(this), className: 'btn-comment', value: '1' }),
                             wp.element.createElement(
                                 'label',
-                                { htmlFor: 'resolve_cb' },
+                                { htmlFor: "resolve_cb_" + this.props.timestamp + '_' + index },
                                 'Mark as a Resolved'
                             )
                         ),
@@ -14173,6 +14337,9 @@ var Comment = function (_React$Component) {
         key: 'renderEditingMode',
         value: function renderEditingMode() {
             var _this2 = this;
+
+            // Hide the textarea for new comments.
+            jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
 
             return wp.element.createElement(
                 'div',

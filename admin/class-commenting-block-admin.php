@@ -57,6 +57,160 @@ class Commenting_block_Admin {
 
 		// Allow caps for Multisite environment.
 		add_filter( 'map_meta_cap', array( $this, 'cf_add_unfiltered_html_capability_to_users' ), 1, 3 );
+
+		// Action to add setting page.
+		add_action( 'admin_menu', array( $this, 'cf_add_setting_page' ) );
+
+		// Adding new column to the posts list.
+		add_filter( 'manage_posts_columns', array( $this, 'cf_columns_head' ) );
+		add_filter( 'manage_pages_columns', array( $this, 'cf_columns_head' ) );
+
+		// Adding content in a column of posts list.
+		add_action( 'manage_posts_custom_column', array( $this, 'cf_columns_content' ), 10, 2 );
+		add_action( 'manage_pages_custom_column', array( $this, 'cf_columns_content' ), 10, 2 );
+
+		// Make custom comments columns sortable.
+		add_filter( 'manage_edit-post_sortable_columns', array( $this, 'cf_sortable_comments_column' ) );
+		add_filter( 'manage_edit-page_sortable_columns', array( $this, 'cf_sortable_comments_column' ) );
+
+		// Set query to sort.
+		add_action( 'pre_get_posts', array( $this, 'cf_sort_custom_column_query' ) );
+	}
+
+	/**
+	 * Make custom comments columns sortable.
+	 *
+	 * @param array $columns List of columns.
+	 *
+	 * @return mixed Updated list of columns.
+	 */
+	public function cf_sortable_comments_column( $columns ) {
+		$columns['cb_comments_status'] = 'sort_by_cf_comments';
+
+		return $columns;
+	}
+
+	/**
+	 * Set query to sort.
+	 *
+	 * @param object $query Query object.
+	 */
+	public function cf_sort_custom_column_query( $query ) {
+		$orderby = $query->get( 'orderby' );
+
+		if ( 'sort_by_cf_comments' == $orderby ) {
+
+			$meta_query = array(
+				'relation' => 'OR',
+				array(
+					'key'     => 'open_cf_count',
+					'compare' => 'NOT EXISTS', // see note above
+				),
+				array(
+					'key' => 'open_cf_count',
+				),
+			);
+
+			$query->set( 'meta_query', $meta_query );
+			$query->set( 'orderby', 'meta_value' );
+		}
+	}
+
+	/**
+	 * Update columns of the posts list.
+	 *
+	 * @param array $defaults List of default columns.
+	 *
+	 * @return array mixed Updated list of default columns.
+	 */
+	public function cf_columns_head( $defaults ) {
+		$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg" width=17/>' . ' Editorial Comments';
+
+		return $defaults;
+	}
+
+	/**
+	 * Add content in a new column of the posts list.
+	 *
+	 * @param string $column_name Column name.
+	 * @param int $post_ID Post ID.
+	 */
+	public function cf_columns_content( $column_name, $post_ID ) {
+
+		if ( $column_name === 'cb_comments_status' ) {
+
+			$comment_counts = $this->cf_get_comment_counts( $post_ID );
+			if ( 0 !== $comment_counts['total_counts'] ) {
+				echo '<a href="' . esc_url( get_edit_post_link( $post_ID ) ) . '">' . esc_html( $comment_counts['open_counts'] . '/' . $comment_counts['total_counts'] ) . '</a>';
+			} else {
+				echo '-';
+			}
+		}
+	}
+
+	/**
+	 * Counts opened comment and total comments in the post/page.
+	 *
+	 * @param int $post_ID Post ID.
+	 * @param string $content Content of the post/page.
+	 * @param array $metas Array of all meta.
+	 *
+	 * @return array Details of the open and total comments.
+	 */
+	public function cf_get_comment_counts( $post_ID, $content = '', $metas = array() ) {
+
+		$metas       = 0 === count( $metas ) ? get_post_meta( $post_ID ) : $metas;
+		$content     = empty( $content ) ? get_the_content( $post_ID ) : $content;
+		$total_count = $open_counts = 0;
+
+		foreach ( $metas as $key => $val ) {
+			if ( substr( $key, 0, 3 ) === '_el' ) {
+				$key = str_replace( '_el', '', $key );
+				if ( strpos( $val[0], 'resolved' ) === false && strpos( $content, $key ) !== false ) {
+					$open_counts ++;
+				}
+				$total_count ++;
+			}
+		}
+
+		// Confirm open counts with the meta value, if not
+		// matched, update it. Just for double confirmation.
+		$open_cf_count = $metas['open_cf_count'][0];
+		if ( (int) $open_cf_count !== $open_counts ) {
+			update_post_meta( $post_ID, 'open_cf_count', $open_counts );
+		}
+
+		$comment_counts['open_counts']  = $open_counts;
+		$comment_counts['total_counts'] = $total_count;
+
+		return $comment_counts;
+	}
+
+	/**
+	 * Add Setting Page.
+	 *
+	 */
+	public function cf_add_setting_page() {
+
+		$settings_title = 'Editorial Comments';
+
+		//Adding a new admin page for MYS
+		add_menu_page(
+			__( esc_html( $settings_title ), 'content-collaboration-inline-commenting' ),
+			__( esc_html( $settings_title ), 'content-collaboration-inline-commenting' ),
+			'manage_options',
+			'editorial-comments',
+			array( $this, 'cf_settings_callback' ),
+			COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg'
+		);
+	}
+
+	/**
+	 * Plugin setting page callback function.
+	 *
+	 */
+	public function cf_settings_callback() {
+		require_once( plugin_dir_path( __FILE__ ) . 'partials/commenting-block-settings-page.php' );
 	}
 
 	/**
@@ -66,9 +220,9 @@ class Commenting_block_Admin {
 	 * @param string $cap Cap in a loop.
 	 * @param int $user_id User ID.
 	 *
-	 * @return array
+	 * @return array Caps.
 	 */
-	function cf_add_unfiltered_html_capability_to_users( $caps, $cap, $user_id ) {
+	public function cf_add_unfiltered_html_capability_to_users( $caps, $cap, $user_id ) {
 		if ( 'unfiltered_html' === $cap && ( user_can( $user_id, 'administrator' ) || user_can( $user_id, 'editor' ) || user_can( $user_id, 'author' ) || user_can( $user_id, 'contributor' ) ) ) {
 			$caps = array( 'unfiltered_html' );
 		}
@@ -120,13 +274,16 @@ class Commenting_block_Admin {
 				'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
 			]
 		];
+
+		$metas = get_post_meta( $post_ID );
+
 		$p_content  = is_object( $post ) ? $post->post_content : $post;
 		$p_link     = get_edit_post_link( $post_ID );
 		$p_title    = get_the_title( $post_ID );
 		$site_title = get_bloginfo( 'name' );
 
 		// Publish drafts from the 'current_drafts' stack.
-		$current_drafts = get_post_meta( $post_ID, 'current_drafts', true );
+		$current_drafts = $metas['current_drafts'][0];
 		$current_drafts = maybe_unserialize( $current_drafts );
 
 		$date_format = get_option( 'date_format' );
@@ -144,7 +301,7 @@ class Commenting_block_Admin {
 			$current_user_display_name = $curr_user->display_name;
 
 			foreach ( $resolved_drafts as $el ) {
-				$prev_state                       = get_post_meta( $post_ID, $el, true );
+				$prev_state                       = $metas[ $el ][0];
 				$prev_state                       = maybe_unserialize( $prev_state );
 				$prev_state['resolved']           = 'true';
 				$prev_state['resolved_timestamp'] = $current_timestamp;
@@ -152,15 +309,15 @@ class Commenting_block_Admin {
 				update_post_meta( $post_ID, $el, $prev_state );
 
 				// Send Email.
-				$comments = get_post_meta( $post_ID, "$el", true );
+				$comments = $metas[ $el ][0];
 				$comments = maybe_unserialize( $comments );
 				$comments = isset( $comments['comments'] ) ? $comments['comments'] : '';
 
 				if ( ! empty( $comments ) && is_array( $comments ) ) {
-					$current_comment = end( $comments );
-					$users_emails    = array();
-					$headers         = array( 'Content-Type: text/html; charset=UTF-8' );
 
+					$users_emails = array();
+
+					$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 					$html    = '
 					<style>
 						.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
@@ -168,7 +325,7 @@ class Commenting_block_Admin {
 						.comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
 						.comment-box a{color:#4B1BCE;}
 						.comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-						.comment-box .comment-box-header p{margin:15px 0;}
+					.comment-box .comment-box-header p{margin:15px 0;}
 						.comment-box .comment-box-header .comment-page-title{font-size:20px;}
 						.comment-box .comment-box-header a{color:#4B1BCE;text-decoration:underline;display:inline-block;font-size:20px;}
 						.comment-box .comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
@@ -206,6 +363,7 @@ class Commenting_block_Admin {
 					$html    .= "<div class='commented_text'>This is a dummy content</div>";
 					$html    .= '<ul>';
 					foreach ( $comments as $timestamp => $arr ) {
+
 						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
 							$user_info      = get_userdata( $arr['userData'] );
 							$username       = $user_info->display_name;
@@ -219,15 +377,15 @@ class Commenting_block_Admin {
 
 							$html .= "<li>
 										<div class='comment-header'>
-											<div class='avtar'><img src='" . esc_url( $profile_url ) . "' alt='avatar' /></div>
-											<div class='comment-details'>
+										<div class='avtar'><img src='" . esc_url( $profile_url ) . "' alt='avatar' /></div>
+										<div class='comment-details'>
 												<div class='commenter-name-role'>
-													<div class='commenter-name'>" . esc_html( $username ) . "</div>
+												<div class='commenter-name'>" . esc_html( $username ) . "</div>
 													<div class='comment-role'>( " . esc_html( ucwords( $user_role ) ) . " )</div>
-												</div>
+											</div>
 												<div class='comment'>" . $text_comment . "</div>
 											</div>
-										 </div>
+										</div>
 									   </li>";
 						}
 					}
@@ -238,6 +396,12 @@ class Commenting_block_Admin {
 					$users_emails = array_unique( $users_emails );
 					if ( ( $key = array_search( $current_user_email, $users_emails, true ) ) !== false ) {
 						unset( $users_emails[ $key ] );
+					}
+
+					// Notify Site Admin if setting enabled.
+					$cf_admin_notif = get_option( 'cf_admin_notif' );
+					if ( '1' === $cf_admin_notif ) {
+						$users_emails[] = get_option( 'admin_email');
 					}
 
 					// Limit the page and site titles for Subject.
@@ -263,7 +427,7 @@ class Commenting_block_Admin {
 				 */
 				$elid = str_replace( '_', '', $el );
 				if ( strpos( $p_content, $elid ) !== false ) {
-					$prev_state = get_post_meta( $post_ID, $el, true );
+					$prev_state = $metas[ $el ][0];
 					$prev_state = maybe_unserialize( $prev_state );
 					foreach ( $drafts as $d ) {
 						$prev_state['comments'][ $d ]['status'] = 'publish';
@@ -278,7 +442,7 @@ class Commenting_block_Admin {
 			$edited_drafts = $current_drafts['edited'];
 
 			foreach ( $edited_drafts as $el => $timestamps ) {
-				$prev_state = get_post_meta( $post_ID, $el, true );
+				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
 
 				foreach ( $timestamps as $t ) {
@@ -304,7 +468,7 @@ class Commenting_block_Admin {
 			$deleted_drafts = $current_drafts['deleted'];
 
 			foreach ( $deleted_drafts as $el => $timestamps ) {
-				$prev_state = get_post_meta( $post_ID, $el, true );
+				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
 
 				foreach ( $timestamps as $t ) {
@@ -321,13 +485,13 @@ class Commenting_block_Admin {
 		// Flush Current Drafts Stack.
 		update_post_meta( $post_ID, 'current_drafts', '' );
 
-		// New Comments from past should be moved to'permanent_drafts'.
-		$permanent_drafts = get_post_meta( $post_ID, 'permanent_drafts', true );
+		// New Comments from past should be moved to 'permanent_drafts'.
+		$permanent_drafts = $metas['permanent_drafts'][0];
 		$permanent_drafts = maybe_unserialize( $permanent_drafts );
 		if ( isset( $permanent_drafts['comments'] ) && 0 !== count( $permanent_drafts['comments'] ) ) {
 			$permanent_drafts = $permanent_drafts['comments'];
 			foreach ( $permanent_drafts as $el => $drafts ) {
-				$prev_state = get_post_meta( $post_ID, $el, true );
+				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
 				foreach ( $drafts as $d ) {
 					$prev_state['comments'][ $d ]['status'] = 'permanent_draft';
@@ -338,6 +502,10 @@ class Commenting_block_Admin {
 
 		// Flush Permanent Drafts Stack.
 		update_post_meta( $post_ID, 'permanent_drafts', '' );
+
+		// Update open comments count.
+		$comment_counts = $this->cf_get_comment_counts( $post_ID, $p_content, $metas );
+		update_post_meta( $post_ID, 'open_cf_count', $comment_counts['open_counts'] );
 	}
 
 	/**
@@ -393,7 +561,7 @@ class Commenting_block_Admin {
 		 */
 
 		$screen = get_current_screen();
-		if ( $screen->is_block_editor ) {
+		if ( $screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base ) {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/commenting-block-admin.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-mark', plugin_dir_url( __FILE__ ) . 'js/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'content-collaboration-inline-commenting', plugin_dir_url( __FILE__ ) . 'js/blockJS/block.build.js', array(
@@ -574,9 +742,9 @@ class Commenting_block_Admin {
 	 */
 	public function cf_add_comment() {
 
-		$commentList      = filter_input( INPUT_POST, "commentList" );
-		$commentList      = html_entity_decode( $commentList );
-		$commentList      = json_decode( $commentList, true );
+		$commentList = filter_input( INPUT_POST, "commentList" );
+		$commentList = html_entity_decode( $commentList );
+		$commentList = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
 
 		// Get the assigned User Email.
@@ -723,49 +891,48 @@ class Commenting_block_Admin {
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['profileURL']        = $profile_url;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dtTime']            = $dtTime;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = 'resolved thread';
+				}
 
-				} else {
+				$comment_count = 0;
+				foreach ( $comments as $timestamp => $c ) {
 
-					$comment_count = 0;
-					foreach ( $comments as $timestamp => $c ) {
+					$cstatus        = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
+					$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
+					$comment_status = isset( $c['status'] ) ? $c['status'] : '';
+					$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
 
-						$cstatus        = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
-						$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
-						$comment_status = isset( $c['status'] ) ? $c['status'] : '';
-						$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
-
-						// Stop displaying history of comments in draft mode.
-						if ( 'draft' === $comment_status ) {
-							continue;
-						}
-
-						$udata = $c['userData'];
-
-						if ( ! array_key_exists( $udata, $userData ) ) {
-							$user_info = get_userdata( $udata );
-
-							$userData[ $udata ]['username']   = $username = $user_info->display_name;
-							$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-						} else {
-							$username    = $userData[ $udata ]['username'];
-							$profile_url = $userData[ $udata ]['profileURL'];
-						}
-
-						$thread = $c['thread'];
-						if ( ! empty( $timestamp ) ) {
-							$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
-						}
-
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
-						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $cstatus;
-						$comment_count ++;
-						$total_comments ++;
+					// Stop displaying history of comments in draft mode.
+					if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
+						continue;
 					}
+
+					$udata = $c['userData'];
+
+					if ( ! array_key_exists( $udata, $userData ) ) {
+						$user_info = get_userdata( $udata );
+
+						$userData[ $udata ]['username']   = $username = $user_info->display_name;
+						$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
+					} else {
+						$username    = $userData[ $udata ]['username'];
+						$profile_url = $userData[ $udata ]['profileURL'];
+					}
+
+					$thread = $c['thread'];
+					if ( ! empty( $timestamp ) ) {
+						$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
+					}
+
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $cstatus;
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['resolved']          = $resolved;
+					$comment_count ++;
+					$total_comments ++;
 				}
 			}
 		}
@@ -799,13 +966,13 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-title'>
 									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span> ";
 
-					if ( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] ) {
+					if ( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] || 'true' === $c['resolved'] ) {
 						$html .= esc_html( $commented_on_text );
 					} else {
-						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-comented-on'>" . esc_html( $commented_on_text ) . "</a>";
+						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . "</a>";
 					}
 
-					$html .= "<div class='user-comment'> " . $c['thread'] . "</div>
+					$html .= "<div class='user-comment'> " . esc_html( $c['thread'] ) . "</div>
 								</div>";
 					$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . "</div>";
 					$html .= "</div>";
@@ -839,6 +1006,7 @@ class Commenting_block_Admin {
 
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
+
 		$edited_comment = filter_input( INPUT_POST, "editedComment" );
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );
@@ -862,6 +1030,7 @@ class Commenting_block_Admin {
 		$current_drafts['edited'][ $metaId ][] = $old_timestamp;
 
 		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
+
 		wp_die();
 	}
 
@@ -886,6 +1055,19 @@ class Commenting_block_Admin {
 	}
 
 	/**
+	 * Save settings of the plugin.
+	 */
+	public function cf_save_settings() {
+		$form_data = array();
+		parse_str( filter_input( INPUT_POST, "formData", FILTER_SANITIZE_STRING ), $form_data );
+
+		update_option( 'cf_admin_notif', $form_data['cf_admin_notif'] );
+
+		echo 'saved';
+		wp_die();
+	}
+
+	/**
 	 * Save important details in a localstorage.
 	 */
 	public function cf_store_in_localstorage() {
@@ -905,7 +1087,7 @@ class Commenting_block_Admin {
 	 * Reset Drafts meta.
 	 */
 	public function cf_reset_drafts_meta() {
-		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );;
+		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 
 		$changed = 0;
 
@@ -1040,13 +1222,13 @@ class Commenting_block_Admin {
 		$time_format = get_option( 'time_format' );
 
 		foreach ( $comments as $t => $val ) {
-			$user_info   = get_userdata( $val['userData'] );
-			$username    = $user_info->display_name;
+			$user_info    = get_userdata( $val['userData'] );
+			$username     = $user_info->display_name;
 			$user_role   = implode( ', ', $user_info->roles );
-			$profile_url = get_avatar_url( $user_info->user_email );
-			$thread      = $val['thread'];
+			$profile_url  = get_avatar_url( $user_info->user_email );
+			$thread       = $val['thread'];
+			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
 			$cstatus     = isset( $val['status'] ) ? $val['status'] : '';
-
 			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
 
 			$date = gmdate( $time_format . ' ' . $date_format, $t );
@@ -1082,7 +1264,7 @@ class Commenting_block_Admin {
 
 		$data                    = array();
 		$data['userDetails']     = $userDetails;
-		$data['resolved']        = 'true' === $superCareerData['resolved'] ? 'true': 'false';
+		$data['resolved']        = 'true' === $superCareerData['resolved'] ? 'true' : 'false';
 		$data['commentedOnText'] = $superCareerData['commentedOnText'];
 		$data['assignedTo']      = $assigned_to;
 

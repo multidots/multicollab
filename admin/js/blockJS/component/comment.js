@@ -52,9 +52,7 @@ export default class Comment extends React.Component {
     remove(event) {
 
         if (confirm('Are you sure you want to delete this comment ?')) {
-            var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-            //	var elID = event.currentTarget.parentElement.parentElement.parentElement.id;
-
+            const elID = jQuery(event.currentTarget).closest('.cls-board-outer');
             this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
         }
     }
@@ -74,15 +72,15 @@ export default class Comment extends React.Component {
                 'currentPostID': CurrentPostID,
                 'metaId': elID
             };
-            // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
             jQuery.post(ajaxurl, data, function () {
                 jQuery('#' + elIDRemove).remove();
+                jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
             });
 
             // Remove Tag.
             this.removeTag(elIDRemove);
         } else {
-            jQuery('#' + elIDRemove + ' #resolve_cb').prop('checked', false);
+            jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
         }
     }
 
@@ -91,25 +89,77 @@ export default class Comment extends React.Component {
         const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
 
         const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-        if( null !== blockAttributes ) {
-            const {content} = blockAttributes;
-            if ('' !== content) {
-                let tempDiv = document.createElement('div');
-                tempDiv.innerHTML = content;
-                let childElements = tempDiv.getElementsByTagName('mdspan');
-                for (let i = 0; i < childElements.length; i++) {
-                    if (elIDRemove === childElements[i].attributes.datatext.value) {
-                        childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                        let finalContent = tempDiv.innerHTML;
-                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                            attributes: {
-                                content: finalContent
+        if (null !== blockAttributes) {
+
+            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+            jQuery(findAttributes).each(function (i, attrb) {
+                var content = blockAttributes[attrb];
+                if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                    if ('' !== content) {
+                        let tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = content;
+                        let childElements = tempDiv.getElementsByTagName('mdspan');
+                        for (let i = 0; i < childElements.length; i++) {
+                            if (elIDRemove === childElements[i].attributes.datatext.value) {
+                                childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
+                                const finalContent = tempDiv.innerHTML;
+
+                                if (attrb === 'content') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            content: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'citation') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            citation: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'value') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            value: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'caption') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            caption: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'values') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            values: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'fileName') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            fileName: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'text') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            text: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'downloadButtonText') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            downloadButtonText: finalContent
+                                        }
+                                    });
+                                }
+                                break;
                             }
-                        });
-                        break;
+                        }
                     }
                 }
-            }
+            });
         }
     }
 
@@ -118,6 +168,10 @@ export default class Comment extends React.Component {
     }
 
     renderNormalMode() {
+
+        // Display the textarea for new comments.
+        jQuery('.cls-board-outer.focus .shareCommentContainer').show();
+
         const {index} = this.props;
         const commentStatus = this.props.status ? this.props.status : 'draft';
 
@@ -145,8 +199,8 @@ export default class Comment extends React.Component {
                     <div className="comment-actions">
                         {index === 0 &&
                             <div className="comment-resolve">
-                                <input id="resolve_cb" type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
-                                <label htmlFor="resolve_cb">{'Mark as a Resolved'}</label>
+                                <input id={"resolve_cb_" + this.props.timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
+                                <label htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
                             </div>
                         }
                         {this.props.userID === owner &&
@@ -177,6 +231,10 @@ export default class Comment extends React.Component {
     }
 
     renderEditingMode() {
+
+        // Hide the textarea for new comments.
+        jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
+
         return (
             <div className="commentContainer" id={this.props.timestamp}>
                 <div className="comment-header">

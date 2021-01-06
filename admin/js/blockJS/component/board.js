@@ -82,25 +82,77 @@ export default class Board extends React.Component {
         const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
 
         const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-        if( null !== blockAttributes ) {
-            const {content} = blockAttributes;
-            if ('' !== content) {
-                let tempDiv = document.createElement('div');
-                tempDiv.innerHTML = content;
-                let childElements = tempDiv.getElementsByTagName('mdspan');
-                for (let i = 0; i < childElements.length; i++) {
-                    if (elIDRemove === childElements[i].attributes.datatext.value) {
-                        childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                        let finalContent = tempDiv.innerHTML;
-                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                            attributes: {
-                                content: finalContent
+        if (null !== blockAttributes) {
+
+            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+            jQuery(findAttributes).each(function (i, attrb) {
+                var content = blockAttributes[attrb];
+                if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                    if ('' !== content) {
+                        let tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = content;
+                        let childElements = tempDiv.getElementsByTagName('mdspan');
+                        for (let i = 0; i < childElements.length; i++) {
+                            if (elIDRemove === childElements[i].attributes.datatext.value) {
+                                childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
+                                const finalContent = tempDiv.innerHTML;
+
+                                if (attrb === 'content') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            content: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'citation') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            citation: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'value') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            value: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'caption') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            caption: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'values') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            values: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'fileName') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            fileName: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'text') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            text: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'downloadButtonText') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            downloadButtonText: finalContent
+                                        }
+                                    });
+                                }
+                                break;
                             }
-                        });
-                        break;
+                        }
                     }
                 }
-            }
+            });
         }
     }
 
@@ -240,6 +292,7 @@ export default class Board extends React.Component {
             jQuery.post(ajaxurl, data, function (data) {
 
                 jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
+                jQuery('.fresh-board').removeClass('fresh-board');
 
                 data = jQuery.parseJSON(data);
                 if (undefined !== data.error) {
@@ -346,9 +399,15 @@ export default class Board extends React.Component {
     }
 
     cancelComment() {
+
+        // Reset Comments Float.
+        jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
+        jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
+        jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+        jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+
         const {datatext, onChanged, lastVal} = this.props;
         const name = 'multidots/comment';
-        jQuery('#'+ datatext).removeClass('focus');
 
         if ( 0 === jQuery('#'+ datatext + ' .boardTop .commentContainer').length ) {
             onChanged(removeFormat(lastVal, name));

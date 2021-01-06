@@ -17,14 +17,14 @@ $(window).on('load', function () {
     var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
     commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
 
-    const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+    const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
     var loadAttempts = 0;
     const loadIcons = setInterval(function () {
         loadAttempts++;
 
         if (loadAttempts >= 10 || (1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length)) {
-            if( 0 === $('.edit-post-header-toolbar__left').length ) {
+            if (0 === $('.edit-post-header-toolbar__left').length) {
                 $('.edit-post-header-toolbar').append(customButtons);
             } else {
                 $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
@@ -121,6 +121,7 @@ function fetchComments() {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 }
                 if (loadAttempts >= 10) {
                     clearInterval(loadComments);
@@ -198,6 +199,8 @@ function bring_back_comments() {
             });
         }
 
+        // Update unresolved comments count.
+        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
     });
 
     return false;
@@ -263,8 +266,6 @@ const mdComment = {
 
             this.onToggle = this.onToggle.bind(this);
             this.getSelectedText = this.getSelectedText.bind(this);
-            this.removeSuggestion = this.removeSuggestion.bind(this);
-            this.hidethread = this.hidethread.bind(this);
             this.floatComments = this.floatComments.bind(this);
             this.removeTag = this.removeTag.bind(this);
 
@@ -284,24 +285,76 @@ const mdComment = {
 
             const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
             if (null !== blockAttributes) {
-                const {content} = blockAttributes;
-                if ('' !== content) {
-                    let tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content;
-                    let childElements = tempDiv.getElementsByTagName('mdspan');
-                    for (let i = 0; i < childElements.length; i++) {
-                        if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                            let finalContent = tempDiv.innerHTML;
-                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                attributes: {
-                                    content: finalContent
+
+                const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+                jQuery(findAttributes).each(function (i, attrb) {
+                    var content = blockAttributes[attrb];
+                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+
+                        if ('' !== content) {
+                            let tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = content;
+                            let childElements = tempDiv.getElementsByTagName('mdspan');
+                            for (let i = 0; i < childElements.length; i++) {
+                                if (elIDRemove === childElements[i].attributes.datatext.value) {
+                                    childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
+                                    const finalContent = tempDiv.innerHTML;
+
+                                    if (attrb === 'content') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                content: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'citation') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                citation: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'value') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                value: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'caption') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                caption: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'values') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                values: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'fileName') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                fileName: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'text') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                text: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'downloadButtonText') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                downloadButtonText: finalContent
+                                            }
+                                        });
+                                    }
+                                    break;
                                 }
-                            });
-                            break;
+                            }
                         }
                     }
-                }
+                });
             }
         }
 
@@ -326,6 +379,7 @@ const mdComment = {
             var referenceNode = document.getElementById('md-span-comments');
 
             referenceNode.appendChild(newNode);
+            $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
             onChange(toggleFormat(value, {type: name}),
                 ReactDOM.render(
@@ -342,18 +396,28 @@ const mdComment = {
 
             const {onChange, value, activeAttributes} = this.props;
 
+            // Prevent on locked mode + fix for unnecessary calls on hover.
+            if ($('.cls-board-outer').hasClass('locked') ) {
+                return;
+            }
+
+
             // Ignore unnecessary event calls on hover.
             if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
                 return;
             }
 
-            // Reset Comments Float.
-            jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-            jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+            // Reset Comments Float only if the selected text has no comments on it.
+            if (undefined === activeAttributes.datatext) {
+                $('#md-span-comments .cls-board-outer').css('opacity', '1');
+                $('#md-span-comments .cls-board-outer').removeClass('focus');
+                $('#md-span-comments .cls-board-outer').removeAttr('style');
 
-            var referenceNode = document.getElementById('md-span-comments');
+                //ne_pending remove the attr true
+                $('mdspan').removeAttr('data-rich-text-format-boundary');
+            }
 
+            const referenceNode = document.getElementById('md-span-comments');
 
             // Remove tags if selected tag ID exist in 'remove-comment' attribute of body.
             let removedComments = $('body').attr('remove-comment');
@@ -385,7 +449,7 @@ const mdComment = {
                             $('[datatext="' + selectedText + '"]').css('background', 'transparent');
                         }
                     }
-
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                     $('#' + selectedText).addClass('has_text').show();
                 });
 
@@ -398,12 +462,14 @@ const mdComment = {
                     if (selectedText !== latestBoard) {
                         this.removeTag(latestBoard);
                         $('#' + latestBoard).remove();
+                        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                     }
                 }
 
                 // Just hide these popups and only display on CTRLz
                 $('#md-span-comments .cls-board-outer:not(.has_text):not([data-sid])').each(function () {
                     $(this).hide();
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 });
 
                 // Adding lastVal and onChanged props to make it deletable,
@@ -416,42 +482,32 @@ const mdComment = {
                     )
                 }
 
+                // Removing dark highlights from other texts,
+                // only if current active text has an attribute,
+                // and no 'focus' class active on mdspan tag.
+                // This condition prevents thread popup flickering
+                // when navigating through the activity center.
+
                 // Adding focus on selected text's popup.
                 $('.cls-board-outer').removeClass('focus');
                 $('#' + selectedText + '.cls-board-outer').addClass('focus');
 
-                // Removing dark highlights from other texts.
                 $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
                 // Float comments column.
-                if (undefined !== selectedText) {
-                    //Active comment tab
-                    if (!$('#md-tabs .comment').hasClass('active')) {
-                        $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
-                        $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
-                    }
-                    this.floatComments(selectedText);
-                }
-
+                this.floatComments(selectedText);
             }
         }
 
         floatComments(selectedText) {
             if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
+
                 $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
+
+                $('#md-span-comments .cls-board-outer').css('top', 0);
                 $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
             }
-        }
-
-        removeSuggestion() {
-            const {onChange, value} = this.props;
-            onChange(removeFormat(value, name));
-        }
-
-        hidethread() {
-            $('.cls-board-outer').removeClass('is_active');
-
         }
 
         render() {
