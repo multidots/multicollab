@@ -409,9 +409,6 @@ const mdComment = {
                 return;
             }
 
-            console.dir(this.props);
-
-
             // Reset Comments Float only if the selected text has no comments on it.
             if (undefined === activeAttributes.datatext) {
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
