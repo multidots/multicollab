@@ -164,30 +164,29 @@
                 range             = window.getSelection().getRangeAt(0);
                 var preCaretRange = range.cloneRange();
                 if( typeof element == 'Node' ) {
-                    preCaretRange.selectNodeContents(element);
+                    preCaretRange.selectNodeContents( element );
                 }
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                preCaretRange.setEnd( range.endContainer, range.endOffset );
                 caretOffset       = preCaretRange.toString().length;
-        
+
             } else if ( ie ) {
                 var textRange         = document.selection.createRange();
                 var preCaretTextRange = document.body.createTextRange();
-                preCaretTextRange.moveToElementText(element);
-                preCaretTextRange.setEndPoint("EndToEnd", textRange);
+                preCaretTextRange.moveToElementText( element );
+                preCaretTextRange.setEndPoint( "EndToEnd", textRange );
                 caretOffset           = preCaretTextRange.text.length;
             }
             return caretOffset;
         }
 
         // Insert Display Name.
-        var insertDisplayName = function( setRange, email, fullName, displayName ) {
+        var insertDisplayName = function( setRange, email, fullName, displayName, createTextarea ) {
             var anchor = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
             anchor.setAttribute( 'title', fullName );
             anchor.setAttribute( 'data-email', email );
             anchor.setAttribute( 'class', 'js-mentioned' );
-        
             var anchorContent = document.createTextNode( displayName );
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
@@ -344,7 +343,7 @@
                 var email       = $( this ).data( 'email' );
 
                 // Insert Display Name.
-                insertDisplayName( range, email, fullName, displayName );
+                insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                 var typedContent   = $( createTextarea ).html();
                 var refinedContent = typedContent.replace( /(?<=@)\w+(?=\<)/gi, '' );
