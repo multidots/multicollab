@@ -135,7 +135,6 @@
                         </ul>
                     </div>
                 `;
-
                 $( emailList ).insertAfter( appendTo );
             }
         }
@@ -196,20 +195,21 @@
 
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
-            var el              = '';
-            var currentBoardID   = '';
-            var typedText        = ''
-            var trackedStr       = ''
-            var isEmail          = false;
-            var createTextarea   = '';
-            var appendIn         = '';
-            var assignablePopup  = '';
-            var editLink         = '';
-            var keysToAvoid      = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
-            var currentPostID    = $( '#post_ID' ).val();
-            var parentBoardClass = '.cls-board-outer';
-            var editTextarea     = '.commentContainer .commentText textarea';
-            var mood             = 'create';
+            var el                    = '';
+            var currentBoardID        = '';
+            var currentCommentBoardID = '';
+            var typedText             = '';
+            var trackedStr            = '';
+            var isEmail               = false;
+            var createTextarea        = '';
+            var appendIn              = '';
+            var assignablePopup       = '';
+            var editLink              = '';
+            var keysToAvoid           = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
+            var currentPostID         = $( '#post_ID' ).val();
+            var parentBoardClass      = '.cls-board-outer';
+            var editTextarea          = '.commentContainer .commentText textarea';
+            var mood                  = 'create';
             // Grab the current board ID.
             $( document.body ).on( 'click', parentBoardClass, function(e) {
                 el              = $( this ).attr( 'id' );
@@ -238,8 +238,9 @@
             $( document.body ).on( 'focus keyup', '.js-cf-edit-comment', function(e) {
                 mood = 'edit';
                 el   = $( this ).parents( parentBoardClass ).attr( 'id' );
+                currentCommentBoardID = $( this ).parents( '.commentContainer' ).attr( 'id' );
                 if( 'edit' === mood ) {
-                    createTextarea  = `${currentBoardID} .js-cf-edit-comment`;
+                    createTextarea  = `#${currentCommentBoardID} .js-cf-edit-comment`;
                 }
             } )
             // Remove emails list on edit link click.
