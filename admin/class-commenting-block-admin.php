@@ -454,20 +454,39 @@ class Commenting_block_Admin {
 			foreach( $args['list_of_comments'] as $comment ) {
 				$comment_list_html .= "
 					<li>
-						<div class='comment-header'>
-							<div class='avtar'>
-								<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
+						<a href='{$args['post_edit_link']}&comment_id={$comment['timestamp']}' target='_blank'>
+							<div class='comment-header'>
+								<div class='avtar'>
+									<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
+								</div>
+								<div class='comment-details'>
+									<h3 class='author-name'>{$comment['userName']}</h3>
+									<div class='author-comment'>{$comment['thread']}</div>
+								</div>
 							</div>
-							<div class='comment-details'>
-								<h3 class='author-name'>{$comment['userName']}</h3>
-								<div class='author-comment'>{$comment['thread']}</div>
-							</div>
-							<a href='{$args['post_edit_link']}&comment_id={$comment['timestamp']}' target='_blank'>View</a>
-						</div>
+						</a>
 					</li>
 				";
 			}
 			$comment_list_html .= '</ul>';
+		}
+
+		$assigned_to_who = '';
+		if( ! empty( $args['assign_to'] ) ) {
+			$assinged_user   = get_user_by( 'email', $args['assign_to'] );
+			$assigned_to_who = "
+				<div class='comment-assigned-to'>
+					<span class='icon-assign'>
+						<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'>
+							<g id='Group_22' data-name='Group 22' transform='translate(1 1)'>
+								<circle id='Ellipse_4' data-name='Ellipse 4' cx='10' cy='10' r='10' fill='none' stroke='#6ac359' stroke-width='2'/>
+								<path id='Path_7' data-name='Path 7' d='M93.92,119.6l-3.593-3.664,1.353-1.327,2.252,2.3,5.621-5.621,1.34,1.34Z' transform='translate(-85.327 -105.288)' fill='#6ac359'/>
+							</g>
+						</svg>
+					</span>
+					Assigned to <a href='mailto:{$assinged_user->user_email}' title={$assinged_user->display_name} class='commenter-name'>@{$assinged_user->first_name}</a>
+				</div>
+			";
 		}
 
 		$template = "
@@ -508,23 +527,17 @@ class Commenting_block_Admin {
 				</div>
 				<div class='comment-box-body'>
 					<h2 class='latest-comment'>
-					<span class='icon-comment'>
-					<svg xmlns='http://www.w3.org/2000/svg' width='36.226' height='43.02' viewBox='0 0 36.226 43.02'>
-					  <g id='Group_2' data-name='Group 2' transform='translate(-36.242 1.019)'>
-					    <path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
-					  </g>
-					</svg></span>
-					{$args['thread']} </h2>
+						<span class='icon-comment'>
+							<svg xmlns='http://www.w3.org/2000/svg' width='36.226' height='43.02' viewBox='0 0 36.226 43.02'>
+								<g id='Group_2' data-name='Group 2' transform='translate(-36.242 1.019)'>
+									<path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
+								</g>
+							</svg>
+						</span>
+						{$args['thread']}
+					</h2>
 					<div class='commented_text'>{$args['commented_text']}</div>
-					<div class='comment-assigned-to'>
-					<span class='icon-assign'>
-					<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'>
-	                  <g id='Group_22' data-name='Group 22' transform='translate(1 1)'>
-	                    <circle id='Ellipse_4' data-name='Ellipse 4' cx='10' cy='10' r='10' fill='none' stroke='#6ac359' stroke-width='2'/>
-	                    <path id='Path_7' data-name='Path 7' d='M93.92,119.6l-3.593-3.664,1.353-1.327,2.252,2.3,5.621-5.621,1.34,1.34Z' transform='translate(-85.327 -105.288)' fill='#6ac359'/>
-	                  </g>
-	                </svg></span>
-					Assigned to <span class='commenter-name'>John Doe</span></div>
+					{$assigned_to_who}
 					{$comment_list_html}
 				</div>
 			</div>
@@ -536,7 +549,7 @@ class Commenting_block_Admin {
 
 		if( ! empty( $args['assign_to'] ) ) {
 			$key = array_search( $args['assign_to'], $matches[0] );
-			unset($matches[0][$key]);
+			unset( $matches[0][$key] );
 		}
 
 		if ( ! empty( $matches[0] ) ) {
