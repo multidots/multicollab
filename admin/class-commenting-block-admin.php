@@ -1009,11 +1009,6 @@ class Commenting_block_Admin {
 						$commented_on_text = substr( $commented_on_text, 0, $limit ) . '...';
 					}
 					$c['thread'] = isset( $c['thread'] ) ? $c['thread'] : '';
-					$allowed_tags = [
-							'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
-						]
-					];
-					$c['thread'] = wp_kses( $c['thread'], $allowed_tags );
 					$count ++;
 
 					$html .= "<div class='user-data-row'>";
@@ -1028,7 +1023,7 @@ class Commenting_block_Admin {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . "</a>";
 					}
 
-					$html .= "<div class='user-comment'> " . $c['thread'] . "</div>
+					$html .= "<div class='user-comment'> " . wp_kses( $c['thread'], $this->allowed_tags ) . "</div>
 								</div>";
 					$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . "</div>";
 					$html .= "</div>";
@@ -1423,14 +1418,9 @@ class Commenting_block_Admin {
 		if( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
 			return;
 		}
-		$content      = $_POST['content'];
-		$allowed_tags = [
-				'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
-			]
-		];
 
-		$content = wp_kses( $content, $allowed_tags );
-
+		// Getting the content from the editor to filter out the users.
+		$content = wp_kses( $_POST['content'], $this->allowed_tags );
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $content, $matches );
 
