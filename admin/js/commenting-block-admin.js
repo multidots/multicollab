@@ -220,6 +220,9 @@
                 if( 'create' === mood ) {
                     createTextarea  = `${currentBoardID} .js-cf-share-comment`;
                 }
+                var focusRange = window.getSelection().getRangeAt(0);
+                var node = document.getElementsByClassName( '.js-cf-share-comment' );
+                focusRange.setStart( node, 0 )
             } )
             if( '' === el ) {
                 $( document.body ).on( 'focus', '.shareCommentContainer', function(e) {
