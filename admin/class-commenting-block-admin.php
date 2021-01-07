@@ -972,7 +972,7 @@ class Commenting_block_Admin {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . "</a>";
 					}
 
-					$html .= "<div class='user-comment'> " . esc_html( $c['thread'] ) . "</div>
+					$html .= "<div class='user-comment'> " . $c['thread'] . "</div>
 								</div>";
 					$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . "</div>";
 					$html .= "</div>";
