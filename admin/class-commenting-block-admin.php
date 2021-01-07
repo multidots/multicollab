@@ -1348,8 +1348,8 @@ class Commenting_block_Admin {
 				$email_list[] = [
 					'ID'                => $user->ID,
 					'role'              => implode( ', ', $user->roles ),
-					'display_name'      => $user->first_name,
-					'full_name'         => "{$user->first_name} {$user->last_name}",
+					'display_name'      => $user->display_name,
+					'full_name'         => $user->display_name,
 					'user_email'        => $user->user_email,
 					'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
 					'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
@@ -1390,8 +1390,8 @@ class Commenting_block_Admin {
 					$email_list[] = [
 						'ID'                => $user->ID,
 						'role'              => implode( ', ', $user->roles ),
-						'display_name'      => $user->first_name,
-						'full_name'         => "{$user->first_name} {$user->last_name}",
+						'display_name'      => $user->display_name,
+						'full_name'         => $user->display_name,
 						'user_email'        => $user->user_email,
 						'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
 						'edit_others_posts' => $user->allcaps['edit_others_posts'],
