@@ -26,7 +26,7 @@ function cf_add_comment_email_template( $args ) {
     if( ! empty( $args['list_of_comments'] ) ) {
         $comment_list_html = '<ul>';
         foreach( $args['list_of_comments'] as $comment ) {
-            $comment['thread'] = $this->convert_str_to_email($comment['thread']);
+            // $comment['thread'] = $this->convert_str_to_email($comment['thread']);
             $comment_list_html .= "
                 <li>
                     <div class='comment-header'>
@@ -46,7 +46,7 @@ function cf_add_comment_email_template( $args ) {
     }
 
     // Make email address linkable in email body.
-    $args['thread'] = $this->convert_str_to_email( $args['thread'] );
+    // $args['thread'] = $this->convert_str_to_email( $args['thread'] );
 
     $template = "
         <style>
