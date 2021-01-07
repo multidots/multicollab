@@ -321,47 +321,55 @@ class Commenting_block_Admin {
 					$html    = '
 					<style>
 						.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
-						.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
 						.comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
-						.comment-box a{color:#4B1BCE;}
+						.comment-box a{color:#4B1BCE;text-decoration:none;}
 						.comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-					.comment-box .comment-box-header p{margin:15px 0;}
-						.comment-box .comment-box-header .comment-page-title{font-size:20px;}
-						.comment-box .comment-box-header a{color:#4B1BCE;text-decoration:underline;display:inline-block;font-size:20px;}
-						.comment-box .comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-						.comment-box .comment-header:last-child{margin-bottom:0;}
+						.comment-box .comment-box-header p{margin:0 0 20px;}
+						.comment-box .comment-box-header .comment-page-title{font-size:20px;margin:0;}
+						.comment-box .comment-box-header a{color:#4B1BCE;display:inline-block;}
+						.comment-box .comment-page-title a{text-decoration:underline;font-size:20px;}
+						.comment-box .comment-box-wrap{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-box .comment-box-wrap:last-child{margin-bottom:0;}
 						.comment-box .avtar{width:40px;margin-right:10px;}
 						.comment-box .avtar img{max-width:100%;border-radius:50%;}
 						.comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-						.comment-box .comment-header .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-						.comment-box .comment-header .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin-right:7px;color:#141414;font-weight:600;}
-						.comment-box .comment-header .commenter-name-role .comment-role{font-size:14px;font-weight:400;font-family:Arial,serif;color:#4C5056;}
-						.comment-box .author-name{margin:0 0 5px;}
-						.comment-box .comment,
-						.comment-box .author-comment{font-family:Arial,serif;font-size:14px;color:#4C5056;}
+						.comment-box .comment-box-wrap .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-box .comment-box-wrap .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin:0 7px 0 0;color:#141414;font-weight:600;}
+						.comment-box .comment-box-wrap .commenter-role{font-size:14px;font-weight:400;font-family:Arial,serif;color:#4C5056;margin-right:10px;}
+						.comment-box .comment{font-family:Arial,serif;font-size:14px;color:#4C5056;}
 						.comment-box .comment-box-body{border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-						.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:15px;color:#4C5056;}
+						.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;}
 						.comment-box .comment-assigned-to{margin-bottom:20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
 						.comment-box .comment-assigned-to .commenter-name{color:#4B1BCE;margin-left:5px;}
-						.comment-box .comment-assigned-to .icon-assign{margin-right:5px;}
-						.comment-box ul{margin:0;padding:0;list-style:none;}
+						.comment-box .comment-assigned-to .icon-assign{margin-right:5px;line-height:1;}
+						.comment-box ul{margin:0 0 20px;padding:0;list-style:none;}
 						.comment-box ul li{margin-bottom:20px;}
-						.comment-box .latest-comment{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;}
-						.comment-box .latest-comment .icon-comment{margin-right:10px;}
-						.comment-box .comment-box-header h3{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-box ul li:last-child{margin-bottom:10px;}
+						.comment-box .head-with-icon{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;}
+						.comment-box .head-with-icon .icon-comment{margin-right:10px;line-height:1;}
+						.comment-box .head-with-icon .icon-resolved{margin-right:10px;}
+						.comment-box .head-with-icon h3{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-box .cf-marked-resolved-by{margin:0 10px 20px 0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+						.comment-box .cf-marked-resolved-by .icon-resolved{margin-right:5px;line-height:1;}
+						.comment-box .cf-marked-resolved-by a{margin-left:5px;}
+						.comment-box.new-comment .comment-list li:last-child .commenter-name-role:after{content:"New";padding:5px 10px;background-color:#4B1BCE;color:#fff;font-size:12px;}
+						.comment-box .view_reply{margin:10px 0;}
+						.comment-box .view_reply_btn{display:inline-block;padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;}
+						.comment-box .view_reply_btn a{text-decoration:underline;color:#fff;}
+						@media (max-width:1400px){.comment-box{width:90%;}}
 					</style>
 					';
-					$html    .= '<div class="comment-box"><div class="comment-box-header">';
+					$html    .= '<div class="comment-box comment-resolved"><div class="comment-box-header">';
 					$html    .= '<p><a href="mailto:'.esc_attr( $current_user_email ).'" class="">'. esc_html( $current_user_display_name ) .'</a> '.__( 'Mentioned you in a comment in the following page', 'content-collaboration-inline-commenting' ).'</p>';
 					$html    .= '<h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
 					$html    .= '<div class="comment-box-body">';
-					$html    .= '<h3>';
+					$html    .= '<h3 class="head-with-icon">';
 					$html    .= '<span class="icon-resolved">';
 					$html 	 .= '<svg id="Group_19" data-name="Group 19" xmlns="http://www.w3.org/2000/svg" width="40" height="40.001" viewBox="0 0 40 40.001"><path id="Path_6" data-name="Path 6" d="M65.567,45.564a20,20,0,1,0,20,20A20,20,0,0,0,65.567,45.564ZM61.722,75.7l-7.583-7.731L57,65.164l4.753,4.847L73.609,58.151l2.828,2.828Z" transform="translate(-45.567 -45.564)" fill="#6ac359"/></svg>';
 					$html 	 .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
 					$html 	 .= '</h3>';
 					$html    .= "<div class='commented_text'>This is a dummy content</div>";
-					$html    .= '<ul>';
+					$html    .= '<ul class="comment-list">';
 					foreach ( $comments as $timestamp => $arr ) {
 
 						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
@@ -376,21 +384,29 @@ class Commenting_block_Admin {
 							$draft          = 'draft' === $cstatus ? '(draft)' : '';
 
 							$html .= "<li>
-										<div class='comment-header'>
+										<div class='comment-box-wrap'>
 										<div class='avtar'><img src='" . esc_url( $profile_url ) . "' alt='avatar' /></div>
-										<div class='comment-details'>
+											<div class='comment-details'>
 												<div class='commenter-name-role'>
-												<div class='commenter-name'>" . esc_html( $username ) . "</div>
-													<div class='comment-role'>( " . esc_html( ucwords( $user_role ) ) . " )</div>
-											</div>
+													<h3 class='commenter-name'>" . esc_html( $username ) . "</h3>
+													<span class='commenter-role'>( " . esc_html( ucwords( $user_role ) ) . " )</span>
+												</div>
 												<div class='comment'>" . $text_comment . "</div>
 											</div>
 										</div>
 									   </li>";
 						}
 					}
-					$html .= '<span class="cf-marked-resolved-by">' . __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:'.esc_attr( $current_user_email ).'" title="'.esc_attr( $current_user_display_name ).'" target="_blank"> '. esc_html( $current_user_display_name ) .' </a>' .'</span>';
-					$html .= '</ul></div>'; // .comment-box-body end
+					$html .= '</ul>';
+					$html .= '<div class="cf-marked-resolved-by">';
+					$html .= '<span class="icon-resolved"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+							  <g id="Group_22" data-name="Group 22" transform="translate(1 1)">
+							    <circle id="Ellipse_4" data-name="Ellipse 4" cx="10" cy="10" r="10" fill="none" stroke="#6ac359" stroke-width="2"/>
+							    <path id="Path_7" data-name="Path 7" d="M93.92,119.6l-3.593-3.664,1.353-1.327,2.252,2.3,5.621-5.621,1.34,1.34Z" transform="translate(-85.327 -105.288)" fill="#6ac359"/>
+							  </g>
+							</svg></span>';
+					$html .= __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:'.esc_attr( $current_user_email ).'" title="'.esc_attr( $current_user_display_name ).'" target="_blank"> '. esc_html( $current_user_display_name ) .' </a>' .'</div>';
+					$html .= '</div>'; // .comment-box-body end
 					$html .= '</div>'; // .comment-box end
 
 					$users_emails = array_unique( $users_emails );
@@ -619,18 +635,21 @@ class Commenting_block_Admin {
 		preg_match_all( $pattern, $args['thread'], $matches );
 
 		if( ! empty( $args['list_of_comments'] ) ) {
-			$comment_list_html = '<ul>';
+			$comment_list_html = '<ul class="comment-list">';
 			foreach( $args['list_of_comments'] as $comment ) {
 				$user_role = ucwords( $comment['userRole'] );
 				$comment_list_html .= "
 					<li>
-						<div class='comment-header'>
+						<div class='comment-box-wrap'>
 							<div class='avtar'>
 								<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
 							</div>
 							<div class='comment-details'>
-								<h3 class='author-name'>{$comment['userName']}</h3> <span class='author-role'>( {$user_role} )</span>
-								<div class='author-comment'>{$comment['thread']}</div>
+								<div class='commenter-name-role'>
+									<h3 class='commenter-name'>{$comment['userName']}</h3> 
+									<span class='commenter-role'>( {$user_role} )</span>
+								</div>
+								<div class='comment'>{$comment['thread']}</div>
 							</div>
 						</div>
 					</li>
@@ -645,11 +664,16 @@ class Commenting_block_Admin {
 			$assigned_to_who = "
 				<div class='comment-assigned-to'>
 					<span class='icon-assign'>
-						<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'>
-							<g id='Group_22' data-name='Group 22' transform='translate(1 1)'>
-								<circle id='Ellipse_4' data-name='Ellipse 4' cx='10' cy='10' r='10' fill='none' stroke='#6ac359' stroke-width='2'/>
-								<path id='Path_7' data-name='Path 7' d='M93.92,119.6l-3.593-3.664,1.353-1.327,2.252,2.3,5.621-5.621,1.34,1.34Z' transform='translate(-85.327 -105.288)' fill='#6ac359'/>
-							</g>
+						<svg id='Group_31' data-name='Group 31' xmlns='http://www.w3.org/2000/svg' width='19.644' height='20' viewBox='0 0 19.644 20'>
+						  <g id='Group_28' data-name='Group 28' transform='translate(2.21)'>
+						    <path id='Path_11' data-name='Path 11' d='M149.786,160.469a10.107,10.107,0,0,1-7.123-2.907.885.885,0,0,1,0-1.279.885.885,0,0,1,1.275,0,8.254,8.254,0,0,0,5.78,2.439,7.905,7.905,0,0,0,5.776-2.436,8.236,8.236,0,0,0,0-11.632,8.253,8.253,0,0,0-5.779-2.438,8.032,8.032,0,0,0-5.779,2.438,1.047,1.047,0,0,1-1.255.018.771.771,0,0,1-.29-.564.949.949,0,0,1,.269-.73,9.992,9.992,0,0,1,7.126-2.909,10.107,10.107,0,0,1,7.124,2.907,9.761,9.761,0,0,1,2.912,7.128,10.1,10.1,0,0,1-2.907,7.124A9.619,9.619,0,0,1,149.786,160.469Z' transform='translate(-142.388 -140.469)' fill='#6ac359'/>
+						  </g>
+						  <g id='Group_29' data-name='Group 29' transform='translate(0 9.055)'>
+						    <path id='Path_12' data-name='Path 12' d='M141.088,151.342a.909.909,0,1,1,0-1.818h5.727a.909.909,0,1,1,0,1.818Z' transform='translate(-140.178 -149.524)' fill='#6ac359'/>
+						  </g>
+						  <g id='Group_30' data-name='Group 30' transform='translate(4.564 4.705)'>
+						    <path id='Path_13' data-name='Path 13' d='M148.645,155.834a.844.844,0,0,1-.638-.271.884.884,0,0,1,0-1.276l2.945-2.945h-5.3a.909.909,0,0,1,0-1.818h5.159l-2.8-2.8a.884.884,0,0,1,0-1.276.884.884,0,0,1,1.276,0l4.492,4.492a.8.8,0,0,1,.2.566.845.845,0,0,1-.271.639l-4.421,4.42A.841.841,0,0,1,148.645,155.834Z' transform='translate(-144.742 -145.174)' fill='#6ac359'/>
+						  </g>
 						</svg>
 					</span>
 					Assigned to <a href='mailto:{$assinged_user->user_email}' title={$assinged_user->display_name} class='commenter-name'>@{$assinged_user->first_name}</a>
@@ -661,52 +685,64 @@ class Commenting_block_Admin {
 			<style>
 				.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
 				.comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
-				.comment-box a{color:#4B1BCE;}
+				.comment-box a{color:#4B1BCE;text-decoration:none;}
 				.comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-				.comment-box .comment-box-header p{margin:15px 0;}
-				.comment-box .comment-box-header .comment-page-title{font-size:20px;}
-				.comment-box .comment-box-header a{color:#4B1BCE;text-decoration:underline;display:inline-block;font-size:20px;}
-				.comment-box .comment-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-header:last-child{margin-bottom:0;}
+				.comment-box .comment-box-header p{margin:0 0 20px;}
+				.comment-box .comment-box-header .comment-page-title{font-size:20px;margin:0;}
+				.comment-box .comment-box-header a{color:#4B1BCE;display:inline-block;}
+				.comment-box .comment-page-title a{text-decoration:underline;font-size:20px;}
+				.comment-box .comment-box-wrap{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-box .comment-box-wrap:last-child{margin-bottom:0;}
 				.comment-box .avtar{width:40px;margin-right:10px;}
 				.comment-box .avtar img{max-width:100%;border-radius:50%;}
 				.comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-				.comment-box .comment-header .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-header .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin-right:7px;color:#141414;font-weight:600;}
-				.comment-box .comment-header .commenter-name-role .comment-role{font-size:14px;font-weight:400;font-family:Arial,serif;color:#4C5056;}
-				.comment-box .author-name{margin:0 0 5px;}
-				.comment-box .comment,
-				.comment-box .author-comment{font-family:Arial,serif;font-size:14px;color:#4C5056;}
+				.comment-box .comment-box-wrap .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-box .comment-box-wrap .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin:0 7px 0 0;color:#141414;font-weight:600;}
+				.comment-box .comment-box-wrap .commenter-role{font-size:14px;font-weight:400;font-family:Arial,serif;color:#4C5056;margin-right:10px;}
+				.comment-box .comment{font-family:Arial,serif;font-size:14px;color:#4C5056;}
 				.comment-box .comment-box-body{border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-				.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:15px;color:#4C5056;}
+				.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;}
 				.comment-box .comment-assigned-to{margin-bottom:20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
 				.comment-box .comment-assigned-to .commenter-name{color:#4B1BCE;margin-left:5px;}
-				.comment-box .comment-assigned-to .icon-assign{margin-right:5px;}
-				.comment-box ul{margin:0;padding:0;list-style:none;}
+				.comment-box .comment-assigned-to .icon-assign{margin-right:5px;line-height:1;}
+				.comment-box ul{margin:0 0 20px;padding:0;list-style:none;}
 				.comment-box ul li{margin-bottom:20px;}
-				.comment-box .latest-comment{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;}
-				.comment-box .latest-comment .icon-comment{margin-right:10px;}
-				.comment-box .comment-box-header h3{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-box ul li:last-child{margin-bottom:10px;}
+				.comment-box .head-with-icon{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;}
+				.comment-box .head-with-icon .icon-comment{margin-right:10px;line-height:1;}
+				.comment-box .head-with-icon .icon-resolved{margin-right:10px;}
+				.comment-box .head-with-icon h3{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-box .cf-marked-resolved-by{margin:0 10px 20px 0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+				.comment-box .cf-marked-resolved-by .icon-resolved{margin-right:5px;line-height:1;}
+				.comment-box .cf-marked-resolved-by a{margin-left:5px;}
+				.comment-box.new-comment .comment-list li:last-child .commenter-name-role:after{content:'New';padding:5px 10px;background-color:#4B1BCE;color:#fff;font-size:12px;}
+				.comment-box .view_reply{margin:10px 0;}
+				.comment-box .view_reply_btn{display:inline-block;padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;}
+				.comment-box .view_reply_btn a{text-decoration:underline;color:#fff;}
+				@media (max-width:1400px){.comment-box{width:90%;}}
 			</style>
-			<div class='comment-box'>
+			<div class='comment-box new-comment'>
 				<div class='comment-box-header'>
 					<p><span class='commenter-name'>{$args['commenter']}</span> - mentioned you in a comment in the following page.</p>
 					<h2 class='comment-page-title'><a href='{$args['post_edit_link']}' target='_blank'>{$args['post_title']}</a></h2>
 				</div>
 				<div class='comment-box-body'>
-					<h2 class='latest-comment'>
+					<h2 class='head-with-icon'>
 						<span class='icon-comment'>
 							<svg xmlns='http://www.w3.org/2000/svg' width='36.226' height='43.02' viewBox='0 0 36.226 43.02'>
 								<g id='Group_2' data-name='Group 2' transform='translate(-36.242 1.019)'>
 									<path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
 								</g>
 							</svg>
-							Comments
 						</span>
+						Comments
 					</h2>
 					<div class='commented_text'>{$args['commented_text']}</div>
 					{$assigned_to_who}
 					{$comment_list_html}
+					<div class='view_reply'>
+						<div class='view_reply_btn'><a href=''>Click here</a> - View or reply to this comment</div>
+					</div>
 				</div>
 			</div>
 		";
