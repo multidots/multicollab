@@ -701,8 +701,8 @@ class Commenting_block_Admin {
 									<path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
 								</g>
 							</svg>
+							Comments
 						</span>
-						{$args['thread']}
 					</h2>
 					<div class='commented_text'>{$args['commented_text']}</div>
 					{$assigned_to_who}
