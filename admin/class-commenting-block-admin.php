@@ -38,6 +38,18 @@ class Commenting_block_Admin {
 	private $version;
 
 	/**
+	 * Allowed tags for the editor.
+	 *
+	 * @since 	1.1.0
+	 * @access 	private
+	 * @var 	array $allowed_tags Contains the tags that are allowed in the editor.
+	 */
+	private $allowed_tags = [
+			'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
+		]
+	];
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @param string $plugin_name The name of this plugin.
@@ -631,6 +643,7 @@ class Commenting_block_Admin {
 	 * @return void
 	 */
 	public function cf_sent_email_to_commented_users( $args ) {
+
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $args['thread'], $matches );
 
@@ -642,14 +655,14 @@ class Commenting_block_Admin {
 					<li>
 						<div class='comment-box-wrap'>
 							<div class='avtar'>
-								<img src='{$comment['profileURL']}' alt='{$comment['userName']}'/>
+								<img src='".esc_url( $comment['profileURL'] )."' alt='".esc_attr( $comment['userName'] )."'/>
 							</div>
 							<div class='comment-details'>
 								<div class='commenter-name-role'>
-									<h3 class='commenter-name'>{$comment['userName']}</h3> 
-									<span class='commenter-role'>( {$user_role} )</span>
+									<h3 class='commenter-name'>".esc_html( $comment['userName'] )."</h3>
+									<span class='commenter-role'>( ".esc_html( $user_role )." )</span>
 								</div>
-								<div class='comment'>{$comment['thread']}</div>
+								<div class='comment'>".wp_kses( $comment['thread'], $this->allowed_tags )."</div>
 							</div>
 						</div>
 					</li>
@@ -676,7 +689,7 @@ class Commenting_block_Admin {
 						  </g>
 						</svg>
 					</span>
-					Assigned to <a href='mailto:{$assinged_user->user_email}' title={$assinged_user->display_name} class='commenter-name'>@{$assinged_user->first_name}</a>
+					Assigned to <a href='mailto:".sanitize_email( $assinged_user->user_email )."' title='".esc_attr( $assinged_user->display_name )."' class='commenter-name'>@".esc_html( $assinged_user->first_name )."</a>
 				</div>
 			";
 		}
@@ -723,8 +736,8 @@ class Commenting_block_Admin {
 			</style>
 			<div class='comment-box new-comment'>
 				<div class='comment-box-header'>
-					<p><span class='commenter-name'>{$args['commenter']}</span> - mentioned you in a comment in the following page.</p>
-					<h2 class='comment-page-title'><a href='{$args['post_edit_link']}' target='_blank'>{$args['post_title']}</a></h2>
+					<p><span class='commenter-name'>".esc_html( $args['commenter'] )."</span> - mentioned you in a comment in the following page.</p>
+					<h2 class='comment-page-title'><a href='".esc_url( $args['post_edit_link'] )."' target='_blank'>".esc_html( $args['post_title'] )."</a></h2>
 				</div>
 				<div class='comment-box-body'>
 					<h2 class='head-with-icon'>
@@ -737,11 +750,11 @@ class Commenting_block_Admin {
 						</span>
 						Comments
 					</h2>
-					<div class='commented_text'>{$args['commented_text']}</div>
+					<div class='commented_text'>".esc_html( $args['commented_text'] )."</div>
 					{$assigned_to_who}
 					{$comment_list_html}
 					<div class='view_reply'>
-						<div class='view_reply_btn'><a href=''>Click here</a> - View or reply to this comment</div>
+						<div class='view_reply_btn'><a href='".esc_url( $args['post_edit_link'] )."'>Click here</a> - View or reply to this comment</div>
 					</div>
 				</div>
 			</div>
@@ -756,17 +769,24 @@ class Commenting_block_Admin {
 			unset( $matches[0][$key] );
 		}
 
+		// Notify Site Admin if setting enabled.
+		$cf_admin_notif = get_option( 'cf_admin_notif' );
+
 		if ( ! empty( $matches[0] ) ) {
 			$to      = $matches[0];
-			$subject = "New Comment - {$post_title} - {$site_name}";
+			$subject = "New Comment - ".esc_html( $post_title )." - ".esc_html( $site_name );
 			$body    = $template;
 			$headers = 'Content-Type: text/html; charset=UTF-8';
+			// Add admin email to notify when email is sent.
+			if ( '1' === $cf_admin_notif ) {
+				$to[] = get_option( 'admin_email');
+			}
 			wp_mail( $to, $subject, $body, $headers );
 		}
 
 		if( ! empty( $args['assign_to'] ) ) {
 			$assign_to      = $args['assign_to'];
-			$assign_subject = "Assgined to you - {$post_title}";
+			$assign_subject = "Assigned to you - ".esc_html( $post_title );
 			$assign_body    = $template;
 			$headers        = 'Content-Type: text/html; charset=UTF-8';
 			wp_mail( $assign_to, $assign_subject, $assign_body, $headers );
