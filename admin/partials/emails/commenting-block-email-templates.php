@@ -60,7 +60,7 @@ class Commenting_Block_Email_Templates {
            }
            $comment_list_html .= '</ul>';
        }
-    
+
        $assigned_to_who = '';
        if( ! empty( $args['assign_to'] ) ) {
            $assinged_user   = get_user_by( 'email', $args['assign_to'] );
@@ -79,7 +79,7 @@ class Commenting_Block_Email_Templates {
                            </g>
                        </svg>
                    </span>
-                   Assigned to <a href='mailto:".sanitize_email( $assinged_user->user_email )."' title='".esc_attr( $assinged_user->display_name )."' class='commenter-name'>@".esc_html( $assinged_user->first_name )."</a>
+                   Assigned to <a href='mailto:".sanitize_email( $assinged_user->user_email )."' title='".esc_attr( $assinged_user->display_name )."' class='commenter-name'>@".esc_html( $assinged_user->display_name )."</a>
                </div>
            ";
        }
@@ -149,11 +149,11 @@ class Commenting_Block_Email_Templates {
                </div>
            </div>
        ";
-    
+
        // Limit the page and site titles for Subject.
        $post_title = $this->cf_limit_characters( $args['post_title'], 30 );
        $site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
-    
+
        if( ! empty( $args['assign_to'] ) ) {
            $key = array_search( $args['assign_to'], $matches[0] );
            unset( $matches[0][$key] );
