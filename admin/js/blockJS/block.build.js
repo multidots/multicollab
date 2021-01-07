@@ -1734,85 +1734,86 @@ var Comment = function (_React$Component) {
             var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
 
             var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            var multiHierarchy = false;
+            //let multiHierarchy = false;
             if (null !== blockAttributes) {
 
-                if ('images' in blockAttributes) {
+                /*if( 'images' in blockAttributes ) {
                     blockAttributes = blockAttributes['images'];
-                }
+                }*/
 
                 var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
                 jQuery(findAttributes).each(function (i, attrb) {
                     var content = blockAttributes[attrb];
 
-                    jQuery(blockAttributes).each(function (i, content) {
+                    //jQuery(blockAttributes).each(function (i, content) {
 
-                        if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
 
-                            if ('' !== content) {
-                                var tempDiv = document.createElement('div');
-                                tempDiv.innerHTML = content;
-                                var childElements = tempDiv.getElementsByTagName('mdspan');
-                                for (var _i = 0; _i < childElements.length; _i++) {
-                                    if (elIDRemove === childElements[_i].attributes.datatext.value) {
-                                        childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
-                                        var finalContent = tempDiv.innerHTML;
+                        if ('' !== content) {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = content;
+                            var childElements = tempDiv.getElementsByTagName('mdspan');
+                            for (var _i = 0; _i < childElements.length; _i++) {
+                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
+                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
+                                    var finalContent = tempDiv.innerHTML;
 
-                                        if (attrb === 'content') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    content: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'citation') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    citation: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'value') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    value: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'caption') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    caption: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'values') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    values: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'fileName') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    fileName: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'text') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    text: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'downloadButtonText') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    downloadButtonText: finalContent
-                                                }
-                                            });
-                                        }
-                                        break;
+                                    if (attrb === 'content') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                content: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'citation') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                citation: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'value') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                value: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'caption') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                caption: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'values') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                values: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'fileName') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                fileName: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'text') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                text: finalContent
+                                            }
+                                        });
+                                    } else if (attrb === 'downloadButtonText') {
+                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                            attributes: {
+                                                downloadButtonText: finalContent
+                                            }
+                                        });
                                     }
+                                    break;
                                 }
                             }
                         }
-                    });
+                    }
+
+                    //});
                 });
             }
         }
