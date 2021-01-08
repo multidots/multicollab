@@ -36,27 +36,31 @@ class Commenting_Block_Email_Templates {
        ];
        $pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
        preg_match_all( $pattern, $args['thread'], $matches );
-    
+
        if( ! empty( $args['list_of_comments'] ) ) {
            $comment_list_html = '<ul class="comment-list">';
            foreach( $args['list_of_comments'] as $comment ) {
-               $user_role = ucwords( $comment['userRole'] );
-               $comment_list_html .= "
+
+	           if ( isset( $comment['status'] ) && 'permanent_draft' !== $comment['status'] && 'draft' !== $comment['status'] ) {
+
+		           $user_role         = ucwords( $comment['userRole'] );
+		           $comment_list_html .= "
                    <li>
                        <div class='comment-box-wrap'>
                            <div class='avtar'>
-                               <img src='".esc_url( $comment['profileURL'] )."' alt='".esc_attr( $comment['userName'] )."'/>
+                               <img src='" . esc_url( $comment['profileURL'] ) . "' alt='" . esc_attr( $comment['userName'] ) . "'/>
                            </div>
                            <div class='comment-details'>
                                <div class='commenter-name-role'>
-                                   <h3 class='commenter-name'>".esc_html( $comment['userName'] )."</h3>
-                                   <span class='commenter-role'>( ".esc_html( $user_role )." )</span>
+                                   <h3 class='commenter-name'>" . esc_html( $comment['userName'] ) . "</h3>
+                                   <span class='commenter-role'>( " . esc_html( $user_role ) . " )</span>
                                </div>
-                               <div class='comment'>".wp_kses( $comment['thread'], $allowed_tags )."</div>
+                               <div class='comment'>" . wp_kses( $comment['thread'], $allowed_tags ) . "</div>
                            </div>
                        </div>
                    </li>
                ";
+	           }
            }
            $comment_list_html .= '</ul>';
        }
@@ -83,7 +87,7 @@ class Commenting_Block_Email_Templates {
                </div>
            ";
        }
-    
+
        $template = "
            <style>
                .comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
@@ -158,10 +162,10 @@ class Commenting_Block_Email_Templates {
            $key = array_search( $args['assign_to'], $matches[0] );
            unset( $matches[0][$key] );
        }
-    
+
        // Notify Site Admin if setting enabled.
        $cf_admin_notif = get_option( 'cf_admin_notif' );
-    
+
        if ( ! empty( $matches[0] ) ) {
            $to      = $matches[0];
            $subject = "New Comment - ".esc_html( $post_title )." - ".esc_html( $site_name );
@@ -173,7 +177,7 @@ class Commenting_Block_Email_Templates {
            }
            wp_mail( $to, $subject, $body, $headers );
        }
-    
+
        if( ! empty( $args['assign_to'] ) ) {
            $assign_to      = $args['assign_to'];
            $assign_subject = "Assigned to you - ".esc_html( $post_title );
