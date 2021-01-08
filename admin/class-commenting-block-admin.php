@@ -402,7 +402,7 @@ class Commenting_block_Admin {
 					$html .= '<ul class="comment-list">';
 					foreach ( $comments as $timestamp => $arr ) {
 
-						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
+						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] && 'draft' !== $arr['status'] ) {
 							$user_info      = get_userdata( $arr['userData'] );
 							$username       = $user_info->display_name;
 							$user_role      = implode( ', ', $user_info->roles );
