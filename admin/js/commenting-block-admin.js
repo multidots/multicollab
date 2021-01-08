@@ -338,6 +338,7 @@
                             data: {
                                 action: 'cf_get_user_email_list',
                                 postID: currentPostID,
+                                nonce: adminLocalizer.nonce,
                             },
                             beforeSend: function() {},
                             success: function( res ) {
@@ -376,6 +377,7 @@
                                     action: 'cf_get_matched_user_email_list',
                                     niddle: trackedStr,
                                     postID: currentPostID,
+                                    nonce: adminLocalizer.nonce,
                                 },
                                 success: function( res ) {
                                     $( appendIn ).remove(); // Removing previous DOM.
@@ -513,6 +515,7 @@
                     data: {
                         action: 'cf_get_assignable_user_list',
                         content: content,
+                        nonce: adminLocalizer.nonce
                     },
                     beforeSend: function() {},
                     success: function( res ) {

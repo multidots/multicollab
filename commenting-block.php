@@ -36,6 +36,7 @@ define( 'COMMENTING_BLOCK_VERSION', '1.0.5' );
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
 define( 'COMMENTING_BLOCK_DIR', plugin_dir_path( __FILE__ ) );
 define( 'COMMENTING_BLOCK_BASE', plugin_basename( __FILE__ ) );
+define( 'COMMENTING_NONCE', 'BFaYbfonJ=n@R<8kId|nN8x #W[-S>1%Sazm%<' );
 
 /**
  * The code that runs during plugin activation.

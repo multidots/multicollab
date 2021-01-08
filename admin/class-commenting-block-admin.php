@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -36,18 +35,6 @@ class Commenting_block_Admin {
 	 * @var      string $version The current version of this plugin.
 	 */
 	private $version;
-
-	/**
-	 * Allowed tags for the editor.
-	 *
-	 * @since 	1.1.0
-	 * @access 	private
-	 * @var 	array $allowed_tags Contains the tags that are allowed in the editor.
-	 */
-	private $allowed_tags = [
-			'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
-		]
-	];
 
 	/**
 	 * Initialize the class and set its properties.
@@ -110,7 +97,7 @@ class Commenting_block_Admin {
 	public function cf_sort_custom_column_query( $query ) {
 		$orderby = $query->get( 'orderby' );
 
-		if ( 'sort_by_cf_comments' == $orderby ) {
+		if ( 'sort_by_cf_comments' === $orderby ) {
 
 			$meta_query = array(
 				'relation' => 'OR',
@@ -282,25 +269,15 @@ class Commenting_block_Admin {
 	 * @param string $update Status of the update.
 	 */
 	public function cf_post_status_changes( $post_ID, $post, $update ) {
-		$allowed_tags = [
-				'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
-			]
-		];
-
-		$metas = get_post_meta( $post_ID );
-
-		$p_content  = is_object( $post ) ? $post->post_content : $post;
+		$metas      = get_post_meta( $post_ID );
+		$p_content  = is_object( $post ) ? $post->post_content: $post;
 		$p_link     = get_edit_post_link( $post_ID );
 		$p_title    = get_the_title( $post_ID );
 		$site_title = get_bloginfo( 'name' );
 
 		// Publish drafts from the 'current_drafts' stack.
-		$current_drafts = $metas['current_drafts'][0];
-		$current_drafts = maybe_unserialize( $current_drafts );
-
-		$date_format = get_option( 'date_format' );
-		$time_format = get_option( 'time_format' );
-
+		$current_drafts    = $metas['current_drafts'][0];
+		$current_drafts    = maybe_unserialize( $current_drafts );
 		$current_timestamp = current_time( 'timestamp' );
 
 		// Mark Resolved Threads.
@@ -390,10 +367,7 @@ class Commenting_block_Admin {
 							$user_role      = implode( ', ', $user_info->roles );
 							$users_emails[] = $user_info->user_email;
 							$profile_url    = get_avatar_url( $user_info->user_email );
-							$date           = gmdate( $time_format . ' ' . $date_format, $timestamp );
-							$text_comment   = wp_kses( $arr['thread'], $allowed_tags );
-							$cstatus        = $arr['status'];
-							$draft          = 'draft' === $cstatus ? '(draft)' : '';
+							$text_comment   = wp_kses( $arr['thread'], wp_kses_allowed_html( 'post' ) );
 
 							$html .= "<li>
 										<div class='comment-box-wrap'>
@@ -614,8 +588,13 @@ class Commenting_block_Admin {
 			$date_format       = get_option( 'date_format' );
 			$time_format       = get_option( 'time_format' );
 			$comment_id        = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
-			wp_localize_script( 'content-collaboration-inline-commenting', 'suggestionBlock', array( 'userRole' => $current_user_role, 'dateFormat' => $date_format, 'timeFormat' => $time_format ) );
+			wp_localize_script( 'content-collaboration-inline-commenting', 'suggestionBlock', array(
+				'userRole'   => $current_user_role,
+				'dateFormat' => $date_format,
+				'timeFormat' => $time_format
+			) );
 			wp_localize_script( $this->plugin_name, 'adminLocalizer', [
+				'nonce'      => wp_create_nonce( COMMENTING_NONCE ),
 				'comment_id' => isset( $comment_id ) ? $comment_id : null
 			] );
 
@@ -643,7 +622,7 @@ class Commenting_block_Admin {
 	 * @return void
 	 */
 	public function cf_sent_email_to_commented_users( $args ) {
-		require_once COMMENTING_BLOCK_DIR . '/admin/partials/emails/commenting-block-email-templates.php';
+		require_once( plugin_dir_path( __FILE__ ) . '/partials/emails/commenting-block-email-templates.php' );
 		$send_email = new Commenting_Block_Email_Templates();
 		$send_email->cf_add_comment_email_template( $args );
 	}
@@ -660,7 +639,7 @@ class Commenting_block_Admin {
 
 		// Get the assigned User Email.
 		$user_email = '';
-		$assign_to  = intval( $_POST['assignTo'] ); // get the assign to value
+		$assign_to = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
 		if( isset( $assign_to ) && $assign_to > 0 ) {
 			$user_data  = get_user_by( 'ID', $assign_to );
 			$user_email = $user_data->user_email;
@@ -878,7 +857,7 @@ class Commenting_block_Admin {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . "</a>";
 					}
 
-					$html .= "<div class='user-comment'> " . wp_kses( $c['thread'], $this->allowed_tags ) . "</div>
+					$html .= "<div class='user-comment'> " . wp_kses( $c['thread'], wp_kses_allowed_html( 'post' ) ) . "</div>
 								</div>";
 					$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . "</div>";
 					$html .= "</div>";
@@ -1156,6 +1135,7 @@ class Commenting_block_Admin {
 		}
 
 		// Get assigned user data
+		$assigned_to = null;
 		if( $superCareerData['assigned_to'] > 0 ) {
 			$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
 			$assigned_to = [
@@ -1164,8 +1144,6 @@ class Commenting_block_Admin {
 				'user_email'   => $user_data->user_email,
 				'avatar'       => get_avatar_url( $user_data->ID, [ 'size' => 32 ] )
 			];
-		} else {
-			$assign_to = null;
 		}
 
 		$data                    = array();
@@ -1182,6 +1160,9 @@ class Commenting_block_Admin {
 	 * Fetch User Email List.
 	 */
 	public function cf_get_user_email_list() {
+		// Check for nonce verification.
+		check_ajax_referer( COMMENTING_NONCE, 'nonce' );
+
 		// Get the current post id if not present then return.
 		$post_id = filter_input( INPUT_POST, 'postID', FILTER_SANITIZE_NUMBER_INT );
 		if( $post_id <= 0 ) {
@@ -1223,6 +1204,9 @@ class Commenting_block_Admin {
 	 * Fetch Matched User Email List.
 	 */
 	public function cf_get_matched_user_email_list() {
+		// Check for nonce verification.
+		check_ajax_referer( COMMENTING_NONCE, 'nonce' );
+
 		// Get the current post id if not present then return.
 		$post_id = filter_input( INPUT_POST, 'postID', FILTER_SANITIZE_NUMBER_INT );
 		if( $post_id <= 0 ) {
@@ -1269,13 +1253,15 @@ class Commenting_block_Admin {
 	 * @return void
 	 */
 	public function cf_get_assignable_user_list() {
+		// Check for nonce verification.
+		check_ajax_referer( COMMENTING_NONCE, 'nonce' );
 
 		if( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
 			return;
 		}
 
 		// Getting the content from the editor to filter out the users.
-		$content = wp_kses( $_POST['content'], $this->allowed_tags );
+		$content = wp_kses( $_POST['content'], wp_kses_allowed_html( 'post' ) );
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $content, $matches );
 
