@@ -198,6 +198,12 @@ export default class Comment extends React.Component {
         // Removing contenteditable attr from the link.
         str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' );
 
+        // Limiting User Role Character.
+        var userRolePartial = this.props.userRole;
+        if( 8 < userRolePartial.length ) {
+            userRolePartial = userRolePartial.slice( 0, 8 ) + '...';
+        }
+
         return (
             <div className={"commentContainer " + commentStatus} id={this.props.timestamp}>
                 <div className="comment-header">
@@ -222,7 +228,13 @@ export default class Comment extends React.Component {
                         </div>
                         }
                         <div className="commenter-name-time">
-                            <div className="commenter-name">{this.props.userName} <small>({ this.props.userRole })</small></div>
+                            <div className="commenter-name">
+                                {this.props.userName}
+                                <div className="tooltip">
+                                    <small>({ userRolePartial })</small>
+                                    <span className="top">{ this.props.userRole }<i></i></span>
+                                </div>
+                            </div>
                             <div className="comment-time">{this.props.dateTime}</div>
                         </div>
                     </div>
@@ -240,13 +252,25 @@ export default class Comment extends React.Component {
         // Hide the textarea for new comments.
         jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
 
+        // Limiting User Role Character.
+        var userRolePartial = this.props.userRole;
+        if( 8 < userRolePartial.length ) {
+            userRolePartial = userRolePartial.slice( 0, 8 ) + '...';
+        }
+
         return (
             <div className="commentContainer" id={this.props.timestamp}>
                 <div className="comment-header">
                     <div className="comment-details">
                         <div className="avtar"><img src={this.props.profileURL} alt="avatar"/></div>
                         <div className="commenter-name-time">
-                            <div className="commenter-name">{this.props.userName}</div>
+                            <div className="commenter-name">
+                                {this.props.userName}
+                                <div className="tooltip">
+                                    <small>({ userRolePartial })</small>
+                                    <span className="top">{ this.props.userRole }<i></i></span>
+                                </div>
+                            </div>
                             <div className="comment-time">{this.props.dateTime}</div>
                         </div>
                     </div>
@@ -259,6 +283,7 @@ export default class Comment extends React.Component {
                         onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
                         id={ `edit-${this.props.timestamp}` }
                         className="cf-share-comment js-cf-edit-comment"
+                        placeholder="loading..."
                     />
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">

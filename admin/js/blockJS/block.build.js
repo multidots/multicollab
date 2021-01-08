@@ -13995,7 +13995,7 @@ var Board = function (_React$Component) {
                 wp.element.createElement(
                     'div',
                     { className: 'shareCommentContainer' },
-                    wp.element.createElement('div', { contentEditable: 'true', suppressContentEditableWarning: true, className: 'cf-share-comment js-cf-share-comment', id: "txt" + datatext }),
+                    wp.element.createElement('div', { contentEditable: 'true', placeholder: 'Comment or add others with @', className: 'cf-share-comment js-cf-share-comment', id: "txt" + datatext }),
                     wp.element.createElement(
                         'button',
                         { onClick: this.addNewComment, className: 'btn btn-success' },
@@ -14264,6 +14264,12 @@ var Comment = function (_React$Component) {
             // Removing contenteditable attr from the link.
             str = str.replace(/contenteditable=\"false\"/ig, 'data-edit="false"');
 
+            // Limiting User Role Character.
+            var userRolePartial = this.props.userRole;
+            if (8 < userRolePartial.length) {
+                userRolePartial = userRolePartial.slice(0, 8) + '...';
+            }
+
             return wp.element.createElement(
                 'div',
                 { className: "commentContainer " + commentStatus, id: this.props.timestamp },
@@ -14305,13 +14311,22 @@ var Comment = function (_React$Component) {
                                 'div',
                                 { className: 'commenter-name' },
                                 this.props.userName,
-                                ' ',
                                 wp.element.createElement(
-                                    'small',
-                                    null,
-                                    '(',
-                                    this.props.userRole,
-                                    ')'
+                                    'div',
+                                    { className: 'tooltip' },
+                                    wp.element.createElement(
+                                        'small',
+                                        null,
+                                        '(',
+                                        userRolePartial,
+                                        ')'
+                                    ),
+                                    wp.element.createElement(
+                                        'span',
+                                        { className: 'top' },
+                                        this.props.userRole,
+                                        wp.element.createElement('i', null)
+                                    )
                                 )
                             ),
                             wp.element.createElement(
@@ -14358,6 +14373,12 @@ var Comment = function (_React$Component) {
             // Hide the textarea for new comments.
             jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
 
+            // Limiting User Role Character.
+            var userRolePartial = this.props.userRole;
+            if (8 < userRolePartial.length) {
+                userRolePartial = userRolePartial.slice(0, 8) + '...';
+            }
+
             return wp.element.createElement(
                 'div',
                 { className: 'commentContainer', id: this.props.timestamp },
@@ -14378,7 +14399,24 @@ var Comment = function (_React$Component) {
                             wp.element.createElement(
                                 'div',
                                 { className: 'commenter-name' },
-                                this.props.userName
+                                this.props.userName,
+                                wp.element.createElement(
+                                    'div',
+                                    { className: 'tooltip' },
+                                    wp.element.createElement(
+                                        'small',
+                                        null,
+                                        '(',
+                                        userRolePartial,
+                                        ')'
+                                    ),
+                                    wp.element.createElement(
+                                        'span',
+                                        { className: 'top' },
+                                        this.props.userRole,
+                                        wp.element.createElement('i', null)
+                                    )
+                                )
                             ),
                             wp.element.createElement(
                                 'div',
@@ -14399,7 +14437,8 @@ var Comment = function (_React$Component) {
                             return _this2.setState({ contentHtml: e.target.value });
                         },
                         id: 'edit-' + this.props.timestamp,
-                        className: 'cf-share-comment js-cf-edit-comment'
+                        className: 'cf-share-comment js-cf-edit-comment',
+                        placeholder: 'loading...'
                     })
                 ),
                 wp.element.createElement(

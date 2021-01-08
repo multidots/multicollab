@@ -446,7 +446,6 @@ span.user-name {
 .comment-header .commenter-name-time {
     margin-right: 0;
     white-space: nowrap;
-    overflow: hidden;
     flex-grow: 1;
     width: 60%;
     width: calc(100% - 130px);
@@ -462,7 +461,6 @@ span.user-name {
     font-size: 15px;
     line-height: 1;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 4px;
     font-weight: 500;
@@ -1199,6 +1197,11 @@ body.hide-comments .block-editor-writing-flow {
     border: 1px solid #007cba;
     border-radius: 5px;
 }
+[contenteditable=true]:empty:before{
+    content: attr( placeholder );
+    pointer-events: none;
+    display: block; /* For Firefox */
+}
 .js-mentioned {
     font-weight: 600;
     text-decoration: none;
@@ -1210,8 +1213,9 @@ body.hide-comments .block-editor-writing-flow {
     height: auto;
     position: absolute;
     z-index: 10;
+    border-radius: 4px;
     background: #fff;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 1px 6px 0px rgba(0,0,0,0.16);
 }
 .cf-mentioned-user-popup ul,
 .cf-assignable-list-popup ul {
@@ -1267,6 +1271,54 @@ body.hide-comments .block-editor-writing-flow {
     background-color: transparent;
     font-weight: 600;
     padding: 0;
+}
+.tooltip {
+    display:inline-block;
+    position:relative;
+    border-bottom:1px dotted #666;
+    text-align:left;
+    margin-left: 2px;
+}
+.tooltip .top {
+    width: auto;
+    height: auto;
+    top: -10px;
+    left: 50%;
+    transform: translate(-30%,-100%);
+    padding: 10px 20px;
+    color: #ffffff;
+    background-color: rgba( 0,0,0,0.8 );
+    font-weight: normal;
+    font-size: 14px;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 99999999;
+    box-sizing: border-box;
+    box-shadow: 0 1px 5px 0px rgba(0,0,0,0.1);
+    display: none;
+}
+.tooltip:hover .top {
+    display:block;
+    text-transform: capitalize;
+}
+.tooltip .top i {
+    position:absolute;
+    top:100%;
+    left:30%;
+    margin-left:-15px;
+    width:30px;
+    height:15px;
+    overflow:hidden;
+}
+.tooltip .top i::after {
+    content:'';
+    position:absolute;
+    width:15px;
+    height:15px;
+    left:50%;
+    transform:translate(-50%,-50%) rotate(45deg);
+    background-color: rgba( 0,0,0,0.8 );
+    box-shadow: 0 1px 5px 0px rgba(0,0,0,0.1);
 }
 .readmoreComment,
 .readlessComment {
