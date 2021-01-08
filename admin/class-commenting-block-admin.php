@@ -668,13 +668,8 @@ class Commenting_block_Admin {
 
 		// Get the assigned User Email.
 		$user_email = '';
-<<<<<<< HEAD
-		$assign_to = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
+		$assign_to  = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
 		if( isset( $assign_to ) && $assign_to > 0 ) {
-=======
-		$assign_to  = intval( $_POST['assignTo'] ); // get the assign to value
-		if ( isset( $assign_to ) && $assign_to > 0 ) {
->>>>>>> 014f404484671d74e067f63f2812a64f8b0237e4
 			$user_data  = get_user_by( 'ID', $assign_to );
 			$user_email = $user_data->user_email;
 		}
@@ -1169,14 +1164,9 @@ class Commenting_block_Admin {
 		}
 
 		// Get assigned user data
-<<<<<<< HEAD
 		$assigned_to = null;
 		if( $superCareerData['assigned_to'] > 0 ) {
 			$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
-=======
-		if ( $superCareerData['assigned_to'] > 0 ) {
-			$user_data   = get_user_by( 'ID', $superCareerData['assigned_to'] );
->>>>>>> 014f404484671d74e067f63f2812a64f8b0237e4
 			$assigned_to = [
 				'ID'           => $user_data->ID,
 				'display_name' => $user_data->display_name,
