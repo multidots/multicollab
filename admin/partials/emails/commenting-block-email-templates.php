@@ -30,10 +30,6 @@ class Commenting_Block_Email_Templates {
      * @return void
      */
     public function cf_add_comment_email_template( $args ) {
-       $allowed_tags = [
-               'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
-           ]
-       ];
        $pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
        preg_match_all( $pattern, $args['thread'], $matches );
 
@@ -55,7 +51,7 @@ class Commenting_Block_Email_Templates {
                                    <h3 class='commenter-name'>" . esc_html( $comment['userName'] ) . "</h3>
                                    <span class='commenter-role'>( " . esc_html( $user_role ) . " )</span>
                                </div>
-                               <div class='comment'>" . wp_kses( $comment['thread'], $allowed_tags ) . "</div>
+                               <div class='comment'>".wp_kses( $comment['thread'], wp_kses_allowed_html( 'post' ) )."</div>
                            </div>
                        </div>
                    </li>
@@ -159,7 +155,7 @@ class Commenting_Block_Email_Templates {
        $site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
 
        if( ! empty( $args['assign_to'] ) ) {
-           $key = array_search( $args['assign_to'], $matches[0] );
+           $key = array_search( $args['assign_to'], $matches[0], true );
            unset( $matches[0][$key] );
        }
 
