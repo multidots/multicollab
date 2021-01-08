@@ -156,6 +156,7 @@ mdspan {
 
 .reverted_back.resolved {
     background: #fa9f77;
+    display: none;
 }
 
 span.dashicon.dashicons.dashicons-admin-comments {
@@ -698,11 +699,11 @@ button.btn-comment.btn-reject {
     transition: all 0.5s;
 }
 
-.custom-buttons button {
+.custom-buttons .components-button {
     box-shadow: none !important;
 }
 
-.custom-buttons button:hover {
+.custom-buttons .components-button:hover {
     color: #4B1BCE;
 }
 
@@ -1181,7 +1182,7 @@ body.hide-comments .block-editor-writing-flow {
     fill: #1e1e1e;
 }
 
-.custom-buttons button:hover svg * {
+.custom-buttons components-button:hover svg * {
     fill: #007cba;
 }
 

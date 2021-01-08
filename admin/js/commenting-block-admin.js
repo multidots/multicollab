@@ -1,31 +1,13 @@
 (function ($) {
     'use strict';
     /**
-     * All of the code for your admin-facing JavaScript source
+     * All of the code for the admin-facing JavaScript source
      * should reside in this file.
      *
      * Note: It has been assumed you will write jQuery code here, so the
      * $ function reference has been prepared for usage within the scope
      * of this function.
      *
-     * This enables you to define handlers, for when the DOM is ready:
-     *
-     * $(function() {
-     *
-     * });
-     *
-     * When the window is loaded:
-     *
-     * $( window ).load(function() {
-     *
-     * });
-     *
-     * ...and/or other possibilities.
-     *
-     * Ideally, it is not considered best practise to attach more than a
-     * single DOM-ready or window-load handler for a particular page.
-     * Although scripts in the WordPress core, Plugins and Themes may be
-     * practising this, we should strive to set a better example in our own work.
      */
 
     // Add temporary style tag to hide resolved tag color on load.
@@ -93,17 +75,20 @@
         // Focus comment popup on click.
         $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function (e) {
 
+            // Exclude focus on specific elements.
             var target = $(e.target), article;
-            if( 'dashicons dashicons-trash' === target[0].className ) {
+            if( 'dashicons dashicons-trash' === target[0].className
+                || 'resolve-label' === target[0].className
+                || 'resolve-cb' === target[0].className
+            ) {
                 return;
             }
 
             const _this = $(this);
 
             // Reset Comments Float.
-            jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
             jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
 
             _this.addClass('focus');
 

@@ -402,7 +402,6 @@ export default class Board extends React.Component {
 
         // Reset Comments Float.
         jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-        jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
         jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
         jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
 
