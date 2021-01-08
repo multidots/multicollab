@@ -380,6 +380,10 @@ span.user-name {
     color: #4B1BCE;
 }
 
+#history-toggle{
+    line-height: normal;
+}
+
 #history-toggle:before {
     content: attr(data-count);
     position: absolute;
@@ -387,12 +391,13 @@ span.user-name {
     left: 17px;
     background: #f02849;
     color: #FFFFFF;
-    padding: 2px 5px;
+    padding: 2px;
     border-radius: 10px;
-    border: 2px solid #FFF;
-    font-size: 11px;
-    font-weight: 700;
-    min-width: 20px;
+    font-size: 9px;
+    font-weight: 600;
+    width: 18px;
+    height: 18px;
+    text-align: center;
 }
 
 .block-editor-editor-skeleton__body {
