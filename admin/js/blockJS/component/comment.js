@@ -75,6 +75,11 @@ export default class Comment extends React.Component {
             jQuery.post(ajaxurl, data, function () {
                 jQuery('#' + elIDRemove).remove();
                 jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
+
+                // Reset Comments Float.
+                jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
+                jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+                jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
             });
 
             // Remove Tag.
@@ -199,8 +204,8 @@ export default class Comment extends React.Component {
                     <div className="comment-actions">
                         {index === 0 &&
                             <div className="comment-resolve">
-                                <input id={"resolve_cb_" + this.props.timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
-                                <label htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
+                                <input id={"resolve_cb_" + this.props.timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="resolve-cb" value="1" />
+                                <label className="resolve-label" htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
                             </div>
                         }
                         {this.props.userID === owner &&

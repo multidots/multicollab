@@ -40,12 +40,20 @@ class Commenting_block_Admin {
 	/**
 	 * Allowed tags for the editor.
 	 *
-	 * @since 	1.1.0
-	 * @access 	private
-	 * @var 	array $allowed_tags Contains the tags that are allowed in the editor.
+	 * @since    1.1.0
+	 * @access    private
+	 * @var    array $allowed_tags Contains the tags that are allowed in the editor.
 	 */
 	private $allowed_tags = [
-			'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
+		'a' => [
+			'id'              => [],
+			'title'           => [],
+			'href'            => [],
+			'target'          => [],
+			'style'           => [],
+			'class'           => [],
+			'data-email'      => [],
+			'contenteditable' => [],
 		]
 	];
 
@@ -110,7 +118,7 @@ class Commenting_block_Admin {
 	public function cf_sort_custom_column_query( $query ) {
 		$orderby = $query->get( 'orderby' );
 
-		if ( 'sort_by_cf_comments' == $orderby ) {
+		if ( 'sort_by_cf_comments' === $orderby ) {
 
 			$meta_query = array(
 				'relation' => 'OR',
@@ -269,7 +277,7 @@ class Commenting_block_Admin {
 		$userID    = $curr_user->ID;
 		$userName  = $curr_user->display_name;
 		$userURL   = get_avatar_url( $userID );
-		$userRole  = get_userdata($userID)->roles[0];
+		$userRole  = get_userdata( $userID )->roles[0];
 
 		echo wp_json_encode( array( 'id' => $userID, 'name' => $userName, 'role' => $userRole, 'url' => $userURL ) );
 		wp_die();
@@ -283,7 +291,15 @@ class Commenting_block_Admin {
 	 */
 	public function cf_post_status_changes( $post_ID, $post, $update ) {
 		$allowed_tags = [
-				'a' => [ 'id' => [], 'title' => [], 'href' => [], 'target'=> [], 'style' => [], 'class' => [], 'data-email' => [], 'contenteditable' => [],
+			'a' => [
+				'id'              => [],
+				'title'           => [],
+				'href'            => [],
+				'target'          => [],
+				'style'           => [],
+				'class'           => [],
+				'data-email'      => [],
+				'contenteditable' => [],
 			]
 		];
 
@@ -372,16 +388,18 @@ class Commenting_block_Admin {
 					</style>
 					';
 					$html    .= '<div class="comment-box comment-resolved"><div class="comment-box-header">';
-					$html    .= '<p><a href="mailto:'.esc_attr( $current_user_email ).'" class="">'. esc_html( $current_user_display_name ) .'</a> '.__( 'Mentioned you in a comment in the following page', 'content-collaboration-inline-commenting' ).'</p>';
-					$html    .= '<h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
-					$html    .= '<div class="comment-box-body">';
-					$html    .= '<h3 class="head-with-icon">';
-					$html    .= '<span class="icon-resolved">';
-					$html 	 .= '<svg id="Group_19" data-name="Group 19" xmlns="http://www.w3.org/2000/svg" width="40" height="40.001" viewBox="0 0 40 40.001"><path id="Path_6" data-name="Path 6" d="M65.567,45.564a20,20,0,1,0,20,20A20,20,0,0,0,65.567,45.564ZM61.722,75.7l-7.583-7.731L57,65.164l4.753,4.847L73.609,58.151l2.828,2.828Z" transform="translate(-45.567 -45.564)" fill="#6ac359"/></svg>';
-					$html 	 .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
-					$html 	 .= '</h3>';
-					$html    .= "<div class='commented_text'>This is a dummy content</div>";
-					$html    .= '<ul class="comment-list">';
+					$html    .= '<p><a href="mailto:' . esc_attr( $current_user_email ) . '" class="">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'Mentioned you in a comment in the following page', 'content-collaboration-inline-commenting' ) . '</p>';
+					if ( ! empty( $p_title ) ) {
+						$html .= '<h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
+					}
+					$html .= '<div class="comment-box-body">';
+					$html .= '<h3 class="head-with-icon">';
+					$html .= '<span class="icon-resolved">';
+					$html .= '<svg id="Group_19" data-name="Group 19" xmlns="http://www.w3.org/2000/svg" width="40" height="40.001" viewBox="0 0 40 40.001"><path id="Path_6" data-name="Path 6" d="M65.567,45.564a20,20,0,1,0,20,20A20,20,0,0,0,65.567,45.564ZM61.722,75.7l-7.583-7.731L57,65.164l4.753,4.847L73.609,58.151l2.828,2.828Z" transform="translate(-45.567 -45.564)" fill="#6ac359"/></svg>';
+					$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
+					$html .= '</h3>';
+					$html .= "<div class='commented_text'>This is a dummy content</div>";
+					$html .= '<ul class="comment-list">';
 					foreach ( $comments as $timestamp => $arr ) {
 
 						if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] ) {
@@ -417,7 +435,7 @@ class Commenting_block_Admin {
 							    <path id="Path_7" data-name="Path 7" d="M93.92,119.6l-3.593-3.664,1.353-1.327,2.252,2.3,5.621-5.621,1.34,1.34Z" transform="translate(-85.327 -105.288)" fill="#6ac359"/>
 							  </g>
 							</svg></span>';
-					$html .= __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:'.esc_attr( $current_user_email ).'" title="'.esc_attr( $current_user_display_name ).'" target="_blank"> '. esc_html( $current_user_display_name ) .' </a>' .'</div>';
+					$html .= __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank"> ' . esc_html( $current_user_display_name ) . ' </a>' . '</div>';
 					$html .= '</div>'; // .comment-box-body end
 					$html .= '</div>'; // .comment-box end
 
@@ -429,14 +447,15 @@ class Commenting_block_Admin {
 					// Notify Site Admin if setting enabled.
 					$cf_admin_notif = get_option( 'cf_admin_notif' );
 					if ( '1' === $cf_admin_notif ) {
-						$users_emails[] = get_option( 'admin_email');
+						$users_emails[] = get_option( 'admin_email' );
 					}
 
 					// Limit the page and site titles for Subject.
-					$p_title    = $this->cf_limit_characters( $p_title, 30 );
 					$site_title = $this->cf_limit_characters( $site_title, 20 );
+					$r_subject  = ! empty( $p_title ) ? $this->cf_limit_characters( $p_title, 30 ) . ' — ' . $site_title : $site_title;
+					$r_subject  = sprintf( __( 'Comment Resolved — %s', 'content-collaboration-inline-commenting' ), $r_subject );
 
-					wp_mail( $users_emails, __( "Comment Resolved — $p_title — $site_title", 'content-collaboration-inline-commenting' ), $html, $headers );
+					wp_mail( $users_emails, $r_subject, $html, $headers );
 				}
 			}
 		}
@@ -629,10 +648,12 @@ class Commenting_block_Admin {
 	 * Convert string to linkable email.
 	 *
 	 * @param string $str Contains the strings that comes from the textarea.
+	 *
 	 * @return string
 	 */
 	public function convert_str_to_email( $str ) {
 		$mail_pattern = "/([A-z0-9\._-]+\@[A-z0-9_-]+\.)([A-z0-9\_\-\.]{1,}[A-z])/";
+
 		return preg_replace( $mail_pattern, '<a href="mailto:$1$2">$1$2</a>', $str );
 	}
 
@@ -640,6 +661,7 @@ class Commenting_block_Admin {
 	 * Sent email to the commented recipients.
 	 *
 	 * @param array $args Contains all keys related to send the email.
+	 *
 	 * @return void
 	 */
 	public function cf_sent_email_to_commented_users( $args ) {
@@ -653,15 +675,15 @@ class Commenting_block_Admin {
 	 */
 	public function cf_add_comment() {
 
-		$commentList = filter_input( INPUT_POST, "commentList" );
-		$commentList = html_entity_decode( $commentList );
-		$commentList = json_decode( $commentList, true );
+		$commentList      = filter_input( INPUT_POST, "commentList" );
+		$commentList      = html_entity_decode( $commentList );
+		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
 
 		// Get the assigned User Email.
 		$user_email = '';
 		$assign_to  = intval( $_POST['assignTo'] ); // get the assign to value
-		if( isset( $assign_to ) && $assign_to > 0 ) {
+		if ( isset( $assign_to ) && $assign_to > 0 ) {
 			$user_data  = get_user_by( 'ID', $assign_to );
 			$user_email = $user_data->user_email;
 		}
@@ -704,26 +726,26 @@ class Commenting_block_Admin {
 
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 			$superCareerData['comments'][ $timestamp ] = $arr;
-			if( $assign_to > 0 ) {
-				$superCareerData['assigned_to']            = $assign_to;
+			if ( $assign_to > 0 ) {
+				$superCareerData['assigned_to'] = $assign_to;
 			}
 		} else {
 			$superCareerData                           = array();
 			$superCareerData['comments'][ $timestamp ] = $arr;
 			$superCareerData['commentedOnText']        = $commentList['commentedOnText'];
-			if( $assign_to > 0 ) {
-				$superCareerData['assigned_to']            = $assign_to;
+			if ( $assign_to > 0 ) {
+				$superCareerData['assigned_to'] = $assign_to;
 			}
 
 			update_post_meta( $current_post_id, 'th' . $metaId, get_current_user_id() );
 		}
 		update_post_meta( $current_post_id, $metaId, $superCareerData );
 
-		$last_index = count($list_of_comments) - 1;
-		$list_of_comments[$last_index]['timestamp'] = $timestamp;
+		$last_index                                   = count( $list_of_comments ) - 1;
+		$list_of_comments[ $last_index ]['timestamp'] = $timestamp;
 
 		// Get assigned user data.
-		$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
+		$user_data   = get_user_by( 'ID', $superCareerData['assigned_to'] );
 		$assigned_to = [
 			'ID'           => $user_data->ID,
 			'display_name' => $user_data->display_name,
@@ -1102,8 +1124,8 @@ class Commenting_block_Admin {
 	 */
 	public function cf_rest_api() {
 		register_rest_route( 'cf', 'cf-get-comments-api', array(
-				'methods'  => 'GET',
-				'callback' => array( $this, 'cf_get_comments' ),
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'cf_get_comments' ),
 				'permission_callback' => '__return_true'
 			)
 		);
@@ -1130,11 +1152,11 @@ class Commenting_block_Admin {
 		foreach ( $comments as $t => $val ) {
 			$user_info    = get_userdata( $val['userData'] );
 			$username     = $user_info->display_name;
-			$user_role   = implode( ', ', $user_info->roles );
+			$user_role    = implode( ', ', $user_info->roles );
 			$profile_url  = get_avatar_url( $user_info->user_email );
 			$thread       = $val['thread'];
 			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
-			$cstatus     = isset( $val['status'] ) ? $val['status'] : '';
+			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
 			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
 
 			$date = gmdate( $time_format . ' ' . $date_format, $t );
@@ -1156,8 +1178,8 @@ class Commenting_block_Admin {
 		}
 
 		// Get assigned user data
-		if( $superCareerData['assigned_to'] > 0 ) {
-			$user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
+		if ( $superCareerData['assigned_to'] > 0 ) {
+			$user_data   = get_user_by( 'ID', $superCareerData['assigned_to'] );
 			$assigned_to = [
 				'ID'           => $user_data->ID,
 				'display_name' => $user_data->display_name,
@@ -1184,22 +1206,22 @@ class Commenting_block_Admin {
 	public function cf_get_user_email_list() {
 		// Get the current post id if not present then return.
 		$post_id = filter_input( INPUT_POST, 'postID', FILTER_SANITIZE_NUMBER_INT );
-		if( $post_id <= 0 ) {
+		if ( $post_id <= 0 ) {
 			return;
 		}
 
 		// WP User Query.
-		$users = new WP_User_Query([
-			'number' => 10,
+		$users = new WP_User_Query( [
+			'number'       => 10,
 			'role__not_in' => 'Subscriber'
-		]);
+		] );
 
 		// Fetch out all user's email.
 		$email_list   = [];
 		$system_users = $users->get_results();
 
 		foreach ( $system_users as $user ) {
-			if( $user->has_cap( 'edit_post', $post_id ) ) {
+			if ( $user->has_cap( 'edit_post', $post_id ) ) {
 				$email_list[] = [
 					'ID'                => $user->ID,
 					'role'              => implode( ', ', $user->roles ),
@@ -1225,23 +1247,23 @@ class Commenting_block_Admin {
 	public function cf_get_matched_user_email_list() {
 		// Get the current post id if not present then return.
 		$post_id = filter_input( INPUT_POST, 'postID', FILTER_SANITIZE_NUMBER_INT );
-		if( $post_id <= 0 ) {
+		if ( $post_id <= 0 ) {
 			return;
 		}
 		$niddle = filter_input( INPUT_POST, 'niddle', FILTER_SANITIZE_STRING );
 		$niddle = substr( $niddle, 1 );
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
-			$users = new WP_User_Query([
+			$users = new WP_User_Query( [
 				'search'         => $niddle . '*',
-				'search_columns' => ['display_name'],
+				'search_columns' => [ 'display_name' ],
 				'role__not_in'   => 'Subscriber'
-			]);
+			] );
 
 			// Fetch out matched user's email.
 			$email_list   = [];
 			$system_users = $users->get_results();
 			foreach ( $system_users as $user ) {
-				if( $user->has_cap( 'edit_post', $post_id ) ) {
+				if ( $user->has_cap( 'edit_post', $post_id ) ) {
 					$email_list[] = [
 						'ID'                => $user->ID,
 						'role'              => implode( ', ', $user->roles ),
@@ -1270,7 +1292,7 @@ class Commenting_block_Admin {
 	 */
 	public function cf_get_assignable_user_list() {
 
-		if( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
+		if ( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
 			return;
 		}
 
@@ -1282,8 +1304,8 @@ class Commenting_block_Admin {
 		$user_emails = array_unique( $matches[0] ); // Remove duplicate entries if any.
 
 		$results = [];
-		if( count( $user_emails ) > 0 ) {
-			foreach( $user_emails as $user_email ) {
+		if ( count( $user_emails ) > 0 ) {
+			foreach ( $user_emails as $user_email ) {
 				$user_data = get_user_by( 'email', $user_email );
 				$results[] = [
 					'ID'           => $user_data->ID,

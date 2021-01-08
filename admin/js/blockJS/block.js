@@ -13,35 +13,14 @@ const $ = jQuery;
 // Window Load functions.
 $(window).on('load', function () {
 
-    // Add history button.
-    var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
-    commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
-
-    const customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
-
-    var loadAttempts = 0;
-    const loadIcons = setInterval(function () {
-        loadAttempts++;
-
-        if (loadAttempts >= 10 || (1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length)) {
-            if (0 === $('.edit-post-header-toolbar__left').length) {
-                $('.edit-post-header-toolbar').append(customButtons);
-            } else {
-                $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
-            }
-        }
-
-        // Stop checking after 3 attempts as WordPress is wiping
-        // out these custom buttons in first few attempts.
-        if (loadAttempts >= 3 && 1 === $('#history-toggle').length) {
-            clearInterval(loadIcons);
-        }
-    }, 2000);
-
     const customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
     $('.edit-post-layout').append(customHistoryPopup);
 
+    // Fetch comments.
     fetchComments();
+
+    // Show setting button.
+    showSettings();
 
     $(document).on('click', '.components-notice__action', function () {
 
@@ -67,6 +46,38 @@ $(window).on('load', function () {
     });
 
 });
+
+// Add history button.
+function showSettings() {
+
+    if( 0 === $('#history-toggle').length ) {
+
+        let commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
+        commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
+
+        const customButtons = '<div class="components-dropdown custom-buttons"><span aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+
+        let loadAttempts = 0;
+        const loadIcons = setInterval(function () {
+            loadAttempts++;
+
+            if (loadAttempts >= 10 || (1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length)) {
+                // Same condition used (#history-toggle.length) as WordPress wipes out it some times.
+                if (0 === $('.edit-post-header-toolbar__left').length) {
+                    $('.edit-post-header-toolbar').append(customButtons);
+                } else {
+                    $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+                }
+            }
+
+            // Stop checking after 3 attempts as WordPress is wiping
+            // out these custom buttons in first few attempts.
+            if (loadAttempts >= 3 && 1 === $('#history-toggle').length) {
+                clearInterval(loadIcons);
+            }
+        }, 2000);
+    }
+}
 
 function fetchComments() {
 
@@ -114,7 +125,7 @@ function fetchComments() {
                 allThreads.push(selectedText);
             });
 
-            var loadAttempts = 0;
+            let loadAttempts = 0;
             const loadComments = setInterval(function () {
                 loadAttempts++;
                 if (1 <= $('#md-span-comments .commentContainer').length) {
@@ -122,11 +133,13 @@ function fetchComments() {
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
                     $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
+                    showSettings(); // Another attempt if setting icon not displayed.
                 }
                 if (loadAttempts >= 10) {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
+                    showSettings(); // Another attempt if setting icon not displayed.
                 }
             }, 1000);
         }

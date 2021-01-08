@@ -12928,35 +12928,14 @@ var $ = jQuery;
 // Window Load functions.
 $(window).on('load', function () {
 
-    // Add history button.
-    var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
-    commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
-
-    var customButtons = '<div class="components-dropdown custom-buttons"><button type="button" aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
-
-    var loadAttempts = 0;
-    var loadIcons = setInterval(function () {
-        loadAttempts++;
-
-        if (loadAttempts >= 10 || 1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length) {
-            if (0 === $('.edit-post-header-toolbar__left').length) {
-                $('.edit-post-header-toolbar').append(customButtons);
-            } else {
-                $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
-            }
-        }
-
-        // Stop checking after 3 attempts as WordPress is wiping
-        // out these custom buttons in first few attempts.
-        if (loadAttempts >= 3 && 1 === $('#history-toggle').length) {
-            clearInterval(loadIcons);
-        }
-    }, 2000);
-
     var customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
     $('.edit-post-layout').append(customHistoryPopup);
 
+    // Fetch comments.
     fetchComments();
+
+    // Show setting button.
+    showSettings();
 
     $(document).on('click', '.components-notice__action', function () {
 
@@ -12979,6 +12958,38 @@ $(window).on('load', function () {
         }
     });
 });
+
+// Add history button.
+function showSettings() {
+
+    if (0 === $('#history-toggle').length) {
+
+        var commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
+        commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
+
+        var customButtons = '<div class="components-dropdown custom-buttons"><span aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+
+        var loadAttempts = 0;
+        var loadIcons = setInterval(function () {
+            loadAttempts++;
+
+            if (loadAttempts >= 10 || 1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length) {
+                // Same condition used (#history-toggle.length) as WordPress wipes out it some times.
+                if (0 === $('.edit-post-header-toolbar__left').length) {
+                    $('.edit-post-header-toolbar').append(customButtons);
+                } else {
+                    $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+                }
+            }
+
+            // Stop checking after 3 attempts as WordPress is wiping
+            // out these custom buttons in first few attempts.
+            if (loadAttempts >= 3 && 1 === $('#history-toggle').length) {
+                clearInterval(loadIcons);
+            }
+        }, 2000);
+    }
+}
 
 function fetchComments() {
 
@@ -13031,11 +13042,13 @@ function fetchComments() {
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
                     $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
+                    showSettings(); // Another attempt if setting icon not displayed.
                 }
                 if (loadAttempts >= 10) {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
+                    showSettings(); // Another attempt if setting icon not displayed.
                 }
             }, 1000);
         }
@@ -13883,7 +13896,6 @@ var Board = function (_React$Component) {
 
             // Reset Comments Float.
             jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-            jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
             jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
             jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
 
@@ -14125,6 +14137,11 @@ var Comment = function (_React$Component) {
                 jQuery.post(ajaxurl, data, function () {
                     jQuery('#' + elIDRemove).remove();
                     jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
+
+                    // Reset Comments Float.
+                    jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
+                    jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
+                    jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
                 });
 
                 // Remove Tag.
@@ -14259,10 +14276,10 @@ var Comment = function (_React$Component) {
                         index === 0 && wp.element.createElement(
                             'div',
                             { className: 'comment-resolve' },
-                            wp.element.createElement('input', { id: "resolve_cb_" + this.props.timestamp + '_' + index, type: 'checkbox', onClick: this.resolve.bind(this), className: 'btn-comment', value: '1' }),
+                            wp.element.createElement('input', { id: "resolve_cb_" + this.props.timestamp + '_' + index, type: 'checkbox', onClick: this.resolve.bind(this), className: 'resolve-cb', value: '1' }),
                             wp.element.createElement(
                                 'label',
-                                { htmlFor: "resolve_cb_" + this.props.timestamp + '_' + index },
+                                { className: 'resolve-label', htmlFor: "resolve_cb_" + this.props.timestamp + '_' + index },
                                 'Mark as a Resolved'
                             )
                         ),
