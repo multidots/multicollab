@@ -625,15 +625,13 @@
     });
 
     // Load.
-    $(window).load(function () {
+    $(window).on( 'load', function () {
         $('.cid_popup_hover').parents('.wp-block.editor-block-list__block.block-editor-block-list__block').addClass('parent_cid_popup_hover');
 
         // Handling Older WordPress Versions.
         // The function wp.data.select("core").getCurrentUser() is not
         // defined for v5.2.2, so getting data from PHP.
-        try {
-            let userID = wp.data.select("core").getCurrentUser().id;
-        } catch (e) {
+        if( 'undefined' === typeof ( wp.data.select("core").getCurrentUser().id ) ) {
             // Fetch User details from AJAX.
             jQuery.post(ajaxurl, {
                 'action': 'cf_get_user'
