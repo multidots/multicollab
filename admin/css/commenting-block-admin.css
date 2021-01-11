@@ -69,7 +69,7 @@ span.user-name{font-weight:700}
 .comment-header .avtar img{max-width:100%;border-radius:50%}
 .comment-header .commenter-name-time{margin-right:0;white-space:nowrap;flex-grow:1;width:60%;width:calc(100% - 130px)}
 #cf-column-img, .column-cb_comments_status .sorting-indicator{top:4px;position:relative;left:-2px}
-.comment-header .commenter-name-time .commenter-name{font-size:15px;line-height:1;white-space:nowrap;text-overflow:ellipsis;margin-bottom:4px;font-weight:500;height:17px}
+.comment-header .commenter-name-time .commenter-name{font-size:15px;line-height:1;white-space:nowrap;text-overflow:ellipsis;margin-bottom:4px;font-weight:500;height:17px;overflow:hidden}
 .comment-header .commenter-name-time .comment-time{font-size:10px;line-height:1.1;font-weight:400}
 .buttons-holder{flex-shrink:0;position:relative;background-color:white}
 .btn-comment, .buttons-holder{opacity:0.3}
@@ -262,7 +262,13 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cf-tabs-main .cf-tabs .cf-tab-active .cf-tab-item{border-bottom-color:#4a1bce;color:#000}
 .cf-tabs-main .cf-tabs-content .cf-video-links{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin:30px 0 0}
 .cf-tabs-main .cf-tabs-content .cf-video-links .cf-link-wrap{margin:10px 30px 10px 0}
+@media (max-width:1280px){
+  #md-comments-suggestions-parent{width:320px}
+  .cls-board-outer{width:260px}
+}
 @media (max-width:1200px){
+  #md-comments-suggestions-parent{width:300px}
+  .cls-board-outer{width:240px}
   .cf-plugin-settings .cf-left{width:66%;padding:0 10px 0 0}
   .cf-plugin-settings .cf-right{width:34%;padding:0 10px}
   .cf-plugin-settings .cf-plugin-header h1{font-size:24px}
