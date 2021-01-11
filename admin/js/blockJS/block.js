@@ -55,7 +55,7 @@ function showSettings() {
         let commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
         commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
 
-        const customButtons = '<div class="components-dropdown custom-buttons"><span aria-expanded="false" class="components-button has-icon" aria-label="Tools"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+        const customButtons = '<div class="components-dropdown custom-buttons"><span aria-expanded="false" class="components-button has-icon" aria-label="Tools" title="Editorial Comments Settings"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
 
         let loadAttempts = 0;
         const loadIcons = setInterval(function () {
