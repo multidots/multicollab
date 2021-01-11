@@ -42,8 +42,8 @@ define( 'COMMENTING_NONCE', 'BFaYbfonJ=n@R<8kId|nN8x #W[-S>1%Sazm%<' );
  * The code that runs during plugin activation.
  * This action is documented in includes/class-commenting-block-activator.php
  */
-function activate_commenting_block() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-activator.php';
+function cf_activate_commenting_block() {
+	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-activator.php';
 	Commenting_block_Activator::activate();
 }
 
@@ -51,19 +51,19 @@ function activate_commenting_block() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-commenting-block-deactivator.php
  */
-function deactivate_commenting_block() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-deactivator.php';
+function cf_deactivate_commenting_block() {
+	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-deactivator.php';
 	Commenting_block_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_commenting_block' );
-register_deactivation_hook( __FILE__, 'deactivate_commenting_block' );
+register_activation_hook( __FILE__, 'cf_activate_commenting_block' );
+register_deactivation_hook( __FILE__, 'cf_deactivate_commenting_block' );
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block.php';
+require COMMENTING_BLOCK_DIR . 'includes/class-commenting-block.php';
 
 /**
  * Begins execution of the plugin.
@@ -74,13 +74,14 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block.php';
  *
  * @since    1.0.0
  */
-function run_commenting_block() {
+function cf_run_commenting_block() {
 
 	$plugin = new Commenting_block();
 	$plugin->run();
 
 }
-run_commenting_block();
+
+cf_run_commenting_block();
 
 /**
  * Redirect after plugin activation.

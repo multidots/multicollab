@@ -12,44 +12,129 @@
 
 class Commenting_Block_Email_Templates {
 
-    /**
-     * Limiting the characters of a string.
-     *
-     * @param string $string The string that is going to be limiting.
-     * @param integer $limit The limiting value.
-     * @return void
-     */
-    public function cf_limit_characters( $string, $limit = 100 ) {
-        return strlen( $string ) > $limit ? substr( $string, 0, $limit ) . '...' : $string;
-    }
+	/**
+	 * Limiting the characters of a string.
+	 *
+	 * @param string $string The string that is going to be limiting.
+	 * @param integer $limit The limiting value.
+	 *
+	 * @return void
+	 */
+	public function cf_limit_characters( $string, $limit = 100 ) {
+		return strlen( $string ) > $limit ? substr( $string, 0, $limit ) . '...' : $string;
+	}
 
-    /**
-     * Add Comment / Reply Comment Email Template.
-     *
-     * @param array $args Contains all keys related to send the email.
-     * @return void
-     */
-    public function cf_add_comment_email_template( $args ) {
-        $current_user_data = get_user_by( 'ID', $args['commenter'] );
-        $thread = '';
-        foreach( $args['list_of_comments'] as $comment ) {
-            if( 'draft' === $comment['status'] ) {
-                $thread .= $comment['thread'];
-            }
-        }
+	/**
+	 * Resolved Thread Email Template.
+	 *
+	 * @param array $args Data to be used in the template.
+	 *
+	 * @return void
+	 */
+	public function cf_email_resolved_thread( $args ) {
+		$html                      = $args['html'];
+		$comments                  = $args['list_of_comments'];
+		$site_title                = $args['site_title'];
+		$commented_on_text                = $args['commented_on_text'];
+		$current_user_email        = $args['current_user_email'];
+		$current_user_display_name = $args['current_user_display_name'];
 
-        $pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
-        preg_match_all( $pattern, $thread, $matches );
-        $email_list = array_unique( $matches[0] );
+		if ( ! empty( $comments ) && is_array( $comments ) ) {
 
-        if( ! empty( $args['list_of_comments'] ) ) {
-            $comment_list_html = '<ul class="comment-list">';
-            foreach( $args['list_of_comments'] as $comment ) {
-                $user_ID = $comment['userData'];
-	            if ( isset( $comment['status'] ) && 'permanent_draft' !== $comment['status'] && 'deleted' !== $comment['status'] && 'draft' !== $comment['status'] ) {
-                    $user_data = get_user_by( 'ID', $user_ID );
-                    $user_role = ucwords( implode( ', ', $user_data->roles ) );
-                    $comment_list_html .= "
+			$users_emails = array();
+			$headers      = array( 'Content-Type: text/html; charset=UTF-8' );
+			$html .= "<div class='commented_text'>" . $commented_on_text . "</div>";
+			$html .= '<ul class="comment-list">';
+
+			foreach ( $comments as $timestamp => $arr ) {
+
+				if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] && 'draft' !== $arr['status'] ) {
+					$user_info      = get_userdata( $arr['userData'] );
+					$username       = $user_info->display_name;
+					$user_role      = implode( ', ', $user_info->roles );
+					$users_emails[] = $user_info->user_email;
+					$profile_url    = get_avatar_url( $user_info->user_email );
+					$text_comment   = wp_kses( $arr['thread'], wp_kses_allowed_html( 'post' ) );
+
+					$html .= "<li>
+										<div class='comment-box-wrap'>
+										<div class='avtar'><img src='" . esc_url( $profile_url ) . "' alt='avatar' /></div>
+											<div class='comment-details'>
+												<div class='commenter-name-role'>
+													<h3 class='commenter-name'>" . esc_html( $username ) . "</h3>
+													<span class='commenter-role'>( " . esc_html( ucwords( $user_role ) ) . " )</span>
+												</div>
+												<div class='comment'>" . $text_comment . "</div>
+											</div>
+										</div>
+									   </li>";
+				}
+			}
+			$html .= '</ul>';
+			$html .= '<div class="cf-marked-resolved-by">';
+			$html .= '<span class="icon-resolved"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+							  <g id="Group_22" data-name="Group 22" transform="translate(1 1)">
+							    <circle id="Ellipse_4" data-name="Ellipse 4" cx="10" cy="10" r="10" fill="none" stroke="#6ac359" stroke-width="2"/>
+							    <path id="Path_7" data-name="Path 7" d="M93.92,119.6l-3.593-3.664,1.353-1.327,2.252,2.3,5.621-5.621,1.34,1.34Z" transform="translate(-85.327 -105.288)" fill="#6ac359"/>
+							  </g>
+							</svg></span>';
+			$html .= __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank"> ' . esc_html( $current_user_display_name ) . ' </a>' . '</div>';
+			$html .= '</div>'; // .comment-box-body end
+			$html .= '</div>'; // .comment-box end
+
+			$users_emails = array_unique( $users_emails );
+			if ( ( $key = array_search( $current_user_email, $users_emails, true ) ) !== false ) {
+				unset( $users_emails[ $key ] );
+			}
+
+			// Notify Site Admin if setting enabled.
+			$users_emails = $this->cf_email_notify_siteadmin( $users_emails );
+
+			// Limit the page and site titles for Subject.
+			$site_title = $this->cf_limit_characters( $site_title, 20 );
+			$r_subject  = ! empty( $p_title ) ? $this->cf_limit_characters( $p_title, 30 ) . ' — ' . $site_title : $site_title;
+			$r_subject  = sprintf( __( 'Comment Resolved — %s', 'content-collaboration-inline-commenting' ), $r_subject );
+
+			wp_mail( $users_emails, $r_subject, $html, $headers );
+		}
+	}
+
+	private function cf_email_notify_siteadmin( $users_emails ) {
+		$cf_admin_notif = get_option( 'cf_admin_notif' );
+		if ( '1' === $cf_admin_notif ) {
+			$users_emails[] = get_option( 'admin_email' );
+		}
+		return $users_emails;
+	}
+
+	/**
+	 * Add Comment / Reply Comment Email Template.
+	 *
+	 * @param array $args Contains all keys related to send the email.
+	 *
+	 * @return void
+	 */
+	public function cf_email_new_comments( $args ) {
+		$current_user_data = get_user_by( 'ID', $args['commenter'] );
+		$thread            = '';
+		foreach ( $args['list_of_comments'] as $comment ) {
+			if ( 'draft' === $comment['status'] ) {
+				$thread .= $comment['thread'];
+			}
+		}
+
+		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
+		preg_match_all( $pattern, $thread, $matches );
+		$email_list = array_unique( $matches[0] );
+
+		if ( ! empty( $args['list_of_comments'] ) ) {
+			$comment_list_html = '<ul class="comment-list">';
+			foreach ( $args['list_of_comments'] as $comment ) {
+				$user_ID = $comment['userData'];
+				if ( isset( $comment['status'] ) && 'permanent_draft' !== $comment['status'] && 'deleted' !== $comment['status'] && 'draft' !== $comment['status'] ) {
+					$user_data         = get_user_by( 'ID', $user_ID );
+					$user_role         = ucwords( implode( ', ', $user_data->roles ) );
+					$comment_list_html .= "
                     <li>
                         <div class='comment-box-wrap'>
                             <div class='avtar'>
@@ -60,20 +145,20 @@ class Commenting_Block_Email_Templates {
                                     <h3 class='commenter-name'>" . esc_html( $user_data->display_name ) . "</h3>
                                     <span class='commenter-role'>( " . esc_html( $user_role ) . " )</span>
                                 </div>
-                                <div class='comment'>".wp_kses( $comment['thread'], wp_kses_allowed_html( 'post' ) )."</div>
+                                <div class='comment'>" . wp_kses( $comment['thread'], wp_kses_allowed_html( 'post' ) ) . "</div>
                             </div>
                         </div>
                     </li>
                 ";
-                }
-            }
-            $comment_list_html .= '</ul>';
-        }
+				}
+			}
+			$comment_list_html .= '</ul>';
+		}
 
-        $assigned_to_who = '';
-        if( ! empty( $args['assign_to'] ) ) {
-            $assinged_user   = get_user_by( 'ID', $args['assign_to'] );
-            $assigned_to_who = "
+		$assigned_to_who = '';
+		if ( ! empty( $args['assign_to'] ) ) {
+			$assinged_user   = get_user_by( 'ID', $args['assign_to'] );
+			$assigned_to_who = "
                 <div class='comment-assigned-to'>
                     <span class='icon-assign'>
                         <svg id='Group_31' data-name='Group 31' xmlns='http://www.w3.org/2000/svg' width='19.644' height='20' viewBox='0 0 19.644 20'>
@@ -88,55 +173,22 @@ class Commenting_Block_Email_Templates {
                             </g>
                         </svg>
                     </span>
-                    Assigned to <a href='mailto:".sanitize_email( $assinged_user->user_email )."' title='".esc_attr( $assinged_user->display_name )."' class='commenter-name'>@".esc_html( $assinged_user->display_name )."</a>
+                    Assigned to <a href='mailto:" . sanitize_email( $assinged_user->user_email ) . "' title='" . esc_attr( $assinged_user->display_name ) . "' class='commenter-name'>@" . esc_html( $assinged_user->display_name ) . "</a>
                 </div>
             ";
-        }
+		}
 
-        $template = "
-            <style>
-                .comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
-                .comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
-                .comment-box a{color:#4B1BCE;text-decoration:none;}
-                .comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-                .comment-box .comment-box-header p{margin:0 0 20px;}
-                .comment-box .comment-box-header .comment-page-title{font-size:20px;margin:0;}
-                .comment-box .comment-box-header a{color:#4B1BCE;display:inline-block;}
-                .comment-box .comment-page-title a{text-decoration:underline;font-size:20px;}
-                .comment-box .comment-box-wrap{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-                .comment-box .comment-box-wrap:last-child{margin-bottom:0;}
-                .comment-box .avtar{width:40px;margin-right:10px;}
-                .comment-box .avtar img{max-width:100%;border-radius:50%;}
-                .comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-                .comment-box .comment-box-wrap .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-                .comment-box .comment-box-wrap .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin:0 7px 0 0;color:#141414;font-weight:600;}
-                .comment-box .comment-box-wrap .commenter-role{font-size:14px;font-weight:400;font-family:Arial,serif;color:#4C5056;margin-right:10px;}
-                .comment-box .comment{font-family:Arial,serif;font-size:14px;color:#4C5056;}
-                .comment-box .comment-box-body{border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-                .comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;}
-                .comment-box .comment-assigned-to{margin-bottom:20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-                .comment-box .comment-assigned-to .commenter-name{color:#4B1BCE;margin-left:5px;}
-                .comment-box .comment-assigned-to .icon-assign{margin-right:5px;line-height:1;}
-                .comment-box ul{margin:0 0 20px;padding:0;list-style:none;}
-                .comment-box ul li{margin-bottom:20px;}
-                .comment-box ul li:last-child{margin-bottom:10px;}
-                .comment-box .head-with-icon{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;}
-                .comment-box .head-with-icon .icon-comment{margin-right:10px;line-height:1;}
-                .comment-box .head-with-icon .icon-resolved{margin-right:10px;}
-                .comment-box .head-with-icon h3{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-                .comment-box .cf-marked-resolved-by{margin:0 10px 20px 0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-                .comment-box .cf-marked-resolved-by .icon-resolved{margin-right:5px;line-height:1;}
-                .comment-box .cf-marked-resolved-by a{margin-left:5px;}
-                .comment-box.new-comment .comment-list li:last-child .commenter-name-role:after{content:'New';padding:5px 10px;background-color:#4B1BCE;color:#fff;font-size:12px;}
-                .comment-box .view_reply{margin:10px 0;}
-                .comment-box .view_reply_btn{display:inline-block;padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;}
-                .comment-box .view_reply_btn a{text-decoration:underline;color:#fff;}
-                @media (max-width:1400px){.comment-box{width:90%;}}
-            </style>
+		$template = $args['html']; /*Common CSS added*/
+		$template .= "
             <div class='comment-box new-comment'>
                 <div class='comment-box-header'>
-                    <p><span class='commenter-name'>".esc_html( $current_user_data->display_name )."</span> - mentioned you in a comment in the following page.</p>
-                    <h2 class='comment-page-title'><a href='".esc_url( $args['post_edit_link'] )."' target='_blank'>".esc_html( $args['post_title'] )."</a></h2>
+                    <p><span class='commenter-name'>".esc_html( $current_user_data->display_name )."</span> - mentioned you in a comment in the following page.</p>";
+
+		if( empty( $args['post_title'] ) ) {
+			$template .= "<h2 class='comment-page-title'><a href='".esc_url( $args['post_edit_link'] )."' target='_blank'>".esc_html( $args['post_title'] )."</a></h2>";
+		}
+
+		$template .= "
                 </div>
                 <div class='comment-box-body'>
                     <h2 class='head-with-icon'>
@@ -149,47 +201,44 @@ class Commenting_Block_Email_Templates {
                         </span>
                         Comments
                     </h2>
-                    <div class='commented_text'>".esc_html( $args['commented_text'] )."</div>
+                    <div class='commented_text'>" . esc_html( $args['commented_text'] ) . "</div>
                     {$assigned_to_who}
                     {$comment_list_html}
                     <div class='view_reply'>
-                        <div class='view_reply_btn'><a href='".esc_url( $args['post_edit_link'] )."'>Click here</a> - View or reply to this comment</div>
+                        <div class='view_reply_btn'><a href='" . esc_url( $args['post_edit_link'] ) . "'>Click here</a> - View or reply to this comment</div>
                     </div>
                 </div>
             </div>
         ";
 
-        // Limit the page and site titles for Subject.
-        $post_title = $this->cf_limit_characters( $args['post_title'], 30 );
-        $site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
+		// Limit the page and site titles for Subject.
+		$post_title = $this->cf_limit_characters( $args['post_title'], 30 );
+		$site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
 
-        //    if( ! empty( $args['assign_to'] ) ) {
-        //        $key = array_search( $args['assign_to'], $email_list, true );
-        //        unset( $email_list[$key] );
-        //    }
+		//    if( ! empty( $args['assign_to'] ) ) {
+		//        $key = array_search( $args['assign_to'], $email_list, true );
+		//        unset( $email_list[$key] );
+		//    }
 
-        // Notify Site Admin if setting enabled.
-        $cf_admin_notif = get_option( 'cf_admin_notif' );
+		// Notify Site Admin if setting enabled.
+		$email_list = $this->cf_email_notify_siteadmin( $email_list );
 
-        if ( ! empty( $email_list ) ) {
-            $to      = $email_list;
-            $subject = "New Comment - ".esc_html( $post_title )." - ".esc_html( $site_name );
-            $body    = $template;
-            $headers = 'Content-Type: text/html; charset=UTF-8';
-            // Add admin email to notify when email is sent.
-            if ( '1' === $cf_admin_notif ) {
-                $to[] = get_option( 'admin_email');
-            }
-            wp_mail( $to, $subject, $body, $headers );
-        }
+		if ( ! empty( $email_list ) ) {
+			$to      = $email_list;
+			$subject = "New Comment - " . esc_html( $post_title ) . " - " . esc_html( $site_name );
+			$body    = $template;
+			$headers = 'Content-Type: text/html; charset=UTF-8';
 
-        if( ! empty( $assinged_user ) ) {
-            $assign_to      = $assinged_user->user_email;
-            $assign_subject = "Assigned to you - ".esc_html( $post_title );
-            $assign_body    = $template;
-            $headers        = 'Content-Type: text/html; charset=UTF-8';
-            wp_mail( $assign_to, $assign_subject, $assign_body, $headers );
-        }
-    }
+			wp_mail( $to, $subject, $body, $headers );
+		}
+
+		if ( ! empty( $assinged_user ) ) {
+			$assign_to      = $assinged_user->user_email;
+			$assign_subject = "Assigned to you - " . esc_html( $post_title );
+			$assign_body    = $template;
+			$headers        = 'Content-Type: text/html; charset=UTF-8';
+			wp_mail( $assign_to, $assign_subject, $assign_body, $headers );
+		}
+	}
 }
 

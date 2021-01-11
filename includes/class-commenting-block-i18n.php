@@ -36,7 +36,7 @@ class Commenting_block_i18n {
 		load_plugin_textdomain(
 			'COMMENTING_BLOCK',
 			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+			dirname( dirname( COMMENTING_BLOCK_BASE ) ) . '/languages/'
 		);
 
 	}
