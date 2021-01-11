@@ -300,6 +300,12 @@ class Commenting_block_Admin {
 		$p_title    = get_the_title( $post_ID );
 		$site_title = get_bloginfo( 'name' );
 
+		// Get current user details.
+		$curr_user                 = wp_get_current_user();
+		$user_id                   = $curr_user->ID;
+		$current_user_email        = $curr_user->user_email;
+		$current_user_display_name = $curr_user->display_name;
+
 		// Publish drafts from the 'current_drafts' stack.
 		$current_drafts    = $metas['current_drafts'][0];
 		$current_drafts    = maybe_unserialize( $current_drafts );
@@ -311,11 +317,6 @@ class Commenting_block_Admin {
 		// Mark Resolved Threads.
 		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
 			$resolved_drafts = $current_drafts['resolved'];
-
-			// Get current user details.
-			$curr_user                 = wp_get_current_user();
-			$current_user_email        = $curr_user->user_email;
-			$current_user_display_name = $curr_user->display_name;
 
 			// Add common CSS for email templates.
 			$html = $this->cf_email_add_commmon_css();
@@ -337,25 +338,25 @@ class Commenting_block_Admin {
 				$prev_state                       = maybe_unserialize( $prev_state );
 				$prev_state['resolved']           = 'true';
 				$prev_state['resolved_timestamp'] = $current_timestamp;
-				$prev_state['resolved_by']        = get_current_user_id();
+				$prev_state['resolved_by']        = $user_id;
 				update_post_meta( $post_ID, $el, $prev_state );
 
 				// Send Email.
 				$comments          = $metas[ $el ][0];
 				$comments          = maybe_unserialize( $comments );
 				$commented_on_text = $comments['commentedOnText'];
-				$comments          = isset( $comments['comments'] ) ? $comments['comments'] : '';
+				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
+
 
 				// Notify users about the resolved thread.
 				$this->email_class->cf_email_resolved_thread( array(
 					'html'                      => $html,
 					'post_title'                => $p_title,
-					'post_edit_link'            => $p_link,
 					'site_title'                => $site_title,
 					'current_user_email'        => $current_user_email,
 					'current_user_display_name' => $current_user_display_name,
 					'commented_on_text'         => $commented_on_text,
-					'list_of_comments'          => $comments
+					'list_of_comments'          => $list_of_comments
 				) );
 			}
 		}
@@ -394,14 +395,15 @@ class Commenting_block_Admin {
 
 					// Send email to the commented recipients.
 					$this->email_class->cf_email_new_comments( array(
-						'html'             => $html,
-						'site_name'        => get_bloginfo( 'name' ),
-						'commenter'        => get_current_user_id(),
-						'post_title'       => $p_title,
-						'post_edit_link'   => $p_link,
-						'commented_text'   => $commented_on_text,
-						'list_of_comments' => $list_of_comments,
-						'assign_to'        => $assigned_to
+						'html'                      => $html,
+						'post_title'                => $p_title,
+						'post_edit_link'            => $p_link,
+						'site_title'                => $site_title,
+						'commented_on_text'         => $commented_on_text,
+						'list_of_comments'          => $list_of_comments,
+						'current_user_email'        => $current_user_email,
+						'current_user_display_name' => $current_user_display_name,
+						'assign_to'                 => $assigned_to
 					) );
 				}
 			}

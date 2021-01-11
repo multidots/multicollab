@@ -33,20 +33,21 @@ class Commenting_Block_Email_Templates {
 	 */
 	public function cf_email_resolved_thread( $args ) {
 		$html                      = $args['html'];
-		$comments                  = $args['list_of_comments'];
+		$list_of_comments          = $args['list_of_comments'];
+		$p_title                   = $args['post_title'];
 		$site_title                = $args['site_title'];
-		$commented_on_text                = $args['commented_on_text'];
+		$commented_on_text         = $args['commented_on_text'];
 		$current_user_email        = $args['current_user_email'];
 		$current_user_display_name = $args['current_user_display_name'];
 
-		if ( ! empty( $comments ) && is_array( $comments ) ) {
+		if ( ! empty( $list_of_comments ) && is_array( $list_of_comments ) ) {
 
 			$users_emails = array();
 			$headers      = array( 'Content-Type: text/html; charset=UTF-8' );
-			$html .= "<div class='commented_text'>" . $commented_on_text . "</div>";
-			$html .= '<ul class="comment-list">';
+			$html         .= "<div class='commented_text'>" . $commented_on_text . "</div>";
+			$html         .= '<ul class="comment-list">';
 
-			foreach ( $comments as $timestamp => $arr ) {
+			foreach ( $list_of_comments as $timestamp => $arr ) {
 
 				if ( isset( $arr['status'] ) && 'permanent_draft' !== $arr['status'] && 'draft' !== $arr['status'] ) {
 					$user_info      = get_userdata( $arr['userData'] );
@@ -91,19 +92,39 @@ class Commenting_Block_Email_Templates {
 			$users_emails = $this->cf_email_notify_siteadmin( $users_emails );
 
 			// Limit the page and site titles for Subject.
-			$site_title = $this->cf_limit_characters( $site_title, 20 );
-			$r_subject  = ! empty( $p_title ) ? $this->cf_limit_characters( $p_title, 30 ) . ' — ' . $site_title : $site_title;
-			$r_subject  = sprintf( __( 'Comment Resolved — %s', 'content-collaboration-inline-commenting' ), $r_subject );
+			$r_subject = $this->cf_email_prepare_subject( 'Comment Resolved', $p_title, $site_title );
 
 			wp_mail( $users_emails, $r_subject, $html, $headers );
 		}
 	}
 
+	/**
+	 * Prepare Subject line and limit the page and site titles for Subject.
+	 *
+	 * @param string $pre_subject The subject prefix.
+	 * @param string $p_title The post title.
+	 * @param string $site_title The site title.
+	 *
+	 * @return string The subject for email.
+	 */
+	private function cf_email_prepare_subject( $pre_subject, $p_title, $site_title ) {
+		$site_title   = $this->cf_limit_characters( $site_title, 20 );
+		$post_subject = ! empty( $p_title ) ? $this->cf_limit_characters( $p_title, 30 ) . ' — ' . $site_title : $site_title;
+
+		return sprintf( __( '%s — %s', 'content-collaboration-inline-commenting' ), $pre_subject, $post_subject );
+	}
+
+	/**
+	 * @param array $users_emails List of emails.
+	 *
+	 * @return array Updated list of emails.
+	 */
 	private function cf_email_notify_siteadmin( $users_emails ) {
 		$cf_admin_notif = get_option( 'cf_admin_notif' );
 		if ( '1' === $cf_admin_notif ) {
 			$users_emails[] = get_option( 'admin_email' );
 		}
+
 		return $users_emails;
 	}
 
@@ -115,9 +136,18 @@ class Commenting_Block_Email_Templates {
 	 * @return void
 	 */
 	public function cf_email_new_comments( $args ) {
-		$current_user_data = get_user_by( 'ID', $args['commenter'] );
-		$thread            = '';
-		foreach ( $args['list_of_comments'] as $comment ) {
+		$html                      = $args['html'];
+		$list_of_comments          = $args['list_of_comments'];
+		$p_title                   = $args['post_title'];
+		$post_edit_link            = $args['post_edit_link'];
+		$site_title                = $args['site_title'];
+		$commented_on_text         = $args['commented_on_text'];
+		$current_user_email        = $args['current_user_email'];
+		$current_user_display_name = $args['current_user_display_name'];
+		$assign_to                 = $args['assign_to'];
+
+		$thread = '';
+		foreach ( $list_of_comments as $comment ) {
 			if ( 'draft' === $comment['status'] ) {
 				$thread .= $comment['thread'];
 			}
@@ -127,9 +157,9 @@ class Commenting_Block_Email_Templates {
 		preg_match_all( $pattern, $thread, $matches );
 		$email_list = array_unique( $matches[0] );
 
-		if ( ! empty( $args['list_of_comments'] ) ) {
+		if ( ! empty( $list_of_comments ) ) {
 			$comment_list_html = '<ul class="comment-list">';
-			foreach ( $args['list_of_comments'] as $comment ) {
+			foreach ( $list_of_comments as $comment ) {
 				$user_ID = $comment['userData'];
 				if ( isset( $comment['status'] ) && 'permanent_draft' !== $comment['status'] && 'deleted' !== $comment['status'] && 'draft' !== $comment['status'] ) {
 					$user_data         = get_user_by( 'ID', $user_ID );
@@ -156,8 +186,8 @@ class Commenting_Block_Email_Templates {
 		}
 
 		$assigned_to_who = '';
-		if ( ! empty( $args['assign_to'] ) ) {
-			$assinged_user   = get_user_by( 'ID', $args['assign_to'] );
+		if ( ! empty( $assign_to ) ) {
+			$assinged_user   = get_user_by( 'ID', $assign_to );
 			$assigned_to_who = "
                 <div class='comment-assigned-to'>
                     <span class='icon-assign'>
@@ -178,17 +208,16 @@ class Commenting_Block_Email_Templates {
             ";
 		}
 
-		$template = $args['html']; /*Common CSS added*/
-		$template .= "
+		$html .= "
             <div class='comment-box new-comment'>
                 <div class='comment-box-header'>
-                    <p><span class='commenter-name'>".esc_html( $current_user_data->display_name )."</span> - mentioned you in a comment in the following page.</p>";
+                    <p><span class='commenter-name'>" . esc_html( $current_user_display_name ) . "</span> - mentioned you in a comment in the following page.</p>";
 
-		if( empty( $args['post_title'] ) ) {
-			$template .= "<h2 class='comment-page-title'><a href='".esc_url( $args['post_edit_link'] )."' target='_blank'>".esc_html( $args['post_title'] )."</a></h2>";
+		if ( empty( $args['post_title'] ) ) {
+			$html .= "<h2 class='comment-page-title'><a href='" . esc_url( $post_edit_link ) . "' target='_blank'>" . esc_html( $p_title ) . "</a></h2>";
 		}
 
-		$template .= "
+		$html .= "
                 </div>
                 <div class='comment-box-body'>
                     <h2 class='head-with-icon'>
@@ -201,43 +230,35 @@ class Commenting_Block_Email_Templates {
                         </span>
                         Comments
                     </h2>
-                    <div class='commented_text'>" . esc_html( $args['commented_text'] ) . "</div>
+                    <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who}
                     {$comment_list_html}
                     <div class='view_reply'>
-                        <div class='view_reply_btn'><a href='" . esc_url( $args['post_edit_link'] ) . "'>Click here</a> - View or reply to this comment</div>
+                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>Click here</a> - View or reply to this comment</div>
                     </div>
                 </div>
             </div>
         ";
 
-		// Limit the page and site titles for Subject.
-        $post_title = strlen( $args['post_title'] ) > 30 ? substr( $args['post_title'], 0, 30 ) . '...': $args['post_title'];
-        $site_name  = strlen( $args['site_name'] ) > 20 ? substr( $args['site_name'], 0, 20 ) . '...'  : $args['site_name'];
-
-		//    if( ! empty( $args['assign_to'] ) ) {
-		//        $key = array_search( $args['assign_to'], $email_list, true );
-		//        unset( $email_list[$key] );
-		//    }
-
 		// Notify Site Admin if setting enabled.
 		$email_list = $this->cf_email_notify_siteadmin( $email_list );
 
+		$headers = 'Content-Type: text/html; charset=UTF-8';
 		if ( ! empty( $email_list ) ) {
-			$to      = $email_list;
-			$subject = "New Comment - " . esc_html( $post_title ) . " - " . esc_html( $site_name );
-			$body    = $template;
-			$headers = 'Content-Type: text/html; charset=UTF-8';
 
-			wp_mail( $to, $subject, $body, $headers );
+			// Limit the page and site titles for Subject.
+			$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+
+			wp_mail( $email_list, $subject, $html, $headers );
 		}
 
 		if ( ! empty( $assinged_user ) ) {
-			$assign_to      = $assinged_user->user_email;
-			$assign_subject = "Assigned to you - " . esc_html( $post_title );
-			$assign_body    = $template;
-			$headers        = 'Content-Type: text/html; charset=UTF-8';
-			wp_mail( $assign_to, $assign_subject, $assign_body, $headers );
+			$assign_to = $assinged_user->user_email;
+
+			// Limit the page and site titles for Subject.
+			$subject = $this->cf_email_prepare_subject( 'Assigned to you', $p_title, $site_title );
+
+			wp_mail( $assign_to, $subject, $html, $headers );
 		}
 	}
 }
