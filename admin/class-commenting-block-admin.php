@@ -626,19 +626,6 @@ class Commenting_block_Admin {
 	}
 
 	/**
-	 * Convert string to linkable email.
-	 *
-	 * @param string $str Contains the strings that comes from the textarea.
-	 *
-	 * @return string
-	 */
-	public function convert_str_to_email( $str ) {
-		$mail_pattern = "/([A-z0-9\._-]+\@[A-z0-9_-]+\.)([A-z0-9\_\-\.]{1,}[A-z])/";
-
-		return preg_replace( $mail_pattern, '<a href="mailto:$1$2">$1$2</a>', $str );
-	}
-
-	/**
 	 * Sent email to the commented recipients.
 	 *
 	 * @param array $args Contains all keys related to send the email.
