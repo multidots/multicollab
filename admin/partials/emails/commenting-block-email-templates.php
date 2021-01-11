@@ -212,8 +212,8 @@ class Commenting_Block_Email_Templates {
         ";
 
 		// Limit the page and site titles for Subject.
-		$post_title = $this->cf_limit_characters( $args['post_title'], 30 );
-		$site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
+        $post_title = strlen( $args['post_title'] ) > 30 ? substr( $args['post_title'], 0, 30 ) . '...': $args['post_title'];
+        $site_name  = strlen( $args['site_name'] ) > 20 ? substr( $args['site_name'], 0, 20 ) . '...'  : $args['site_name'];
 
 		//    if( ! empty( $args['assign_to'] ) ) {
 		//        $key = array_search( $args['assign_to'], $email_list, true );
