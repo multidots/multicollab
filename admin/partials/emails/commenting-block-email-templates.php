@@ -46,7 +46,7 @@ class Commenting_Block_Email_Templates {
             $comment_list_html = '<ul class="comment-list">';
             foreach( $args['list_of_comments'] as $comment ) {
                 $user_ID = $comment['userData'];
-	            if ( isset( $comment['status'] ) && 'permanent_draft' !== $comment['status'] && 'deleted' !== $comment['status'] ) {
+	            if ( isset( $comment['status'] ) && 'permanent_draft' !== $comment['status'] && 'deleted' !== $comment['status'] && 'draft' !== $comment['status'] ) {
                     $user_data = get_user_by( 'ID', $user_ID );
                     $user_role = ucwords( implode( ', ', $user_data->roles ) );
                     $comment_list_html .= "

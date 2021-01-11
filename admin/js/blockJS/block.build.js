@@ -14309,24 +14309,15 @@ var Comment = function (_React$Component) {
                             { className: 'commenter-name-time' },
                             wp.element.createElement(
                                 'div',
-                                { className: 'commenter-name' },
+                                { className: 'commenter-name', title: this.props.userName + ' ( ' + this.props.userRole + ' )' },
                                 this.props.userName,
+                                ' ',
                                 wp.element.createElement(
-                                    'div',
-                                    { className: 'tooltip' },
-                                    wp.element.createElement(
-                                        'small',
-                                        null,
-                                        '(',
-                                        userRolePartial,
-                                        ')'
-                                    ),
-                                    wp.element.createElement(
-                                        'span',
-                                        { className: 'top' },
-                                        this.props.userRole,
-                                        wp.element.createElement('i', null)
-                                    )
+                                    'small',
+                                    null,
+                                    '(',
+                                    userRolePartial,
+                                    ')'
                                 )
                             ),
                             wp.element.createElement(
@@ -14398,24 +14389,15 @@ var Comment = function (_React$Component) {
                             { className: 'commenter-name-time' },
                             wp.element.createElement(
                                 'div',
-                                { className: 'commenter-name' },
+                                { className: 'commenter-name', title: this.props.userName + ' ( ' + this.props.userRole + ' )' },
                                 this.props.userName,
+                                ' ',
                                 wp.element.createElement(
-                                    'div',
-                                    { className: 'tooltip' },
-                                    wp.element.createElement(
-                                        'small',
-                                        null,
-                                        '(',
-                                        userRolePartial,
-                                        ')'
-                                    ),
-                                    wp.element.createElement(
-                                        'span',
-                                        { className: 'top' },
-                                        this.props.userRole,
-                                        wp.element.createElement('i', null)
-                                    )
+                                    'small',
+                                    null,
+                                    '(',
+                                    userRolePartial,
+                                    ')'
                                 )
                             ),
                             wp.element.createElement(

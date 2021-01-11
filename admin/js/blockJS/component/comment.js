@@ -228,12 +228,8 @@ export default class Comment extends React.Component {
                         </div>
                         }
                         <div className="commenter-name-time">
-                            <div className="commenter-name">
-                                {this.props.userName}
-                                <div className="tooltip">
-                                    <small>({ userRolePartial })</small>
-                                    <span className="top">{ this.props.userRole }<i></i></span>
-                                </div>
+                            <div className="commenter-name" title={ `${this.props.userName} ( ${this.props.userRole} )` }>
+                                {this.props.userName} <small>({ userRolePartial })</small>
                             </div>
                             <div className="comment-time">{this.props.dateTime}</div>
                         </div>
@@ -264,12 +260,8 @@ export default class Comment extends React.Component {
                     <div className="comment-details">
                         <div className="avtar"><img src={this.props.profileURL} alt="avatar"/></div>
                         <div className="commenter-name-time">
-                            <div className="commenter-name">
-                                {this.props.userName}
-                                <div className="tooltip">
-                                    <small>({ userRolePartial })</small>
-                                    <span className="top">{ this.props.userRole }<i></i></span>
-                                </div>
+                            <div className="commenter-name" title={ `${this.props.userName} ( ${this.props.userRole} )` }>
+                                {this.props.userName} <small>({ userRolePartial })</small>
                             </div>
                             <div className="comment-time">{this.props.dateTime}</div>
                         </div>

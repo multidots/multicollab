@@ -1277,54 +1277,6 @@ body.hide-comments .block-editor-writing-flow {
     font-weight: 600;
     padding: 0;
 }
-.tooltip {
-    display:inline-block;
-    position:relative;
-    border-bottom:1px dotted #666;
-    text-align:left;
-    margin-left: 2px;
-}
-.tooltip .top {
-    width: auto;
-    height: auto;
-    top: -10px;
-    left: 50%;
-    transform: translate(-30%,-100%);
-    padding: 10px 20px;
-    color: #ffffff;
-    background-color: rgba( 0,0,0,0.8 );
-    font-weight: normal;
-    font-size: 14px;
-    border-radius: 5px;
-    position: absolute;
-    z-index: 99999999;
-    box-sizing: border-box;
-    box-shadow: 0 1px 5px 0px rgba(0,0,0,0.1);
-    display: none;
-}
-.tooltip:hover .top {
-    display:block;
-    text-transform: capitalize;
-}
-.tooltip .top i {
-    position:absolute;
-    top:100%;
-    left:30%;
-    margin-left:-15px;
-    width:30px;
-    height:15px;
-    overflow:hidden;
-}
-.tooltip .top i::after {
-    content:'';
-    position:absolute;
-    width:15px;
-    height:15px;
-    left:50%;
-    transform:translate(-50%,-50%) rotate(45deg);
-    background-color: rgba( 0,0,0,0.8 );
-    box-shadow: 0 1px 5px 0px rgba(0,0,0,0.1);
-}
 .readmoreComment,
 .readlessComment {
     text-decoration: underline;
