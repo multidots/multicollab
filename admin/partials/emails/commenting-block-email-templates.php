@@ -11,18 +11,6 @@
  */
 
 class Commenting_Block_Email_Templates {
-
-    /**
-     * Limiting the characters of a string.
-     *
-     * @param string $string The string that is going to be limiting.
-     * @param integer $limit The limiting value.
-     * @return void
-     */
-    public function cf_limit_characters( $string, $limit = 100 ) {
-        return strlen( $string ) > $limit ? substr( $string, 0, $limit ) . '...' : $string;
-    }
-
     /**
      * Add Comment / Reply Comment Email Template.
      *
@@ -160,8 +148,8 @@ class Commenting_Block_Email_Templates {
         ";
 
         // Limit the page and site titles for Subject.
-        $post_title = $this->cf_limit_characters( $args['post_title'], 30 );
-        $site_name  = $this->cf_limit_characters( $args['site_name'], 20 );
+        $post_title = strlen( $args['post_title'] ) > 30 ? substr( $args['post_title'], 0, 30 ) . '...': $args['post_title'];
+        $site_name  = strlen( $args['site_name'] ) > 20 ? substr( $args['site_name'], 0, 20 ) . '...'  : $args['site_name'];
 
         //    if( ! empty( $args['assign_to'] ) ) {
         //        $key = array_search( $args['assign_to'], $email_list, true );
