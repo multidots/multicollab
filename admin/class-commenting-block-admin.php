@@ -461,26 +461,25 @@ class Commenting_block_Admin {
 					}
 					update_post_meta( $post_ID, $el, $prev_state );
 
-					// Send Email.
-					$comments = $metas[ $el ][0];
-					$comments = maybe_unserialize( $comments );
-					$comments = isset( $comments['comments'] ) ? $comments['comments'] : '';
-					// echo '<pre>';
-					// var_dump( $comments );
-					// echo '</pre>';
+
+					// Sending email.
+					$comments          = $metas[ $el ][0];
+					$comments          = maybe_unserialize( $comments );
+					$commented_on_text = $comments['commentedOnText'];
+					$assigned_to       = $comments['assigned_to'];
+					$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments']: '';
+					$this->cf_sent_email_to_commented_users( [
+						'site_name'        => get_bloginfo( 'name' ),
+						'commenter'        => get_current_user_id(),
+						'post_title'       => $p_title,
+						'post_edit_link'   => $p_link,
+						'commented_text'   => $commented_on_text,
+						'list_of_comments' => $list_of_comments,
+						'assign_to'        => $assigned_to
+					] );
 				}
 
-				// Sending email.
-				// $this->cf_sent_email_to_commented_users( [
-				// 	'site_name'        => get_bloginfo( 'name' ),
-				// 	'commenter'        => $commentList['userName'],
-				// 	'thread'           => $commentList['thread'],
-				// 	'post_title'       => get_the_title( $current_post_id ),
-				// 	'post_edit_link'   => get_edit_post_link( $current_post_id ),
-				// 	'commented_text'   => $commentList['commentedOnText'],
-				// 	'list_of_comments' => $list_of_comments,
-				// 	'assign_to'        => $user_email
-				// ] );
+
 			}
 		}
 
@@ -765,18 +764,18 @@ class Commenting_block_Admin {
 		) );
 
 		// Sending email.
-		$this->cf_sent_email_to_commented_users( [
-			'site_name'        => get_bloginfo( 'name' ),
-			'commenter'        => $commentList['userName'],
-			'thread'           => $commentList['thread'],
-			'post_title'       => get_the_title( $current_post_id ),
-			'post_edit_link'   => get_edit_post_link( $current_post_id ),
-			'open_count'       => '',
-			'resolved_count'   => '',
-			'commented_text'   => $commentList['commentedOnText'],
-			'list_of_comments' => $list_of_comments,
-			'assign_to'        => $user_email
-		] );
+		// $this->cf_sent_email_to_commented_users( [
+		// 	'site_name'        => get_bloginfo( 'name' ),
+		// 	'commenter'        => $commentList['userName'],
+		// 	'thread'           => $commentList['thread'],
+		// 	'post_title'       => get_the_title( $current_post_id ),
+		// 	'post_edit_link'   => get_edit_post_link( $current_post_id ),
+		// 	'open_count'       => '',
+		// 	'resolved_count'   => '',
+		// 	'commented_text'   => $commentList['commentedOnText'],
+		// 	'list_of_comments' => $list_of_comments,
+		// 	'assign_to'        => $user_email
+		// ] );
 		wp_die();
 	}
 
