@@ -387,13 +387,17 @@
                 // Insert Display Name.
                 insertDisplayName( range, email, fullName, displayName, createTextarea );
 
-                var typedContent   = $( createTextarea ).html();
-                var refinedContent = typedContent.replace( /(?<=@)\w+(?=\<)/gi, '' );
-                $( createTextarea ).html( refinedContent );
+                var typedContent              = $( createTextarea ).html();
+                var refinedContent            = typedContent.replace( /(?<= @)\w+(?= \<)/gmi, '' );
+                var fragments                 = document.createRange().createContextualFragment( refinedContent );
+                var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
+                var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
+                currentTextAreaNode.innerHTML = '';
+                currentTextAreaNode.appendChild( fragments );
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
                 trackedStr = '';
-            } )
+            } );
         }
         createAutoEmailMention();
 
@@ -437,7 +441,6 @@
                 el = $( this ).parents( parentBoardClass ).attr( 'id' );
                 let appendTo        = `#${el} .cf-assign-to`;
                 let assignablePopup = `#${el} .cf-assignable-list-popup`;
-                let thisEmail       = $( this ).data( 'email' );
                 let thisUserId      = $( this ).data( 'user-id' );
                 let thisDisplayName = $( this ).data( 'display-name' );
                 let checkbox = `
@@ -447,7 +450,10 @@
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                 `;
 
-                $( appendTo ).html('').append( checkbox );
+                let checkboxFragments      = document.createRange().createContextualFragment( checkbox );
+                let appendToSelector       = document.querySelector( appendTo );
+                appendToSelector.innerHTML = '';
+                appendToSelector.appendChild( checkboxFragments );
                 $( assignablePopup ).remove();
             } )
         }

@@ -37,29 +37,6 @@ class Commenting_block_Admin {
 	private $version;
 
 	/**
-<<<<<<< HEAD
-=======
-	 * Allowed tags for the editor.
-	 *
-	 * @since    1.1.0
-	 * @access    private
-	 * @var    array $allowed_tags Contains the tags that are allowed in the editor.
-	 */
-	private $allowed_tags = [
-		'a' => [
-			'id'              => [],
-			'title'           => [],
-			'href'            => [],
-			'target'          => [],
-			'style'           => [],
-			'class'           => [],
-			'data-email'      => [],
-			'contenteditable' => [],
-		]
-	];
-
-	/**
->>>>>>> 014f404484671d74e067f63f2812a64f8b0237e4
 	 * Initialize the class and set its properties.
 	 *
 	 * @param string $plugin_name The name of this plugin.
@@ -646,19 +623,6 @@ class Commenting_block_Admin {
 			wp_enqueue_script( 'jquery-ui-droppable' );
 		}
 
-	}
-
-	/**
-	 * Convert string to linkable email.
-	 *
-	 * @param string $str Contains the strings that comes from the textarea.
-	 *
-	 * @return string
-	 */
-	public function convert_str_to_email( $str ) {
-		$mail_pattern = "/([A-z0-9\._-]+\@[A-z0-9_-]+\.)([A-z0-9\_\-\.]{1,}[A-z])/";
-
-		return preg_replace( $mail_pattern, '<a href="mailto:$1$2">$1$2</a>', $str );
 	}
 
 	/**

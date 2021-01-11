@@ -201,11 +201,6 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cf-mentioned-user-popup ul li .cf-user-info .cf-user-display-name, .cf-assignable-list-popup ul li .cf-user-info .cf-user-display-name{color:rgb(60, 64, 67);font-size:14px;font-weight:400;line-height:20px;text-transform:capitalize;margin:5px 0 0 0px!important}
 .cf-mentioned-user-popup ul li .cf-user-info .cf-user-email, .cf-assignable-list-popup ul li .cf-user-info .cf-user-email{margin:0 0 5px 0px!important;font-size:12px;font-weight:400;line-height:16px}
 .cf-user-info mark{background-color:transparent;font-weight:600;padding:0}
-.tooltip{position:relative;display:inline-block;border-bottom:1px dotted #666;text-align:left;margin-left:2px}
-.tooltip .top{width:auto;height:auto;top:-10px;left:50%;transform:translate(-30%, -100%);padding:10px 20px;color:#ffffff;background-color:rgba(0, 0, 0, 0.8);font-weight:normal;font-size:14px;border-radius:5px;position:absolute;z-index:99999999;box-sizing:border-box;box-shadow:0 1px 5px 0 rgba(0, 0, 0, 0.1);display:none}
-.tooltip:hover .top{display:block;text-transform:capitalize}
-.tooltip .top i{position:absolute;top:100%;left:30%;margin-left:-15px;width:30px;height:15px;overflow:hidden}
-.tooltip .top i::after{content:'';position:absolute;width:15px;height:15px;left:50%;transform:translate(-50%, -50%) rotate(45deg);background-color:rgba(0, 0, 0, 0.8);box-shadow:0 1px 5px 0 rgba(0, 0, 0, 0.1)}
 .readmoreComment, .readlessComment{text-decoration:underline;color:#006799}
 .comment-flash{background-color:rgba(252, 239, 69, 0.2);transition:all 0.3s ease-in-out}
 .cf-assign-to{display:flex;align-items:center;justify-content:space-between;width:100%;margin:10px 0}
