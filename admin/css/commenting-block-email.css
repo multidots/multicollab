@@ -12,8 +12,8 @@
 .comment-box .comment-page-title a{text-decoration:underline;font-size:20px;}
 .comment-box .comment-box-wrap{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
 .comment-box .comment-box-wrap:last-child{margin-bottom:0;}
-.comment-box .avtar{width:40px;margin-right:10px;}
-.comment-box .avtar img{max-width:100%;border-radius:50%;}
+.comment-box .avatar{width:40px;margin-right:10px;}
+.comment-box .avatar img{max-width:100%;border-radius:50%;}
 .comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
 .comment-box .comment-box-wrap .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
 .comment-box .comment-box-wrap .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin:0 7px 0 0;color:#141414;font-weight:600;}

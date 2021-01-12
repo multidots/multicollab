@@ -302,9 +302,9 @@ export default class Board extends React.Component {
                 arr[arr.length - 1]['dtTime'] = data.dtTime;
                 arr[arr.length - 1]['timestamp'] = data.timestamp;
 
-                // Updating the assinged user info
+                // Updating the assigned user info
                 if( null !== data.assignedTo.ID ) {
-                    var assingedUserDetails = `
+                    var assignedUserDetails = `
                         <div class="cf-board-assigned-to">
                             <div class="assigned-user-details">
                                 <div class="user-avatar">
@@ -320,7 +320,7 @@ export default class Board extends React.Component {
                     if( jQuery( `#${el} .cf-board-assigned-to` ).length ) {
                         jQuery( `#${el} .cf-board-assigned-to` ).remove();
                     }
-                    jQuery( assingedUserDetails ).insertBefore( `#${el} .boardTop` )
+                    jQuery( assignedUserDetails ).insertBefore( `#${el} .boardTop` )
                 }
 
                 // Update hasComment prop for dynamic button text.
@@ -452,7 +452,7 @@ export default class Board extends React.Component {
                     <div className="commentContainer">
                         <div className="comment-header">
                             <div className="comment-details">
-                                <div className="avtar"><img src={this.currentUserProfile} alt="avatar"/></div>
+                                <div className="avatar"><img src={this.currentUserProfile} alt="avatar"/></div>
                                 <div className="commenter-name-time">
                                     <div className="commenter-name">{this.currentUserName}</div>
                                 </div>

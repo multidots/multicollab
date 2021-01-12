@@ -13801,13 +13801,13 @@ var Board = function (_React$Component) {
                     arr[arr.length - 1]['dtTime'] = data.dtTime;
                     arr[arr.length - 1]['timestamp'] = data.timestamp;
 
-                    // Updating the assinged user info
+                    // Updating the assigned user info
                     if (null !== data.assignedTo.ID) {
-                        var assingedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + data.assignedTo.display_name + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
+                        var assignedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + data.assignedTo.display_name + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
                         if (jQuery('#' + el + ' .cf-board-assigned-to').length) {
                             jQuery('#' + el + ' .cf-board-assigned-to').remove();
                         }
-                        jQuery(assingedUserDetails).insertBefore('#' + el + ' .boardTop');
+                        jQuery(assignedUserDetails).insertBefore('#' + el + ' .boardTop');
                     }
 
                     // Update hasComment prop for dynamic button text.
@@ -13977,7 +13977,7 @@ var Board = function (_React$Component) {
                             { className: 'comment-details' },
                             wp.element.createElement(
                                 'div',
-                                { className: 'avtar' },
+                                { className: 'avatar' },
                                 wp.element.createElement('img', { src: this.currentUserProfile, alt: 'avatar' })
                             ),
                             wp.element.createElement(
@@ -14301,7 +14301,7 @@ var Comment = function (_React$Component) {
                         { className: 'comment-details' },
                         "1" === this.props.showAvatars && wp.element.createElement(
                             'div',
-                            { className: 'avtar' },
+                            { className: 'avatar' },
                             wp.element.createElement('img', { src: this.props.profileURL, alt: 'avatar' })
                         ),
                         wp.element.createElement(
@@ -14381,7 +14381,7 @@ var Comment = function (_React$Component) {
                         { className: 'comment-details' },
                         wp.element.createElement(
                             'div',
-                            { className: 'avtar' },
+                            { className: 'avatar' },
                             wp.element.createElement('img', { src: this.props.profileURL, alt: 'avatar' })
                         ),
                         wp.element.createElement(
@@ -35867,7 +35867,7 @@ var currentlyProcessingQueue;
   didWarnUpdateInsideUpdate = false;
   currentlyProcessingQueue = null;
 
-  
+
 }
 
 function createUpdateQueue(baseState) {
@@ -40182,7 +40182,7 @@ function insertNonHydratedInstance(returnFiber, fiber) {
               break;
 
             case SuspenseComponent:
-              
+
               break;
           }
 

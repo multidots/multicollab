@@ -37,29 +37,9 @@ class Commenting_block_Admin {
 	private $version;
 
 	/**
-	 * Allowed tags for the editor.
-	 *
-	 * @since    1.1.0
-	 * @access    private
-	 * @var    array $allowed_tags Contains the tags that are allowed in the editor.
-	 */
-	private $allowed_tags = [
-		'a' => [
-			'id'              => [],
-			'title'           => [],
-			'href'            => [],
-			'target'          => [],
-			'style'           => [],
-			'class'           => [],
-			'data-email'      => [],
-			'contenteditable' => [],
-		]
-	];
-
-	/**
 	 * Initiate Email Class Object.
 	 */
-	private $email_class = '';
+	private $email_class;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -70,6 +50,7 @@ class Commenting_block_Admin {
 	 * @since    1.0.0
 	 */
 	public function __construct( $plugin_name, $version ) {
+
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 
@@ -314,6 +295,51 @@ class Commenting_block_Admin {
 		// Initiate Email Class Object.
 		$this->cf_initiate_email_class();
 
+		// Publish Edited Comments.
+		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
+			$edited_drafts = $current_drafts['edited'];
+
+			foreach ( $edited_drafts as $el => $timestamps ) {
+				$prev_state = $metas[ $el ][0];
+				$prev_state = maybe_unserialize( $prev_state );
+
+				foreach ( $timestamps as $t ) {
+
+					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
+					if ( ! empty( $edited_draft ) ) {
+						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
+					}
+
+					// Change status to publish.
+					$prev_state['comments'][ $t ]['status'] = 'publish';
+
+					// Remove comment from edited_draft.
+					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
+
+				}
+				update_post_meta( $post_ID, $el, $prev_state );
+			}
+		}
+
+		// Publish Deleted Comments. (i.e. finally delete them.)
+		if ( isset( $current_drafts['deleted'] ) && 0 !== count( $current_drafts['deleted'] ) ) {
+			$deleted_drafts = $current_drafts['deleted'];
+
+			foreach ( $deleted_drafts as $el => $timestamps ) {
+				$prev_state = $metas[ $el ][0];
+				$prev_state = maybe_unserialize( $prev_state );
+
+				foreach ( $timestamps as $t ) {
+					// Update the timestamp of deleted comment.
+					$previous_comment = $prev_state['comments'][ $t ];
+					unset( $prev_state['comments'][ $t ] );
+					$prev_state['comments'][ $current_timestamp ]           = $previous_comment;
+					$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
+				}
+				update_post_meta( $post_ID, $el, $prev_state );
+			}
+		}
+
 		// Mark Resolved Threads.
 		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
 			$resolved_drafts = $current_drafts['resolved'];
@@ -371,20 +397,22 @@ class Commenting_block_Admin {
 			foreach ( $new_drafts as $el => $drafts ) {
 				/*
 				 * Make publish only if its tag available in the content.
-				 * Doing this to vhandle the CTRL-Z action.
+				 * Doing this to handle the CTRL-Z action.
 				 * Sometimes CTRL-Z does not removes the tag completely
 				 * but only removes its attributes, so we cant find 'datatext' attribute,
 				 * So skipping those mdspan tags which has no 'datatext' attribute.
+				 * This is also skipping the recent resolved drafts.
 				 */
 				$elid = str_replace( '_', '', $el );
 				if ( strpos( $p_content, $elid ) !== false ) {
-					$prev_state = $metas[ $el ][0];
-					$prev_state = maybe_unserialize( $prev_state );
+					$prev_state   = $metas[ $el ][0];
+					$prev_state   = maybe_unserialize( $prev_state );
+					$new_comments = array();
 					foreach ( $drafts as $d ) {
 						$prev_state['comments'][ $d ]['status'] = 'publish';
+						$new_comments[]                         = $d;
 					}
 					update_post_meta( $post_ID, $el, $prev_state );
-
 
 					// Sending email.
 					$comments          = $metas[ $el ][0];
@@ -403,54 +431,10 @@ class Commenting_block_Admin {
 						'list_of_comments'          => $list_of_comments,
 						'current_user_email'        => $current_user_email,
 						'current_user_display_name' => $current_user_display_name,
+						'new_comments'              => $new_comments,
 						'assign_to'                 => $assigned_to
 					) );
 				}
-			}
-		}
-
-		// Publish Edited Comments.
-		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
-			$edited_drafts = $current_drafts['edited'];
-
-			foreach ( $edited_drafts as $el => $timestamps ) {
-				$prev_state = $metas[ $el ][0];
-				$prev_state = maybe_unserialize( $prev_state );
-
-				foreach ( $timestamps as $t ) {
-
-					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
-					if ( ! empty( $edited_draft ) ) {
-						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
-					}
-
-					// Change status to publish.
-					$prev_state['comments'][ $t ]['status'] = 'publish';
-
-					// Remove comment from edited_draft.
-					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
-
-				}
-				update_post_meta( $post_ID, $el, $prev_state );
-			}
-		}
-
-		// Publish Deleted Comments. (i.e. finally delete them.)
-		if ( isset( $current_drafts['deleted'] ) && 0 !== count( $current_drafts['deleted'] ) ) {
-			$deleted_drafts = $current_drafts['deleted'];
-
-			foreach ( $deleted_drafts as $el => $timestamps ) {
-				$prev_state = $metas[ $el ][0];
-				$prev_state = maybe_unserialize( $prev_state );
-
-				foreach ( $timestamps as $t ) {
-					// Update the timestamp of deleted comment.
-					$previous_comment = $prev_state['comments'][ $t ];
-					unset( $prev_state['comments'][ $t ] );
-					$prev_state['comments'][ $current_timestamp ]           = $previous_comment;
-					$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
-				}
-				update_post_meta( $post_ID, $el, $prev_state );
 			}
 		}
 
@@ -697,19 +681,6 @@ class Commenting_block_Admin {
 			'assignedTo' => $assigned_to
 		) );
 
-		// Sending email.
-		// $this->cf_email_new_comments( [
-		// 	'site_name'        => get_bloginfo( 'name' ),
-		// 	'commenter'        => $commentList['userName'],
-		// 	'thread'           => $commentList['thread'],
-		// 	'post_title'       => get_the_title( $current_post_id ),
-		// 	'post_edit_link'   => get_edit_post_link( $current_post_id ),
-		// 	'open_count'       => '',
-		// 	'resolved_count'   => '',
-		// 	'commented_text'   => $commentList['commentedOnText'],
-		// 	'list_of_comments' => $list_of_comments,
-		// 	'assign_to'        => $user_email
-		// ] );
 		wp_die();
 	}
 
@@ -828,7 +799,7 @@ class Commenting_block_Admin {
 
 					$html .= "<div class='user-data-row'>";
 					$html .= "<div class='user-data-box'>";
-					$html .= "<div class='user-avtar'><img src='" . esc_url( $c['profileURL'] ) . "'/></div>";
+					$html .= "<div class='user-avatar'><img src='" . esc_url( $c['profileURL'] ) . "'/></div>";
 					$html .= "<div class='user-title'>
 									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span> ";
 

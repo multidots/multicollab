@@ -223,7 +223,7 @@ export default class Comment extends React.Component {
                     </div>
                     <div className="comment-details">
                         {"1" === this.props.showAvatars &&
-                        <div className="avtar">
+                        <div className="avatar">
                             <img src={this.props.profileURL} alt="avatar"/>
                         </div>
                         }
@@ -258,7 +258,7 @@ export default class Comment extends React.Component {
             <div className="commentContainer" id={this.props.timestamp}>
                 <div className="comment-header">
                     <div className="comment-details">
-                        <div className="avtar"><img src={this.props.profileURL} alt="avatar"/></div>
+                        <div className="avatar"><img src={this.props.profileURL} alt="avatar"/></div>
                         <div className="commenter-name-time">
                             <div className="commenter-name" title={ `${this.props.userName} ( ${this.props.userRole} )` }>
                                 {this.props.userName} <small>({ userRolePartial })</small>

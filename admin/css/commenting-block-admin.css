@@ -42,8 +42,8 @@ span.dashicon.dashicons.dashicons-admin-comments{min-width:24px;margin-right:8px
 #custom-history-popup{display:none;opacity:0;transition:all 1s;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif}
 #custom-history-popup.active{display:block;min-height:300px;width:80%;position:absolute;left:20px;top:61px;background:#fff;padding:20px;z-index:99;box-sizing:border-box;opacity:1;max-height:calc(90vh - 100px);overflow-y:auto;box-shadow:rgba(60, 64, 67, 0.2) 0 7px 10px 2px;border-radius:4px!important;border:1px solid #e9eaed;border-top:0}
 #custom-history-popup table{width:100%;text-align:center}
-.user-avtar{margin-right:15px;float:left;width:50px}
-.user-avtar img{max-height:50px}
+.user-avatar{margin-right:15px;float:left;width:50px}
+.user-avatar img{max-height:50px}
 .user-time{float:right;width:200px;text-align:right;color:#939393;font-size:14px}
 #custom-history-popup #history-popup-insider::before{content:'Activity Center';font-size:20px;display:block;margin:0 0 20px;font-weight:700}
 .user-title{float:left;width:60%;width:calc(100% - 265px);font-size:15px}
@@ -65,8 +65,8 @@ span.user-name{font-weight:700}
 .cls-board-outer.locked{background:#f2f2fa}
 .buttons-opner{position:relative;cursor:pointer;color:#000;line-height:1;display:flex}
 .buttons-opner svg{transform:rotate(90deg);cursor:pointer}
-.comment-header .avtar{width:35px;margin-right:10px;flex-shrink:0;height:35px}
-.comment-header .avtar img{max-width:100%;border-radius:50%}
+.comment-header .avatar{width:35px;margin-right:10px;flex-shrink:0;height:35px}
+.comment-header .avatar img{max-width:100%;border-radius:50%}
 .comment-header .commenter-name-time{margin-right:0;white-space:nowrap;flex-grow:1;width:60%;width:calc(100% - 130px)}
 #cf-column-img, .column-cb_comments_status .sorting-indicator{top:4px;position:relative;left:-2px}
 .comment-header .commenter-name-time .commenter-name{font-size:15px;line-height:1;white-space:nowrap;text-overflow:ellipsis;margin-bottom:4px;font-weight:500;height:17px;overflow:hidden}
