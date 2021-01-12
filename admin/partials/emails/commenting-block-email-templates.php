@@ -52,6 +52,7 @@ class Commenting_Block_Email_Templates {
 
 		if ( ! empty( $list_of_comments ) && is_array( $list_of_comments ) ) {
 
+
 			$headers      = array( 'Content-Type: text/html; charset=UTF-8' );
 			$html         .= "<div class='commented_text'>" . $commented_on_text . "</div>";
 
@@ -171,8 +172,7 @@ class Commenting_Block_Email_Templates {
 			// Get comments loop.
 			$this->list_of_comments = $list_of_comments;
 			$comment_list_html      = $this->cf_email_get_comments_loop();
-
-			$users_emails = array_unique( $this->users_emails );
+			$users_emails           = array_unique( $this->users_emails );
 
 			$assigned_to_who = '';
 			if ( ! empty( $assign_to ) ) {
@@ -278,7 +278,7 @@ class Commenting_Block_Email_Templates {
 				} else {
 					// Notify Site Admin if setting enabled.
 					$email_list = $this->cf_email_notify_siteadmin( $email_list );
-					
+
 					// Sent email to all users.
 					if ( ! empty( $email_list ) ) {
 						// Limit the page and site titles for Subject.
