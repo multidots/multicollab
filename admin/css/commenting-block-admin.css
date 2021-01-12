@@ -187,6 +187,22 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .custom-buttons svg *{fill:#1e1e1e}
 .custom-buttons components-button:hover svg *{fill:#007cba}
 
+.custom-buttons button:hover svg * {
+    fill: #007cba;
+}
+
+.custom-buttons button:hover svg * {
+    fill: #007cba;
+}
+
+/* Hide/show menu setting page icon */
+#adminmenuwrap .toplevel_page_editorial-comments .wp-menu-image{position:relative;padding:0 8px;box-sizing:border-box;}
+#adminmenuwrap .toplevel_page_editorial-comments .wp-menu-image:before{opacity:0;content:'';display:inline-block;width:100%;height:100%;background:url(/wp-content/plugins/gutenberg_commenting/admin/images/menu-icon-hover.svg) center 9px no-repeat;position:absolute;left:0;right:0;top:0;padding:9px 8px 0;box-sizing:border-box;background-size:20px;transition:none}
+#adminmenuwrap .toplevel_page_editorial-comments:hover .wp-menu-image:before{opacity:1;}
+#adminmenuwrap .toplevel_page_editorial-comments.current .wp-menu-image img{opacity:0;}
+#adminmenuwrap .toplevel_page_editorial-comments.current .wp-menu-image:before{background:url(/wp-content/plugins/gutenberg_commenting/admin/images/current-menu-icon.svg) center 9px no-repeat;opacity:1;background-size:20px;}
+#adminmenuwrap .toplevel_page_editorial-comments .wp-menu-image img{width:20px}
+
 /* Email Mentioning Popup */
 .cf-share-comment{width:100%;min-height:80px;height:auto;background-color:#fff;color:#222;padding:8px;border:1px solid #007cba;border-radius:5px}
 [contenteditable=true]:empty::before{content:attr(placeholder);pointer-events:none;display:block}
@@ -208,7 +224,6 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cf-board-assigned-to .assigned-user-details{display:flex;align-items:center;justify-content:flex-start;padding:10px 20px;background-color:rgb(232, 240, 254);color:rgb(60, 64, 67)}
 .cf-board-assigned-to .assigned-user-details .user-avatar img{border-radius:50%;margin-right:10px}
 .cf-board-assigned-to .assigned-user-details .user-info p.display-name{margin:0;line-height:20px;font-weight:600;font-size:14px}
-#adminmenuwrap .toplevel_page_editorial-comments .wp-menu-image img{width:20px}
 
 /* Editorial comments page */
 .cf-plugin-settings{-webkit-box-sizing:border-box;box-sizing:border-box;padding-right:20px}
