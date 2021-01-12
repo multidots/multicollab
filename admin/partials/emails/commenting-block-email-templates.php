@@ -132,6 +132,8 @@ class Commenting_Block_Email_Templates {
 	 */
 	public function cf_email_new_comments( $args ) {
 		$html                      = $args['html'];
+		$elid                      = $args['elid'];
+		$post_id                   = $args['post_ID'];
 		$p_title                   = $args['post_title'];
 		$assign_to                 = $args['assign_to'];
 		$site_title                = $args['site_title'];
@@ -140,7 +142,7 @@ class Commenting_Block_Email_Templates {
 		$list_of_comments          = $args['list_of_comments'];
 		$commented_on_text         = $args['commented_on_text'];
 		$current_user_email        = $args['current_user_email'];
-		$current_user_display_name = $args['current_user_display_name'];
+		$current_user_display_name =  $args['current_user_display_name'];
 
 		$find_mentions = '';
 		foreach ( $list_of_comments as $timestamp => $comment ) {
@@ -152,6 +154,14 @@ class Commenting_Block_Email_Templates {
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $find_mentions, $matches );
 		$email_list = array_unique( $matches[0] );
+
+		// Removed current user email from the list.
+		if( ! empty( $current_user_email ) ) {
+			$key = array_search( $current_user_email, $email_list, true );
+			if( $key ) {
+				unset( $email_list[$key] );
+			}
+		}
 
 		if ( ! empty( $list_of_comments ) ) {
 			// Get comments loop.
@@ -214,37 +224,69 @@ class Commenting_Block_Email_Templates {
             </div>
 			";
 
-			if( ! empty( $assign_to ) ) {
-				$assigned_user = get_user_by( 'ID', $assign_to );
-				$key           = array_search( $assigned_user->user_email, $email_list, true );
-				unset( $email_list[$key] );
-			}
-
-			if( ! empty( $current_user_email ) ) {
-				$key = array_search( $current_user_email, $email_list, true );
-				unset( $email_list[$key] );
-			}
-
-			// Notify Site Admin if setting enabled.
-			$email_list = $this->cf_email_notify_siteadmin( $email_list );
-
 			$headers = 'Content-Type: text/html; charset=UTF-8';
-			if ( ! empty( $email_list ) ) {
 
-				// Limit the page and site titles for Subject.
-				$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+			// Sent email to assign user once & rest of the mentioned users.
+			$el_obj = get_post_meta( $post_id, "_{$elid}", true );
+			if( ! empty( $el_obj ) ) {
+				if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === false ) {
+					$assigned_user = get_user_by( 'ID', $el_obj['assigned_to'] );
+					if ( ! empty( $assigned_user ) ) {
+						$assign_to = $assigned_user->user_email;
+		
+						// Limit the page and site titles for Subject.
+						$subject = $this->cf_email_prepare_subject( 'Assigned to you', $p_title, $site_title );
 
-				wp_mail( $email_list, $subject, $html, $headers );
+						wp_mail( $assign_to, $subject, $html, $headers );
+					}
+					// Updating after sending the email.
+					$el_obj['sent_assigned_email'] = true;
+					update_post_meta( $post_id, "_{$elid}", $el_obj );
+
+					// Remove assigned email from the list.
+					$key = array_search( $assigned_user->user_email, $email_list, true );
+					unset( $email_list[$key] );
+
+					// Notify Site Admin if setting enabled.
+					$email_list = $this->cf_email_notify_siteadmin( $email_list );
+
+					// Sent email to all users.
+					if ( ! empty( $email_list ) ) {
+						// Limit the page and site titles for Subject.
+						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+						wp_mail( $email_list, $subject, $html, $headers );
+					}
+				} else if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === true ) {
+					// Remove assigned email from the list.
+					$assigned_user = get_user_by( 'ID', $el_obj['assigned_to'] );
+					$email_list[]  = $assigned_user->user_email;
+
+					// Notify Site Admin if setting enabled.
+					$email_list = $this->cf_email_notify_siteadmin( $email_list );
+
+					// Sent email to all users.
+					if ( ! empty( $email_list ) ) {
+						// Limit the page and site titles for Subject.
+						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+						wp_mail( $email_list, $subject, $html, $headers );
+					}
+				} else {
+					// Notify Site Admin if setting enabled.
+					$email_list = $this->cf_email_notify_siteadmin( $email_list );
+					
+					// Sent email to all users.
+					if ( ! empty( $email_list ) ) {
+						// Limit the page and site titles for Subject.
+						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+						wp_mail( $email_list, $subject, $html, $headers );
+					}
+				}
 			}
 
-			if ( ! empty( $assigned_user ) ) {
-				$assign_to = $assigned_user->user_email;
 
-				// Limit the page and site titles for Subject.
-				$subject = $this->cf_email_prepare_subject( 'Assigned to you', $p_title, $site_title );
 
-				wp_mail( $assign_to, $subject, $html, $headers );
-			}
+
+
 		}
 	}
 }

@@ -423,6 +423,8 @@ class Commenting_block_Admin {
 
 					// Send email to the commented recipients.
 					$this->email_class->cf_email_new_comments( array(
+						'post_ID'                   => $post_ID,
+						'elid'                      => $elid,
 						'html'                      => $html,
 						'post_title'                => $p_title,
 						'post_edit_link'            => $p_link,
@@ -650,6 +652,7 @@ class Commenting_block_Admin {
 			$superCareerData['comments'][ $timestamp ] = $arr;
 			if ( $assign_to > 0 ) {
 				$superCareerData['assigned_to'] = $assign_to;
+				$superCareerData['sent_assigned_email'] = false;
 			}
 		} else {
 			$superCareerData                           = array();
@@ -657,6 +660,7 @@ class Commenting_block_Admin {
 			$superCareerData['commentedOnText']        = $commentList['commentedOnText'];
 			if ( $assign_to > 0 ) {
 				$superCareerData['assigned_to'] = $assign_to;
+				$superCareerData['sent_assigned_email'] = false;
 			}
 
 			update_post_meta( $current_post_id, 'th' . $metaId, get_current_user_id() );
