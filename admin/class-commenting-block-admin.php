@@ -609,14 +609,6 @@ class Commenting_block_Admin {
 		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
 
-		// Get the assigned User Email.
-		$user_email = '';
-		$assign_to  = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
-		if ( isset( $assign_to ) && $assign_to > 0 ) {
-			$user_data  = get_user_by( 'ID', $assign_to );
-			$user_email = $user_data->user_email;
-		}
-
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$arr             = array();
 
