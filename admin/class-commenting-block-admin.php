@@ -609,6 +609,9 @@ class Commenting_block_Admin {
 		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
 
+		// Get the assigned User ID.
+		$assign_to  = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
+
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$arr             = array();
 

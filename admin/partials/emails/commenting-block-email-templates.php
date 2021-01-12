@@ -128,6 +128,13 @@ class Commenting_Block_Email_Templates {
 		return $users_emails;
 	}
 
+	public function cf_find_mentioned_emails( $str ) {
+		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
+		preg_match_all( $pattern, $str, $matches );
+
+		return $matches[0];
+	}
+
 	/**
 	 * Add Comment / Reply Comment Email Template.
 	 *
@@ -154,11 +161,12 @@ class Commenting_Block_Email_Templates {
 			$find_mentions .= $comment['thread'];
 		}
 
-		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
-		preg_match_all( $pattern, $find_mentions, $matches );
-		$users_emails = array_unique( $this->users_emails );
-		$email_list   = array_merge( $matches[0], $users_emails );
-		$email_list   = array_unique( $matches[0] );
+		$users_emails      = array_unique( $this->users_emails );
+		$mentioned_emails  = $this->cf_find_mentioned_emails( $find_mentions );
+		if( null !== $users_emails ) {
+			$mentioned_emails = array_merge( $mentioned_emails, $users_emails );
+		}
+		$email_list = array_unique( $mentioned_emails );
 
 		// Removed current user email from the list.
 		if( ! empty( $current_user_email ) ) {
@@ -173,10 +181,10 @@ class Commenting_Block_Email_Templates {
 			$this->list_of_comments = $list_of_comments;
 			$comment_list_html      = $this->cf_email_get_comments_loop();
 
-			$assigned_to_who = '';
+			$assigned_to_who_html = '';
 			if ( ! empty( $assign_to ) ) {
 				$assigned_user   = get_user_by( 'ID', $assign_to );
-				$assigned_to_who = "
+				$assigned_to_who_html = "
                 <div class='comment-assigned-to'>
                     <span class='icon-assign'>
                         <svg id='Group_31' data-name='Group 31' xmlns='http://www.w3.org/2000/svg' width='19.644' height='20' viewBox='0 0 19.644 20'>
@@ -196,57 +204,16 @@ class Commenting_Block_Email_Templates {
             ";
 			}
 
-			$html .= "
-			<style>
-				.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
-				.comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
-				.comment-box a{color:#4B1BCE;text-decoration:none;}
-				.comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-				.comment-box .comment-box-header p{margin:0 0 20px;}
-				.comment-box .comment-box-header .comment-page-title{font-size:20px;margin:0;}
-				.comment-box .comment-box-header a{color:#4B1BCE;display:inline-block;}
-				.comment-box .comment-page-title a{text-decoration:underline;font-size:20px;}
-				.comment-box .comment-box-wrap{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-box-wrap:last-child{margin-bottom:0;}
-				.comment-box .avatar{width:40px;margin-right:10px;}
-				.comment-box .avatar img{max-width:100%;border-radius:50%;}
-				.comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-				.comment-box .comment-box-wrap .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-box-wrap .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin:0 7px 0 0;color:#141414;font-weight:600;}
-				.comment-box .comment-box-wrap .commenter-role{font-size:14px;font-weight:400;font-family:Arial,serif;color:#4C5056;margin-right:10px;}
-				.comment-box .comment{font-family:Arial,serif;font-size:14px;color:#4C5056;}
-				.comment-box .comment-box-body{border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-				.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;}
-				.comment-box .comment-assigned-to{margin-bottom:20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-assigned-to .commenter-name{color:#4B1BCE;margin-left:5px;}
-				.comment-box .comment-assigned-to .icon-assign{margin-right:5px;line-height:1;}
-				.comment-box ul{margin:0 0 20px;padding:0;list-style:none;}
-				.comment-box ul li{margin-bottom:20px;}
-				.comment-box ul li:last-child{margin-bottom:10px;}
-				.comment-box .head-with-icon{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;}
-				.comment-box .head-with-icon .icon-comment{margin-right:10px;line-height:1;}
-				.comment-box .head-with-icon .icon-resolved{margin-right:10px;}
-				.comment-box .head-with-icon h3{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .cf-marked-resolved-by{margin:0 10px 20px 0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .cf-marked-resolved-by .icon-resolved{margin-right:5px;line-height:1;}
-				.comment-box .cf-marked-resolved-by a{margin-left:5px;}
-				.comment-box.new-comment .comment-list li:last-child .commenter-name-role:after{content:'New';padding:5px 10px;background-color:#4B1BCE;color:#fff;font-size:12px;}
-				.comment-box .view_reply{margin:10px 0;}
-				.comment-box .view_reply_btn{display:inline-block;padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;}
-				.comment-box .view_reply_btn a{text-decoration:underline;color:#fff;}
-				@media (max-width:1400px){.comment-box{width:90%;}}
-		  	</style>";
+			$post_title_html = '';
+			if ( ! empty( $args['post_title'] ) ) {
+				$post_title_html .= "<h2 class='comment-page-title'><a href='" . esc_url( $post_edit_link ) . "' target='_blank'>" . esc_html( $p_title ) . "</a></h2>";
+			}
 
 			$html .= "
             <div class='comment-box new-comment'>
                 <div class='comment-box-header'>
-                    <p><span class='commenter-name'>" . esc_html( $current_user_display_name ) . "</span> - mentioned you in a comment in the following page.</p>";
-
-			if ( ! empty( $args['post_title'] ) ) {
-				$html .= "<h2 class='comment-page-title'><a href='" . esc_url( $post_edit_link ) . "' target='_blank'>" . esc_html( $p_title ) . "</a></h2>";
-			}
-
-			$html .= "
+                    <p><span class='commenter-name'>" . esc_html( $current_user_display_name ) . "</span> - mentioned you in a comment in the following page.</p>
+					{$post_title_html}
                 </div>
                 <div class='comment-box-body'>
                     <h2 class='head-with-icon'>
@@ -260,7 +227,7 @@ class Commenting_Block_Email_Templates {
                         Comments
                     </h2>
                     <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
-                    {$assigned_to_who}
+                    {$assigned_to_who_html}
                     {$comment_list_html}
                     <div class='view_reply'>
                         <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>Click here</a> - View or reply to this comment</div>
