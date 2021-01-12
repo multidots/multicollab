@@ -11,7 +11,7 @@
 			$user_info      = get_userdata( $comment['userData'] );
 			$user_role      = implode( ', ', $user_info->roles );
 			$username       = $user_info->display_name;
-			$users_emails[] = $user_info->user_email;
+			$this->users_emails[] = $user_info->user_email;
 			$profile_url    = get_avatar_url( $user_info->user_email );
 			?>
             <li>

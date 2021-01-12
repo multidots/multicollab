@@ -14157,11 +14157,19 @@ var Comment = function (_React$Component) {
             var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
 
             var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
+            //let multiHierarchy = false;
             if (null !== blockAttributes) {
+
+                /*if( 'images' in blockAttributes ) {
+                    blockAttributes = blockAttributes['images'];
+                }*/
 
                 var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
                 jQuery(findAttributes).each(function (i, attrb) {
                     var content = blockAttributes[attrb];
+
+                    //jQuery(blockAttributes).each(function (i, content) {
+
                     if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
 
                         if ('' !== content) {
@@ -14227,6 +14235,8 @@ var Comment = function (_React$Component) {
                             }
                         }
                     }
+
+                    //});
                 });
             }
         }
@@ -35867,7 +35877,7 @@ var currentlyProcessingQueue;
   didWarnUpdateInsideUpdate = false;
   currentlyProcessingQueue = null;
 
-
+  
 }
 
 function createUpdateQueue(baseState) {
@@ -40182,7 +40192,7 @@ function insertNonHydratedInstance(returnFiber, fiber) {
               break;
 
             case SuspenseComponent:
-
+              
               break;
           }
 

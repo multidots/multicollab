@@ -18,6 +18,11 @@ class Commenting_Block_Email_Templates {
 	public $list_of_comments;
 
 	/**
+	 * User email addresses.
+	 */
+	public $users_emails;
+
+	/**
 	 * Limiting the characters of a string.
 	 *
 	 * @param string $string The string that is going to be limiting.
@@ -47,7 +52,6 @@ class Commenting_Block_Email_Templates {
 
 		if ( ! empty( $list_of_comments ) && is_array( $list_of_comments ) ) {
 
-			$users_emails = array();
 			$headers      = array( 'Content-Type: text/html; charset=UTF-8' );
 			$html         .= "<div class='commented_text'>" . $commented_on_text . "</div>";
 
@@ -66,7 +70,7 @@ class Commenting_Block_Email_Templates {
 			$html .= '</div>'; // .comment-box-body end
 			$html .= '</div>'; // .comment-box end
 
-			$users_emails = array_unique( $users_emails );
+			$users_emails = array_unique( $this->users_emails );
 			if ( ( $key = array_search( $current_user_email, $users_emails, true ) ) !== false ) {
 				unset( $users_emails[ $key ] );
 			}
@@ -158,6 +162,7 @@ class Commenting_Block_Email_Templates {
 			$this->list_of_comments = $list_of_comments;
 			$comment_list_html      = $this->cf_email_get_comments_loop();
 
+			$users_emails = array_unique( $this->users_emails );
 
 			$assigned_to_who = '';
 			if ( ! empty( $assign_to ) ) {

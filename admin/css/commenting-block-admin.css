@@ -40,7 +40,7 @@ span.dashicon.dashicons.dashicons-admin-comments{min-width:24px;margin-right:8px
 .comment-header{display:flex;align-items:flex-start;width:100%;margin-bottom:15px;flex-wrap:wrap}
 .user-data-row:last-child{padding-bottom:0}
 #custom-history-popup{display:none;opacity:0;transition:all 1s;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif}
-#custom-history-popup.active{display:block;min-height:300px;width:80%;position:absolute;left:20px;top:61px;background:#fff;padding:20px;z-index:99;box-sizing:border-box;opacity:1;max-height:calc(90vh - 100px);overflow-y:auto;box-shadow:rgba(60, 64, 67, 0.2) 0 7px 10px 2px;border-radius:4px!important;border:1px solid #e9eaed;border-top:0}
+#custom-history-popup.active{display:block;min-height:300px;width:80%;position:absolute;left:20px;top:61px;background:#fff;padding:20px;z-index:9999;box-sizing:border-box;opacity:1;max-height:calc(90vh - 100px);overflow-y:auto;box-shadow:rgba(60, 64, 67, 0.2) 0 7px 10px 2px;border-radius:4px!important;border:1px solid #e9eaed;border-top:0}
 #custom-history-popup table{width:100%;text-align:center}
 .user-avatar{margin-right:15px;float:left;width:50px}
 .user-avatar img{max-height:50px}
