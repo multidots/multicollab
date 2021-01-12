@@ -43,9 +43,9 @@ class Commenting_Block_Email_Templates {
 	 */
 	public function cf_email_resolved_thread( $args ) {
 		$html                      = $args['html'];
-		$list_of_comments          = $args['list_of_comments'];
 		$p_title                   = $args['post_title'];
 		$site_title                = $args['site_title'];
+		$list_of_comments          = $args['list_of_comments'];
 		$commented_on_text         = $args['commented_on_text'];
 		$current_user_email        = $args['current_user_email'];
 		$current_user_display_name = $args['current_user_display_name'];
@@ -136,21 +136,21 @@ class Commenting_Block_Email_Templates {
 	 */
 	public function cf_email_new_comments( $args ) {
 		$html                      = $args['html'];
-		$list_of_comments          = $args['list_of_comments'];
 		$p_title                   = $args['post_title'];
-		$post_edit_link            = $args['post_edit_link'];
+		$assign_to                 = $args['assign_to'];
 		$site_title                = $args['site_title'];
+		$new_comments              = $args['new_comments'];
+		$post_edit_link            = $args['post_edit_link'];
+		$list_of_comments          = $args['list_of_comments'];
 		$commented_on_text         = $args['commented_on_text'];
 		$current_user_email        = $args['current_user_email'];
 		$current_user_display_name = $args['current_user_display_name'];
-		$new_comments              = $args['new_comments'];
-		$assign_to                 = $args['assign_to'];
 
 		$find_mentions = '';
 		foreach ( $list_of_comments as $timestamp => $comment ) {
-			if ( in_array( $timestamp, $new_comments, true ) ) {
-				$find_mentions .= $comment['thread'];
-			}
+			$find_mentions .= $comment['thread'];
+			// if ( in_array( $timestamp, $new_comments, true ) ) {
+			// }
 		}
 
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
@@ -217,7 +217,18 @@ class Commenting_Block_Email_Templates {
                     </div>
                 </div>
             </div>
-        	";
+			";
+
+			if( ! empty( $assign_to ) ) {
+				$assigned_user = get_user_by( 'ID', $assign_to );
+				$key           = array_search( $assigned_user->user_email, $email_list, true );
+				unset( $email_list[$key] );
+			}
+
+			if( ! empty( $current_user_email ) ) {
+				$key = array_search( $current_user_email, $email_list, true );
+				unset( $email_list[$key] );
+			}
 
 			// Notify Site Admin if setting enabled.
 			$email_list = $this->cf_email_notify_siteadmin( $email_list );
