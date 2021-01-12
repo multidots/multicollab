@@ -187,7 +187,7 @@ class Commenting_block_Admin {
 			update_post_meta( $post_ID, 'open_cf_count', $open_counts );
 		}
 
-		$comment_counts = array();
+		$comment_counts                 = array();
 		$comment_counts['open_counts']  = $open_counts;
 		$comment_counts['total_counts'] = $total_count;
 
@@ -218,7 +218,7 @@ class Commenting_block_Admin {
 	 *
 	 */
 	public function cf_settings_callback() {
-		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-settings-page.php' );
+		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-settings-page.php' ); // phpcs:ignore
 	}
 
 	/**
@@ -240,6 +240,8 @@ class Commenting_block_Admin {
 
 	/**
 	 * Add capabilities to user roles to make 'mdspan' tag unfiltered.
+	 *
+	 * @return bool True always.
 	 */
 	public function cf_custom_caps() {
 
@@ -255,7 +257,7 @@ class Commenting_block_Admin {
 			}
 		}
 
-		return;
+		return true;
 	}
 
 	/**
@@ -412,10 +414,8 @@ class Commenting_block_Admin {
 				if ( strpos( $p_content, $elid ) !== false ) {
 					$prev_state   = $metas[ $el ][0];
 					$prev_state   = maybe_unserialize( $prev_state );
-					$new_comments = array();
 					foreach ( $drafts as $d ) {
 						$prev_state['comments'][ $d ]['status'] = 'publish';
-						$new_comments[]                         = $d;
 					}
 					update_post_meta( $post_ID, $el, $prev_state );
 
@@ -438,7 +438,6 @@ class Commenting_block_Admin {
 						'list_of_comments'          => $list_of_comments,
 						'current_user_email'        => $current_user_email,
 						'current_user_display_name' => $current_user_display_name,
-						'new_comments'              => $new_comments,
 						'assign_to'                 => $assigned_to
 					) );
 				}
@@ -478,7 +477,7 @@ class Commenting_block_Admin {
 
 		ob_start();
 		echo '<style>';
-		file_get_contents( COMMENTING_BLOCK_DIR . 'admin/css/commenting-block-email.css' );
+		file_get_contents( COMMENTING_BLOCK_DIR . 'admin/css/commenting-block-email.css' ); // phpcs:ignore
 		echo '</style>';
 
 		return ob_get_clean();
@@ -488,7 +487,7 @@ class Commenting_block_Admin {
 	 * Include the Email template class and initiate the object.
 	 */
 	private function cf_initiate_email_class() {
-		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/emails/commenting-block-email-templates.php' );
+		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/emails/commenting-block-email-templates.php' ); // phpcs:ignore
 		$this->email_class = new Commenting_Block_Email_Templates();
 	}
 
@@ -604,13 +603,14 @@ class Commenting_block_Admin {
 	 */
 	public function cf_add_comment() {
 
-		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT );
+		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_SANITIZE_STRING );
+		$commentList      = htmlspecialchars_decode( $commentList );
 		$commentList      = html_entity_decode( $commentList );
 		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
 
 		// Get the assigned User ID.
-		$assign_to  = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
+		$assign_to = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
 
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$arr             = array();
@@ -651,7 +651,7 @@ class Commenting_block_Admin {
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 			$superCareerData['comments'][ $timestamp ] = $arr;
 			if ( $assign_to > 0 ) {
-				$superCareerData['assigned_to'] = $assign_to;
+				$superCareerData['assigned_to']         = $assign_to;
 				$superCareerData['sent_assigned_email'] = false;
 			}
 		} else {
@@ -659,7 +659,7 @@ class Commenting_block_Admin {
 			$superCareerData['comments'][ $timestamp ] = $arr;
 			$superCareerData['commentedOnText']        = $commentList['commentedOnText'];
 			if ( $assign_to > 0 ) {
-				$superCareerData['assigned_to'] = $assign_to;
+				$superCareerData['assigned_to']         = $assign_to;
 				$superCareerData['sent_assigned_email'] = false;
 			}
 
@@ -848,7 +848,8 @@ class Commenting_block_Admin {
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
 
-		$edited_comment = filter_input( INPUT_POST, "editedComment" );
+		$edited_comment = filter_input( INPUT_POST, "editedComment", FILTER_SANITIZE_STRING );
+		$edited_comment = htmlspecialchars_decode( $edited_comment );
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );
 

@@ -47,7 +47,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                                 <div class="cf-cnt-box-body">
                                     <div id="cf-notice">
                                         <div class="cf-success notice notice-success" style="display: none">
-                                            <p><?php _e( 'Settings saved!', 'content-collaboration-inline-commenting' ); ?></p>
+                                            <p><?php esc_html_e( 'Settings saved!', 'content-collaboration-inline-commenting' ); ?></p>
                                         </div>
                                     </div>
                                     <div class="cf-notification-settings">

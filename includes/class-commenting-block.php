@@ -103,24 +103,24 @@ class Commenting_block {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-loader.php';
+		require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-loader.php'; // phpcs:ignore
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-i18n.php';
+		require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-i18n.php'; // phpcs:ignore
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once COMMENTING_BLOCK_DIR . 'admin/class-commenting-block-admin.php';
+		require_once COMMENTING_BLOCK_DIR . 'admin/class-commenting-block-admin.php'; // phpcs:ignore
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once COMMENTING_BLOCK_DIR . 'public/class-commenting-block-public.php';
+		require_once COMMENTING_BLOCK_DIR . 'public/class-commenting-block-public.php'; // phpcs:ignore
 
 		$this->loader = new Commenting_block_Loader();
 

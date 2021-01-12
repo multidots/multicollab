@@ -72,7 +72,8 @@ class Commenting_Block_Email_Templates {
 			$html .= '</div>'; // .comment-box end
 
 			$users_emails = array_unique( $this->users_emails );
-			if ( ( $key = array_search( $current_user_email, $users_emails, true ) ) !== false ) {
+			$key = array_search( $current_user_email, $users_emails, true );
+			if ( $key !== false ) {
 				unset( $users_emails[ $key ] );
 			}
 
@@ -82,7 +83,7 @@ class Commenting_Block_Email_Templates {
 			// Limit the page and site titles for Subject.
 			$r_subject = $this->cf_email_prepare_subject( 'Comment Resolved', $p_title, $site_title );
 
-			wp_mail( $users_emails, $r_subject, $html, $headers );
+			wp_mail( $users_emails, $r_subject, $html, $headers ); // phpcs:ignore
 		}
 	}
 
@@ -93,7 +94,7 @@ class Commenting_Block_Email_Templates {
 	 */
 	private function cf_email_get_comments_loop() {
 		ob_start();
-		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-email-comments.php' );
+		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-email-comments.php' ); // phpcs:ignore
 
 		return ob_get_clean();
 	}
@@ -149,7 +150,6 @@ class Commenting_Block_Email_Templates {
 		$p_title                   = $args['post_title'];
 		$assign_to                 = $args['assign_to'];
 		$site_title                = $args['site_title'];
-		$new_comments              = $args['new_comments'];
 		$post_edit_link            = $args['post_edit_link'];
 		$list_of_comments          = $args['list_of_comments'];
 		$commented_on_text         = $args['commented_on_text'];
@@ -157,7 +157,7 @@ class Commenting_Block_Email_Templates {
 		$current_user_display_name =  $args['current_user_display_name'];
 
 		$find_mentions = '';
-		foreach ( $list_of_comments as $timestamp => $comment ) {
+		foreach ( $list_of_comments as $comment ) {
 			$find_mentions .= $comment['thread'];
 		}
 
@@ -245,11 +245,11 @@ class Commenting_Block_Email_Templates {
 					$assigned_user = get_user_by( 'ID', $el_obj['assigned_to'] );
 					if ( ! empty( $assigned_user ) ) {
 						$assign_to = $assigned_user->user_email;
-		
+
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'Assigned to you', $p_title, $site_title );
 
-						wp_mail( $assign_to, $subject, $html, $headers );
+						wp_mail( $assign_to, $subject, $html, $headers ); // phpcs:ignore
 					}
 					// Updating after sending the email.
 					$el_obj['sent_assigned_email'] = true;
@@ -266,7 +266,7 @@ class Commenting_Block_Email_Templates {
 					if ( ! empty( $email_list ) ) {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
-						wp_mail( $email_list, $subject, $html, $headers );
+						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
 					}
 				} else if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === true ) {
 					// Remove assigned email from the list.
@@ -280,7 +280,7 @@ class Commenting_Block_Email_Templates {
 					if ( ! empty( $email_list ) ) {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
-						wp_mail( $email_list, $subject, $html, $headers );
+						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
 					}
 				} else {
 					// Notify Site Admin if setting enabled.
@@ -290,7 +290,7 @@ class Commenting_Block_Email_Templates {
 					if ( ! empty( $email_list ) ) {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
-						wp_mail( $email_list, $subject, $html, $headers );
+						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
 					}
 				}
 			}
