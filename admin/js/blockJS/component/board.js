@@ -14,7 +14,6 @@ export default class Board extends React.Component {
         this.removeComment = this.removeComment.bind(this);
         this.addNewComment = this.addNewComment.bind(this);
         this.cancelComment = this.cancelComment.bind(this);
-        this.removeTag = this.removeTag.bind(this);
 
         const currentPostID = wp.data.select('core/editor').getCurrentPostId();
         const postSelections = [];
@@ -43,7 +42,7 @@ export default class Board extends React.Component {
 
                 if ('true' === resolved || 0 === userDetails.length) {
                     let elIDRemove = selectedText;
-                    this.removeTag(elIDRemove);
+                    removeTag(elIDRemove);
                     jQuery('#' + elIDRemove).remove();
 
                     return false;
@@ -75,85 +74,6 @@ export default class Board extends React.Component {
         }
 
         this.state = {comments: []};
-    }
-
-    removeTag(elIDRemove) {
-
-        const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-        const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-        if (null !== blockAttributes) {
-
-            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
-            jQuery(findAttributes).each(function (i, attrb) {
-                var content = blockAttributes[attrb];
-                if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                    if ('' !== content) {
-                        let tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = content;
-                        let childElements = tempDiv.getElementsByTagName('mdspan');
-                        for (let i = 0; i < childElements.length; i++) {
-                            if (elIDRemove === childElements[i].attributes.datatext.value) {
-                                childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                                const finalContent = tempDiv.innerHTML;
-
-                                if (attrb === 'content') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            content: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'citation') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            citation: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'value') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            value: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'caption') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            caption: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'values') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            values: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'fileName') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            fileName: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'text') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            text: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'downloadButtonText') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            downloadButtonText: finalContent
-                                        }
-                                    });
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-            });
-        }
     }
 
     removeComment(idx, cTimestamp, elID) {

@@ -569,11 +569,6 @@ class Commenting_block_Admin {
 			$date_format       = get_option( 'date_format' );
 			$time_format       = get_option( 'time_format' );
 			$comment_id        = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
-			wp_localize_script( 'content-collaboration-inline-commenting', 'suggestionBlock', array(
-				'userRole'   => $current_user_role,
-				'dateFormat' => $date_format,
-				'timeFormat' => $time_format
-			) );
 			wp_localize_script( $this->plugin_name, 'adminLocalizer', [
 				'nonce'      => wp_create_nonce( COMMENTING_NONCE ),
 				'comment_id' => isset( $comment_id ) ? $comment_id : null

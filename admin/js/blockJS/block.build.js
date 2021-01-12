@@ -13193,7 +13193,6 @@ var mdComment = {
             _this.onToggle = _this.onToggle.bind(_this);
             _this.getSelectedText = _this.getSelectedText.bind(_this);
             _this.floatComments = _this.floatComments.bind(_this);
-            _this.removeTag = _this.removeTag.bind(_this);
 
             // Typecheck.
             toggleComments.propTypes = {
@@ -13207,86 +13206,6 @@ var mdComment = {
         }
 
         _createClass(toggleComments, [{
-            key: 'removeTag',
-            value: function removeTag(elIDRemove) {
-
-                var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-                var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-                if (null !== blockAttributes) {
-
-                    var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
-                    jQuery(findAttributes).each(function (i, attrb) {
-                        var content = blockAttributes[attrb];
-                        if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                            if ('' !== content) {
-                                var tempDiv = document.createElement('div');
-                                tempDiv.innerHTML = content;
-                                var childElements = tempDiv.getElementsByTagName('mdspan');
-                                for (var _i2 = 0; _i2 < childElements.length; _i2++) {
-                                    if (elIDRemove === childElements[_i2].attributes.datatext.value) {
-                                        childElements[_i2].parentNode.replaceChild(document.createTextNode(childElements[_i2].innerText), childElements[_i2]);
-                                        var finalContent = tempDiv.innerHTML;
-
-                                        if (attrb === 'content') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    content: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'citation') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    citation: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'value') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    value: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'caption') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    caption: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'values') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    values: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'fileName') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    fileName: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'text') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    text: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'downloadButtonText') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    downloadButtonText: finalContent
-                                                }
-                                            });
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        }, {
             key: 'onToggle',
             value: function onToggle() {
                 var _props = this.props,
@@ -13387,7 +13306,7 @@ var mdComment = {
                     if (1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length) {
                         var latestBoard = $('.board.fresh-board').parents('.cls-board-outer').attr('id');
                         if (selectedText !== latestBoard) {
-                            this.removeTag(latestBoard);
+                            removeTag(latestBoard);
                             $('#' + latestBoard).remove();
                             $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                         }
@@ -13503,7 +13422,6 @@ var Board = function (_React$Component) {
         _this2.removeComment = _this2.removeComment.bind(_this2);
         _this2.addNewComment = _this2.addNewComment.bind(_this2);
         _this2.cancelComment = _this2.cancelComment.bind(_this2);
-        _this2.removeTag = _this2.removeTag.bind(_this2);
 
         var currentPostID = wp.data.select('core/editor').getCurrentPostId();
         var postSelections = [];
@@ -13535,7 +13453,7 @@ var Board = function (_React$Component) {
 
                 if ('true' === resolved || 0 === userDetails.length) {
                     var elIDRemove = selectedText;
-                    _this2.removeTag(elIDRemove);
+                    removeTag(elIDRemove);
                     jQuery('#' + elIDRemove).remove();
 
                     return false;
@@ -13571,86 +13489,6 @@ var Board = function (_React$Component) {
     }
 
     _createClass(Board, [{
-        key: 'removeTag',
-        value: function removeTag(elIDRemove) {
-
-            var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-            var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            if (null !== blockAttributes) {
-
-                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
-                jQuery(findAttributes).each(function (i, attrb) {
-                    var content = blockAttributes[attrb];
-                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                        if ('' !== content) {
-                            var tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = content;
-                            var childElements = tempDiv.getElementsByTagName('mdspan');
-                            for (var _i = 0; _i < childElements.length; _i++) {
-                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
-                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
-                                    var finalContent = tempDiv.innerHTML;
-
-                                    if (attrb === 'content') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                content: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'citation') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                citation: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'value') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                value: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'caption') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                caption: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'values') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                values: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'fileName') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                fileName: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'text') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                text: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'downloadButtonText') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                downloadButtonText: finalContent
-                                            }
-                                        });
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }, {
         key: 'removeComment',
         value: function removeComment(idx, cTimestamp, elID) {
 
@@ -14070,7 +13908,6 @@ var Comment = function (_React$Component) {
         _this.remove = _this.remove.bind(_this);
         _this.resolve = _this.resolve.bind(_this);
         _this.cancelEdit = _this.cancelEdit.bind(_this);
-        _this.removeTag = _this.removeTag.bind(_this);
         _this.state = { editing: false, showEditedDraft: false, contentHtml: '' };
 
         return _this;
@@ -14145,99 +13982,9 @@ var Comment = function (_React$Component) {
                 });
 
                 // Remove Tag.
-                this.removeTag(elIDRemove);
+                removeTag(elIDRemove);
             } else {
                 jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
-            }
-        }
-    }, {
-        key: 'removeTag',
-        value: function removeTag(elIDRemove) {
-
-            var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-            var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            //let multiHierarchy = false;
-            if (null !== blockAttributes) {
-
-                /*if( 'images' in blockAttributes ) {
-                    blockAttributes = blockAttributes['images'];
-                }*/
-
-                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
-                jQuery(findAttributes).each(function (i, attrb) {
-                    var content = blockAttributes[attrb];
-
-                    //jQuery(blockAttributes).each(function (i, content) {
-
-                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                        if ('' !== content) {
-                            var tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = content;
-                            var childElements = tempDiv.getElementsByTagName('mdspan');
-                            for (var _i = 0; _i < childElements.length; _i++) {
-                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
-                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
-                                    var finalContent = tempDiv.innerHTML;
-
-                                    if (attrb === 'content') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                content: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'citation') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                citation: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'value') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                value: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'caption') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                caption: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'values') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                values: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'fileName') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                fileName: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'text') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                text: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'downloadButtonText') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                downloadButtonText: finalContent
-                                            }
-                                        });
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    //});
-                });
             }
         }
     }, {

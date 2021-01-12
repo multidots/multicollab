@@ -15,7 +15,6 @@ export default class Comment extends React.Component {
         this.remove = this.remove.bind(this);
         this.resolve = this.resolve.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
-        this.removeTag = this.removeTag.bind(this);
         this.state = {editing: false, showEditedDraft: false, contentHtml: ''};
 
     }
@@ -83,98 +82,9 @@ export default class Comment extends React.Component {
             });
 
             // Remove Tag.
-            this.removeTag(elIDRemove);
+            removeTag(elIDRemove);
         } else {
             jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
-        }
-    }
-
-    removeTag(elIDRemove) {
-
-        const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-        let blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-        //let multiHierarchy = false;
-        if (null !== blockAttributes) {
-
-            /*if( 'images' in blockAttributes ) {
-                blockAttributes = blockAttributes['images'];
-            }*/
-
-            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
-            jQuery(findAttributes).each(function (i, attrb) {
-                let content = blockAttributes[attrb];
-
-                //jQuery(blockAttributes).each(function (i, content) {
-
-                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                        if ('' !== content) {
-                            let tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = content;
-                            let childElements = tempDiv.getElementsByTagName('mdspan');
-                            for (let i = 0; i < childElements.length; i++) {
-                                if (elIDRemove === childElements[i].attributes.datatext.value) {
-                                    childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                                    const finalContent = tempDiv.innerHTML;
-
-                                    if (attrb === 'content') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                content: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'citation') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                citation: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'value') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                value: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'caption') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                caption: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'values') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                values: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'fileName') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                fileName: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'text') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                text: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'downloadButtonText') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                downloadButtonText: finalContent
-                                            }
-                                        });
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                //});
-            });
         }
     }
 
