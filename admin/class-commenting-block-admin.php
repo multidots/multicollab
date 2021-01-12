@@ -103,7 +103,7 @@ class Commenting_block_Admin {
 	public function cf_sort_custom_column_query( $query ) {
 		$orderby = $query->get( 'orderby' );
 
-		if ( 'sort_by_cf_comments' === $orderby ) {
+		if ( 'sort_by_cf_comments' === $orderby && $query->is_main_query() ) {
 
 			$meta_query = array(
 				'relation' => 'OR',
@@ -118,6 +118,8 @@ class Commenting_block_Admin {
 
 			$query->set( 'meta_query', $meta_query );
 			$query->set( 'orderby', 'meta_value' );
+
+			return;
 		}
 	}
 
@@ -185,6 +187,7 @@ class Commenting_block_Admin {
 			update_post_meta( $post_ID, 'open_cf_count', $open_counts );
 		}
 
+		$comment_counts = array();
 		$comment_counts['open_counts']  = $open_counts;
 		$comment_counts['total_counts'] = $total_count;
 
@@ -251,6 +254,8 @@ class Commenting_block_Admin {
 				$role->add_cap( 'unfiltered_html' );
 			}
 		}
+
+		return;
 	}
 
 	/**
@@ -473,7 +478,7 @@ class Commenting_block_Admin {
 
 		ob_start();
 		echo '<style>';
-		require_once( COMMENTING_BLOCK_DIR . 'admin/css/commenting-block-email.css' );
+		file_get_contents( COMMENTING_BLOCK_DIR . 'admin/css/commenting-block-email.css' );
 		echo '</style>';
 
 		return ob_get_clean();
@@ -599,7 +604,7 @@ class Commenting_block_Admin {
 	 */
 	public function cf_add_comment() {
 
-		$commentList      = filter_input( INPUT_POST, "commentList" );
+		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT );
 		$commentList      = html_entity_decode( $commentList );
 		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
