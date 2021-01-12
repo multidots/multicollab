@@ -290,11 +290,12 @@
             // Triggering textarea keyup event.
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( createTextarea );
-                typedText = _self.val();
+                typedText = _self.html();
                 // If textarea is blank then remove email list.
-                if( '' == typedText ) {
+                if( typedText.length <=0 ) {
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
+                    $( '.cf-assign-to' ).remove();
                 }
 
                 // Handeling space. As if someone type space has no intension to write email.
@@ -309,9 +310,9 @@
                 cursorPos = getCaretPosition(el);
                 if( '@' === e.key && true === e.shiftKey ) {
                     var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2, 2 );
-
                     if(
                         ' @' == prevCharOfEmailSymbol
+                        || ';@' == prevCharOfEmailSymbol
                         || '' == prevCharOfEmailSymbol
                         || '@' == prevCharOfEmailSymbol
                     ) { // meaning @ is typed at the begining or as independent.
@@ -388,7 +389,7 @@
                 insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                 var typedContent              = $( createTextarea ).html();
-                var refinedContent            = typedContent.replace( /(?<= @)\w+(?= \<)/gmi, '' );
+                var refinedContent            = typedContent.replace( /(?<=@)\w+(?=\<)/gi, '' );
                 var fragments                 = document.createRange().createContextualFragment( refinedContent );
                 var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                 var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
