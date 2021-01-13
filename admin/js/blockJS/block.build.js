@@ -13935,7 +13935,6 @@ var Comment = function (_React$Component) {
         key: 'save',
         value: function save(event) {
             var newText = this.state.contentHtml;
-            console.log(newText);
             if ('' === newText) {
                 alert("Please write a comment to share!");
                 return false;

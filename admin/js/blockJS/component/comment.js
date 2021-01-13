@@ -37,7 +37,6 @@ export default class Comment extends React.Component {
 
     save(event) {
         var newText = this.state.contentHtml;
-        console.log( newText )
         if ( '' === newText ) {
             alert( "Please write a comment to share!" );
             return false;
