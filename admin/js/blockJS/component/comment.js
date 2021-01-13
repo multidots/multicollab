@@ -31,7 +31,7 @@ export default class Comment extends React.Component {
         var editedValue     = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
         var editedContainer = '#edit-' + this.props.timestamp;
         setTimeout( function() {
-            jQuery( editedContainer ).html( editedValue )
+            jQuery( editedContainer ).html( editedValue ); // phpcs:ignore
         }, 500 )
     }
 
@@ -195,7 +195,6 @@ export default class Comment extends React.Component {
                         onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
                         id={ `edit-${this.props.timestamp}` }
                         className="cf-share-comment js-cf-edit-comment"
-                        placeholder="loading..."
                     />
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">

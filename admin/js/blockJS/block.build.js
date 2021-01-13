@@ -13928,7 +13928,7 @@ var Comment = function (_React$Component) {
             var editedValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
             var editedContainer = '#edit-' + this.props.timestamp;
             setTimeout(function () {
-                jQuery(editedContainer).html(editedValue);
+                jQuery(editedContainer).html(editedValue); // phpcs:ignore
             }, 500);
         }
     }, {
@@ -14176,8 +14176,7 @@ var Comment = function (_React$Component) {
                             return _this2.setState({ contentHtml: e.target.value });
                         },
                         id: 'edit-' + this.props.timestamp,
-                        className: 'cf-share-comment js-cf-edit-comment',
-                        placeholder: 'loading...'
+                        className: 'cf-share-comment js-cf-edit-comment'
                     })
                 ),
                 wp.element.createElement(
