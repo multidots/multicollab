@@ -133,7 +133,7 @@ class Commenting_Block_Email_Templates {
 		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
 		preg_match_all( $pattern, $str, $matches );
 
-		return $matches[0];
+		return array_unique( $matches[0] );
 	}
 
 	/**
@@ -145,6 +145,7 @@ class Commenting_Block_Email_Templates {
 	 */
 	public function cf_email_new_comments( $args ) {
 		$html                      = $args['html'];
+		$mentioned_html            = $args['html'];
 		$elid                      = $args['elid'];
 		$post_id                   = $args['post_ID'];
 		$p_title                   = $args['post_title'];
@@ -155,13 +156,18 @@ class Commenting_Block_Email_Templates {
 		$list_of_comments          = $args['list_of_comments'];
 		$commented_on_text         = $args['commented_on_text'];
 		$current_user_email        = $args['current_user_email'];
-		$current_user_display_name =  $args['current_user_display_name'];
+		$current_user_display_name = $args['current_user_display_name'];
 
 		$find_mentions = '';
-		foreach ( $list_of_comments as $comment ) {
+		$find_new_mentions = '';
+		foreach ( $list_of_comments as $timestamp => $comment ) {
 			$find_mentions .= $comment['thread'];
+			if( in_array( $timestamp, $new_comments ) ) {
+				$find_new_mentions .= $comment['thread'];
+			}
 		}
 
+		// Grab all the emails mentioned in the current board.
 		$users_emails      = array_unique( $this->users_emails );
 		$mentioned_emails  = $this->cf_find_mentioned_emails( $find_mentions );
 		if( null !== $users_emails ) {
@@ -169,10 +175,21 @@ class Commenting_Block_Email_Templates {
 		}
 		$email_list = array_unique( $mentioned_emails );
 
+		// Grab only newly mentioned email of the board.
+		$newly_mentioned_emails = $this->cf_find_mentioned_emails( $find_new_mentions );
+
+		// Unset the newly mentioned emails from the list.
+		foreach( $newly_mentioned_emails as $newly_mentioned ) {
+			$key = array_search( $newly_mentioned, $email_list, true );
+			if( $key !== false ) {
+				unset( $email_list[$key] );
+			}
+		}
+
 		// Removed current user email from the list.
 		if( ! empty( $current_user_email ) ) {
 			$key = array_search( $current_user_email, $email_list, true );
-			if( $key ) {
+			if( $key !== false ) {
 				unset( $email_list[$key] );
 			}
 		}
@@ -213,6 +230,32 @@ class Commenting_Block_Email_Templates {
 			$html .= "
             <div class='comment-box new-comment'>
                 <div class='comment-box-header'>
+                    {$post_title_html}
+                </div>
+                <div class='comment-box-body'>
+                    <h2 class='head-with-icon'>
+                        <span class='icon-comment'>
+                            <svg xmlns='http://www.w3.org/2000/svg' width='36.226' height='43.02' viewBox='0 0 36.226 43.02'>
+                                <g id='Group_2' data-name='Group 2' transform='translate(-36.242 1.019)'>
+                                    <path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
+                                </g>
+                            </svg>
+                        </span>
+                        Comments
+                    </h2>
+                    <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
+                    {$assigned_to_who_html}
+                    {$comment_list_html}
+                    <div class='view_reply'>
+                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>Click here</a> - View or reply to this comment</div>
+                    </div>
+                </div>
+            </div>
+			";
+
+			$mentioned_html .= "
+            <div class='comment-box new-comment'>
+                <div class='comment-box-header'>
                     <p><span class='commenter-name'>" . esc_html( $current_user_display_name ) . "</span> - mentioned you in a comment in the following page.</p>
 					{$post_title_html}
                 </div>
@@ -241,6 +284,9 @@ class Commenting_Block_Email_Templates {
 
 			// Sent email to assign user once & rest of the mentioned users.
 			$el_obj = get_post_meta( $post_id, "_{$elid}", true );
+			echo '<pre>';
+					var_dump( $newly_mentioned_emails );
+					echo '</pre>';die();
 			if( ! empty( $el_obj ) ) {
 				if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === false ) {
 					$assigned_user = get_user_by( 'ID', $el_obj['assigned_to'] );
@@ -250,7 +296,7 @@ class Commenting_Block_Email_Templates {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'Assigned to you', $p_title, $site_title );
 
-						wp_mail( $assign_to, $subject, $html, $headers ); // phpcs:ignore
+						wp_mail( $assign_to, $subject, $mentioned_html, $headers ); // phpcs: ignore
 					}
 					// Updating after sending the email.
 					$el_obj['sent_assigned_email'] = true;
@@ -258,7 +304,9 @@ class Commenting_Block_Email_Templates {
 
 					// Remove assigned email from the list.
 					$key = array_search( $assigned_user->user_email, $email_list, true );
-					unset( $email_list[$key] );
+					if( $key !== false ) {
+						unset( $email_list[$key] );
+					}
 
 					// Notify Site Admin if setting enabled.
 					$email_list = $this->cf_email_notify_siteadmin( $email_list );
@@ -268,6 +316,16 @@ class Commenting_Block_Email_Templates {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
 						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
+					}
+
+					$key = array_search( $assigned_user->user_email, $newly_mentioned_emails, true );
+					if( $key !== false ) {
+						unset( $newly_mentioned_emails[$key] );
+					}
+					if( ! empty( $newly_mentioned_emails ) ) {
+						// Limit the page and site titles for Subject.
+						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
+						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers );
 					}
 				} else if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === true ) {
 					// Remove assigned email from the list.
@@ -286,6 +344,12 @@ class Commenting_Block_Email_Templates {
 				} else {
 					// Notify Site Admin if setting enabled.
 					$email_list = $this->cf_email_notify_siteadmin( $email_list );
+
+					if( ! empty( $newly_mentioned_emails ) ) {
+						// Limit the page and site titles for Subject.
+						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
+						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers );
+					}
 
 					// Sent email to all users.
 					if ( ! empty( $email_list ) ) {
