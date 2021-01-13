@@ -158,8 +158,6 @@ class Commenting_Block_Email_Templates {
 		$current_user_email        = $args['current_user_email'];
 		$current_user_display_name = $args['current_user_display_name'];
 
-
-
 		$find_mentions = '';
 		$find_new_mentions = '';
 		foreach ( $list_of_comments as $timestamp => $comment ) {
@@ -172,9 +170,7 @@ class Commenting_Block_Email_Templates {
 		// Grab all the emails mentioned in the current board.
 		$users_emails      = array_unique( $this->users_emails );
 		$mentioned_emails  = $this->cf_find_mentioned_emails( $find_mentions );
-		// echo '<pre>';
-		// var_dump( $list_of_comments );
-		// echo '</pre>';die();
+
 		if( null !== $users_emails ) {
 			$mentioned_emails = array_merge( $mentioned_emails, $users_emails );
 		}
@@ -182,10 +178,6 @@ class Commenting_Block_Email_Templates {
 
 		// Grab only newly mentioned email of the board.
 		$newly_mentioned_emails = $this->cf_find_mentioned_emails( $find_new_mentions );
-
-		// echo '<pre>';
-		// var_dump( $mentioned_emails );
-		// echo '</pre>';die();
 
 		// Unset the newly mentioned emails from the list.
 		foreach( $newly_mentioned_emails as $newly_mentioned ) {
@@ -331,7 +323,7 @@ class Commenting_Block_Email_Templates {
 					if( ! empty( $newly_mentioned_emails ) ) {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
-						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers );
+						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers ); // phpcs:ignore
 					}
 				} else if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === true ) {
 					// Remove assigned email from the list.
@@ -354,7 +346,7 @@ class Commenting_Block_Email_Templates {
 					if( ! empty( $newly_mentioned_emails ) ) {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
-						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers );
+						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers ); // phpcs:ignore
 					}
 
 					// Sent email to all users.

@@ -414,8 +414,10 @@ class Commenting_block_Admin {
 				if ( strpos( $p_content, $elid ) !== false ) {
 					$prev_state   = $metas[ $el ][0];
 					$prev_state   = maybe_unserialize( $prev_state );
+					$new_comments = array();
 					foreach ( $drafts as $d ) {
 						$prev_state['comments'][ $d ]['status'] = 'publish';
+						$new_comments[]                         = $d;
 					}
 					update_post_meta( $post_ID, $el, $prev_state );
 
@@ -438,6 +440,7 @@ class Commenting_block_Admin {
 						'list_of_comments'          => $list_of_comments,
 						'current_user_email'        => $current_user_email,
 						'current_user_display_name' => $current_user_display_name,
+						'new_comments'              => $new_comments,
 						'assign_to'                 => $assigned_to
 					) );
 				}
@@ -597,9 +600,7 @@ class Commenting_block_Admin {
 	 * Add Comment function.
 	 */
 	public function cf_add_comment() {
-
-		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_SANITIZE_STRING );
-		$commentList      = htmlspecialchars_decode( $commentList );
+		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT );
 		$commentList      = html_entity_decode( $commentList );
 		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
