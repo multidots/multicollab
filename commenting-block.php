@@ -43,7 +43,7 @@ define( 'COMMENTING_NONCE', 'BFaYbfonJ=n@R<8kId|nN8x #W[-S>1%Sazm%<' );
  * This action is documented in includes/class-commenting-block-activator.php
  */
 function cf_activate_commenting_block() {
-	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-activator.php';
+	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-activator.php'; // phpcs:ignore
 	Commenting_block_Activator::activate();
 }
 
@@ -52,7 +52,7 @@ function cf_activate_commenting_block() {
  * This action is documented in includes/class-commenting-block-deactivator.php
  */
 function cf_deactivate_commenting_block() {
-	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-deactivator.php';
+	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-deactivator.php'; // phpcs:ignore
 	Commenting_block_Deactivator::deactivate();
 }
 
@@ -63,7 +63,7 @@ register_deactivation_hook( __FILE__, 'cf_deactivate_commenting_block' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require COMMENTING_BLOCK_DIR . 'includes/class-commenting-block.php';
+require COMMENTING_BLOCK_DIR . 'includes/class-commenting-block.php'; // phpcs:ignore
 
 /**
  * Begins execution of the plugin.
