@@ -320,6 +320,8 @@ class Commenting_Block_Email_Templates {
 					if( $key !== false ) {
 						unset( $newly_mentioned_emails[$key] );
 					}
+					
+					// Sent email to newly mentioned users.
 					if( ! empty( $newly_mentioned_emails ) ) {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
@@ -339,10 +341,18 @@ class Commenting_Block_Email_Templates {
 						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
 						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
 					}
+
+					// Sent email to newly mentioned users.
+					if( ! empty( $newly_mentioned_emails ) ) {
+						// Limit the page and site titles for Subject.
+						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
+						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers ); // phpcs:ignore
+					}
 				} else {
 					// Notify Site Admin if setting enabled.
 					$email_list = $this->cf_email_notify_siteadmin( $email_list );
 
+					// Sent email to newly mentioned users.
 					if( ! empty( $newly_mentioned_emails ) ) {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
