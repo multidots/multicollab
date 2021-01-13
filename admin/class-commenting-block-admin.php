@@ -490,7 +490,7 @@ class Commenting_block_Admin {
 	 * Include the Email template class and initiate the object.
 	 */
 	private function cf_initiate_email_class() {
-		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/emails/commenting-block-email-templates.php' ); // phpcs:ignore
+		require_once( COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-email-templates.php' ); // phpcs:ignore
 		$this->email_class = new Commenting_Block_Email_Templates();
 	}
 
