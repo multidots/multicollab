@@ -150,6 +150,7 @@ class Commenting_Block_Email_Templates {
 		$p_title                   = $args['post_title'];
 		$assign_to                 = $args['assign_to'];
 		$site_title                = $args['site_title'];
+		$new_comments              = $args['new_comments'];
 		$post_edit_link            = $args['post_edit_link'];
 		$list_of_comments          = $args['list_of_comments'];
 		$commented_on_text         = $args['commented_on_text'];
