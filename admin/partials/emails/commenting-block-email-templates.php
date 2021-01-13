@@ -158,6 +158,8 @@ class Commenting_Block_Email_Templates {
 		$current_user_email        = $args['current_user_email'];
 		$current_user_display_name = $args['current_user_display_name'];
 
+
+
 		$find_mentions = '';
 		$find_new_mentions = '';
 		foreach ( $list_of_comments as $timestamp => $comment ) {
@@ -170,6 +172,9 @@ class Commenting_Block_Email_Templates {
 		// Grab all the emails mentioned in the current board.
 		$users_emails      = array_unique( $this->users_emails );
 		$mentioned_emails  = $this->cf_find_mentioned_emails( $find_mentions );
+		// echo '<pre>';
+		// var_dump( $list_of_comments );
+		// echo '</pre>';die();
 		if( null !== $users_emails ) {
 			$mentioned_emails = array_merge( $mentioned_emails, $users_emails );
 		}
@@ -177,6 +182,10 @@ class Commenting_Block_Email_Templates {
 
 		// Grab only newly mentioned email of the board.
 		$newly_mentioned_emails = $this->cf_find_mentioned_emails( $find_new_mentions );
+
+		// echo '<pre>';
+		// var_dump( $mentioned_emails );
+		// echo '</pre>';die();
 
 		// Unset the newly mentioned emails from the list.
 		foreach( $newly_mentioned_emails as $newly_mentioned ) {
@@ -284,9 +293,6 @@ class Commenting_Block_Email_Templates {
 
 			// Sent email to assign user once & rest of the mentioned users.
 			$el_obj = get_post_meta( $post_id, "_{$elid}", true );
-			echo '<pre>';
-					var_dump( $newly_mentioned_emails );
-					echo '</pre>';die();
 			if( ! empty( $el_obj ) ) {
 				if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === false ) {
 					$assigned_user = get_user_by( 'ID', $el_obj['assigned_to'] );
