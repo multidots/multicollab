@@ -566,11 +566,6 @@ class Commenting_block_Admin {
 				'wp-edit-post',
 			), '1.0.7', true );
 
-			global $wp_roles;
-			$curr_user         = wp_get_current_user();
-			$current_user_role = $wp_roles->roles[ $curr_user->roles[0] ]['name'];
-			$date_format       = get_option( 'date_format' );
-			$time_format       = get_option( 'time_format' );
 			$comment_id        = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
 			wp_localize_script( $this->plugin_name, 'adminLocalizer', [
 				'nonce'      => wp_create_nonce( COMMENTING_NONCE ),
@@ -600,7 +595,7 @@ class Commenting_block_Admin {
 	 * Add Comment function.
 	 */
 	public function cf_add_comment() {
-		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT );
+		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT ); // phpcs:ignore
 		$commentList      = html_entity_decode( $commentList );
 		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;

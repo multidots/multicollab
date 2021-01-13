@@ -162,7 +162,7 @@ class Commenting_Block_Email_Templates {
 		$find_new_mentions = '';
 		foreach ( $list_of_comments as $timestamp => $comment ) {
 			$find_mentions .= $comment['thread'];
-			if( in_array( $timestamp, $new_comments ) ) {
+			if( in_array( $timestamp, $new_comments, true ) ) {
 				$find_new_mentions .= $comment['thread'];
 			}
 		}
@@ -294,7 +294,7 @@ class Commenting_Block_Email_Templates {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'Assigned to you', $p_title, $site_title );
 
-						wp_mail( $assign_to, $subject, $mentioned_html, $headers ); // phpcs: ignore
+						wp_mail( $assign_to, $subject, $mentioned_html, $headers ); // phpcs:ignore
 					}
 					// Updating after sending the email.
 					$el_obj['sent_assigned_email'] = true;
@@ -320,7 +320,7 @@ class Commenting_Block_Email_Templates {
 					if( $key !== false ) {
 						unset( $newly_mentioned_emails[$key] );
 					}
-					
+
 					// Sent email to newly mentioned users.
 					if( ! empty( $newly_mentioned_emails ) ) {
 						// Limit the page and site titles for Subject.
