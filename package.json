@@ -1,0 +1,24 @@
+{
+  "name": "eslintcheck",
+  "version": "1.0.0",
+  "description": "> **⚠️ Note:** This is a beta version. Use it for contributions only.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-plugin-react": "^7.22.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/multidots/gutenberg_commenting.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/multidots/gutenberg_commenting/issues"
+  },
+  "homepage": "https://github.com/multidots/gutenberg_commenting#readme"
+}

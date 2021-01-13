@@ -100,6 +100,28 @@ class Commenting_Block_Email_Templates {
 	}
 
 	/**
+	 * Assigned to SVG icon for Email templates.
+	 *
+	 * @return string HTML for assigned to svg icon.
+	 */
+	private function cf_email_get_assigned_svg_icon() {
+		ob_start();
+		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-email-assign-to-svg-icon.php' ); // phpcs:ignore
+		return ob_get_clean();
+	}
+
+	/**
+	 * Comment SVG icon for Email templates.
+	 *
+	 * @return string HTML for assigned to svg icon.
+	 */
+	private function cf_email_get_comment_svg_icon() {
+		ob_start();
+		require_once( COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-email-comment-svg-icon.php' ); // phpcs:ignore
+		return ob_get_clean();
+	}
+
+	/**
 	 * Prepare Subject line and limit the page and site titles for Subject.
 	 *
 	 * @param string $pre_subject The subject prefix.
@@ -205,20 +227,8 @@ class Commenting_Block_Email_Templates {
 				$assigned_user   = get_user_by( 'ID', $assign_to );
 				$assigned_to_who_html = "
                 <div class='comment-assigned-to'>
-                    <span class='icon-assign'>
-                        <svg id='Group_31' data-name='Group 31' xmlns='http://www.w3.org/2000/svg' width='19.644' height='20' viewBox='0 0 19.644 20'>
-                            <g id='Group_28' data-name='Group 28' transform='translate(2.21)'>
-                            <path id='Path_11' data-name='Path 11' d='M149.786,160.469a10.107,10.107,0,0,1-7.123-2.907.885.885,0,0,1,0-1.279.885.885,0,0,1,1.275,0,8.254,8.254,0,0,0,5.78,2.439,7.905,7.905,0,0,0,5.776-2.436,8.236,8.236,0,0,0,0-11.632,8.253,8.253,0,0,0-5.779-2.438,8.032,8.032,0,0,0-5.779,2.438,1.047,1.047,0,0,1-1.255.018.771.771,0,0,1-.29-.564.949.949,0,0,1,.269-.73,9.992,9.992,0,0,1,7.126-2.909,10.107,10.107,0,0,1,7.124,2.907,9.761,9.761,0,0,1,2.912,7.128,10.1,10.1,0,0,1-2.907,7.124A9.619,9.619,0,0,1,149.786,160.469Z' transform='translate(-142.388 -140.469)' fill='#6ac359'/>
-                            </g>
-                            <g id='Group_29' data-name='Group 29' transform='translate(0 9.055)'>
-                            <path id='Path_12' data-name='Path 12' d='M141.088,151.342a.909.909,0,1,1,0-1.818h5.727a.909.909,0,1,1,0,1.818Z' transform='translate(-140.178 -149.524)' fill='#6ac359'/>
-                            </g>
-                            <g id='Group_30' data-name='Group 30' transform='translate(4.564 4.705)'>
-                            <path id='Path_13' data-name='Path 13' d='M148.645,155.834a.844.844,0,0,1-.638-.271.884.884,0,0,1,0-1.276l2.945-2.945h-5.3a.909.909,0,0,1,0-1.818h5.159l-2.8-2.8a.884.884,0,0,1,0-1.276.884.884,0,0,1,1.276,0l4.492,4.492a.8.8,0,0,1,.2.566.845.845,0,0,1-.271.639l-4.421,4.42A.841.841,0,0,1,148.645,155.834Z' transform='translate(-144.742 -145.174)' fill='#6ac359'/>
-                            </g>
-                        </svg>
-                    </span>
-                    Assigned to <a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name'>@" . esc_html( $assigned_user->display_name ) . "</a>
+					{$this->cf_email_get_assigned_svg_icon()}
+                    ".__( 'Assigned to', 'content-collaboration-inline-commenting' )." <a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name'>@" . esc_html( $assigned_user->display_name ) . "</a>
                 </div>
             ";
 			}
@@ -235,20 +245,14 @@ class Commenting_Block_Email_Templates {
                 </div>
                 <div class='comment-box-body'>
                     <h2 class='head-with-icon'>
-                        <span class='icon-comment'>
-                            <svg xmlns='http://www.w3.org/2000/svg' width='36.226' height='43.02' viewBox='0 0 36.226 43.02'>
-                                <g id='Group_2' data-name='Group 2' transform='translate(-36.242 1.019)'>
-                                    <path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
-                                </g>
-                            </svg>
-                        </span>
-                        Comments
+                        {$this->cf_email_get_comment_svg_icon()}
+                        ".__( 'Comments', 'content-collaboration-inline-commenting' )."
                     </h2>
                     <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who_html}
                     {$comment_list_html}
                     <div class='view_reply'>
-                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>Click here</a> - View or reply to this comment</div>
+                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>".__( 'Click here', 'content-collaboration-inline-commenting' )."</a> - ".__( 'View or reply to this comment', 'content-collaboration-inline-commenting' )."</div>
                     </div>
                 </div>
             </div>
@@ -262,20 +266,14 @@ class Commenting_Block_Email_Templates {
                 </div>
                 <div class='comment-box-body'>
                     <h2 class='head-with-icon'>
-                        <span class='icon-comment'>
-                            <svg xmlns='http://www.w3.org/2000/svg' width='36.226' height='43.02' viewBox='0 0 36.226 43.02'>
-                                <g id='Group_2' data-name='Group 2' transform='translate(-36.242 1.019)'>
-                                    <path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
-                                </g>
-                            </svg>
-                        </span>
-                        Comments
+						{$this->cf_email_get_comment_svg_icon()}
+						".__( 'Comments', 'content-collaboration-inline-commenting' )."
                     </h2>
                     <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who_html}
                     {$comment_list_html}
                     <div class='view_reply'>
-                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>Click here</a> - View or reply to this comment</div>
+                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>".__( 'Click here', 'content-collaboration-inline-commenting' )."</a> - ".__( 'View or reply to this comment', 'content-collaboration-inline-commenting' )."</div>
                     </div>
                 </div>
             </div>

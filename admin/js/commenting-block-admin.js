@@ -250,10 +250,9 @@
             var keysToAvoid           = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
             var currentPostID         = $( '#post_ID' ).val();
             var parentBoardClass      = '.cls-board-outer';
-            var editTextarea          = '.commentContainer .commentText textarea';
             var mood                  = 'create';
             // Grab the current board ID.
-            $( document.body ).on( 'click', parentBoardClass, function(e) {
+            $( document.body ).on( 'click', parentBoardClass, function() {
                 el              = $( this ).attr( 'id' );
                 currentBoardID  = `#${el}`;
                 appendIn        = `${currentBoardID} .cf-mentioned-user-popup`;
@@ -265,7 +264,7 @@
                 }
             } )
             if( '' === el ) {
-                $( document.body ).on( 'focus', '.shareCommentContainer', function(e) {
+                $( document.body ).on( 'focus', '.shareCommentContainer', function() {
                     el              = $( this ).parents(parentBoardClass).attr( 'id' );
                     currentBoardID  = `#${el}`;
                     appendIn        = `${currentBoardID} .cf-mentioned-user-popup`;
@@ -277,7 +276,7 @@
                     }
                 } )
             }
-            $( document.body ).on( 'focus keyup', '.js-cf-edit-comment', function(e) {
+            $( document.body ).on( 'focus keyup', '.js-cf-edit-comment', function() {
                 mood = 'edit';
                 el   = $( this ).parents( parentBoardClass ).attr( 'id' );
                 currentCommentBoardID = $( this ).parents( '.commentContainer' ).attr( 'id' );
@@ -327,7 +326,7 @@
                             data: {
                                 action: 'cf_get_user_email_list',
                                 postID: currentPostID,
-                                nonce: adminLocalizer.nonce,
+                                nonce: adminLocalizer.nonce, // eslint-disable-line
                             },
                             beforeSend: function() {},
                             success: function( res ) {
@@ -366,7 +365,7 @@
                                     action: 'cf_get_matched_user_email_list',
                                     niddle: trackedStr,
                                     postID: currentPostID,
-                                    nonce: adminLocalizer.nonce,
+                                    nonce: adminLocalizer.nonce, // eslint-disable-line
                                 },
                                 success: function( res ) {
                                     $( appendIn ).remove(); // Removing previous DOM.
@@ -413,13 +412,12 @@
             var mentionedEmail    = '.cf-system-user-email-list li';
             let checkBoxContainer = '.cf-assign-to';
             // Grab the current board ID.
-            $( document.body ).on( 'focus', appendTo, function(e) {
+            $( document.body ).on( 'focus', appendTo, function() {
                 el = $( this ).parents( parentBoardClass ).attr( 'id' );
             } )
 
             // On Suggested Email Click.
-            $( document.body ).on( 'click', mentionedEmail, function(e) {
-                let thisEmail       = $( this ).data( 'email' );
+            $( document.body ).on( 'click', mentionedEmail, function() {
                 let thisUserId      = $( this ).data( 'user-id' );
                 let thisDisplayName = $( this ).data( 'display-name' );
                 let checkbox        = `
@@ -510,7 +508,7 @@
                     data: {
                         action: 'cf_get_assignable_user_list',
                         content: content,
-                        nonce: adminLocalizer.nonce
+                        nonce: adminLocalizer.nonce // eslint-disable-line
                     },
                     beforeSend: function() {},
                     success: function( res ) {
@@ -540,7 +538,7 @@
 
         // Open comment box when user redirect from email.
         var openComment = function() {
-            var commentedId = adminLocalizer.comment_id;
+            var commentedId = adminLocalizer.comment_id; // eslint-disable-line
             $( window ).load( function() {
                 setTimeout( function() {
                     $( `#${commentedId} .js-edit-comment` ).trigger( 'click' );
@@ -607,7 +605,6 @@
 
         // Hide Comments from Dropdown
         $(document).on('click', '[aria-label="More rich text controls"]', function () {
-            const _this = $(this);
             setTimeout( function() {
                 if( $('body').hasClass('hide-comments') ) {
                     $('button.components-dropdown-menu__menu-item .dashicons-admin-comments').parents('button').toggleClass('hide-me');
@@ -674,7 +671,7 @@
         $('#'+getTabID).addClass('cf-tab-active').show().siblings().removeClass('cf-tab-active').hide();
     });
 
-})(jQuery);
+})(jQuery); // eslint-disable-line
 
 /**
  * Remove the <mdspan> tag from the text.
