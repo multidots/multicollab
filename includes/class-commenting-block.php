@@ -114,7 +114,7 @@ class Commenting_block {
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once COMMENTING_BLOCK_DIR . 'admin/class-commenting-block-admin.php'; // phpcs:ignore
+		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-admin.php'; // phpcs:ignore
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
