@@ -839,7 +839,7 @@ class Commenting_block_Admin {
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 		$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
 
-		$edited_comment = filter_input( INPUT_POST, "editedComment", FILTER_SANITIZE_STRING );
+		$edited_comment = filter_input( INPUT_POST, "editedComment", FILTER_DEFAULT ); // phpcs:ignore
 		$edited_comment = htmlspecialchars_decode( $edited_comment );
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );
