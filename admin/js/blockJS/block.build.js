@@ -12935,6 +12935,13 @@ $(window).on('load', function () {
     var customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
     $('.edit-post-layout').append(customHistoryPopup);
 
+    // Managing comment boards for mobile view.
+    // By default in mobile view borads will be hidden.
+    var screenWidth = window.screen.width;
+    if (1200 > screenWidth) {
+        $('#comments-toggle').trigger('click');
+    }
+
     // Fetch comments.
     fetchComments();
 

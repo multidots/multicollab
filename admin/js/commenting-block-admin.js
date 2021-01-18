@@ -16,8 +16,8 @@
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
 
-    // Document Ready.
-    $(document).ready(function () {
+    // On Document Ready Event.
+    $( document ).ready(function () {
 
         // If thread focused via an activity center,
         // it is in lock mode, so clicking any para
@@ -619,8 +619,8 @@
 
     });
 
-    // Load.
-    $(window).on( 'load', function () {
+    // On Window Load Event.
+    $( window ).on( 'load', function () {
         $('.cid_popup_hover').parents('.wp-block.editor-block-list__block.block-editor-block-list__block').addClass('parent_cid_popup_hover');
 
         // Handling Older WordPress Versions.
