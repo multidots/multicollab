@@ -55,7 +55,7 @@
                 'action': 'cf_save_settings',
                 'formData': $(this).serialize()
             };
-            $.post(ajaxurl, settingsData, function () {
+            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
                 $('#cf-settings-form').find('[type="submit"]').removeClass('loading');
                 $('#cf-notice .cf-success').slideDown(300);
                 setTimeout(function () {
@@ -69,7 +69,7 @@
         const data = {
             'action': 'cf_store_in_localstorage'
         };
-        $.post(ajaxurl, data, function (response) {
+        $.post(ajaxurl, data, function (response) { // eslint-disable-line
             response = JSON.parse(response);
             localStorage.setItem("showAvatars", response.showAvatars);
             localStorage.setItem("commentingPluginUrl", response.commentingPluginUrl);
@@ -79,7 +79,7 @@
         $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function (e) {
 
             // Exclude focus on specific elements.
-            var target = $(e.target), article;
+            var target = $(e.target);
             if( 'dashicons dashicons-trash' === target[0].className
                 || 'resolve-label' === target[0].className
                 || 'resolve-cb' === target[0].className
@@ -90,8 +90,8 @@
             const _this = $(this);
 
             // Reset Comments Float.
-            jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
-            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
+            $('#md-span-comments .cls-board-outer').removeAttr('style');
+            $('#md-span-comments .cls-board-outer').removeClass('focus');
 
             _this.addClass('focus');
 
@@ -285,7 +285,7 @@
                 }
             } )
             // Remove emails list on edit link click.
-            $( document.body ).on( 'click', editLink, function(e) {
+            $( document.body ).on( 'click', editLink, function() {
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
             } )
@@ -321,7 +321,7 @@
                         // Fetch all email list.
                         isEmail = true;
                         $.ajax({
-                            url: ajaxurl,
+                            url: ajaxurl, // eslint-disable-line
                             type: 'post',
                             data: {
                                 action: 'cf_get_user_email_list',
@@ -359,7 +359,7 @@
                         if( '@' !== trackedStr ) {
                             // Sending Ajax Call to get the matched email list(s).
                             $.ajax({
-                                url: ajaxurl,
+                                url: ajaxurl, // eslint-disable-line
                                 type: 'post',
                                 data: {
                                     action: 'cf_get_matched_user_email_list',
@@ -391,7 +391,7 @@
                 insertDisplayName( range, email, fullName, displayName );
 
                 var typedContent              = $( createTextarea ).html();
-                var refinedContent            = typedContent.replace( /(?<=@)\w+(?=\<)/gi, '' );
+                var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
                 var fragments                 = document.createRange().createContextualFragment( refinedContent );
                 var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                 var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
@@ -503,7 +503,7 @@
                 $( this ).removeClass( 'js-cf-show-assign-list' ).addClass( 'js-cf-hide-assign-list' );
                 // Send Ajax Request
                 $.ajax({
-                    url: ajaxurl,
+                    url: ajaxurl, // eslint-disable-line
                     type: 'post',
                     data: {
                         action: 'cf_get_assignable_user_list',
@@ -572,7 +572,7 @@
             if ($('#custom-history-popup').hasClass('active')) {
                 $('#custom-history-popup').addClass('loaded');
 
-                const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+                const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
                 // Fetch comments from db.
                 var data = {
@@ -581,7 +581,7 @@
                     'limit': 10,
                 };
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-                $.post(ajaxurl, data, function (response) {
+                $.post(ajaxurl, data, function (response) { // eslint-disable-line
                     $(response).appendTo('#custom-history-popup-inner');
                 });
 
@@ -626,9 +626,9 @@
         // Handling Older WordPress Versions.
         // The function wp.data.select("core").getCurrentUser() is not
         // defined for v5.2.2, so getting data from PHP.
-        if( 'undefined' === typeof ( wp.data.select("core").getCurrentUser().id ) ) {
+        if( 'undefined' === typeof ( wp.data.select("core").getCurrentUser().id ) ) { // eslint-disable-line
             // Fetch User details from AJAX.
-            jQuery.post(ajaxurl, {
+            $.post(ajaxurl, { // eslint-disable-line
                 'action': 'cf_get_user'
             }, function (user) {
                 user = JSON.parse(user);

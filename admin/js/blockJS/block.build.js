@@ -13413,7 +13413,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-var removeFormat = wp.richText.removeFormat;
+var $ = jQuery; // eslint-disable-line
+var removeFormat = wp.richText.removeFormat; // eslint-disable-line
 
 var Board = function (_React$Component) {
     _inherits(Board, _React$Component);
@@ -13429,7 +13430,7 @@ var Board = function (_React$Component) {
         _this2.addNewComment = _this2.addNewComment.bind(_this2);
         _this2.cancelComment = _this2.cancelComment.bind(_this2);
 
-        var currentPostID = wp.data.select('core/editor').getCurrentPostId();
+        var currentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
         var postSelections = [];
         var selectedText = void 0;
         var txtselectedText = void 0;
@@ -13440,13 +13441,15 @@ var Board = function (_React$Component) {
         txtselectedText = 'txt' + selectedText;
         metaselectedText = '_' + selectedText;
         setTimeout(function () {
-            jQuery('#' + selectedText + ' textarea').attr('id', txtselectedText);
+            $('#' + selectedText + ' textarea').attr('id', txtselectedText);
         }, 3000);
 
         _this2.commentedOnText = _this2.props.commentedOnText;
 
         if (1 !== _this2.props.freshBoard) {
             wp.apiFetch({ path: 'cf/cf-get-comments-api/?currentPostID=' + currentPostID + '&elID=' + metaselectedText }).then(function (fps) {
+                // eslint-disable-line
+
                 var userDetails = fps.userDetails,
                     resolved = fps.resolved,
                     commentedOnText = fps.commentedOnText,
@@ -13460,12 +13463,12 @@ var Board = function (_React$Component) {
                 if ('true' === resolved || 0 === userDetails.length) {
                     var elIDRemove = selectedText;
                     removeTag(elIDRemove);
-                    jQuery('#' + elIDRemove).remove();
+                    $('#' + elIDRemove).remove();
 
                     return false;
                 }
 
-                jQuery.each(userDetails, function (key, val) {
+                $.each(userDetails, function (key, val) {
                     postSelections.push(val);
                 });
 
@@ -13481,8 +13484,8 @@ var Board = function (_React$Component) {
             });
         } else {
             try {
-                _this2.currentUserName = wp.data.select("core").getCurrentUser().name;
-                var currentUserProfile = wp.data.select("core").getCurrentUser().avatar_urls;
+                _this2.currentUserName = wp.data.select("core").getCurrentUser().name; // eslint-disable-line
+                var currentUserProfile = wp.data.select("core").getCurrentUser().avatar_urls; // eslint-disable-line
                 _this2.currentUserProfile = currentUserProfile[Object.keys(currentUserProfile)[1]];
             } catch (e) {
                 _this2.currentUserName = localStorage.getItem("userName");
@@ -13501,7 +13504,7 @@ var Board = function (_React$Component) {
             var arr = this.state.comments;
 
             arr.splice(idx, 1);
-            var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+            var CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
             elID = '_' + elID;
             var data = {
                 'action': 'cf_delete_comment',
@@ -13510,9 +13513,10 @@ var Board = function (_React$Component) {
                 metaId: elID
             };
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-            jQuery.post(ajaxurl, data, function () {
+            $.post(ajaxurl, data, function () {
+                // eslint-disable-line
                 // Activate 'Save Draft' or 'Publish' button
-                wp.data.dispatch('core/editor').editPost({ meta: { reflect_comments_changes: 1 } });
+                wp.data.dispatch('core/editor').editPost({ meta: { reflect_comments_changes: 1 } }); // eslint-disable-line
             });
             this.setState({ comments: arr });
         }
@@ -13527,10 +13531,10 @@ var Board = function (_React$Component) {
             var userRole = '';
             var userProfile = '';
             try {
-                userID = wp.data.select("core").getCurrentUser().id;
-                userName = wp.data.select("core").getCurrentUser().name;
-                userRole = wp.data.select("core").getUser(userID).roles[0];
-                userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
+                userID = wp.data.select("core").getCurrentUser().id; // eslint-disable-line
+                userName = wp.data.select("core").getCurrentUser().name; // eslint-disable-line
+                userRole = wp.data.select("core").getUser(userID).roles[0]; // eslint-disable-line
+                userProfile = wp.data.select("core").getCurrentUser().avatar_urls; // eslint-disable-line
                 userProfile = userProfile[Object.keys(userProfile)[1]];
             } catch (e) {
                 userID = localStorage.getItem("userID");
@@ -13550,7 +13554,7 @@ var Board = function (_React$Component) {
             newArr['status'] = 'draft reverted_back';
             newArr['timestamp'] = cTimestamp;
             arr[idx] = newArr;
-            var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+            var CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
             metaID = '_' + metaID;
             var data = {
                 'action': 'cf_update_comment',
@@ -13559,9 +13563,10 @@ var Board = function (_React$Component) {
                 'metaId': metaID
             };
             // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-            jQuery.post(ajaxurl, data, function () {
+            $.post(ajaxurl, data, function () {
+                // eslint-disable-line
                 // Activate 'Save Draft' or 'Publish' button
-                wp.data.dispatch('core/editor').editPost({ meta: { reflect_comments_changes: 1 } });
+                wp.data.dispatch('core/editor').editPost({ meta: { reflect_comments_changes: 1 } }); // eslint-disable-line
             });
             this.setState({ comments: arr });
         }
@@ -13576,8 +13581,8 @@ var Board = function (_React$Component) {
 
             var currentTextID = 'txt' + datatext;
 
-            // var newText = jQuery('#' + currentTextID).val();
-            var newText = jQuery('#' + currentTextID).html();
+            // var newText = $('#' + currentTextID).val();
+            var newText = $('#' + currentTextID).html();
 
             if ('' !== newText) {
 
@@ -13586,9 +13591,9 @@ var Board = function (_React$Component) {
                 var userRole = '';
                 var userProfile = '';
                 try {
-                    userID = wp.data.select("core").getCurrentUser().id;
-                    userRole = wp.data.select("core").getUser(userID).roles[0];
-                    userName = wp.data.select("core").getCurrentUser().name;
+                    userID = wp.data.select("core").getCurrentUser().id; // eslint-disable-line
+                    userRole = wp.data.select("core").getUser(userID).roles[0]; // eslint-disable-line
+                    userName = wp.data.select("core").getCurrentUser().name; // eslint-disable-line
                 } catch (e) {
                     userID = localStorage.getItem("userID");
                     userName = localStorage.getItem("userName");
@@ -13596,7 +13601,7 @@ var Board = function (_React$Component) {
                 }
 
                 if ('1' === localStorage.getItem("showAvatars")) {
-                    userProfile = wp.data.select("core").getCurrentUser().avatar_urls;
+                    userProfile = wp.data.select("core").getCurrentUser().avatar_urls; // eslint-disable-line
                     userProfile = userProfile[Object.keys(userProfile)[1]];
                 } else {
                     userProfile = localStorage.getItem("userURL");
@@ -13614,13 +13619,13 @@ var Board = function (_React$Component) {
 
                 arr.push(newArr);
 
-                var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+                var CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
                 var el = currentTextID.substring(3);
                 var metaId = '_' + el;
                 var assignTo = '';
-                if (jQuery('#' + el + ' .cf-assign-to-user').is(':checked')) {
-                    assignTo = jQuery('#' + el + ' .cf-assign-to-user').val();
+                if ($('#' + el + ' .cf-assign-to-user').is(':checked')) {
+                    assignTo = $('#' + el + ' .cf-assign-to-user').val();
                 }
                 var data = {
                     'action': 'cf_add_comment',
@@ -13630,14 +13635,15 @@ var Board = function (_React$Component) {
                     'assignTo': assignTo
                 };
 
-                jQuery('#' + el + ' .shareCommentContainer').addClass('loading');
+                $('#' + el + ' .shareCommentContainer').addClass('loading');
                 var _this = this;
-                jQuery.post(ajaxurl, data, function (data) {
+                $.post(ajaxurl, data, function (data) {
+                    // eslint-disable-line
 
-                    jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
-                    jQuery('.fresh-board').removeClass('fresh-board');
+                    $('#' + el + ' .shareCommentContainer').removeClass('loading');
+                    $('.fresh-board').removeClass('fresh-board');
 
-                    data = jQuery.parseJSON(data);
+                    data = $.parseJSON(data);
                     if (undefined !== data.error) {
                         alert(data.error);
                         return false;
@@ -13648,26 +13654,26 @@ var Board = function (_React$Component) {
                     // Updating the assigned user info
                     if (null !== data.assignedTo.ID) {
                         var assignedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + data.assignedTo.display_name + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
-                        if (jQuery('#' + el + ' .cf-board-assigned-to').length) {
-                            jQuery('#' + el + ' .cf-board-assigned-to').remove();
+                        if ($('#' + el + ' .cf-board-assigned-to').length) {
+                            $('#' + el + ' .cf-board-assigned-to').remove();
                         }
-                        jQuery(assignedUserDetails).insertBefore('#' + el + ' .boardTop');
+                        $(assignedUserDetails).insertBefore('#' + el + ' .boardTop');
                     }
 
                     // Update hasComment prop for dynamic button text.
                     _this.hasComments = 1;
 
                     // Activate 'Save Draft' or 'Publish' button
-                    wp.data.dispatch('core/editor').editPost({ meta: { reflect_comments_changes: 1 } });
+                    wp.data.dispatch('core/editor').editPost({ meta: { reflect_comments_changes: 1 } }); // eslint-disable-line
 
                     // Set the state.
                     _this.setState({ comments: arr });
 
                     // Flushing the text from the textarea
-                    jQuery('#' + currentTextID).html('').focus();
+                    $('#' + currentTextID).html('').focus();
 
                     // Remove assign checkbox
-                    jQuery('.cf-assign-to').remove();
+                    $('.cf-assign-to').remove();
                 });
             } else alert("Please write a comment to share!");
         }
@@ -13739,9 +13745,9 @@ var Board = function (_React$Component) {
         value: function cancelComment() {
 
             // Reset Comments Float.
-            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-            jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
-            jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+            $('#md-span-comments .cls-board-outer').removeClass('focus');
+            $('#md-span-comments .cls-board-outer').removeAttr('style');
+            $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
 
             var _props2 = this.props,
                 datatext = _props2.datatext,
@@ -13750,7 +13756,7 @@ var Board = function (_React$Component) {
 
             var name = 'multidots/comment';
 
-            if (0 === jQuery('#' + datatext + ' .boardTop .commentContainer').length) {
+            if (0 === $('#' + datatext + ' .boardTop .commentContainer').length) {
                 onChanged(removeFormat(lastVal, name));
             }
         }
@@ -13760,7 +13766,7 @@ var Board = function (_React$Component) {
             if (this.props.freshBoard) {
                 var datatext = this.props.datatext;
                 setTimeout(function () {
-                    jQuery('#txt' + datatext).focus();
+                    $('#txt' + datatext).focus();
                 }, 500);
             }
         }
@@ -13893,12 +13899,14 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Fragment = wp.element.Fragment;
+var Fragment = wp.element.Fragment; // eslint-disable-line
 
 
 
 
 
+
+var $ = jQuery; // eslint-disable-line
 
 var Comment = function (_React$Component) {
     _inherits(Comment, _React$Component);
@@ -13923,8 +13931,8 @@ var Comment = function (_React$Component) {
         key: 'componentDidUpdate',
         value: function componentDidUpdate() {
             var editedCommentID = this.props.timestamp;
-            var commenttedText = jQuery('#' + editedCommentID + ' textarea').val();
-            jQuery('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+            var commenttedText = $('#' + editedCommentID + ' textarea').val();
+            $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
         }
     }, {
         key: 'edit',
@@ -13934,7 +13942,7 @@ var Comment = function (_React$Component) {
             var editedValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
             var editedContainer = '#edit-' + this.props.timestamp;
             setTimeout(function () {
-                jQuery(editedContainer).html(editedValue); // phpcs:ignore
+                $(editedContainer).html(editedValue); // phpcs:ignore
             }, 500);
         }
     }, {
@@ -13955,7 +13963,7 @@ var Comment = function (_React$Component) {
         value: function remove(event) {
 
             if (confirm('Are you sure you want to delete this comment ?')) {
-                var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
+                var elID = $(event.currentTarget).closest('.cls-board-outer');
                 this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
             }
         }
@@ -13963,12 +13971,12 @@ var Comment = function (_React$Component) {
         key: 'resolve',
         value: function resolve(event) {
 
-            var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
+            var elID = $(event.currentTarget).closest('.cls-board-outer');
             elID = elID[0].id;
             var elIDRemove = elID;
 
             if (confirm('Are you sure you want to resolve this thread ?')) {
-                var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+                var CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
                 elID = '_' + elID;
 
                 var data = {
@@ -13976,20 +13984,21 @@ var Comment = function (_React$Component) {
                     'currentPostID': CurrentPostID,
                     'metaId': elID
                 };
-                jQuery.post(ajaxurl, data, function () {
-                    jQuery('#' + elIDRemove).remove();
-                    jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
+                $.post(ajaxurl, data, function () {
+                    // eslint-disable-line
+                    $('#' + elIDRemove).remove();
+                    $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
                     // Reset Comments Float.
-                    jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-                    jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
-                    jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+                    $('#md-span-comments .cls-board-outer').removeClass('focus');
+                    $('#md-span-comments .cls-board-outer').removeAttr('style');
+                    $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
                 });
 
                 // Remove Tag.
                 removeTag(elIDRemove);
             } else {
-                jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
+                $('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
             }
         }
     }, {
@@ -14002,7 +14011,7 @@ var Comment = function (_React$Component) {
         value: function renderNormalMode() {
 
             // Display the textarea for new comments.
-            jQuery('.cls-board-outer.focus .shareCommentContainer').show();
+            $('.cls-board-outer.focus .shareCommentContainer').show();
 
             var index = this.props.index;
 
@@ -14010,7 +14019,7 @@ var Comment = function (_React$Component) {
 
             var owner = '';
             try {
-                owner = wp.data.select("core").getCurrentUser().id;
+                owner = wp.data.select("core").getCurrentUser().id; // eslint-disable-line
             } catch (e) {
                 owner = localStorage.getItem("userID");
             }
@@ -14024,7 +14033,7 @@ var Comment = function (_React$Component) {
             }
 
             // Removing contenteditable attr from the link.
-            str = str.replace(/contenteditable=\"false\"/ig, 'data-edit="false"');
+            str = str.replace(/contenteditable=\"false\"/ig, 'data-edit="false"'); // eslint-disable-line
 
             // Limiting User Role Character.
             var userRolePartial = this.props.userRole;
@@ -14124,7 +14133,7 @@ var Comment = function (_React$Component) {
             var _this2 = this;
 
             // Hide the textarea for new comments.
-            jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
+            $('.cls-board-outer.focus .shareCommentContainer').hide();
 
             // Limiting User Role Character.
             var userRolePartial = this.props.userRole;
@@ -14220,6 +14229,7 @@ Comment.propTypes = {
     removeCommentFromBoard: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
     updateCommentFromBoard: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
     userName: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+    userRole: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     dateTime: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     profileURL: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     userID: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,

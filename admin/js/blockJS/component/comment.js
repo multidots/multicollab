@@ -1,9 +1,10 @@
-const {Fragment} = wp.element;
-import React from 'react'
+const {Fragment} = wp.element; // eslint-disable-line
+import React from 'react';
 import PropTypes from 'prop-types';
-import renderHTML from 'react-render-html'
-import ContentEditable from 'react-contenteditable'
+import renderHTML from 'react-render-html';
+import ContentEditable from 'react-contenteditable';
 
+const $ = jQuery; // eslint-disable-line
 export default class Comment extends React.Component {
 
     constructor(props) {
@@ -21,8 +22,8 @@ export default class Comment extends React.Component {
 
     componentDidUpdate() {
         const editedCommentID = this.props.timestamp;
-        const commenttedText = jQuery('#' + editedCommentID + ' textarea').val();
-        jQuery('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+        const commenttedText = $('#' + editedCommentID + ' textarea').val();
+        $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
     }
 
     edit() {
@@ -31,7 +32,7 @@ export default class Comment extends React.Component {
         var editedValue     = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
         var editedContainer = '#edit-' + this.props.timestamp;
         setTimeout( function() {
-            jQuery( editedContainer ).html( editedValue ); // phpcs:ignore
+            $( editedContainer ).html( editedValue ); // phpcs:ignore
         }, 500 )
     }
 
@@ -50,19 +51,19 @@ export default class Comment extends React.Component {
     remove(event) {
 
         if (confirm('Are you sure you want to delete this comment ?')) {
-            const elID = jQuery(event.currentTarget).closest('.cls-board-outer');
+            const elID = $(event.currentTarget).closest('.cls-board-outer');
             this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
         }
     }
 
     resolve(event) {
 
-        var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
+        var elID = $(event.currentTarget).closest('.cls-board-outer');
         elID = elID[0].id;
         const elIDRemove = elID;
 
         if (confirm('Are you sure you want to resolve this thread ?')) {
-            const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+            const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
             elID = '_' + elID;
 
             var data = {
@@ -70,20 +71,20 @@ export default class Comment extends React.Component {
                 'currentPostID': CurrentPostID,
                 'metaId': elID
             };
-            jQuery.post(ajaxurl, data, function () {
-                jQuery('#' + elIDRemove).remove();
-                jQuery('#history-toggle').attr('data-count', jQuery('.cls-board-outer:visible').length);
+            $.post(ajaxurl, data, function () { // eslint-disable-line
+                $('#' + elIDRemove).remove();
+                $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
                 // Reset Comments Float.
-                jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-                jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
-                jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+                $('#md-span-comments .cls-board-outer').removeClass('focus');
+                $('#md-span-comments .cls-board-outer').removeAttr('style');
+                $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
             });
 
             // Remove Tag.
             removeTag(elIDRemove);
         } else {
-            jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
+            $('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
         }
     }
 
@@ -94,14 +95,14 @@ export default class Comment extends React.Component {
     renderNormalMode() {
 
         // Display the textarea for new comments.
-        jQuery('.cls-board-outer.focus .shareCommentContainer').show();
+        $('.cls-board-outer.focus .shareCommentContainer').show();
 
         const {index} = this.props;
         const commentStatus = this.props.status ? this.props.status : 'draft';
 
         var owner = '';
         try {
-            owner = wp.data.select("core").getCurrentUser().id;
+            owner = wp.data.select("core").getCurrentUser().id; // eslint-disable-line
         } catch (e) {
             owner = localStorage.getItem("userID");
         }
@@ -115,7 +116,7 @@ export default class Comment extends React.Component {
         }
 
         // Removing contenteditable attr from the link.
-        str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' );
+        str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
 
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
@@ -165,7 +166,7 @@ export default class Comment extends React.Component {
     renderEditingMode() {
 
         // Hide the textarea for new comments.
-        jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
+        $('.cls-board-outer.focus .shareCommentContainer').hide();
 
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
@@ -222,6 +223,7 @@ Comment.propTypes = {
     removeCommentFromBoard: PropTypes.func,
     updateCommentFromBoard: PropTypes.func,
     userName: PropTypes.string,
+    userRole: PropTypes.string,
     dateTime: PropTypes.string,
     profileURL: PropTypes.string,
     userID: PropTypes.number,
