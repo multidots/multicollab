@@ -14239,6 +14239,7 @@ Comment.propTypes = {
     userRole: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     dateTime: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     profileURL: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+    showAvatars: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     userID: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
     status: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
     lastVal: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
