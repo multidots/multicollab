@@ -3,12 +3,12 @@ import React from 'react'
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-const {__} = wp.i18n;
-const {Fragment, Component} = wp.element;
-const {toggleFormat} = wp.richText;
-const {RichTextToolbarButton} = wp.blockEditor;
-const {registerFormatType, applyFormat, removeFormat} = wp.richText;
-const $ = jQuery;
+const {__} = wp.i18n;                                                   // eslint-disable-line
+const {Fragment, Component} = wp.element;                               // eslint-disable-line
+const {toggleFormat} = wp.richText;                                     // eslint-disable-line
+const {RichTextToolbarButton} = wp.blockEditor;                         // eslint-disable-line
+const {registerFormatType, applyFormat, removeFormat} = wp.richText;    // eslint-disable-line
+const $ = jQuery;                                                       // eslint-disable-line
 
 // Window Load functions.
 $(window).on('load', function () {
@@ -145,12 +145,12 @@ function fetchComments() {
         }
 
         // Reset Draft Comments Data.
-        const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+        const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
         var data = {
             'action': 'cf_reset_drafts_meta',
             'currentPostID': CurrentPostID,
         };
-        $.post(ajaxurl, data, function () {
+        $.post(ajaxurl, data, function () { // eslint-disable-line
         });
     }
 }
@@ -158,12 +158,12 @@ function fetchComments() {
 function bring_back_comments() {
 
     // Reset Draft Comments Data.
-    const CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+    const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
     var data = {
         'action': 'cf_merge_draft_stacks',
         'currentPostID': CurrentPostID,
     };
-    $.post(ajaxurl, data, function (response) {
+    $.post(ajaxurl, data, function (response) { // eslint-disable-line
 
         response = JSON.parse(response);
 

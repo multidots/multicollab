@@ -12912,18 +12912,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-var __ = wp.i18n.__;
+var __ = wp.i18n.__; // eslint-disable-line
+
 var _wp$element = wp.element,
     Fragment = _wp$element.Fragment,
-    Component = _wp$element.Component;
-var toggleFormat = wp.richText.toggleFormat;
-var RichTextToolbarButton = wp.blockEditor.RichTextToolbarButton;
+    Component = _wp$element.Component; // eslint-disable-line
+
+var toggleFormat = wp.richText.toggleFormat; // eslint-disable-line
+
+var RichTextToolbarButton = wp.blockEditor.RichTextToolbarButton; // eslint-disable-line
+
 var _wp$richText = wp.richText,
     registerFormatType = _wp$richText.registerFormatType,
     applyFormat = _wp$richText.applyFormat,
-    removeFormat = _wp$richText.removeFormat;
+    removeFormat = _wp$richText.removeFormat; // eslint-disable-line
 
-var $ = jQuery;
+var $ = jQuery; // eslint-disable-line
 
 // Window Load functions.
 $(window).on('load', function () {
@@ -13054,24 +13058,26 @@ function fetchComments() {
         }
 
         // Reset Draft Comments Data.
-        var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+        var CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
         var data = {
             'action': 'cf_reset_drafts_meta',
             'currentPostID': CurrentPostID
         };
-        $.post(ajaxurl, data, function () {});
+        $.post(ajaxurl, data, function () {// eslint-disable-line
+        });
     }
 }
 
 function bring_back_comments() {
 
     // Reset Draft Comments Data.
-    var CurrentPostID = wp.data.select('core/editor').getCurrentPostId();
+    var CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
     var data = {
         'action': 'cf_merge_draft_stacks',
         'currentPostID': CurrentPostID
     };
     $.post(ajaxurl, data, function (response) {
+        // eslint-disable-line
 
         response = JSON.parse(response);
 
