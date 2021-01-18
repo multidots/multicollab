@@ -206,7 +206,7 @@
             if ( w3 ) {
                 range             = window.getSelection().getRangeAt(0);
                 var preCaretRange = range.cloneRange();
-                if( typeof element == 'Node' ) {
+                if( typeof element === 'Node' ) { // eslint-disable-line
                     preCaretRange.selectNodeContents( element );
                 }
                 preCaretRange.setEnd( range.endContainer, range.endOffset );
@@ -223,7 +223,7 @@
         }
 
         // Insert Display Name.
-        var insertDisplayName = function( setRange, email, fullName, displayName, createTextarea ) {
+        var insertDisplayName = function( setRange, email, fullName, displayName ) {
             var anchor = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
@@ -388,7 +388,7 @@
                 var email       = $( this ).data( 'email' );
 
                 // Insert Display Name.
-                insertDisplayName( range, email, fullName, displayName, createTextarea );
+                insertDisplayName( range, email, fullName, displayName );
 
                 var typedContent              = $( createTextarea ).html();
                 var refinedContent            = typedContent.replace( /(?<=@)\w+(?=\<)/gi, '' );
