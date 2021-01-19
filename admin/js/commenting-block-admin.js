@@ -233,6 +233,7 @@
             var anchorContent = document.createTextNode( displayName );
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
+
         }
 
         // Create @mentioning email features.
@@ -400,6 +401,7 @@
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
                 trackedStr = '';
+                currentTextAreaNode.focus();
             } );
         }
         createAutoEmailMention();
@@ -678,15 +680,15 @@
  *
  * @param sting elIDRemove The ID of the comment thread.
  */
-var removeTag = function( elIDRemove ) {
+var removeTag = function( elIDRemove ) { // eslint-disable-line
 
-    const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
+    const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block'); // eslint-disable-line
 
-    const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
+    const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId); // eslint-disable-line
     if (null !== blockAttributes) {
 
         const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
-        jQuery(findAttributes).each(function (i, attrb) {
+        jQuery(findAttributes).each(function (i, attrb) { // eslint-disable-line
             var content = blockAttributes[attrb];
             if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
 
@@ -700,49 +702,49 @@ var removeTag = function( elIDRemove ) {
                             const finalContent = tempDiv.innerHTML;
 
                             if (attrb === 'content') {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                wp.data.dispatch('core/editor').updateBlock(clientId, { // eslint-disable-line
                                     attributes: {
                                         content: finalContent
                                     }
                                 });
                             } else if (attrb === 'citation') {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                wp.data.dispatch('core/editor').updateBlock(clientId, { // eslint-disable-line
                                     attributes: {
                                         citation: finalContent
                                     }
                                 });
                             } else if (attrb === 'value') {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                wp.data.dispatch('core/editor').updateBlock(clientId, { // eslint-disable-line
                                     attributes: {
                                         value: finalContent
                                     }
                                 });
                             } else if (attrb === 'caption') {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                wp.data.dispatch('core/editor').updateBlock(clientId, { // eslint-disable-line
                                     attributes: {
                                         caption: finalContent
                                     }
                                 });
                             } else if (attrb === 'values') {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                wp.data.dispatch('core/editor').updateBlock(clientId, { // eslint-disable-line
                                     attributes: {
                                         values: finalContent
                                     }
                                 });
                             } else if (attrb === 'fileName') {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                wp.data.dispatch('core/editor').updateBlock(clientId, { // eslint-disable-line
                                     attributes: {
                                         fileName: finalContent
                                     }
                                 });
                             } else if (attrb === 'text') {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                wp.data.dispatch('core/editor').updateBlock(clientId, { // eslint-disable-line
                                     attributes: {
                                         text: finalContent
                                     }
                                 });
                             } else if (attrb === 'downloadButtonText') {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                wp.data.dispatch('core/editor').updateBlock(clientId, { // eslint-disable-line
                                     attributes: {
                                         downloadButtonText: finalContent
                                     }

@@ -42,7 +42,7 @@ export default class Board extends React.Component {
 
                 if ('true' === resolved || 0 === userDetails.length) {
                     let elIDRemove = selectedText;
-                    removeTag(elIDRemove);
+                    removeTag(elIDRemove); // eslint-disable-line
                     $('#' + elIDRemove).remove();
 
                     return false;

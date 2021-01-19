@@ -13319,7 +13319,7 @@ var mdComment = {
                     if (1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length) {
                         var latestBoard = $('.board.fresh-board').parents('.cls-board-outer').attr('id');
                         if (selectedText !== latestBoard) {
-                            removeTag(latestBoard);
+                            removeTag(latestBoard); // eslint-disable-line
                             $('#' + latestBoard).remove();
                             $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                         }
@@ -13469,7 +13469,7 @@ var Board = function (_React$Component) {
 
                 if ('true' === resolved || 0 === userDetails.length) {
                     var elIDRemove = selectedText;
-                    removeTag(elIDRemove);
+                    removeTag(elIDRemove); // eslint-disable-line
                     $('#' + elIDRemove).remove();
 
                     return false;
@@ -14003,7 +14003,7 @@ var Comment = function (_React$Component) {
                 });
 
                 // Remove Tag.
-                removeTag(elIDRemove);
+                removeTag(elIDRemove); // eslint-disable-line
             } else {
                 $('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
             }

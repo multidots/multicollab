@@ -82,7 +82,7 @@ export default class Comment extends React.Component {
             });
 
             // Remove Tag.
-            removeTag(elIDRemove);
+            removeTag(elIDRemove); // eslint-disable-line
         } else {
             $('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
         }

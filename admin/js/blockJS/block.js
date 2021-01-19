@@ -400,7 +400,7 @@ const mdComment = {
                 if (1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length) {
                     const latestBoard = $('.board.fresh-board').parents('.cls-board-outer').attr('id');
                     if (selectedText !== latestBoard) {
-                        removeTag(latestBoard);
+                        removeTag(latestBoard); // eslint-disable-line
                         $('#' + latestBoard).remove();
                         $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                     }
