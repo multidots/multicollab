@@ -226,6 +226,7 @@ Comment.propTypes = {
     userRole: PropTypes.string,
     dateTime: PropTypes.string,
     profileURL: PropTypes.string,
+    showAvatars: PropTypes.string,
     userID: PropTypes.number,
     status: PropTypes.string,
     lastVal: PropTypes.object,
