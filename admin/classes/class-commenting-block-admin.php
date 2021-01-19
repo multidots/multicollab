@@ -480,7 +480,7 @@ class Commenting_block_Admin {
 
 		ob_start();
 		echo '<style>';
-		file_get_contents( COMMENTING_BLOCK_DIR . 'admin/css/commenting-block-email.css' ); // phpcs:ignore
+		require_once( COMMENTING_BLOCK_DIR . 'admin/css/commenting-block-email.css' ); // phpcs:ignore
 		echo '</style>';
 
 		return ob_get_clean();

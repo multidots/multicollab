@@ -223,7 +223,7 @@
         }
 
         // Insert Display Name.
-        var insertDisplayName = function( setRange, email, fullName, displayName ) {
+        var insertDisplayName = function( setRange, email, fullName, displayName, createTextarea ) {
             var anchor = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
@@ -233,6 +233,10 @@
             var anchorContent = document.createTextNode( displayName );
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
+
+            var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
+            var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
+            currentTextareaNode.focus();
 
         }
 
@@ -389,7 +393,7 @@
                 var email       = $( this ).data( 'email' );
 
                 // Insert Display Name.
-                insertDisplayName( range, email, fullName, displayName );
+                insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                 var typedContent              = $( createTextarea ).html();
                 var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
@@ -401,7 +405,7 @@
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
                 trackedStr = '';
-                currentTextAreaNode.focus();
+                // currentTextAreaNode.focus();
             } );
         }
         createAutoEmailMention();
