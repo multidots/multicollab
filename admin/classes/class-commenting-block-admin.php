@@ -625,7 +625,7 @@ class Commenting_block_Admin {
 
 		$arr['status']   = 'draft';
 		$arr['userData'] = get_current_user_id();
-		
+
 		// Secure content.
 		$arr['thread'] = $this->cf_secure_content( $commentList['thread'] );
 
