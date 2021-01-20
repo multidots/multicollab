@@ -595,11 +595,10 @@ class Commenting_block_Admin {
 	 * Add Comment function.
 	 */
 	public function cf_add_comment() {
-		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT ); // phpcs:ignore
-		$commentList      = html_entity_decode( $commentList );
-		$commentList      = json_decode( $commentList, true );
+		$commentList = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT ); // phpcs: ignore
+		$commentList = html_entity_decode( $commentList );
+		$commentList = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
-
 		// Get the assigned User ID.
 		$assign_to = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
 
@@ -626,7 +625,9 @@ class Commenting_block_Admin {
 
 		$arr['status']   = 'draft';
 		$arr['userData'] = get_current_user_id();
-		$arr['thread']   = $commentList['thread'];
+		
+		// Secure content.
+		$arr['thread'] = $this->cf_secure_content( $commentList['thread'] );
 
 		// Update Current Drafts.
 		$current_drafts = get_post_meta( $current_post_id, 'current_drafts', true );
@@ -832,6 +833,24 @@ class Commenting_block_Admin {
 	}
 
 	/**
+	 * Make Content Secure.
+	 *
+	 * @param string $content
+	 * @return string
+	 */
+	public function cf_secure_content( $content ) {
+		$allowed_tags = array(
+			'a'    => array( 'contenteditable' => array(), 'href' => array(), 'target' => array(), 'style' => array(), 'class' => array('js-mentioned'), 'data-email' => array() ),
+			'div'  => array( 'id' => array(), 'class' => array(), 'style' => array() ),
+		);
+
+		$pattern = '/<[script|\/script]*>/i';
+		$content = preg_replace( $pattern, '', $content );
+		$content = wp_kses( $content, $allowed_tags );
+		return $content;
+	}
+
+	/**
 	 * Update Comment function.
 	 */
 	public function cf_update_comment() {
@@ -843,6 +862,9 @@ class Commenting_block_Admin {
 		$edited_comment = htmlspecialchars_decode( $edited_comment );
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );
+
+		// Make content secured.
+		$edited_comment['thread'] = $this->cf_secure_content( $edited_comment['thread'] );
 
 		$old_timestamp = $edited_comment['timestamp'];
 

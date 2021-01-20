@@ -146,15 +146,11 @@ export default class Board extends React.Component {
     }
 
     addNewComment(event) {
-
         event.preventDefault();
-
-        const {datatext} = this.props;
-
+        const {datatext}  = this.props;
         var currentTextID = 'txt' + datatext;
-
-        // var newText = $('#' + currentTextID).val();
-        var newText = $('#' + currentTextID).html();
+        var newText       = $('#' + currentTextID).html();
+        newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' )
 
         if ('' !== newText) {
 

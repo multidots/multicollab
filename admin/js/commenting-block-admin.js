@@ -185,8 +185,7 @@
 
         // Make matched text highlighted.
         var makeMatchedTextHighlighted = function( term, markEmail, markName ) {
-
-            var term       = term.substring(1);
+            var term       = term.substring( 1 );
             var $markEmail = $( markEmail );
             var $markName  = $( markName );
 

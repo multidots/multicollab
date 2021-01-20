@@ -112,7 +112,6 @@ function fetchComments() {
             $('#loader_style').remove();
         } else {
             $('.wp-block mdspan').each(function () {
-
                 selectedText = $(this).attr('datatext');
 
                 if ($('#' + selectedText).length === 0) {

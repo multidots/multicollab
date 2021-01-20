@@ -117,7 +117,6 @@ export default class Comment extends React.Component {
 
         // Removing contenteditable attr from the link.
         str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
-
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
         if( 8 < userRolePartial.length ) {

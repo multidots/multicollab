@@ -13028,7 +13028,6 @@ function fetchComments() {
             $('#loader_style').remove();
         } else {
             $('.wp-block mdspan').each(function () {
-
                 selectedText = $(this).attr('datatext');
 
                 if ($('#' + selectedText).length === 0) {
@@ -13580,16 +13579,12 @@ var Board = function (_React$Component) {
     }, {
         key: 'addNewComment',
         value: function addNewComment(event) {
-
             event.preventDefault();
-
             var datatext = this.props.datatext;
 
-
             var currentTextID = 'txt' + datatext;
-
-            // var newText = $('#' + currentTextID).val();
             var newText = $('#' + currentTextID).html();
+            newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
 
             if ('' !== newText) {
 
@@ -14041,7 +14036,6 @@ var Comment = function (_React$Component) {
 
             // Removing contenteditable attr from the link.
             str = str.replace(/contenteditable=\"false\"/ig, 'data-edit="false"'); // eslint-disable-line
-
             // Limiting User Role Character.
             var userRolePartial = this.props.userRole;
             if (8 < userRolePartial.length) {
