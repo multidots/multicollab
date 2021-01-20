@@ -239,6 +239,19 @@
 
         }
 
+        /**
+         * Check is the suggestion popup list is eligable to show or not.
+         * @param string tracker
+         * @return boolean
+         */
+        var show_suggestion = function( tracker ) {
+            var allowedStrings = [ '', '@', ' @', ';@', 'v>' ];
+            if( allowedStrings.includes( tracker ) ) {
+                return true;
+            }
+            return false;
+        }
+
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
             var el                    = '';
@@ -316,12 +329,7 @@
                 cursorPos = getCaretPosition(el);
                 if( '@' === e.key && true === e.shiftKey ) {
                     var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2, 2 );
-                    if(
-                        ' @' == prevCharOfEmailSymbol
-                        || ';@' == prevCharOfEmailSymbol
-                        || '' == prevCharOfEmailSymbol
-                        || '@' == prevCharOfEmailSymbol
-                    ) { // meaning @ is typed at the begining or as independent.
+                    if( show_suggestion( prevCharOfEmailSymbol ) ) { // meaning @ is typed at the begining or as independent.
                         // Fetch all email list.
                         isEmail = true;
                         $.ajax({
@@ -404,7 +412,6 @@
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
                 trackedStr = '';
-                // currentTextAreaNode.focus();
             } );
         }
         createAutoEmailMention();
