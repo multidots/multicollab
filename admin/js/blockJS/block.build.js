@@ -12942,10 +12942,17 @@ $(window).on('load', function () {
         $('#comments-toggle').trigger('click');
     }
 
-    // Fetch comments.
-    setTimeout(function () {
-        fetchComments();
-    }, 500);
+    var loadAttempts = 0;
+    var loadComments = setInterval(function () {
+        loadAttempts++;
+        if (1 <= $('.block-editor-writing-flow').length) {
+            clearInterval(loadComments);
+            fetchComments();
+        }
+        if (loadAttempts >= 10) {
+            clearInterval(loadComments);
+        }
+    }, 1000);
 
     // Show setting button.
     showSettings();
