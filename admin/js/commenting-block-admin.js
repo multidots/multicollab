@@ -311,7 +311,7 @@
                 var _self = $( createTextarea );
                 typedText = _self.html();
                 // If textarea is blank then remove email list.
-                if( typedText.length <=0 ) {
+                if( undefined !== typedText && typedText.length <=0 ) {
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                     $( '.cf-assign-to' ).remove();
