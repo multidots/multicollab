@@ -230,13 +230,15 @@ class Commenting_Block_Email_Templates {
 					{$this->cf_email_get_assigned_svg_icon()}
                     ".__( 'Assigned to', 'content-collaboration-inline-commenting' )." <a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name'>@" . esc_html( $assigned_user->display_name ) . "</a>
                 </div>
-            ";
+            	";
 			}
 
 			$post_title_html = '';
 			if ( ! empty( $args['post_title'] ) ) {
 				$post_title_html .= "<h2 class='comment-page-title'><a href='" . esc_url( $post_edit_link ) . "' target='_blank'>" . esc_html( $p_title ) . "</a></h2>";
 			}
+
+			$comment_icon_html = $this->cf_email_get_comment_svg_icon();
 
 			$html .= "
             <div class='comment-box new-comment'>
@@ -245,7 +247,7 @@ class Commenting_Block_Email_Templates {
                 </div>
                 <div class='comment-box-body'>
                     <h2 class='head-with-icon'>
-                        {$this->cf_email_get_comment_svg_icon()}
+                        {$comment_icon_html}
                         ".__( 'Comments', 'content-collaboration-inline-commenting' )."
                     </h2>
                     <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
@@ -265,10 +267,10 @@ class Commenting_Block_Email_Templates {
 					{$post_title_html}
                 </div>
                 <div class='comment-box-body'>
-                    <h2 class='head-with-icon'>
-						{$this->cf_email_get_comment_svg_icon()}
+					<h2 class='head-with-icon'>
+						{$comment_icon_html}
 						".__( 'Comments', 'content-collaboration-inline-commenting' )."
-                    </h2>
+					</h2>
                     <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who_html}
                     {$comment_list_html}
