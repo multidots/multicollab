@@ -24,7 +24,9 @@ $( window ).on('load', function () {
     }
 
     // Fetch comments.
-    fetchComments();
+    setTimeout( function() {
+        fetchComments();
+    }, 500 )
 
     // Show setting button.
     showSettings();
@@ -87,12 +89,10 @@ function showSettings() {
 }
 
 function fetchComments() {
-
     var parentNode = document.createElement('div');
     parentNode.setAttribute("id", 'md-comments-suggestions-parent');
 
     var referenceNode = document.querySelector('.block-editor-writing-flow');
-
     if (null !== referenceNode) {
         referenceNode.appendChild(parentNode);
 
@@ -294,7 +294,6 @@ const mdComment = {
                 onChange: PropTypes.func,
                 isActive: PropTypes.bool,
             };
-
         }
 
         onToggle() {

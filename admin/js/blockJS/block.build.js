@@ -12943,7 +12943,9 @@ $(window).on('load', function () {
     }
 
     // Fetch comments.
-    fetchComments();
+    setTimeout(function () {
+        fetchComments();
+    }, 500);
 
     // Show setting button.
     showSettings();
@@ -13003,12 +13005,10 @@ function showSettings() {
 }
 
 function fetchComments() {
-
     var parentNode = document.createElement('div');
     parentNode.setAttribute("id", 'md-comments-suggestions-parent');
 
     var referenceNode = document.querySelector('.block-editor-writing-flow');
-
     if (null !== referenceNode) {
         referenceNode.appendChild(parentNode);
 
@@ -13213,7 +13213,6 @@ var mdComment = {
                 onChange: __WEBPACK_IMPORTED_MODULE_3_prop_types___default.a.func,
                 isActive: __WEBPACK_IMPORTED_MODULE_3_prop_types___default.a.bool
             };
-
             return _this;
         }
 
