@@ -377,7 +377,7 @@ export default class Board extends React.Component {
                     </div>
                 }
                 <div className="shareCommentContainer">
-                    <div contentEditable="true" placeholder="Comment or add others with @" className="cf-share-comment js-cf-share-comment" id={"txt" + datatext}></div>
+                    <div tabIndex="0" contentEditable="true" placeholder="Comment or add others with @" className="cf-share-comment js-cf-share-comment" id={"txt" + datatext}></div>
                     <button onClick={this.addNewComment} className="btn btn-success">{buttonText}</button>
                     <button onClick={this.cancelComment} className="btn btn-cancel">Cancel</button>
                 </div>

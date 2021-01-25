@@ -162,7 +162,7 @@
             if( data.length > 0 ) {
                 data.forEach( function( user ) {
                     listItem += `
-                        <li data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
+                        <li tabindex="0" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
                             <img src="${user.avatar}" alt="${user.display_name}" />
                             <div class="cf-user-info">
                                 <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">(${user.role})</small></p>
@@ -173,7 +173,7 @@
 
                 var emailList = `
                     <div class="cf-mentioned-user-popup">
-                        <ul class="cf-system-user-email-list">
+                        <ul class="cf-system-user-email-list" role="listbox">
                             ${listItem}
                         </ul>
                     </div>
@@ -393,25 +393,27 @@
                 }
             } )
             // Append email in textarea.
-            $( document.body ).on( 'click', '.cf-system-user-email-list li', function(e) {
+            $( document.body ).on( 'click keypress', '.cf-system-user-email-list li', function(e) {
                 e.stopPropagation();
-                var fullName    = $( this ).data( 'full-name' );
-                var displayName = $( this ).data( 'display-name' );
-                var email       = $( this ).data( 'email' );
+                if( e.which === 1 ) {
+                    var fullName    = $( this ).data( 'full-name' );
+                    var displayName = $( this ).data( 'display-name' );
+                    var email       = $( this ).data( 'email' );
 
-                // Insert Display Name.
-                insertDisplayName( range, email, fullName, displayName, createTextarea );
+                    // Insert Display Name.
+                    insertDisplayName( range, email, fullName, displayName, createTextarea );
 
-                var typedContent              = $( createTextarea ).html();
-                var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
-                var fragments                 = document.createRange().createContextualFragment( refinedContent );
-                var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
-                var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
-                currentTextAreaNode.innerHTML = '';
-                currentTextAreaNode.appendChild( fragments );
-                $( appendIn ).remove();
-                $( assignablePopup ).remove();
-                trackedStr = '';
+                    var typedContent              = $( createTextarea ).html();
+                    var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
+                    var fragments                 = document.createRange().createContextualFragment( refinedContent );
+                    var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
+                    var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
+                    currentTextAreaNode.innerHTML = '';
+                    currentTextAreaNode.appendChild( fragments );
+                    $( appendIn ).remove();
+                    $( assignablePopup ).remove();
+                    trackedStr = '';
+                }
             } );
         }
         createAutoEmailMention();

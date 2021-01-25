@@ -13853,7 +13853,7 @@ var Board = function (_React$Component) {
                 wp.element.createElement(
                     'div',
                     { className: 'shareCommentContainer' },
-                    wp.element.createElement('div', { contentEditable: 'true', placeholder: 'Comment or add others with @', className: 'cf-share-comment js-cf-share-comment', id: "txt" + datatext }),
+                    wp.element.createElement('div', { tabIndex: '0', contentEditable: 'true', placeholder: 'Comment or add others with @', className: 'cf-share-comment js-cf-share-comment', id: "txt" + datatext }),
                     wp.element.createElement(
                         'button',
                         { onClick: this.addNewComment, className: 'btn btn-success' },
@@ -13946,12 +13946,10 @@ var Comment = function (_React$Component) {
         key: 'edit',
         value: function edit() {
             this.setState({ editing: true });
+
             // Handling edited value.
             var editedValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
-            var editedContainer = '#edit-' + this.props.timestamp;
-            setTimeout(function () {
-                $(editedContainer).html(editedValue); // phpcs:ignore
-            }, 500);
+            this.state.contentHtml = editedValue;
         }
     }, {
         key: 'save',

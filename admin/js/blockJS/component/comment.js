@@ -27,13 +27,11 @@ export default class Comment extends React.Component {
     }
 
     edit() {
-        this.setState({editing: true})
+        this.setState({editing: true});
+
         // Handling edited value.
-        var editedValue     = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
-        var editedContainer = '#edit-' + this.props.timestamp;
-        setTimeout( function() {
-            $( editedContainer ).html( editedValue ); // phpcs:ignore
-        }, 500 )
+        var editedValue        = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
+        this.state.contentHtml = editedValue;
     }
 
     save(event) {
