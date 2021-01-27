@@ -851,6 +851,7 @@ class Commenting_block_Admin {
 		$allowed_tags = array(
 			'a'    => array( 'contenteditable' => array(), 'href' => array(), 'target' => array(), 'style' => array(), 'class' => array('js-mentioned'), 'data-email' => array() ),
 			'div'  => array( 'id' => array(), 'class' => array(), 'style' => array() ),
+			'br'   => array(),
 		);
 
 		$pattern = '/<[script|\/script]*>/i';
