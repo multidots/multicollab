@@ -309,13 +309,6 @@ class Commenting_Block_Email_Templates {
 					// Notify Site Admin if setting enabled.
 					$email_list = $this->cf_email_notify_siteadmin( $email_list );
 
-					// Sent email to all users.
-					if ( ! empty( $email_list ) ) {
-						// Limit the page and site titles for Subject.
-						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
-						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
-					}
-
 					$key = array_search( $assigned_user->user_email, $newly_mentioned_emails, true );
 					if( $key !== false ) {
 						unset( $newly_mentioned_emails[$key] );
@@ -326,8 +319,19 @@ class Commenting_Block_Email_Templates {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
 						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers ); // phpcs:ignore
+
+					}
+
+					if( ! empty( $newly_mentioned_emails ) || ! empty( $assign_to ) ) {
+						// Sent email to all users.
+						if ( ! empty( $email_list ) ) {
+							// Limit the page and site titles for Subject.
+							$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+							wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
+						}
 					}
 				} else if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === true ) {
+
 					// Remove assigned email from the list.
 					$assigned_user = get_user_by( 'ID', $el_obj['assigned_to'] );
 					$email_list[]  = $assigned_user->user_email;
@@ -335,18 +339,20 @@ class Commenting_Block_Email_Templates {
 					// Notify Site Admin if setting enabled.
 					$email_list = $this->cf_email_notify_siteadmin( $email_list );
 
-					// Sent email to all users.
-					if ( ! empty( $email_list ) ) {
-						// Limit the page and site titles for Subject.
-						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
-						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
-					}
+					$email_list = array_diff( $email_list, $newly_mentioned_emails );
 
 					// Sent email to newly mentioned users.
 					if( ! empty( $newly_mentioned_emails ) ) {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
 						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers ); // phpcs:ignore
+
+						// Sent email to all users.
+						if ( ! empty( $email_list ) ) {
+							// Limit the page and site titles for Subject.
+							$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+							wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
+						}
 					}
 				} else {
 					// Notify Site Admin if setting enabled.
@@ -357,13 +363,13 @@ class Commenting_Block_Email_Templates {
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'You have been mentioned', $p_title, $site_title );
 						wp_mail( $newly_mentioned_emails, $subject, $mentioned_html, $headers ); // phpcs:ignore
-					}
 
-					// Sent email to all users.
-					if ( ! empty( $email_list ) ) {
-						// Limit the page and site titles for Subject.
-						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
-						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
+						// Sent email to all users.
+						if ( ! empty( $email_list ) ) {
+							// Limit the page and site titles for Subject.
+							$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+							wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
+						}
 					}
 				}
 			}
