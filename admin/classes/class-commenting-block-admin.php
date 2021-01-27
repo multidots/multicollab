@@ -471,6 +471,15 @@ class Commenting_block_Admin {
 		// Update open comments count.
 		$comment_counts = $this->cf_get_comment_counts( $post_ID, $p_content, $metas );
 		update_post_meta( $post_ID, 'open_cf_count', $comment_counts['open_counts'] );
+
+		// Deleteing comments if users delete comments at the same moment.
+		foreach( $current_drafts['deleted'] as $key=>$value ) {
+			$comment = get_post_meta( $post_ID, $key, true );
+			foreach( $value as $delete_key ) {
+				unset( $comment['comments'][$delete_key] );
+			}
+			update_post_meta( $post_ID, $key, $comment );
+		}
 	}
 
 	/**
