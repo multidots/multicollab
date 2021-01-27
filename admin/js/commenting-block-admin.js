@@ -223,6 +223,12 @@
 
         // Insert Display Name.
         var insertDisplayName = function( setRange, email, fullName, displayName, createTextarea ) {
+            var gapValue = '';
+            var gapEl = document.createElement( 'br' );
+            var gapElContent = document.createTextNode( gapValue );
+            gapEl.appendChild( gapElContent );
+            setRange.insertNode( gapEl );
+
             var anchor = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
@@ -236,7 +242,6 @@
             var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
             var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
             currentTextareaNode.focus();
-
         }
 
         /**
@@ -315,6 +320,15 @@
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                     $( '.cf-assign-to' ).remove();
+                }
+
+                // FireFox Browser Fix.
+                var isFireFox = !!navigator.userAgent.match(/firefox/i);
+                if( isFireFox ) {
+                    if( typedText && typedText.length > 0 ) {
+                        var refinedText = typedText.replace( /<br>/igm, '' );
+                        typedText       = refinedText;
+                    }
                 }
 
                 // Handeling space. As if someone type space has no intension to write email.

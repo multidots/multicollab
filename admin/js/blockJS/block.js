@@ -337,13 +337,12 @@ const mdComment = {
 
         getSelectedText() {
 
-            const {onChange, value, activeAttributes} = this.props;
+            const { onChange, value, activeAttributes } = this.props;
 
             // Prevent on locked mode + fix for unnecessary calls on hover.
             if ($('.cls-board-outer').hasClass('locked') ) {
                 return;
             }
-
 
             // Ignore unnecessary event calls on hover.
             if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
