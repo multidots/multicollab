@@ -12931,12 +12931,6 @@ var $ = jQuery; // eslint-disable-line
 
 // Window Load functions.
 $(window).on('load', function () {
-    // Managing comment boards for mobile view.
-    // By default in mobile view borads will be hidden.
-    var screenWidth = window.screen.width;
-    if (1200 > screenWidth) {
-        $('#comments-toggle').trigger('click');
-    }
 
     var loadAttempts = 0;
     var loadComments = setInterval(function () {
@@ -12945,6 +12939,15 @@ $(window).on('load', function () {
             clearInterval(loadComments);
             var customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
             $('.edit-post-layout').append(customHistoryPopup);
+
+            // Managing comment boards for mobile view.
+            // By default in mobile view borads will be hidden.
+            var screenWidth = window.screen.width;
+            if (1200 > screenWidth) {
+                $('#comments-toggle').trigger('click');
+            }
+
+            // Fetching comments
             fetchComments();
         }
         if (loadAttempts >= 10) {
