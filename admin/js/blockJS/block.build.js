@@ -13590,7 +13590,7 @@ var Board = function (_React$Component) {
             var newText = $('#' + currentTextID).html();
             newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
 
-            if ('' !== newText && '&nbsp;' !== newText) {
+            if ($('#' + currentTextID).text().trim().length !== 0) {
 
                 var userID = '';
                 var userName = '';
