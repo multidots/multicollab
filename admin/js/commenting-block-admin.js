@@ -19,13 +19,6 @@
     // On Document Ready Event.
     $( document ).ready(function () {
 
-        // $( document.body ).on( 'click', function(e) {
-        //     console.log( e.target.parentElement.id );
-        //     if( 'custom-history-popup-inner' !== e.target.parentElement.id ) {
-        //         $('#custom-history-popup').removeClass( 'active' );
-        //     }
-        // } )
-
         // If thread focused via an activity center,
         // it is in lock mode, so clicking any para
         // would unlock it.
@@ -622,6 +615,15 @@
 
             }
         });
+
+        // Collapseing history toggle on outside click.
+        $( document.body ).on( 'click', function(e) {
+            var historyPopup = $( '#custom-history-popup' );
+            if ( ! historyPopup.is( e.target ) && historyPopup.has( e.target ).length === 0) {
+                $( '#custom-history-popup' ).removeClass( 'active' );
+                $( '.custom-buttons' ).removeClass( 'active' );
+            }
+        } );
 
         // Comments Toggle
         $(document).on('click', '#comments-toggle', function () {

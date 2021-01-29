@@ -431,6 +431,9 @@ class Commenting_block_Admin {
 
 				// Makeing comments status publish if its resolved its thread in the same time.
 				if( array_key_exists( $el, $current_drafts['comments'] ) ) {
+					// get the number of publish comment of $el from DB
+					// if coutn is 0 then delte $el meta key
+					// else this
 					$unpublished_comments = $current_drafts['comments'][$el];
 					if( ! empty( $unpublished_comments ) ) {
 						foreach( $unpublished_comments as $unpublished_comment ) {
