@@ -302,6 +302,8 @@ class Commenting_block_Admin {
 		// Initiate Email Class Object.
 		$this->cf_initiate_email_class();
 
+
+
 		// Publish Edited Comments.
 		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
 			$edited_drafts = $current_drafts['edited'];
@@ -344,53 +346,6 @@ class Commenting_block_Admin {
 					$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
-			}
-		}
-
-		// Mark Resolved Threads.
-		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
-			$resolved_drafts = $current_drafts['resolved'];
-
-			// Add common CSS for email templates.
-			$html = $this->cf_email_add_commmon_css();
-
-			$html .= '<div class="comment-box comment-resolved"><div class="comment-box-header">';
-			$html .= '<p><a href="mailto:' . esc_attr( $current_user_email ) . '" class="">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'has resolved the following thread.', 'content-collaboration-inline-commenting' ) . '</p>';
-			if ( ! empty( $p_title ) ) {
-				$html .= '<h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
-			}
-			$html .= '<div class="comment-box-body">';
-			$html .= '<h3 class="head-with-icon">';
-			$html .= '<span class="icon-resolved">';
-			$html .= '<svg id="Group_19" data-name="Group 19" xmlns="http://www.w3.org/2000/svg" width="40" height="40.001" viewBox="0 0 40 40.001"><path id="Path_6" data-name="Path 6" d="M65.567,45.564a20,20,0,1,0,20,20A20,20,0,0,0,65.567,45.564ZM61.722,75.7l-7.583-7.731L57,65.164l4.753,4.847L73.609,58.151l2.828,2.828Z" transform="translate(-45.567 -45.564)" fill="#6ac359"/></svg>';
-			$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
-			$html .= '</h3>';
-
-			foreach ( $resolved_drafts as $el ) {
-				$prev_state                       = $metas[ $el ][0];
-				$prev_state                       = maybe_unserialize( $prev_state );
-				$prev_state['resolved']           = 'true';
-				$prev_state['resolved_timestamp'] = $current_timestamp;
-				$prev_state['resolved_by']        = $user_id;
-				update_post_meta( $post_ID, $el, $prev_state );
-
-				// Send Email.
-				$comments          = $metas[ $el ][0];
-				$comments          = maybe_unserialize( $comments );
-				$commented_on_text = $comments['commentedOnText'];
-				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
-
-
-				// Notify users about the resolved thread.
-				$this->email_class->cf_email_resolved_thread( array(
-					'html'                      => $html,
-					'post_title'                => $p_title,
-					'site_title'                => $site_title,
-					'current_user_email'        => $current_user_email,
-					'current_user_display_name' => $current_user_display_name,
-					'commented_on_text'         => $commented_on_text,
-					'list_of_comments'          => $list_of_comments
-				) );
 			}
 		}
 
@@ -444,6 +399,64 @@ class Commenting_block_Admin {
 						'assign_to'                 => $assigned_to
 					) );
 				}
+			}
+
+		}
+
+		// Mark Resolved Threads.
+		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
+			$resolved_drafts = $current_drafts['resolved'];
+
+			// Add common CSS for email templates.
+			$html = $this->cf_email_add_commmon_css();
+
+			$html .= '<div class="comment-box comment-resolved"><div class="comment-box-header">';
+			$html .= '<p><a href="mailto:' . esc_attr( $current_user_email ) . '" class="">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'has resolved the following thread.', 'content-collaboration-inline-commenting' ) . '</p>';
+			if ( ! empty( $p_title ) ) {
+				$html .= '<h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
+			}
+			$html .= '<div class="comment-box-body">';
+			$html .= '<h3 class="head-with-icon">';
+			$html .= '<span class="icon-resolved">';
+			$html .= '<svg id="Group_19" data-name="Group 19" xmlns="http://www.w3.org/2000/svg" width="40" height="40.001" viewBox="0 0 40 40.001"><path id="Path_6" data-name="Path 6" d="M65.567,45.564a20,20,0,1,0,20,20A20,20,0,0,0,65.567,45.564ZM61.722,75.7l-7.583-7.731L57,65.164l4.753,4.847L73.609,58.151l2.828,2.828Z" transform="translate(-45.567 -45.564)" fill="#6ac359"/></svg>';
+			$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
+			$html .= '</h3>';
+
+			foreach ( $resolved_drafts as $el ) {
+				$prev_state                       = $metas[ $el ][0];
+				$prev_state                       = maybe_unserialize( $prev_state );
+				$prev_state['resolved']           = 'true';
+				$prev_state['resolved_timestamp'] = $current_timestamp;
+				$prev_state['resolved_by']        = $user_id;
+
+				// Makeing comments status publish if its resolved its thread in the same time.
+				if( array_key_exists( $el, $current_drafts['comments'] ) ) {
+					$unpublished_comments = $current_drafts['comments'][$el];
+					if( ! empty( $unpublished_comments ) ) {
+						foreach( $unpublished_comments as $unpublished_comment ) {
+							$prev_state['comments'][$unpublished_comment]['status'] = 'publish';
+						}
+					}
+				}
+				update_post_meta( $post_ID, $el, $prev_state );
+
+				// Send Email.
+				$comments          = $metas[ $el ][0];
+				$comments          = maybe_unserialize( $comments );
+				$commented_on_text = $comments['commentedOnText'];
+				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
+
+
+				// Notify users about the resolved thread.
+				$this->email_class->cf_email_resolved_thread( array(
+					'html'                      => $html,
+					'post_title'                => $p_title,
+					'site_title'                => $site_title,
+					'current_user_email'        => $current_user_email,
+					'current_user_display_name' => $current_user_display_name,
+					'commented_on_text'         => $commented_on_text,
+					'list_of_comments'          => $list_of_comments
+				) );
 			}
 		}
 
