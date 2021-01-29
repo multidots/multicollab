@@ -254,7 +254,7 @@ class Commenting_Block_Email_Templates {
                     {$assigned_to_who_html}
                     {$comment_list_html}
                     <div class='view_reply'>
-                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>".__( 'Click here', 'content-collaboration-inline-commenting' )."</a> - ".__( 'View or reply to this comment', 'content-collaboration-inline-commenting' )."</div>
+                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>".__( 'Click here to view this comment', 'content-collaboration-inline-commenting' )."</a></div>
                     </div>
                 </div>
             </div>
@@ -275,7 +275,7 @@ class Commenting_Block_Email_Templates {
                     {$assigned_to_who_html}
                     {$comment_list_html}
                     <div class='view_reply'>
-                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>".__( 'Click here', 'content-collaboration-inline-commenting' )."</a> - ".__( 'View or reply to this comment', 'content-collaboration-inline-commenting' )."</div>
+					<div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>".__( 'Click here to view this comment', 'content-collaboration-inline-commenting' )."</a></div>
                     </div>
                 </div>
             </div>

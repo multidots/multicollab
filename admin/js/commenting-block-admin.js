@@ -418,7 +418,7 @@
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                     var typedContent              = $( createTextarea ).html();
-                    var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
+                    var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gim, '' ); // @\s*(\w+)
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
