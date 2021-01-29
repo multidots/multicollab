@@ -1170,7 +1170,7 @@ class Commenting_block_Admin {
 					'display_name'      => $user->display_name,
 					'full_name'         => $user->display_name,
 					'user_email'        => $user->user_email,
-					'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
+					'avatar'            => get_avatar_url( $user->ID, [ 'size' => '24' ] ),
 					'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
 					'edit_others_posts' => $user->allcaps['edit_others_posts'],
 				];
@@ -1216,7 +1216,7 @@ class Commenting_block_Admin {
 						'display_name'      => $user->display_name,
 						'full_name'         => $user->display_name,
 						'user_email'        => $user->user_email,
-						'avatar'            => get_avatar_url( $user->ID, [ 'size' => '32' ] ),
+						'avatar'            => get_avatar_url( $user->ID, [ 'size' => '24' ] ),
 						'edit_others_posts' => $user->allcaps['edit_others_posts'],
 					];
 				}

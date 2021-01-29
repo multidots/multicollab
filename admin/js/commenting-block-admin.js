@@ -163,10 +163,9 @@
                 data.forEach( function( user ) {
                     listItem += `
                         <li tabindex="0" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
-                            <img src="${user.avatar}" alt="${user.display_name}" />
+                            <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
                             <div class="cf-user-info">
                                 <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">(${user.role})</small></p>
-                                <p class="cf-user-email">${user.user_email}</p>
                             </div>
                         </li>`;
                 } )
