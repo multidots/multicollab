@@ -1154,7 +1154,8 @@ class Commenting_block_Admin {
 		// WP User Query.
 		$users = new WP_User_Query( [
 			'number'       => 10,
-			'role__not_in' => 'Subscriber'
+			'role__not_in' => 'Subscriber',
+			'exclude'      => array( get_current_user_id() ),
 		] );
 
 		// Fetch out all user's email.
@@ -1200,7 +1201,8 @@ class Commenting_block_Admin {
 			$users = new WP_User_Query( [
 				'search'         => $niddle . '*',
 				'search_columns' => [ 'display_name' ],
-				'role__not_in'   => 'Subscriber'
+				'role__not_in'   => 'Subscriber',
+				'exclude'        => array( get_current_user_id() ),
 			] );
 
 			// Fetch out matched user's email.
