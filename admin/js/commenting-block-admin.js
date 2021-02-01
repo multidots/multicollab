@@ -623,8 +623,12 @@
                 $.post(ajaxurl, data, function (response) { // eslint-disable-line
                     $( '#custom-history-popup-inner' ).html('');
                     $(response).appendTo('#custom-history-popup-inner');
+                    if( ! $( '#history-popup-insider' ).children().hasClass( 'user-data-row' ) ) {
+                        $( '#comments-toggle' ).hide();
+                    } else {
+                        $( '#comments-toggle' ).show();
+                    }
                 });
-
             }
         });
 

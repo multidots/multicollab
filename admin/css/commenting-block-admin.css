@@ -49,7 +49,7 @@ span.dashicon.dashicons.dashicons-admin-comments{min-width:24px;margin-right:8px
 .user-title{float:left;width:60%;width:calc(100% - 265px);font-size:15px}
 .user-data-box{overflow:hidden}
 .user-data-row{border-top:1px solid #e9eaed;padding:15px 0}
-#comments-toggle{float:right}
+#comments-toggle{position: absolute; right: 20px; top: 20px; display: none;}
 span.user-name{font-weight:700}
 .user-comment{margin-top:8px;font-size:14px}
 .mdspan-comment.focus{background:#ff9c00!important}
