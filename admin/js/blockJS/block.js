@@ -335,7 +335,8 @@ const mdComment = {
 
             onChange(applyFormat(value, {type: name, attributes: {datatext: currentTime}}));
 
-            // Making hide comment triggered.
+            // Making hide comment triggered when clicking on the ReichToolbar Comment menu.
+            // This occurs if user hide comments before and now wants to add Comment.
             if( $( '#comments-toggle' ).hasClass('active') ) {
                 $( '#comments-toggle' ).trigger( 'click' );
                 $( '#custom-history-popup' ).removeClass( 'active' );
