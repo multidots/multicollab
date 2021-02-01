@@ -13256,6 +13256,13 @@ var mdComment = {
                 onChange(toggleFormat(value, { type: name }), __WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(wp.element.createElement(__WEBPACK_IMPORTED_MODULE_0__component_board__["a" /* default */], { datatext: currentTime, onChanged: onChange, lastVal: value, freshBoard: 1, commentedOnText: commentedOnText }), document.getElementById(currentTime)));
 
                 onChange(applyFormat(value, { type: name, attributes: { datatext: currentTime } }));
+
+                // Making hide comment triggered.
+                if ($('#comments-toggle').hasClass('active')) {
+                    $('#comments-toggle').trigger('click');
+                    $('#custom-history-popup').removeClass('active');
+                    $('.custom-buttons').removeClass('active');
+                }
             }
         }, {
             key: 'getSelectedText',

@@ -305,7 +305,6 @@ const mdComment = {
         }
 
         onToggle() {
-
             const {value, onChange} = this.props;
             let {text, start, end} = value;
             const commentedOnText = text.substring(start, end);
@@ -336,10 +335,16 @@ const mdComment = {
 
             onChange(applyFormat(value, {type: name, attributes: {datatext: currentTime}}));
 
+            // Making hide comment triggered.
+            if( $( '#comments-toggle' ).hasClass('active') ) {
+                $( '#comments-toggle' ).trigger( 'click' );
+                $( '#custom-history-popup' ).removeClass( 'active' );
+                $( '.custom-buttons' ).removeClass( 'active' );
+            }
+
         }
 
         getSelectedText() {
-
             const { onChange, value, activeAttributes } = this.props;
 
             // Prevent on locked mode + fix for unnecessary calls on hover.

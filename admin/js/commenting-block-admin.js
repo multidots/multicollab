@@ -644,13 +644,13 @@
         });
 
         // Hide Comments from Dropdown
-        $(document).on('click', '[aria-label="More rich text controls"]', function () {
-            setTimeout( function() {
-                if( $('body').hasClass('hide-comments') ) {
-                    $('button.components-dropdown-menu__menu-item .dashicons-admin-comments').parents('button').toggleClass('hide-me');
-                }
-            }, 10);
-        });
+        // $(document).on('click', '[aria-label="More rich text controls"]', function () {
+        //     setTimeout( function() {
+        //         if( $('body').hasClass('hide-comments') ) {
+        //             $('button.components-dropdown-menu__menu-item .dashicons-admin-comments').parents('button').toggleClass('hide-me');
+        //         }
+        //     }, 10);
+        // });
 
         // Read More Comments
         $(document).on('click', '.readmoreComment, .readlessComment', function () {
