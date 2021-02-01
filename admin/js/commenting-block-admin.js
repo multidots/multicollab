@@ -594,12 +594,12 @@
         // Collapseing history toggle on outside click.
         $( document.body ).on( 'click', function(e) {
             var historyPopup = $( '#custom-history-popup' );
-            if ( ! historyPopup.is( e.target )
-                && historyPopup.has( e.target ).length === 0
-                || 'history-toggle' !== e.target.id
-            ) {
-                $( '#custom-history-popup' ).removeClass( 'active' );
-                $( '.custom-buttons' ).removeClass( 'active' );
+            if( 'history-toggle' !== e.target.id ) {
+                if ( ! historyPopup.is( e.target )
+                    && historyPopup.has( e.target ).length === 0
+                ) {
+                    $( '#custom-history-popup, .custom-buttons' ).removeClass( 'active' );
+                }
             }
         } );
 
