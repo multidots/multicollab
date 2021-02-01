@@ -302,34 +302,6 @@ class Commenting_block_Admin {
 		// Initiate Email Class Object.
 		$this->cf_initiate_email_class();
 
-
-
-		// Publish Edited Comments.
-		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
-			$edited_drafts = $current_drafts['edited'];
-
-			foreach ( $edited_drafts as $el => $timestamps ) {
-				$prev_state = $metas[ $el ][0];
-				$prev_state = maybe_unserialize( $prev_state );
-
-				foreach ( $timestamps as $t ) {
-
-					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
-					if ( ! empty( $edited_draft ) ) {
-						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
-					}
-
-					// Change status to publish.
-					$prev_state['comments'][ $t ]['status'] = 'publish';
-
-					// Remove comment from edited_draft.
-					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
-
-				}
-				update_post_meta( $post_ID, $el, $prev_state );
-			}
-		}
-
 		// Publish Deleted Comments. (i.e. finally delete them.)
 		if ( isset( $current_drafts['deleted'] ) && 0 !== count( $current_drafts['deleted'] ) ) {
 			$deleted_drafts = $current_drafts['deleted'];
@@ -429,19 +401,29 @@ class Commenting_block_Admin {
 				$prev_state['resolved_timestamp'] = $current_timestamp;
 				$prev_state['resolved_by']        = $user_id;
 
-				// Makeing comments status publish if its resolved its thread in the same time.
 				if( array_key_exists( $el, $current_drafts['comments'] ) ) {
-					// get the number of publish comment of $el from DB
-					// if coutn is 0 then delte $el meta key
-					// else this
-					$unpublished_comments = $current_drafts['comments'][$el];
-					if( ! empty( $unpublished_comments ) ) {
-						foreach( $unpublished_comments as $unpublished_comment ) {
-							$prev_state['comments'][$unpublished_comment]['status'] = 'publish';
+					// If any published comment is there.
+					$can_delete = false;
+					if( count( $prev_state['comments'] ) > 0 ) {
+						foreach( $prev_state['comments'] as $prev_state_cmnt ) {
+							if( 'draft' === $prev_state_cmnt['status'] ) {
+								$can_delete = true;
+							}
+							break;
+						}
+						if( true === $can_delete ) {
+							delete_post_meta( $post_ID, $el );
+						} else {
+							$unpublished_comments = $current_drafts['comments'][$el];
+							if( ! empty( $unpublished_comments ) ) {
+								foreach( $unpublished_comments as $unpublished_comment ) {
+									$prev_state['comments'][$unpublished_comment]['status'] = 'publish';
+								}
+							}
+							update_post_meta( $post_ID, $el, $prev_state );
 						}
 					}
 				}
-				update_post_meta( $post_ID, $el, $prev_state );
 
 				// Send Email.
 				$comments          = $metas[ $el ][0];
@@ -460,6 +442,32 @@ class Commenting_block_Admin {
 					'commented_on_text'         => $commented_on_text,
 					'list_of_comments'          => $list_of_comments
 				) );
+			}
+		}
+
+		// Publish Edited Comments.
+		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
+			$edited_drafts = $current_drafts['edited'];
+
+			foreach ( $edited_drafts as $el => $timestamps ) {
+				$prev_state = $metas[ $el ][0];
+				$prev_state = maybe_unserialize( $prev_state );
+
+				foreach ( $timestamps as $t ) {
+
+					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
+					if ( ! empty( $edited_draft ) ) {
+						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
+					}
+
+					// Change status to publish.
+					$prev_state['comments'][ $t ]['status'] = 'publish';
+
+					// Remove comment from edited_draft.
+					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
+
+				}
+				update_post_meta( $post_ID, $el, $prev_state );
 			}
 		}
 

@@ -591,6 +591,18 @@
         }
         manageContentEditableConsoleIssue();
 
+        // Collapseing history toggle on outside click.
+        $( document.body ).on( 'click', function(e) {
+            var historyPopup = $( '#custom-history-popup' );
+            if ( ! historyPopup.is( e.target )
+                && historyPopup.has( e.target ).length === 0
+                || 'history-toggle' !== e.target.id
+            ) {
+                $( '#custom-history-popup' ).removeClass( 'active' );
+                $( '.custom-buttons' ).removeClass( 'active' );
+            }
+        } );
+
         // History Toggle
         $(document).on('click', '#history-toggle', function () {
             $('#custom-history-popup, #history-toggle').toggleClass('active');
@@ -615,15 +627,6 @@
 
             }
         });
-
-        // Collapseing history toggle on outside click.
-        $( document.body ).on( 'click', function(e) {
-            var historyPopup = $( '#custom-history-popup' );
-            if ( ! historyPopup.is( e.target ) && historyPopup.has( e.target ).length === 0) {
-                $( '#custom-history-popup' ).removeClass( 'active' );
-                $( '.custom-buttons' ).removeClass( 'active' );
-            }
-        } );
 
         // Comments Toggle
         $(document).on('click', '#comments-toggle', function () {
