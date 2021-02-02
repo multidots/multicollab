@@ -40,6 +40,17 @@
             }
         });
 
+        // Show/Hide comment toggler if the counter value is zero.
+        $( document.body ).on( 'click', '#history-toggle', function() {
+            var dataCount = $( this ).attr( 'data-count' );
+            console.log( dataCount )
+            if ( 0 >= dataCount ) {
+                $( '#comments-toggle' ).hide();
+            } else {
+                $( '#comments-toggle' ).show();
+            }
+        } )
+
         // Settings page tabs toggle.
         $(document).on('click', '.cf-tabs span', function () {
             const tabID = $(this).data('id');
@@ -603,7 +614,7 @@
         } );
 
         // History Toggle
-        $(document).on('click', '#history-toggle', function () {
+        $( document.body ).on('click', '#history-toggle', function () {
             $('#custom-history-popup, #history-toggle').toggleClass('active');
             $(this).parents('.custom-buttons').toggleClass('active');
 
@@ -622,11 +633,11 @@
                 $.post(ajaxurl, data, function (response) { // eslint-disable-line
                     $( '#custom-history-popup-inner' ).html('');
                     $(response).appendTo('#custom-history-popup-inner');
-                    if( ! $( '#history-popup-insider' ).children().hasClass( 'user-data-row' ) ) {
-                        $( '#comments-toggle' ).hide();
-                    } else {
-                        $( '#comments-toggle' ).show();
-                    }
+                    // if( ! $( '#history-popup-insider' ).children().hasClass( 'user-data-row' ) ) {
+                    //     $( '#comments-toggle' ).hide();
+                    // } else {
+                    //     $( '#comments-toggle' ).show();
+                    // }
                 });
             }
         });
