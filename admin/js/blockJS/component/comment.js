@@ -133,8 +133,8 @@ export default class Comment extends React.Component {
                         }
                         {this.props.userID === owner &&
                             <div className="buttons-wrapper">
-                                <i className="dashicons dashicons-edit js-edit-comment" onClick={this.edit}></i>
-                                <i className="dashicons dashicons-trash js-trash-comment" onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)}></i>
+                                <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
+                                <i className="dashicons dashicons-trash js-trash-comment" title="Delete" onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)}></i>
                             </div>
                         }
                     </div>
