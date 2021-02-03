@@ -299,6 +299,23 @@ class Commenting_block_Admin {
 		$current_drafts    = maybe_unserialize( $current_drafts );
 		$current_timestamp = current_time( 'timestamp' );
 
+		// Checking if user deleted the recently added comment.
+		if( isset( $current_drafts['deleted'] ) && 0 !== $current_drafts['deleted'] ) {
+			if( isset( $current_drafts['comments'] ) && 0 !== $current_drafts['comments'] ) {
+				foreach( $current_drafts['deleted'] as $key => $values ) {
+					if( array_key_exists( $key, $current_drafts['comments'] ) ) {
+						foreach( $values as $value ) {
+							$value = intval( $value );
+							$get_key = array_search( $value, $current_drafts['comments'][$key], true );
+							if( $get_key !== false ) {
+								unset( $current_drafts['comments'][$key][$get_key] );
+							}
+						}
+					}
+				}
+			}
+		}
+
 		// Initiate Email Class Object.
 		$this->cf_initiate_email_class();
 
@@ -325,9 +342,6 @@ class Commenting_block_Admin {
 		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
 			$new_drafts = $current_drafts['comments'];
 
-			// Add common CSS for email templates.
-			$html = $this->cf_email_add_commmon_css();
-
 			foreach ( $new_drafts as $el => $drafts ) {
 				/*
 				 * Make publish only if its tag available in the content.
@@ -347,32 +361,8 @@ class Commenting_block_Admin {
 						$new_comments[]                         = $d;
 					}
 					update_post_meta( $post_ID, $el, $prev_state );
-
-					// Sending email.
-					$comments          = $metas[ $el ][0];
-					$comments          = maybe_unserialize( $comments );
-					$commented_on_text = $comments['commentedOnText'];
-					$assigned_to       = $comments['assigned_to'];
-					$list_of_comments  = isset( $prev_state['comments'] ) ? $prev_state['comments'] : '';
-
-					// Send email to the commented recipients.
-					$this->email_class->cf_email_new_comments( array(
-						'post_ID'                   => $post_ID,
-						'elid'                      => $elid,
-						'html'                      => $html,
-						'post_title'                => $p_title,
-						'post_edit_link'            => $p_link,
-						'site_title'                => $site_title,
-						'commented_on_text'         => $commented_on_text,
-						'list_of_comments'          => $list_of_comments,
-						'current_user_email'        => $current_user_email,
-						'current_user_display_name' => $current_user_display_name,
-						'new_comments'              => $new_comments,
-						'assign_to'                 => $assigned_to
-					) );
 				}
 			}
-
 		}
 
 		// Mark Resolved Threads.
@@ -504,6 +494,37 @@ class Commenting_block_Admin {
 					unset( $comment['comments'][$delete_key] );
 				}
 				update_post_meta( $post_ID, $key, $comment );
+			}
+		}
+
+		// Sending Emails to newly mentioned users.
+		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
+			$new_drafts = $current_drafts['comments'];
+
+			// Add common CSS for email templates.
+			$html = $this->cf_email_add_commmon_css();
+
+			foreach ( $new_drafts as $el => $drafts ) {
+				$comments          = get_post_meta( $post_ID, $el, true );
+				$commented_on_text = $comments['commentedOnText'];
+				$assigned_to       = $comments['assigned_to'];
+				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
+
+				// Send email to the commented recipients.
+				$this->email_class->cf_email_new_comments( array(
+					'post_ID'                   => $post_ID,
+					'elid'                      => $elid,
+					'html'                      => $html,
+					'post_title'                => $p_title,
+					'post_edit_link'            => $p_link,
+					'site_title'                => $site_title,
+					'commented_on_text'         => $commented_on_text,
+					'list_of_comments'          => $list_of_comments,
+					'current_user_email'        => $current_user_email,
+					'current_user_display_name' => $current_user_display_name,
+					'new_comments'              => $new_comments,
+					'assign_to'                 => $assigned_to
+				) );
 			}
 		}
 	}
