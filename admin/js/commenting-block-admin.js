@@ -621,6 +621,9 @@
             if ($('#custom-history-popup').hasClass('active')) {
                 $('#custom-history-popup').addClass('loaded');
 
+                var headerHeight = $('.edit-post-layout .edit-post-header').outerHeight();
+                $('#custom-history-popup').css({top: headerHeight});
+
                 const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
                 // Fetch comments from db.
