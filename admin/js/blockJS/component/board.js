@@ -220,6 +220,7 @@ export default class Board extends React.Component {
 
                 // Updating the assigned user info
                 if( null !== data.assignedTo.ID ) {
+                    var displayName = data.assignedTo.display_name ? data.assignedTo.display_name : 'Unknown User'
                     var assignedUserDetails = `
                         <div class="cf-board-assigned-to">
                             <div class="assigned-user-details">
@@ -228,7 +229,7 @@ export default class Board extends React.Component {
                                 </div>
                                 <div class="user-info">
                                     <span class="badge">Assigned to</span>
-                                    <p class="display-name">${data.assignedTo.display_name}</p>
+                                    <p class="display-name">${displayName}</p>
                                 </div>
                             </div>
                         </div>
@@ -348,11 +349,11 @@ export default class Board extends React.Component {
                     <div className="cf-board-assigned-to">
                         <div className="assigned-user-details">
                             <div className="user-avatar">
-                                <img src={ this.assignedTo.avatar } alt={this.assignedTo.display_name} />
+                                <img src={ assignedTo.avatar } alt={ assignedTo.display_name } />
                             </div>
                             <div className="user-info">
                                 <span className="badge">Assigned to</span>
-                                <p className="display-name">{ this.assignedTo.display_name }</p>
+                                <p className="display-name">{ assignedTo.display_name ? assignedTo.display_name : 'Unknwon User' }</p>
                             </div>
                         </div>
                     </div>
