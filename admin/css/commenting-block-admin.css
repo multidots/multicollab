@@ -252,7 +252,7 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cf-plugin-settings .cf-notification-settings{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}
 .cf-plugin-settings .cf-notification-settings input[type=checkbox]{margin:0 0.25rem 0 0}
 .cf-plugin-settings .cf-notification-settings label{width:calc(100% - 30px);line-height:normal}
-.cf-plugin-settings .cf-button, .cf-plugin-settings .submit .button{background-color:#4a1bce;border:2px solid #4a1bce;-webkit-box-shadow:none;box-shadow:none;padding:16px 15px;line-height:normal;font-size:18px;border-radius:0;min-width:190px;text-align:center;font-weight:500;-webkit-transition:0.2s all ease-in-out;-o-transition:0.2s all ease-in-out;transition:0.2s all ease-in-out}
+.cf-plugin-settings .cf-button, .cf-plugin-settings .submit .button{background-color:#4a1bce;border:2px solid #4a1bce;-webkit-box-shadow:none;box-shadow:none;text-shadow:none;height:auto;padding:16px 15px;line-height:normal;font-size:18px;border-radius:0;min-width:190px;text-align:center;font-weight:500;-webkit-transition:0.2s all ease-in-out;-o-transition:0.2s all ease-in-out;transition:0.2s all ease-in-out}
 .cf-plugin-settings .cf-button:hover, .cf-plugin-settings .cf-button:focus, .cf-plugin-settings .submit .button:hover, .cf-plugin-settings .submit .button:focus{background-color:transparent;border-color:#4a1bce;color:#4a1bce;-webkit-box-shadow:none;box-shadow:none}
 .cf-plugin-settings .submit .button{font-size:15px;min-width:120px;padding:12px 15px}
 .cf-plugin-settings .cf-check-wrap{position:relative;width:20px;height:20px;display:inline-block;vertical-align:middle;margin:4px 10px 0 0}
