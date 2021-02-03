@@ -13670,7 +13670,8 @@ var Board = function (_React$Component) {
 
                     // Updating the assigned user info
                     if (null !== data.assignedTo.ID) {
-                        var assignedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + data.assignedTo.display_name + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
+                        var displayName = data.assignedTo.display_name ? data.assignedTo.display_name : 'Unknown User';
+                        var assignedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + displayName + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
                         if ($('#' + el + ' .cf-board-assigned-to').length) {
                             $('#' + el + ' .cf-board-assigned-to').remove();
                         }
@@ -13808,7 +13809,7 @@ var Board = function (_React$Component) {
                         wp.element.createElement(
                             'div',
                             { className: 'user-avatar' },
-                            wp.element.createElement('img', { src: this.assignedTo.avatar, alt: this.assignedTo.display_name })
+                            wp.element.createElement('img', { src: assignedTo.avatar, alt: assignedTo.display_name })
                         ),
                         wp.element.createElement(
                             'div',
@@ -13821,7 +13822,7 @@ var Board = function (_React$Component) {
                             wp.element.createElement(
                                 'p',
                                 { className: 'display-name' },
-                                this.assignedTo.display_name
+                                assignedTo.display_name ? assignedTo.display_name : 'Unknwon User'
                             )
                         )
                     )
