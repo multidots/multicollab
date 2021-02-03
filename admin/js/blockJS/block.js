@@ -38,7 +38,7 @@ $( window ).on('load', function () {
             // Fetching comments
             fetchComments();
         }
-        
+
         // Clearing interval if not found in 10 attemps.
         if ( loadAttempts >= 10 ) {
             clearInterval( loadComments );
