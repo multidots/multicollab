@@ -44,7 +44,7 @@ span.dashicon.dashicons.dashicons-admin-comments{min-width:24px;margin-right:8px
 #custom-history-popup table{width:100%;text-align:center}
 .user-avatar{margin-right:15px;float:left;width:50px}
 .user-avatar img{max-height:50px}
-.user-time{float:right;width:200px;text-align:right;color:#939393;font-size:14px}
+.user-time{float:right;width:200px;text-align:right;color:#191e23;font-size:14px}
 #custom-history-popup #history-popup-insider::before{content:'Activity Center';font-size:20px;display:block;margin:0 0 20px;font-weight:700}
 .user-title{float:left;width:60%;width:calc(100% - 265px);font-size:15px}
 .user-data-box{overflow:hidden}
@@ -124,7 +124,7 @@ body.hide-comments #md-comments-suggestions-parent{display:none!important}
 .comment-header .comment-actions .comment-resolve{width:80%;width:calc(100% - 50px);display:flex;align-items:center}
 .comment-header .comment-actions .buttons-wrapper{width:50px;text-align:right}
 .comment-header .comment-actions .buttons-wrapper i{margin-left:6px;color:#9e9e9e}
-.comment-header .comment-actions .comment-resolve label{font-size:12px;color:#939393;font-weight:400}
+.comment-header .comment-actions .comment-resolve label{font-size:12px;color:#191e23;font-weight:400}
 .comment-header .comment-actions .comment-resolve input{margin:0 5px 0 0;opacity:1;border-color:#b3bcc0;box-shadow:none;border-radius:2px}
 .cls-board-outer:hover .comment-header .comment-actions .buttons-wrapper i{color:#0a7fbb}
 .cls-board-outer .board{position:relative}
