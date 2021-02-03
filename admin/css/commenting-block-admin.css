@@ -40,7 +40,7 @@ span.dashicon.dashicons.dashicons-admin-comments{min-width:24px;margin-right:8px
 .comment-header{display:flex;align-items:flex-start;width:100%;margin-bottom:15px;flex-wrap:wrap}
 .user-data-row:last-child{padding-bottom:0}
 #custom-history-popup{display:none;opacity:0;transition:all 1s;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif}
-#custom-history-popup.active{display:block;min-height:50px;width:80%;position:absolute;left:20px;top:61px;background:#fff;padding:20px;z-index:9999;box-sizing:border-box;opacity:1;max-height:calc(90vh - 100px);overflow-y:auto;box-shadow:rgba(60, 64, 67, 0.2) 0 7px 10px 2px;border-radius:4px!important;border:1px solid #e9eaed;border-top:0}
+#custom-history-popup.active{display:block;min-height:50px;width:80%;position:absolute;left:20px;top:60px;background:#fff;padding:20px;z-index:9999;box-sizing:border-box;opacity:1;max-height:calc(90vh - 100px);overflow-y:auto;box-shadow:rgba(60, 64, 67, 0.2) 0 7px 10px 2px;border-radius:4px!important;border:1px solid #e9eaed;border-top:0;margin-top:2px}
 #custom-history-popup table{width:100%;text-align:center}
 .user-avatar{margin-right:15px;float:left;width:50px}
 .user-avatar img{max-height:50px}
@@ -105,7 +105,7 @@ button.btn-comment.btn-reject{box-shadow:none;background-color:#fff;background-i
 .cls-board-outer .board .commentContainer:last-child{margin-bottom:0}
 .comment-header button{margin-top:0!important}
 .cls-board-outer.focus{position:absolute;top:100px;z-index:9;opacity:1;right:45px;left:initial;transition:all 0.5s}
-.custom-buttons .components-button{box-shadow:none!important}
+.custom-buttons .components-button{box-shadow:none!important;height:36px;min-width:36px;padding:6px;box-sizing:border-box}
 .custom-buttons .components-button:hover{color:#4B1BCE}
 .shareCommentContainer.loading{position:relative}
 body.hide-comments mdspan{background:transparent!important}
@@ -141,7 +141,7 @@ body.hide-comments #md-comments-suggestions-parent{display:none!important}
 .cls-board-outer .board.fresh-board .shareCommentContainer{padding-top:0;display:block}
 .comments-loader .cls-board-outer .board::before, .comments-loader .cls-board-outer .board::after{display:none}
 .custom-buttons{position:relative;padding-top:3px}
-.custom-buttons.active::before, .custom-buttons.active::after{content:"";right:5px;top:53px;border:solid transparent;height:0;width:0;position:absolute;pointer-events:none;z-index:99999999999999}
+.custom-buttons.active::before, .custom-buttons.active::after{content:"";left:50%;top:55px;border:solid transparent;height:0;width:0;position:absolute;pointer-events:none;z-index:99999999999999;-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%);transform:translateX(-50%)}
 .custom-buttons.active::after{border-color:rgba(136, 183, 213, 0)!important;border-bottom-color:#ffffff!important;border-width:12px!important;margin-top:-28px!important}
 .custom-buttons.active::before{border-color:rgba(194, 225, 245, 0)!important;border-bottom-color:#e9eaed!important;border-width:14px!important;margin-top:-32px!important;margin-right:-2px}
 .close-button-suggestion{position:absolute;right:0;top:0;height:auto!important}
