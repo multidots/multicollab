@@ -17,10 +17,14 @@ $( window ).on('load', function () {
     const loadComments = setInterval(function () {
         loadAttempts++;
         if ( 1 <= $('.block-editor-writing-flow').length ) {
+            // Clearing interval if found.
             clearInterval( loadComments );
+
+            // Appending history popup on load.
             const customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
             $( '.edit-post-layout' ).append( customHistoryPopup );
 
+            // Adjusting edit post header height.
             var headerHeight = $('.edit-post-layout .edit-post-header').outerHeight();
             $('#custom-history-popup').css({top: headerHeight});
 
@@ -34,6 +38,8 @@ $( window ).on('load', function () {
             // Fetching comments
             fetchComments();
         }
+        
+        // Clearing interval if not found in 10 attemps.
         if ( loadAttempts >= 10 ) {
             clearInterval( loadComments );
         }
