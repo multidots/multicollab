@@ -351,7 +351,6 @@
                 // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
                 cursorPos = getCaretPosition(el);
-
                 // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey ) {
                     var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2, 2 );
