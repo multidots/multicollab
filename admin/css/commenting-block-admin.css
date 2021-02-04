@@ -247,7 +247,7 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cf-plugin-settings .cf-card p{margin:0 0 20px;font-weight:500}
 .cf-plugin-settings .cf-card p:last-child{margin-bottom:0}
 .cf-plugin-settings .cf-card .cf-dev-img{margin:15px 0}
-.cf-plugin-settings .cf-card .cf-dev-img img{max-width:100%;width:230px}
+.cf-plugin-settings .cf-card .cf-dev-img img{max-width:230px;width:90%}
 .cf-plugin-settings .submit{margin:10px 0 0;padding:0}
 .cf-plugin-settings .cf-notification-settings{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}
 .cf-plugin-settings .cf-notification-settings input[type=checkbox]{margin:0 0.25rem 0 0}
@@ -278,36 +278,55 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cf-tabs-main .cf-tabs .cf-tab-active .cf-tab-item{border-bottom-color:#4a1bce;color:#000}
 .cf-tabs-main .cf-tabs-content .cf-video-links{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin:30px 0 0}
 .cf-tabs-main .cf-tabs-content .cf-video-links .cf-link-wrap{margin:10px 30px 10px 0}
+@media (max-width:1400px){
+  .cf-plugin-settings .cf-left{width:calc(100% - 320px);padding:0 10px 0 0}
+  .cf-plugin-settings .cf-right{width:320px;padding:0 10px}
+  .cf-plugin-settings .cf-card h3{font-size: 26px;}
+  .cf-plugin-settings p{font-size:16px;}
+  .cf-plugin-settings .cf-button, .cf-plugin-settings .submit .button{font-size:16px;padding:10px 15px;min-width:130px}
+}
 @media (max-width:1280px){
+  .cf-tabs-main .cf-tabs .cf-tab-item{padding:15px 0}
+  .cf-tabs-main .cf-tabs li{margin:0 15px}
   #md-comments-suggestions-parent{width:320px}
   .cls-board-outer{width:260px}
+  .cf-plugin-settings .cf-left{width:calc(100% - 290px)}
+  .cf-plugin-settings .cf-right{width:290px}
+  .cf-plugin-settings .cf-card .cf-card-header{padding:15px}
+  .cf-plugin-settings .cf-card .cf-card-body{padding:0 15px 20px}
+  .cf-plugin-settings .cf-plugin-header{width:calc(100% - 290px)}
 }
 @media (max-width:1200px){
   #md-comments-suggestions-parent{width:300px}
   .cls-board-outer{width:240px}
-  .cf-plugin-settings .cf-left{width:66%;padding:0 10px 0 0}
-  .cf-plugin-settings .cf-right{width:34%;padding:0 10px}
+  .cf-plugin-settings .cf-left{width:70%}
+  .cf-plugin-settings .cf-right{width:30%}
   .cf-plugin-settings .cf-plugin-header h1{font-size:24px}
   .cf-plugin-settings h2{font-size:22px}
   .cf-plugin-settings h3{font-size:18px}
   .cf-plugin-settings .cf-card h3{font-size:24px}
-  .cf-plugin-settings p{font-size:16px}
-  .cf-plugin-settings .cf-button, .cf-plugin-settings .submit .button{font-size:16px;padding:12px 15px;min-width:130px}
   .cf-tabs-main .cf-tabs .cf-tab-item{font-size:16px}
+  .cf-plugin-settings .cf-plugin-header{width:70%}
   .cf-plugin-settings .cf-plugin-header img{width:30px}
 
   /* responsive layout */
   .responsive-layout .block-editor-writing-flow{width:100%}
 }
-@media (max-width:1024px){
-  .cf-plugin-settings .cf-left{width:64%}
-  .cf-plugin-settings .cf-right{width:36%}
+@media (max-width:1100px){
+  .cf-plugin-settings .cf-left{width:68%}
+  .cf-plugin-settings .cf-right{width:32%}
 }
-@media (max-width:950px){
+@media (max-width:1024px){
+  .cf-plugin-settings .cf-left{width:66%}
+  .cf-plugin-settings .cf-right{width:34%}
+}
+@media (max-width:991px){
+  .cf-plugin-settings .cf-plugin-header{width:100%}
   .cf-plugin-settings .cf-left{width:100%;padding:0;margin:0 0 20px}
   .cf-plugin-settings .cf-right{width:100%;padding:0}
 }
 @media (max-width:780px){
+  .cf-tabs-main .cf-tabs li{margin:0 10px}
   .cf-plugin-settings{padding-left:10px}
   .cf-plugin-settings .cf-plugin-header h1{font-size:22px}
 }
