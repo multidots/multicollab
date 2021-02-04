@@ -351,6 +351,8 @@
                 // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
                 cursorPos = getCaretPosition(el);
+
+                // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey ) {
                     var prevCharOfEmailSymbol = typedText.substr( cursorPos - 2, 2 );
                     if( show_suggestion( prevCharOfEmailSymbol ) ) { // meaning @ is typed at the begining or as independent.
@@ -378,41 +380,77 @@
                     }
                 }
 
-                if( true == isEmail ) {
+                if( true === isEmail ) {
                     var checkKeys = function( key ) {
                         if( key === e.key ) {
                             return true;
                         }
                         return false;
                     }
+
+                    // Chceck for selection deletation with DEL or Backspace.
+                    // var startPoint      = window.getSelection().anchorOffset;
+                    // var endPoint        = window.getSelection().extentOffset;
+                    // var getSelectedText = window.getSelection().anchorNode.data.substring( startPoint, endPoint );
+                    // console.log( 'sel: ' + getSelectedText );
+                    // if ( '' !== getSelectedText ) {
+                    //     trackedStr = trackedStr.replace( getSelectedText, '' );
+                    // }
+
                     if( ! keysToAvoid.find( checkKeys ) ) {
+                        // Check for only backspace.
                         if( 'Backspace' === e.key ) {
                             trackedStr = trackedStr.slice( 0, -1 );
                         } else {
                             trackedStr += e.key;
                         }
 
-                        if( '@' !== trackedStr ) {
-                            // Sending Ajax Call to get the matched email list(s).
-                            $.ajax({
-                                url: ajaxurl, // eslint-disable-line
-                                type: 'post',
-                                data: {
-                                    action: 'cf_get_matched_user_email_list',
-                                    niddle: trackedStr,
-                                    postID: currentPostID,
-                                    nonce: adminLocalizer.nonce, // eslint-disable-line
-                                },
-                                success: function( res ) {
-                                    $( appendIn ).remove(); // Removing previous DOM.
-                                    $( assignablePopup ).remove(); // Removing previous DOM.
-                                    var data = JSON.parse( res );
-                                    emailList( createTextarea, data );
-                                    makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' );
-                                }
-                            })
-
+                        // Check for ctrl+backspace.
+                        if( 'Backspace' === e.key && true === e.ctrlKey ) {
+                            trackedStr = '@';
                         }
+                    }
+
+                    // If trackedStr is left to @
+                    if( '@' === trackedStr ) {
+                        $.ajax({
+                            url: ajaxurl, // eslint-disable-line
+                            type: 'post',
+                            data: {
+                                action: 'cf_get_user_email_list',
+                                postID: currentPostID,
+                                nonce: adminLocalizer.nonce, // eslint-disable-line
+                            },
+                            beforeSend: function() {},
+                            success: function( res ) {
+                                $( appendIn ).remove(); // Remove previous DOM.
+                                $( assignablePopup ).remove(); // Remove previous DOM.
+                                $( assignablePopup ).remove();
+                                var data = JSON.parse( res );
+                                emailList( createTextarea, data );
+                            }
+                        })
+                    }
+                    // If trackedStr contains other chars with @ as well.
+                    if( '@' !== trackedStr ) {
+                        // Sending Ajax Call to get the matched email list(s).
+                        $.ajax({
+                            url: ajaxurl, // eslint-disable-line
+                            type: 'post',
+                            data: {
+                                action: 'cf_get_matched_user_email_list',
+                                niddle: trackedStr,
+                                postID: currentPostID,
+                                nonce: adminLocalizer.nonce, // eslint-disable-line
+                            },
+                            success: function( res ) {
+                                $( appendIn ).remove(); // Removing previous DOM.
+                                $( assignablePopup ).remove(); // Removing previous DOM.
+                                var data = JSON.parse( res );
+                                emailList( createTextarea, data );
+                                makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' );
+                            }
+                        })
                     }
                 }
             } )
