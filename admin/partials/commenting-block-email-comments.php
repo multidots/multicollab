@@ -7,7 +7,7 @@
 	<?php
 	foreach ( $this->list_of_comments as $cf_comment ) {
 
-		if ( isset( $cf_comment['status'] ) && 'permanent_draft' !== $cf_comment['status'] && 'draft' !== $cf_comment['status'] ) {
+		if ( isset( $cf_comment['status'] ) && 'publish' === $cf_comment['status'] ) {
 			$user_info      = get_userdata( $cf_comment['userData'] );
 			$user_role      = implode( ', ', $user_info->roles );
 			$username       = $user_info->display_name;

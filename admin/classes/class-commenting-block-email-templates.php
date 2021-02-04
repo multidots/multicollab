@@ -157,12 +157,14 @@ class Commenting_Block_Email_Templates {
 		$current_user_email        = $args['current_user_email'];
 		$current_user_display_name = $args['current_user_display_name'];
 
-		$find_mentions = '';
-		$find_new_mentions = '';
+		$find_mentions     = '';
+		$find_new_mentions =  '';
 		foreach ( $list_of_comments as $timestamp => $comment ) {
-			$find_mentions .= $comment['thread'];
-			if( in_array( $timestamp, $new_comments, true ) ) {
-				$find_new_mentions .= $comment['thread'];
+			if( 'publish' === $comment['status'] ) {
+				$find_mentions .= $comment['thread'];
+				if( in_array( $timestamp, $new_comments, true ) ) {
+					$find_new_mentions .= $comment['thread'];
+				}
 			}
 		}
 
@@ -174,6 +176,8 @@ class Commenting_Block_Email_Templates {
 			$mentioned_emails = array_merge( $mentioned_emails, $users_emails );
 		}
 		$email_list = array_unique( $mentioned_emails );
+
+
 
 		// Grab only newly mentioned email of the board.
 		$newly_mentioned_emails = $this->cf_find_mentioned_emails( $find_new_mentions );
@@ -378,6 +382,14 @@ class Commenting_Block_Email_Templates {
 					$email_list = $this->cf_email_notify_siteadmin( $email_list );
 
 					$email_list = array_diff( $email_list, $newly_mentioned_emails );
+
+					// Removed current user email from the list.
+					if( ! empty( $current_user_email ) ) {
+						$key = array_search( $current_user_email, $email_list );
+						if( $key !== false ) {
+							unset( $email_list[$key] );
+						}
+					}
 
 					// Sent email to newly mentioned users.
 					if( ! empty( $newly_mentioned_emails ) ) {

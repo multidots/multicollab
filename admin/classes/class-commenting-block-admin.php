@@ -539,7 +539,6 @@ class Commenting_block_Admin {
 		// Sending Emails to newly mentioned users.
 		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
 			$new_drafts = $current_drafts['comments'];
-
 			foreach ( $new_drafts as $el => $drafts ) {
 				$comments          = get_post_meta( $post_ID, $el, true );
 				$commented_on_text = $comments['commentedOnText'];
