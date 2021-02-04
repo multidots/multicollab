@@ -317,11 +317,8 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
   .cf-plugin-settings .cf-right{width:32%}
 }
 @media (max-width:1024px){
-  .cf-plugin-settings .cf-left{width:66%}
-  .cf-plugin-settings .cf-right{width:34%}
-}
-@media (max-width:991px){
   .cf-plugin-settings .cf-plugin-header{width:100%}
+  .cf-plugin-settings .cf-card{margin:0 0 30px}
   .cf-plugin-settings .cf-left{width:100%;padding:0;margin:0 0 20px}
   .cf-plugin-settings .cf-right{width:100%;padding:0}
 }
