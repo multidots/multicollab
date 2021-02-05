@@ -658,6 +658,7 @@
             if ($('#custom-history-popup').hasClass('active')) {
                 $('#custom-history-popup').addClass('loaded');
 
+                /* count header height */
                 var headerHeight = $('.edit-post-layout .edit-post-header').outerHeight();
                 $('#custom-history-popup').css({top: headerHeight});
 

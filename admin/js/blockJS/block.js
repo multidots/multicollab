@@ -24,7 +24,7 @@ $( window ).on('load', function () {
             const customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
             $( '.edit-post-layout' ).append( customHistoryPopup );
 
-            // Adjusting edit post header height.
+            // Adjusting edit post header height
             var headerHeight = $('.edit-post-layout .edit-post-header').outerHeight();
             $('#custom-history-popup').css({top: headerHeight});
 
