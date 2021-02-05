@@ -325,6 +325,7 @@
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( createTextarea );
                 typedText = _self.html();
+
                 // If textarea is blank then remove email list.
                 if( undefined !== typedText && typedText.length <=0 ) {
                     $( appendIn ).remove();
@@ -335,10 +336,10 @@
                 // FireFox Browser Fix.
                 var isFireFox = !!navigator.userAgent.match(/firefox/i);
                 if( isFireFox ) {
-                    if( typedText && typedText.length > 0 ) {
-                        var refinedText = typedText.replace( /<br>/igm, '' );
-                        typedText       = refinedText;
-                    }
+                }
+                if( typedText && typedText.length > 0 ) {
+                    var refinedText = typedText.replace( /<br>/igm, '' );
+                    typedText       = refinedText;
                 }
 
                 // Handeling space. As if someone type space has no intension to write email.
@@ -397,16 +398,34 @@
                     // }
 
                     if( ! keysToAvoid.find( checkKeys ) ) {
-                        // Check for only backspace.
+                        // Check for backspace.
                         if( 'Backspace' === e.key ) {
-                            trackedStr = trackedStr.slice( 0, -1 );
+                            let prevCharOfEmailSymbol = typedText.substr( cursorPos-1, 1 );
+                            if ( '@' === prevCharOfEmailSymbol ) {
+                                if( '' !== typedText ) {
+                                    trackedStr = '@';
+                                } else {
+                                    trackedStr = trackedStr.slice( 0, -1 );
+                                }
+                            } else {
+                                trackedStr = trackedStr.slice( 0, -1 );
+                            }
                         } else {
                             trackedStr += e.key;
                         }
 
                         // Check for ctrl+backspace.
                         if( 'Backspace' === e.key && true === e.ctrlKey ) {
-                            trackedStr = '@';
+                            let prevCharOfEmailSymbol = typedText.substr( cursorPos-1, 1 );
+                            if ( '@' === prevCharOfEmailSymbol ) {
+                                if( '' !== typedText ) {
+                                    trackedStr = '@';
+                                } else {
+                                    trackedStr = '';
+                                }
+                            } else {
+                                trackedStr = '';
+                            }
                         }
                     }
 
