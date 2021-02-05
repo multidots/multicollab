@@ -1219,7 +1219,7 @@ class Commenting_block_Admin {
 
 		// WP User Query.
 		$users = new WP_User_Query( [
-			'number'       => 10,
+			'number'       => 9999,
 			'role__not_in' => 'Subscriber',
 			'exclude'      => array( get_current_user_id() ),
 		] );
@@ -1265,6 +1265,7 @@ class Commenting_block_Admin {
 		$niddle = substr( $niddle, 1 );
 		if ( ! empty( $niddle ) && '@' !== $niddle ) {
 			$users = new WP_User_Query( [
+				'number'         => 9999,
 				'search'         => $niddle . '*',
 				'search_columns' => [ 'display_name' ],
 				'role__not_in'   => 'Subscriber',
