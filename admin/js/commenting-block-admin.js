@@ -460,7 +460,6 @@
                     // If trackedStr contains other chars with @ as well.
                     if( '@' !== trackedStr ) {
                         var cachedUsersList       = adminLocalizer.cached_users_list;
-                        console.log( cachedUsersList );
                         var refinedCachedusersList = [];
                         cachedUsersList.forEach( function( item, index ) {
                             let displayName = item.display_name;
