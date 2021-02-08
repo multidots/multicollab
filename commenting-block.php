@@ -65,6 +65,11 @@ register_deactivation_hook( __FILE__, 'cf_deactivate_commenting_block' );
 require COMMENTING_BLOCK_DIR . 'includes/class-commenting-block.php'; // phpcs:ignore
 
 /**
+ * Load global function file.
+ */
+require COMMENTING_BLOCK_DIR . 'includes/commenting-block-functions.php'; // phpcs:ignore
+
+/**
  * Begins execution of the plugin.
  *
  * Since everything within the plugin is registered via hooks,
@@ -88,11 +93,3 @@ cf_run_commenting_block();
  * @since 1.0.4
  */
 add_action( 'activated_plugin', array( 'Commenting_block', 'cf_redirect_on_activate' ) );
-
-
-// Test code
-add_action( 'user_register', 'gc_delete_user_transient', 10, 1 );
-add_action( 'deleted_user', 'gc_delete_user_transient', 10, 3 );
-function gc_delete_user_transient() {
-	delete_transient( 'gc_users_list' );
-}
