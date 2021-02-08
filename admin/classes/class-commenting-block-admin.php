@@ -1225,7 +1225,7 @@ class Commenting_block_Admin {
 			// WP User Query.
 			$users = new WP_User_Query( [
 				'number'       => 9999,
-				'role__not_in' => 'Subscriber',
+				'role__in' => [ 'Administrator', 'Editor', 'Contributor', 'Author' ],
 				'exclude'      => array( get_current_user_id() ),
 			] );
 	
@@ -1248,7 +1248,7 @@ class Commenting_block_Admin {
 				}
 			}
 			// Set transient
-			set_transient( $cache_key, $email_list );
+			set_transient( $cache_key, $email_list, 24 * HOUR_IN_SECONDS );
 			// Sending Response.
 			$response = $email_list;
 		} else {
