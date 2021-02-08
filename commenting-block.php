@@ -88,3 +88,11 @@ cf_run_commenting_block();
  * @since 1.0.4
  */
 add_action( 'activated_plugin', array( 'Commenting_block', 'cf_redirect_on_activate' ) );
+
+
+// Test code
+add_action( 'user_register', 'gc_delete_user_transient', 10, 1 );
+add_action( 'deleted_user', 'gc_delete_user_transient', 10, 3 );
+function gc_delete_user_transient() {
+	delete_transient( 'gc_users_list' );
+}

@@ -643,10 +643,12 @@ class Commenting_block_Admin {
 				'wp-edit-post',
 			), '1.0.7', true );
 
-			$comment_id        = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
+			$comment_id     = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
+			$get_users_list = get_transient( 'gc_users_list' );
 			wp_localize_script( $this->plugin_name, 'adminLocalizer', [
 				'nonce'      => wp_create_nonce( COMMENTING_NONCE ),
-				'comment_id' => isset( $comment_id ) ? $comment_id : null
+				'comment_id' => isset( $comment_id ) ? $comment_id : null,
+				'cached_users_list' => $get_users_list
 			] );
 
 			wp_enqueue_script( 'jquery-ui-draggable' );
@@ -1217,34 +1219,43 @@ class Commenting_block_Admin {
 			return;
 		}
 
-		// WP User Query.
-		$users = new WP_User_Query( [
-			'number'       => 9999,
-			'role__not_in' => 'Subscriber',
-			'exclude'      => array( get_current_user_id() ),
-		] );
-
-		// Fetch out all user's email.
-		$email_list   = [];
-		$system_users = $users->get_results();
-
-		foreach ( $system_users as $user ) {
-			if ( $user->has_cap( 'edit_post', $post_id ) ) {
-				$email_list[] = [
-					'ID'                => $user->ID,
-					'role'              => implode( ', ', $user->roles ),
-					'display_name'      => $user->display_name,
-					'full_name'         => $user->display_name,
-					'user_email'        => $user->user_email,
-					'avatar'            => get_avatar_url( $user->ID, [ 'size' => '24' ] ),
-					'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
-					'edit_others_posts' => $user->allcaps['edit_others_posts'],
-				];
+		$cache_key = 'gc_users_list';
+		$get_users_list = get_transient( $cache_key );
+		if( false === $get_users_list ) {
+			// WP User Query.
+			$users = new WP_User_Query( [
+				'number'       => 9999,
+				'role__not_in' => 'Subscriber',
+				'exclude'      => array( get_current_user_id() ),
+			] );
+	
+			// Fetch out all user's email.
+			$email_list   = [];
+			$system_users = $users->get_results();
+	
+			foreach ( $system_users as $user ) {
+				if ( $user->has_cap( 'edit_post', $post_id ) ) {
+					$email_list[] = [
+						'ID'                => $user->ID,
+						'role'              => implode( ', ', $user->roles ),
+						'display_name'      => $user->display_name,
+						'full_name'         => $user->display_name,
+						'user_email'        => $user->user_email,
+						'avatar'            => get_avatar_url( $user->ID, [ 'size' => '24' ] ),
+						'profile'           => admin_url( "/user-edit.php?user_id  ={ $user->ID}" ),
+						'edit_others_posts' => $user->allcaps['edit_others_posts'],
+					];
+				}
 			}
+			// Set transient
+			set_transient( $cache_key, $email_list );
+			// Sending Response.
+			$response = $email_list;
+		} else {
+			// Sending Response.
+			$response = $get_users_list;
 		}
 
-		// Sending Response.
-		$response = $email_list;
 		echo wp_json_encode( $response );
 		wp_die();
 	}
