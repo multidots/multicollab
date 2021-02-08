@@ -58,7 +58,7 @@ span.user-name{font-weight:700}
 #custom-history-popup table td{padding:15px 0}
 #comments-toggle.active, #history-toggle.active{color:#4B1BCE}
 #history-toggle{line-height:normal}
-#history-toggle::before{content:attr(data-count);position:absolute;top:0;left:17px;background:#f02849;color:#FFFFFF;padding:2px;border-radius:10px;font-size:9px;font-weight:600;width:18px;height:18px;text-align:center}
+#history-toggle::before{content:attr(data-count);position:absolute;top:0;right:0;background:#f02849;color:#FFFFFF;padding:2px;border-radius:10px;font-size:9px;font-weight:600;width:18px;height:18px;text-align:center;box-sizing:border-box}
 .block-editor-editor-skeleton__body{position:relative}
 .comment-header .buttons-holder .buttons-wrapper{display:none;position:absolute;background:#fff;box-shadow:rgba(60, 64, 67, 0.15) 0 2px 6px 2px;right:0;border-radius:4px;padding-top:5px;z-index:1}
 .comment-header .buttons-holder.is_active .buttons-wrapper{display:block}
@@ -105,7 +105,7 @@ button.btn-comment.btn-reject{box-shadow:none;background-color:#fff;background-i
 .cls-board-outer .board .commentContainer:last-child{margin-bottom:0}
 .comment-header button{margin-top:0!important}
 .cls-board-outer.focus{position:absolute;top:100px;z-index:9;opacity:1;right:45px;left:initial;transition:all 0.5s}
-.custom-buttons .components-button{box-shadow:none!important;height:36px;min-width:36px;padding:6px;box-sizing:border-box}
+.custom-buttons .components-button{box-shadow:none!important;height:36px;min-width:36px;padding:6px;box-sizing:border-box;position:relative;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}
 .custom-buttons .components-button:hover{color:#4B1BCE}
 .shareCommentContainer.loading{position:relative}
 body.hide-comments mdspan{background:transparent!important}
