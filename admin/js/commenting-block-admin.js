@@ -540,11 +540,12 @@
                 var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
                 var el                   = currentTextareaNode.lastChild;
                 var sel                  = window.getSelection();
-                range.setStart( el, 1 );
+                range.setStart( el, 0 );
                 range.collapse( true );
                 sel.removeAllRanges();
                 sel.addRange( range );
             } );
+
 
         }
         createAutoEmailMention();

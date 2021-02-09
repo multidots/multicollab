@@ -182,7 +182,7 @@ class Commenting_block_Admin {
 
 		// Confirm open counts with the meta value, if not
 		// matched, update it. Just for double confirmation.
-		$open_cf_count = $metas['open_cf_count'][0];
+		$open_cf_count = isset($metas['open_cf_count']) ? $metas['open_cf_count'][0] : 0;
 		if ( (int) $open_cf_count !== $open_counts ) {
 			update_post_meta( $post_ID, 'open_cf_count', $open_counts );
 		}
@@ -539,6 +539,9 @@ class Commenting_block_Admin {
 		// Sending Emails to newly mentioned users.
 		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
 			$new_drafts = $current_drafts['comments'];
+			// echo '<pre>';
+			// var_dump( $new_drafts );
+			// echo '</pre>';die();
 			foreach ( $new_drafts as $el => $drafts ) {
 				$comments          = get_post_meta( $post_ID, $el, true );
 				$commented_on_text = $comments['commentedOnText'];

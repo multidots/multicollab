@@ -208,6 +208,7 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cf-share-comment{width:100%;min-height:80px;height:auto;background-color:#fff;color:#222;padding:8px;border:1px solid #007cba;border-radius:5px}
 [contenteditable=true]:empty::before{content:attr(placeholder);pointer-events:none;display:block}
 .js-mentioned{font-weight:600;text-decoration:none}
+.cf-system-user-email-list{max-height:300px;overflow-y: scroll;}
 .cf-mentioned-user-popup, .cf-assignable-list-popup{display:block;width:87%;height:auto;position:absolute;z-index:10;border-radius:4px;background:#fff;box-shadow:0 1px 6px 0 rgba(0, 0, 0, 0.16)}
 .cf-mentioned-user-popup ul, .cf-assignable-list-popup ul{padding:0!important;margin:0!important}
 .cf-mentioned-user-popup ul li, .cf-assignable-list-popup ul li{list-style:none;display:flex;justify-content:flex-start;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(0, 0, 0, 0.1);transition:all 0.3s ease-in-out}
