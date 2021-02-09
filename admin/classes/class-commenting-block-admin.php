@@ -298,6 +298,8 @@ class Commenting_block_Admin {
 		$current_drafts    = $metas['current_drafts'][0];
 		$current_drafts    = maybe_unserialize( $current_drafts );
 		$current_timestamp = current_time( 'timestamp' );
+		// Initiate Email Class Object.
+		$this->cf_initiate_email_class();
 
 		// Checking if user deleted the recently added comment.
 		if( isset( $current_drafts['deleted'] ) && 0 !== $current_drafts['deleted'] ) {
@@ -315,9 +317,6 @@ class Commenting_block_Admin {
 				}
 			}
 		}
-
-		// Initiate Email Class Object.
-		$this->cf_initiate_email_class();
 
 		// Publish Deleted Comments. (i.e. finally delete them.)
 		if ( isset( $current_drafts['deleted'] ) && 0 !== count( $current_drafts['deleted'] ) ) {
@@ -452,6 +451,8 @@ class Commenting_block_Admin {
 							update_post_meta( $post_ID, $el, $prev_state );
 						}
 					}
+				} else {
+					update_post_meta( $post_ID, $el, $prev_state );
 				}
 
 				// Send Email.
