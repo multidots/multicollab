@@ -279,11 +279,11 @@
             var mood                  = 'create';
 
             // Browser detection.
-            var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
-            var is_safari = navigator.userAgent.indexOf("Safari") > -1;
-            if ( ( is_chrome ) && ( is_safari ) ) {
-                is_safari = false;
-            }
+            // var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
+            // var is_safari = navigator.userAgent.indexOf("Safari") > -1;
+            // if ( ( is_chrome ) && ( is_safari ) ) {
+            //     is_safari = false;
+            // }
 
             // Grab the current board ID.
             $( document.body ).on( 'click', parentBoardClass, function() {
@@ -542,11 +542,12 @@
                     var typedContent   = $( createTextarea ).html();
 
                     // If safari then regexp changes becasue of lookbehind is not supported in safari yet.
-                    if( ! is_safari ) {
-                        var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
-                    } else {
+                    if ( navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 ) {
                         var refinedContent = typedContent.replace( /@\s*(\w+)$/gim, '@' );
+                    } else {
+                        var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
                     }
+
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
