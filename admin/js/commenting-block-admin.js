@@ -540,9 +540,11 @@
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                     var typedContent   = $( createTextarea ).html();
-                    var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
+
                     // If safari then regexp changes becasue of lookbehind is not supported in safari yet.
-                    if( is_safari ) {
+                    if( ! is_safari ) {
+                        var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
+                    } else {
                         var refinedContent = typedContent.replace( /@\s*(\w+)$/gim, '@' );
                     }
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
