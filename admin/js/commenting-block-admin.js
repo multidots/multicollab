@@ -328,11 +328,12 @@
                 var _self = $( createTextarea );
                 typedText = _self.html();
 
+                // Removing assignable checkbox if that user's email is not in the content or removed.
                 var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
                 if( assignCheckBoxId.length > 0 ) {
                     var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
-                    let checkEmailPattern = new RegExp( assignCheckBoxUserEmail, 'igm' );
-                    let isThere = typedText.match( checkEmailPattern );
+                    let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
+                    let isThere                 = typedText.match( checkEmailPattern );
                     if( ! isThere ) {
                         $( assignCheckBoxId ).parent().remove();
                     }
@@ -391,10 +392,6 @@
                             }
                         })
                     }
-                    // if( show_suggestion( prevCharOfEmailSymbol ) ) { // meaning @ is typed at the begining or as independent.
-                    // } else { // Meaning @ is typed inside an email address.
-                    //     // do nothing.
-                    // }
                 }
 
                 if( true === isEmail ) {
@@ -425,7 +422,6 @@
                         // Check for ctrl+backspace.
                         if( 'Backspace' === e.key && true === e.ctrlKey ) {
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                            console.log(prevCharOfEmailSymbol)
                             if ( '@' === prevCharOfEmailSymbol ) {
                                 if( '' !== typedText ) {
                                     trackedStr = '@';
@@ -445,7 +441,6 @@
                             $( appendIn ).remove(); // Remove user list popup DOM.
                             $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
                             emailList( createTextarea, cachedUsersList );
-                            console.log('case 2');
                         } else {
                             $.ajax({
                                 url: ajaxurl, // eslint-disable-line
@@ -469,7 +464,6 @@
 
                     // If trackedStr contains other chars with @ as well.
                     if( '@' !== trackedStr ) {
-                        console.log( trackedStr );
                         let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
                         if( checkEmailSymbol ) {
                             var cachedUsersList       = adminLocalizer.cached_users_list;
@@ -490,7 +484,6 @@
                                     $( appendIn ).remove(); // Remove user list popup DOM.
                                     $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
                                     emailList( createTextarea, refinedCachedusersList );
-                                    console.log('case 3');
                                     makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' );
                                 } else {
                                     // Sending Ajax Call to get the matched email list(s).
@@ -539,15 +532,8 @@
                     // Insert Display Name.
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
-                    var typedContent   = $( createTextarea ).html();
-
-                    // If safari then regexp changes becasue of lookbehind is not supported in safari yet.
-                    if ( navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1 ) {
-                        var refinedContent = typedContent.replace( /@\s*(\w+)$/gim, '@' );
-                    } else {
-                        var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
-                    }
-
+                    var typedContent              = $( createTextarea ).html();
+                    var refinedContent            = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gim, ' @' );
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
