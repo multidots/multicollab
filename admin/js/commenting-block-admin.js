@@ -278,6 +278,13 @@
             var parentBoardClass      = '.cls-board-outer';
             var mood                  = 'create';
 
+            // Browser detection.
+            var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
+            var is_safari = navigator.userAgent.indexOf("Safari") > -1;
+            if ( ( is_chrome ) && ( is_safari ) ) {
+                is_safari = false;
+            }
+
             // Grab the current board ID.
             $( document.body ).on( 'click', parentBoardClass, function() {
                 el              = $( this ).attr( 'id' );
@@ -320,6 +327,16 @@
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( createTextarea );
                 typedText = _self.html();
+
+                var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
+                if( assignCheckBoxId.length > 0 ) {
+                    var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
+                    let checkEmailPattern = new RegExp( assignCheckBoxUserEmail, 'igm' );
+                    let isThere = typedText.match( checkEmailPattern );
+                    if( ! isThere ) {
+                        $( assignCheckBoxId ).parent().remove();
+                    }
+                }
 
                 // If textarea is blank then remove email list.
                 if( undefined !== typedText && typedText.length <=0 ) {
@@ -522,9 +539,12 @@
                     // Insert Display Name.
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
-                    var typedContent              = $( createTextarea ).html();
+                    var typedContent   = $( createTextarea ).html();
                     var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
-                    // var refinedContent = typedContent.replace( /@\s*(\w+)$/gim, '@' );
+                    // If safari then regexp changes becasue of lookbehind is not supported in safari yet.
+                    if( is_safari ) {
+                        var refinedContent = typedContent.replace( /@\s*(\w+)$/gim, '@' );
+                    }
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
@@ -566,10 +586,11 @@
             $( document.body ).on( 'click', mentionedEmail, function() {
                 let thisUserId      = $( this ).data( 'user-id' );
                 let thisDisplayName = $( this ).data( 'display-name' );
+                let thisUserEmail   = $( this ).data( 'email' );
                 let checkbox        = `
                 <div class="cf-assign-to">
                     <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
+                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
                     </label>
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                 </div>`;
@@ -611,6 +632,7 @@
         var assignalbeList = function( _self, data ) {
             var listItem = '';
             if( data.length > 0 ) {
+                listItem += `<ul class="cf-assignable-list">`;
                 data.forEach( function( user ) {
                     listItem += `
                     <li data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}">
@@ -620,13 +642,14 @@
                         </div>
                     </li>
                     `;
-                } )
+                } );
+                listItem += `</ul>`
+            } else {
+                listItem += `<strong class="cf-no-assignee">Sorry! No user found!</strong>`;
             }
             var assignListTemplate = `
                 <div class="cf-assignable-list-popup">
-                    <ul class="cf-assignable-list">
-                        ${listItem}
-                    </li>
+                    ${listItem}
                 </div>
             `;
 
