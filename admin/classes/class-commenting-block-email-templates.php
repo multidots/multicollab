@@ -60,12 +60,7 @@ class Commenting_Block_Email_Templates {
 			$html                   .= $this->cf_email_get_comments_loop();
 
 			$html .= '<div class="cf-marked-resolved-by" style="margin:0 10px 20px 0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;">';
-			$html .= '<span class="icon-resolved" style="margin-right:5px;line-height:1;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
-							  <g id="Group_22" data-name="Group 22" transform="translate(1 1)">
-							    <circle id="Ellipse_4" data-name="Ellipse 4" cx="10" cy="10" r="10" fill="none" stroke="#6ac359" stroke-width="2"/>
-							    <path id="Path_7" data-name="Path 7" d="M93.92,119.6l-3.593-3.664,1.353-1.327,2.252,2.3,5.621-5.621,1.34,1.34Z" transform="translate(-85.327 -105.288)" fill="#6ac359"/>
-							  </g>
-							</svg></span>';
+			$html .= '<span class="icon-resolved" style="margin-right:5px;line-height:1;"><img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-check.png' ).'" alt="resolved by" /></span>';
 			$html .= __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank" style="color:#4B1BCE;text-decoration:none;margin-left:5px;"> ' . esc_html( $current_user_display_name ) . ' </a>' . '</div>';
 			$html .= '</div>'; // .comment-box-body end
 			$html .= '</div>'; // .comment-box end
@@ -208,17 +203,7 @@ class Commenting_Block_Email_Templates {
 				$assigned_to_who_html = "
                 <div class='comment-assigned-to' style='margin-bottom:20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;'>
 					<span class='icon-assign' style='margin-right:5px;line-height:1;'>
-						<svg id='Group_31' data-name='Group 31' xmlns='http://www.w3.org/2000/svg' width='19.644' height='20' viewBox='0 0 19.644 20'>
-							<g id='Group_28' data-name='Group 28' transform='translate(2.21)'>
-							<path id='Path_11' data-name='Path 11' d='M149.786,160.469a10.107,10.107,0,0,1-7.123-2.907.885.885,0,0,1,0-1.279.885.885,0,0,1,1.275,0,8.254,8.254,0,0,0,5.78,2.439,7.905,7.905,0,0,0,5.776-2.436,8.236,8.236,0,0,0,0-11.632,8.253,8.253,0,0,0-5.779-2.438,8.032,8.032,0,0,0-5.779,2.438,1.047,1.047,0,0,1-1.255.018.771.771,0,0,1-.29-.564.949.949,0,0,1,.269-.73,9.992,9.992,0,0,1,7.126-2.909,10.107,10.107,0,0,1,7.124,2.907,9.761,9.761,0,0,1,2.912,7.128,10.1,10.1,0,0,1-2.907,7.124A9.619,9.619,0,0,1,149.786,160.469Z' transform='translate(-142.388 -140.469)' fill='#6ac359'/>
-							</g>
-							<g id='Group_29' data-name='Group 29' transform='translate(0 9.055)'>
-							<path id='Path_12' data-name='Path 12' d='M141.088,151.342a.909.909,0,1,1,0-1.818h5.727a.909.909,0,1,1,0,1.818Z' transform='translate(-140.178 -149.524)' fill='#6ac359'/>
-							</g>
-							<g id='Group_30' data-name='Group 30' transform='translate(4.564 4.705)'>
-							<path id='Path_13' data-name='Path 13' d='M148.645,155.834a.844.844,0,0,1-.638-.271.884.884,0,0,1,0-1.276l2.945-2.945h-5.3a.909.909,0,0,1,0-1.818h5.159l-2.8-2.8a.884.884,0,0,1,0-1.276.884.884,0,0,1,1.276,0l4.492,4.492a.8.8,0,0,1,.2.566.845.845,0,0,1-.271.639l-4.421,4.42A.841.841,0,0,1,148.645,155.834Z' transform='translate(-144.742 -145.174)' fill='#6ac359'/>
-							</g>
-						</svg>
+						<img src='".esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-assign.png' )."' alt='Assigned to' />
 					</span>
                     ".__( 'Assigned to', 'content-collaboration-inline-commenting' )." <a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name' style='color:#4B1BCE;text-decoration:none;margin-left:5px;'>@" . esc_html( $assigned_user->display_name ) . "</a>
                 </div>
@@ -230,13 +215,7 @@ class Commenting_Block_Email_Templates {
 				$post_title_html .= "<h2 class='comment-page-title' style='font-size:20px;margin:0;'><a href='" . esc_url( $post_edit_link ) . "' target='_blank' style='font-size:20px;color:#4B1BCE;text-decoration:underline;color:#4B1BCE;display:inline-block;'>" . esc_html( $p_title ) . "</a></h2>";
 			}
 
-			$comment_icon_html = "<span class='icon-comment' style='margin-right:10px;line-height:1;'>
-				<svg xmlns='http://www.w3.org/2000/svg' width='36.226' height='43.02' viewBox='0 0 36.226 43.02'>
-					<g id='Group_2' data-name='Group 2' transform='translate(-36.242 1.019)'>
-						<path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
-					</g>
-				</svg>
-			</span>";
+			$comment_icon_html = "<img src='".esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-comment.png' )."' alt='Icon Comment' />";
 
 			$html .= "
             <div class='comment-box new-comment' style='background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:90%;max-width:1024px;font-family:Arial,serif;margin:40px 0 0;'>
