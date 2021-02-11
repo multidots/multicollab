@@ -377,7 +377,7 @@ class Commenting_block_Admin {
 			$html .= '<div class="comment-box-body" style="border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;">';
 			$html .= '<h3 class="head-with-icon" style="margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;">';
 			$html .= '<span class="icon-resolved" style="margin-right:10px;">';
-			$html .= '<svg id="Group_19" data-name="Group 19" xmlns="http://www.w3.org/2000/svg" width="40" height="40.001" viewBox="0 0 40 40.001"><path id="Path_6" data-name="Path 6" d="M65.567,45.564a20,20,0,1,0,20,20A20,20,0,0,0,65.567,45.564ZM61.722,75.7l-7.583-7.731L57,65.164l4.753,4.847L73.609,58.151l2.828,2.828Z" transform="translate(-45.567 -45.564)" fill="#6ac359"/></svg>';
+			$html .= '<img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-check-fill.png' ).'" alt="Resolved" />';
 			$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
 			$html .= '</h3>';
 

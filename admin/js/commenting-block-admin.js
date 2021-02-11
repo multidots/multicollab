@@ -329,7 +329,7 @@
                 typedText = _self.html();
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
-                if( undefined !== typedText && typedText.length <=0 ) {
+                if( undefined !== typedText && typedText.length > 0 ) {
                     var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
                     if( assignCheckBoxId.length > 0 ) {
                         var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
@@ -472,8 +472,8 @@
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr( 1 );
                             if( '' !== niddle ) {
-                                if( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
-                                    cachedUsersList.forEach( function( item, index ) {
+                                if( '' !== cachedUsersList || undefined !== cachedUsersList || null !== cachedUsersList ) {
+                                    cachedUsersList.forEach( function( item ) {
                                         let displayName = item.display_name;
                                         let pattern = new RegExp( niddle, 'ig' );
                                         let isMatched = displayName.match( pattern );
@@ -587,10 +587,9 @@
                 </div>`;
 
                 if( '' !== el ) {
-                    if( $( `#${el} ${checkBoxContainer}` ).length ) {
-                        $( `#${el} ${checkBoxContainer}` ).remove();
+                    if( $( `#${el} ${checkBoxContainer}` ).children().length <= 0 ) {
+                        $( checkbox ).insertAfter( `#${el} ${appendTo}` );
                     }
-                    $( checkbox ).insertAfter( `#${el} ${appendTo}` );
                 }
 
             } )
@@ -602,10 +601,11 @@
                 let appendTo        = `#${el} .cf-assign-to`;
                 let assignablePopup = `#${el} .cf-assignable-list-popup`;
                 let thisUserId      = $( this ).data( 'user-id' );
+                let thisUserEmail   = $( this ).data( 'email' );
                 let thisDisplayName = $( this ).data( 'display-name' );
                 let checkbox = `
                     <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
+                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
                     </label>
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                 `;
