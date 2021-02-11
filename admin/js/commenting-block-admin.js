@@ -329,13 +329,15 @@
                 typedText = _self.html();
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
-                var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
-                if( assignCheckBoxId.length > 0 ) {
-                    var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
-                    let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
-                    let isThere                 = typedText.match( checkEmailPattern );
-                    if( ! isThere ) {
-                        $( assignCheckBoxId ).parent().remove();
+                if( undefined !== typedText && typedText.length <=0 ) {
+                    var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
+                    if( assignCheckBoxId.length > 0 ) {
+                        var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
+                        let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
+                        let isThere                 = typedText.match( checkEmailPattern );
+                        if( ! isThere ) {
+                            $( assignCheckBoxId ).parent().remove();
+                        }
                     }
                 }
 
