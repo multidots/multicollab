@@ -42,6 +42,16 @@ class Commenting_block_Admin {
 	private $email_class;
 
 	/**
+	 * @todo remove this comment :)
+	 
+	 * @for adeft
+	 * move the allowed attributes from being hardcoded in JS (commenting-block-admin.js)
+	 * up here so that we can put them through dev-defined filter and add necessary
+	 * custom attributes
+	 */
+	private static $allowed_attribute_tags = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @param string $plugin_name The name of this plugin.
@@ -611,7 +621,11 @@ class Commenting_block_Admin {
 			wp_localize_script( $this->plugin_name, 'adminLocalizer', [
 				'nonce'      => wp_create_nonce( COMMENTING_NONCE ),
 				'comment_id' => isset( $comment_id ) ? $comment_id : null,
-				'cached_users_list' => $get_users_list
+				'cached_users_list' => $get_users_list,
+				/**
+				 * For Adeft (cxl)
+				 */
+				'allowed_attribute_tags' => apply_filters( 'commenting_block_allowed_attr_tags', static::$allowed_attribute_tags)
 			] );
 
 			wp_enqueue_script( 'jquery-ui-draggable' );
