@@ -55,12 +55,15 @@ export default class Comment extends React.Component {
     }
 
     resolve(event) {
-
-        var elID = $(event.currentTarget).closest('.cls-board-outer');
-        elID = elID[0].id;
+        var alertMessage = 'Are you sure you want to resolve this thread ?';
+        if( $( event.target ).hasClass( 'js-resolve-comment' ) ) {
+            alertMessage = 'Are you sure, you want to delete this thread? Deleting this thread will also resolve it!'
+        }
+        var elID         = $(event.currentTarget).closest('.cls-board-outer');
+        elID             = elID[0].id;
         const elIDRemove = elID;
 
-        if (confirm('Are you sure you want to resolve this thread ?')) {
+        if (confirm(alertMessage)) {
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
             elID = '_' + elID;
 
@@ -131,11 +134,18 @@ export default class Comment extends React.Component {
                                 <label className="resolve-label" htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
                             </div>
                         }
-                        {this.props.userID === owner &&
-                            <div className="buttons-wrapper">
-                                <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
-                                <i className="dashicons dashicons-trash js-trash-comment" title="Delete" onClick={index === 0 ? this.resolve.bind(this) : this.remove.bind(this)}></i>
-                            </div>
+                        {this.props.userID === owner && index === 0 ?
+                            (
+                                <div className="buttons-wrapper">
+                                    <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
+                                    <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
+                                </div>
+                            ) : (
+                                <div className="buttons-wrapper">
+                                    <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
+                                    <i className="dashicons dashicons-trash js-trash-comment" title="Delete" onClick={this.remove.bind(this)}></i>
+                                </div>
+                            )
                         }
                     </div>
                     <div className="comment-details">

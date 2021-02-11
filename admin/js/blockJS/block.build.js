@@ -13995,12 +13995,15 @@ var Comment = function (_React$Component) {
     }, {
         key: 'resolve',
         value: function resolve(event) {
-
+            var alertMessage = 'Are you sure you want to resolve this thread ?';
+            if ($(event.target).hasClass('js-resolve-comment')) {
+                alertMessage = 'Are you sure, you want to delete this thread? Deleting this thread will also resolve it!';
+            }
             var elID = $(event.currentTarget).closest('.cls-board-outer');
             elID = elID[0].id;
             var elIDRemove = elID;
 
-            if (confirm('Are you sure you want to resolve this thread ?')) {
+            if (confirm(alertMessage)) {
                 var CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
                 elID = '_' + elID;
 
@@ -14084,11 +14087,16 @@ var Comment = function (_React$Component) {
                                 'Mark as a Resolved'
                             )
                         ),
-                        this.props.userID === owner && wp.element.createElement(
+                        this.props.userID === owner && index === 0 ? wp.element.createElement(
                             'div',
                             { className: 'buttons-wrapper' },
                             wp.element.createElement('i', { className: 'dashicons dashicons-edit js-edit-comment', title: 'Edit', onClick: this.edit }),
-                            wp.element.createElement('i', { className: 'dashicons dashicons-trash js-trash-comment', title: 'Delete', onClick: index === 0 ? this.resolve.bind(this) : this.remove.bind(this) })
+                            wp.element.createElement('i', { className: 'dashicons dashicons-trash js-resolve-comment', title: 'Resolve', onClick: this.resolve.bind(this) })
+                        ) : wp.element.createElement(
+                            'div',
+                            { className: 'buttons-wrapper' },
+                            wp.element.createElement('i', { className: 'dashicons dashicons-edit js-edit-comment', title: 'Edit', onClick: this.edit }),
+                            wp.element.createElement('i', { className: 'dashicons dashicons-trash js-trash-comment', title: 'Delete', onClick: this.remove.bind(this) })
                         )
                     ),
                     wp.element.createElement(
