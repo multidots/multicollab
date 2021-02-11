@@ -156,6 +156,7 @@ class Commenting_Block_Email_Templates {
 		$commented_on_text         = $args['commented_on_text'];
 		$current_user_email        = $args['current_user_email'];
 		$current_user_display_name = $args['current_user_display_name'];
+		$admin_notified = false;
 
 		$find_mentions     = '';
 		$find_new_mentions =  '';
@@ -329,12 +330,12 @@ class Commenting_Block_Email_Templates {
 				if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === false ) {
 					$assigned_user = get_user_by( 'ID', $el_obj['assigned_to'] );
 					if ( ! empty( $assigned_user ) ) {
-						$assign_to = $assigned_user->user_email;
+						$assigned_to_email = $assigned_user->user_email;
 
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( 'Assigned to you', $p_title, $site_title );
 
-						wp_mail( $assign_to, $subject, $mentioned_html, $headers ); // phpcs:ignore
+						wp_mail( $assigned_to_email, $subject, $mentioned_html, $headers ); // phpcs:ignore
 					}
 					// Updating after sending the email.
 					$el_obj['sent_assigned_email'] = true;
@@ -359,15 +360,14 @@ class Commenting_Block_Email_Templates {
 
 					}
 
-					if( ! empty( $newly_mentioned_emails ) || ! empty( $assign_to ) ) {
-						// Notify Site Admin if setting enabled.
-						$email_list = $this->cf_email_notify_siteadmin( $email_list );
-						// Sent email to all users.
-						if ( ! empty( $email_list ) ) {
-							// Limit the page and site titles for Subject.
-							$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
-							wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
-						}
+					// Notify Site Admin if setting enabled.
+					$email_list = $this->cf_email_notify_siteadmin( $email_list );
+					// Sent email to all users.
+					if ( ! empty( $email_list ) ) {
+						// Limit the page and site titles for Subject.
+						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+						wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
+						$admin_notified = true;
 					}
 				} else if( $el_obj['assigned_to'] > 0 && $el_obj['sent_assigned_email'] === true ) {
 					// Remove assigned email from the list.
@@ -398,6 +398,7 @@ class Commenting_Block_Email_Templates {
 							// Limit the page and site titles for Subject.
 							$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
 							wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
+							$admin_notified = true;
 						}
 					}
 				} else {
@@ -415,22 +416,25 @@ class Commenting_Block_Email_Templates {
 							// Limit the page and site titles for Subject.
 							$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
 							wp_mail( $email_list, $subject, $html, $headers ); // phpcs:ignore
+							$admin_notified = true;
 						}
 					}
 				}
 
 				// Send Email to admin if no user is mentioned.
-				if( empty( $newly_mentioned_emails ) && empty( $assign_to ) ) {
-					// Notify Site Admin if setting enabled.
-					$cf_admin_notif = get_option( 'cf_admin_notif' );
-					if ( '1' === $cf_admin_notif ) {
-						$admin_email = get_option( 'admin_email' );
-					}
+				if( false === $admin_notified ) {
+					if( empty( $newly_mentioned_emails ) ) {
+						// Notify Site Admin if setting enabled.
+						$cf_admin_notif = get_option( 'cf_admin_notif' );
+						if ( '1' === $cf_admin_notif ) {
+							$admin_email = get_option( 'admin_email' );
+						}
 
-					if( ! empty( $email_list ) ) {
-						// Limit the page and site titles for Subject.
-						$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
-						wp_mail( $admin_email, $subject, $html, $headers ); // phpcs:ignore
+						if( ! empty( $email_list ) ) {
+							// Limit the page and site titles for Subject.
+							$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
+							wp_mail( $admin_email, $subject, $html, $headers ); // phpcs:ignore
+						}
 					}
 				}
 			}
