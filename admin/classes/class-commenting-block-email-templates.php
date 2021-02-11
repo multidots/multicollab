@@ -53,20 +53,20 @@ class Commenting_Block_Email_Templates {
 		if ( ! empty( $list_of_comments ) && is_array( $list_of_comments ) ) {
 
 			$headers      = array( 'Content-Type: text/html; charset=UTF-8' );
-			$html         .= "<div class='commented_text'>" . $commented_on_text . "</div>";
+			$html         .= "<div class='commented_text' style='background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;-webkit-box-sizing:border-box;box-sizing:border-box;'>" . $commented_on_text . "</div>";
 
 			// Get comments loop.
 			$this->list_of_comments = $list_of_comments;
 			$html                   .= $this->cf_email_get_comments_loop();
 
-			$html .= '<div class="cf-marked-resolved-by">';
-			$html .= '<span class="icon-resolved"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+			$html .= '<div class="cf-marked-resolved-by" style="margin:0 10px 20px 0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;">';
+			$html .= '<span class="icon-resolved" style="margin-right:5px;line-height:1;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
 							  <g id="Group_22" data-name="Group 22" transform="translate(1 1)">
 							    <circle id="Ellipse_4" data-name="Ellipse 4" cx="10" cy="10" r="10" fill="none" stroke="#6ac359" stroke-width="2"/>
 							    <path id="Path_7" data-name="Path 7" d="M93.92,119.6l-3.593-3.664,1.353-1.327,2.252,2.3,5.621-5.621,1.34,1.34Z" transform="translate(-85.327 -105.288)" fill="#6ac359"/>
 							  </g>
 							</svg></span>';
-			$html .= __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank"> ' . esc_html( $current_user_display_name ) . ' </a>' . '</div>';
+			$html .= __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank" style="color:#4B1BCE;text-decoration:none;margin-left:5px;"> ' . esc_html( $current_user_display_name ) . ' </a>' . '</div>';
 			$html .= '</div>'; // .comment-box-body end
 			$html .= '</div>'; // .comment-box end
 
@@ -206,8 +206,8 @@ class Commenting_Block_Email_Templates {
 			if ( ! empty( $assign_to ) ) {
 				$assigned_user   = get_user_by( 'ID', $assign_to );
 				$assigned_to_who_html = "
-                <div class='comment-assigned-to'>
-					<span class='icon-assign'>
+                <div class='comment-assigned-to' style='margin-bottom:20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;'>
+					<span class='icon-assign' style='margin-right:5px;line-height:1;'>
 						<svg id='Group_31' data-name='Group 31' xmlns='http://www.w3.org/2000/svg' width='19.644' height='20' viewBox='0 0 19.644 20'>
 							<g id='Group_28' data-name='Group 28' transform='translate(2.21)'>
 							<path id='Path_11' data-name='Path 11' d='M149.786,160.469a10.107,10.107,0,0,1-7.123-2.907.885.885,0,0,1,0-1.279.885.885,0,0,1,1.275,0,8.254,8.254,0,0,0,5.78,2.439,7.905,7.905,0,0,0,5.776-2.436,8.236,8.236,0,0,0,0-11.632,8.253,8.253,0,0,0-5.779-2.438,8.032,8.032,0,0,0-5.779,2.438,1.047,1.047,0,0,1-1.255.018.771.771,0,0,1-.29-.564.949.949,0,0,1,.269-.73,9.992,9.992,0,0,1,7.126-2.909,10.107,10.107,0,0,1,7.124,2.907,9.761,9.761,0,0,1,2.912,7.128,10.1,10.1,0,0,1-2.907,7.124A9.619,9.619,0,0,1,149.786,160.469Z' transform='translate(-142.388 -140.469)' fill='#6ac359'/>
@@ -220,17 +220,17 @@ class Commenting_Block_Email_Templates {
 							</g>
 						</svg>
 					</span>
-                    ".__( 'Assigned to', 'content-collaboration-inline-commenting' )." <a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name'>@" . esc_html( $assigned_user->display_name ) . "</a>
+                    ".__( 'Assigned to', 'content-collaboration-inline-commenting' )." <a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name' style='color:#4B1BCE;text-decoration:none;margin-left:5px;'>@" . esc_html( $assigned_user->display_name ) . "</a>
                 </div>
             	";
 			}
 
 			$post_title_html = '';
 			if ( ! empty( $args['post_title'] ) ) {
-				$post_title_html .= "<h2 class='comment-page-title'><a href='" . esc_url( $post_edit_link ) . "' target='_blank'>" . esc_html( $p_title ) . "</a></h2>";
+				$post_title_html .= "<h2 class='comment-page-title' style='font-size:20px;margin:0;'><a href='" . esc_url( $post_edit_link ) . "' target='_blank' style='font-size:20px;color:#4B1BCE;text-decoration:underline;color:#4B1BCE;display:inline-block;'>" . esc_html( $p_title ) . "</a></h2>";
 			}
 
-			$comment_icon_html = "<span class='icon-comment'>
+			$comment_icon_html = "<span class='icon-comment' style='margin-right:10px;line-height:1;'>
 				<svg xmlns='http://www.w3.org/2000/svg' width='36.226' height='43.02' viewBox='0 0 36.226 43.02'>
 					<g id='Group_2' data-name='Group 2' transform='translate(-36.242 1.019)'>
 						<path id='Path_1' data-name='Path 1' d='M64.607,30.769,52.29,40l0-5.88-1.37-.279a17.1,17.1,0,1,1,13.683-3.072Z' transform='translate(0 0)' fill='none' stroke='#4b1bce' stroke-width='2'/>
@@ -238,85 +238,42 @@ class Commenting_Block_Email_Templates {
 				</svg>
 			</span>";
 
-			$email_css .= "
-			<style>
-				.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
-				.comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
-				.comment-box a{color:#4B1BCE;text-decoration:none;}
-				.comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-				.comment-box .comment-box-header p{margin:0 0 20px;}
-				.comment-box .comment-box-header .comment-page-title{font-size:20px;margin:0;}
-				.comment-box .comment-box-header a{color:#4B1BCE;display:inline-block;}
-				.comment-box .comment-page-title a{text-decoration:underline;font-size:20px;}
-				.comment-box .comment-box-wrap{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-box-wrap:last-child{margin-bottom:0;}
-				.comment-box .avatar{width:40px;margin-right:10px;}
-				.comment-box .avatar img{max-width:100%;border-radius:50%;}
-				.comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-				.comment-box .comment-box-wrap .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-box-wrap .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin:0 7px 0 0;color:#141414;font-weight:600;}
-				.comment-box .comment-box-wrap .commenter-role{font-size:14px;font-weight:400;font-family:Arial,serif;color:#4C5056;margin-right:10px;}
-				.comment-box .comment{font-family:Arial,serif;font-size:14px;color:#4C5056;}
-				.comment-box .comment-box-body{border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-				.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;}
-				.comment-box .comment-assigned-to{margin-bottom:20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-assigned-to .commenter-name{color:#4B1BCE;margin-left:5px;}
-				.comment-box .comment-assigned-to .icon-assign{margin-right:5px;line-height:1;}
-				.comment-box ul{margin:0 0 20px;padding:0;list-style:none;}
-				.comment-box ul li{margin-bottom:20px;}
-				.comment-box ul li:last-child{margin-bottom:10px;}
-				.comment-box .head-with-icon{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;}
-				.comment-box .head-with-icon .icon-comment{margin-right:10px;line-height:1;}
-				.comment-box .head-with-icon .icon-resolved{margin-right:10px;}
-				.comment-box .head-with-icon h3{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .cf-marked-resolved-by{margin:0 10px 20px 0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .cf-marked-resolved-by .icon-resolved{margin-right:5px;line-height:1;}
-				.comment-box .cf-marked-resolved-by a{margin-left:5px;}
-				.comment-box.new-comment .comment-list li:last-child .commenter-name-role:after{content:'New';padding:5px 10px;background-color:#4B1BCE;color:#fff;font-size:12px;}
-				.comment-box .view_reply{margin:10px 0;}
-				.comment-box .view_reply_btn{display:inline-block;padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;}
-				.comment-box .view_reply_btn a{text-decoration:underline;color:#fff;}
-				@media (max-width:1400px){.comment-box{width:90%;}}
-			</style>";
-
 			$html .= "
-			{$email_css}
-            <div class='comment-box new-comment'>
-                <div class='comment-box-header'>
+            <div class='comment-box new-comment' style='background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:90%;max-width:1024px;font-family:Arial,serif;margin:40px 0 0;'>
+                <div class='comment-box-header' style='margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;'>
                     {$post_title_html}
                 </div>
-                <div class='comment-box-body'>
-                    <h2 class='head-with-icon'>
+                <div class='comment-box-body' style='border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;'>
+                    <h2 class='head-with-icon' style='margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;'>
                         {$comment_icon_html}
                         ".__( 'Comments', 'content-collaboration-inline-commenting' )."
                     </h2>
-                    <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
+                    <div class='commented_text' style='background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;-webkit-box-sizing:border-box;box-sizing:border-box;'>" . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who_html}
                     {$comment_list_html}
-                    <div class='view_reply'>
-                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>".__( 'Click here to view this comment', 'content-collaboration-inline-commenting' )."</a></div>
+                    <div class='view_reply' style='margin:10px 0;'>
+                        <div class='view_reply_btn' style='display:inline-block;padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;'><a href='" . esc_url( $post_edit_link ) . "' style='text-decoration:none;color:#fff;'>".__( 'Click here to view this comment', 'content-collaboration-inline-commenting' )."</a></div>
                     </div>
                 </div>
             </div>
 			";
 
 			$mentioned_html .= "
-			{$email_css}
-            <div class='comment-box new-comment'>
-                <div class='comment-box-header'>
-                    <p><span class='commenter-name'>" . esc_html( $current_user_display_name ) . "</span> - mentioned you in a comment in the following page.</p>
+            <div class='comment-box new-comment' style='background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:90%;max-width:1024px;font-family:Arial,serif;margin:40px 0 0;'>
+                <div class='comment-box-header' style='margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;'>
+                    <p style='margin:0 0 20px;'><span class='commenter-name'>" . esc_html( $current_user_display_name ) . "</span> - mentioned you in a comment in the following page.</p>
 					{$post_title_html}
                 </div>
-                <div class='comment-box-body'>
-					<h2 class='head-with-icon'>
+                <div class='comment-box-body' style='border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;'>
+					<h2 class='head-with-icon' style='margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;'>
 						{$comment_icon_html}
 						".__( 'Comments', 'content-collaboration-inline-commenting' )."
 					</h2>
-                    <div class='commented_text'>" . esc_html( $commented_on_text ) . "</div>
+                    <div class='commented_text' style='background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;-webkit-box-sizing:border-box;box-sizing:border-box;'>" . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who_html}
                     {$comment_list_html}
-                    <div class='view_reply'>
-					<div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "'>".__( 'Click here to view this comment', 'content-collaboration-inline-commenting' )."</a></div>
+                    <div class='view_reply' style='margin:10px 0;'>
+					<div class='view_reply_btn' style='display:inline-block;padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;'><a href='" . esc_url( $post_edit_link ) . "' style='text-decoration:none;color:#fff;'>".__( 'Click here to view this comment', 'content-collaboration-inline-commenting' )."</a></div>
                     </div>
                 </div>
             </div>

@@ -368,56 +368,15 @@ class Commenting_block_Admin {
 		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
 			$resolved_drafts = $current_drafts['resolved'];
 
-			// Add common CSS for email templates.
-			$html = "
-			<style>
-				.comment-box{background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;}
-				.comment-box *{-webkit-box-sizing:border-box;box-sizing:border-box;}
-				.comment-box a{color:#4B1BCE;text-decoration:none;}
-				.comment-box .comment-box-header{margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-				.comment-box .comment-box-header p{margin:0 0 20px;}
-				.comment-box .comment-box-header .comment-page-title{font-size:20px;margin:0;}
-				.comment-box .comment-box-header a{color:#4B1BCE;display:inline-block;}
-				.comment-box .comment-page-title a{text-decoration:underline;font-size:20px;}
-				.comment-box .comment-box-wrap{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;width:100%;margin-bottom:20px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-box-wrap:last-child{margin-bottom:0;}
-				.comment-box .avatar{width:40px;margin-right:10px;}
-				.comment-box .avatar img{max-width:100%;border-radius:50%;}
-				.comment-box .comment-details{margin-right:0;width:60%;width:calc(100% - 55px);}
-				.comment-box .comment-box-wrap .commenter-name-role{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:7px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-box-wrap .commenter-name{font-size:18px;font-family:Roboto,Arial,sans-serif;margin:0 7px 0 0;color:#141414;font-weight:600;}
-				.comment-box .comment-box-wrap .commenter-role{font-size:14px;font-weight:400;font-family:Arial,serif;color:#4C5056;margin-right:10px;}
-				.comment-box .comment{font-family:Arial,serif;font-size:14px;color:#4C5056;}
-				.comment-box .comment-box-body{border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;}
-				.comment-box .commented_text{background-color:#F8F8F8;border:1px solid rgb(0 0 0 / 0.1);font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;}
-				.comment-box .comment-assigned-to{margin-bottom:20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .comment-assigned-to .commenter-name{color:#4B1BCE;margin-left:5px;}
-				.comment-box .comment-assigned-to .icon-assign{margin-right:5px;line-height:1;}
-				.comment-box ul{margin:0 0 20px;padding:0;list-style:none;}
-				.comment-box ul li{margin-bottom:20px;}
-				.comment-box ul li:last-child{margin-bottom:10px;}
-				.comment-box .head-with-icon{margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;}
-				.comment-box .head-with-icon .icon-comment{margin-right:10px;line-height:1;}
-				.comment-box .head-with-icon .icon-resolved{margin-right:10px;}
-				.comment-box .head-with-icon h3{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .cf-marked-resolved-by{margin:0 10px 20px 0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;}
-				.comment-box .cf-marked-resolved-by .icon-resolved{margin-right:5px;line-height:1;}
-				.comment-box .cf-marked-resolved-by a{margin-left:5px;}
-				.comment-box.new-comment .comment-list li:last-child .commenter-name-role:after{content:'New';padding:5px 10px;background-color:#4B1BCE;color:#fff;font-size:12px;}
-				.comment-box .view_reply{margin:10px 0;}
-				.comment-box .view_reply_btn{display:inline-block;padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;}
-				.comment-box .view_reply_btn a{text-decoration:underline;color:#fff;}
-				@media (max-width:1400px){.comment-box{width:90%;}}
-			</style>";
-
-			$html .= '<div class="comment-box comment-resolved"><div class="comment-box-header">';
-			$html .= '<p><a href="mailto:' . esc_attr( $current_user_email ) . '" class="">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'has resolved the following thread.', 'content-collaboration-inline-commenting' ) . '</p>';
+			$html .= '<div class="comment-box comment-resolved" style="background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;">';
+			$html .= '<div class="comment-box-header" style="margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;">';
+			$html .= '<p style="margin:0 0 20px;"><a href="mailto:' . esc_attr( $current_user_email ) . '" class="" style="color:#4B1BCE;display:inline-block;text-decoration:none;">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'has resolved the following thread.', 'content-collaboration-inline-commenting' ) . '</p>';
 			if ( ! empty( $p_title ) ) {
-				$html .= '<h2 class="comment-page-title"><a href="' . esc_url( $p_link ) . '">' . esc_html( $p_title ) . '</a></h2></div>';
+				$html .= '<h2 class="comment-page-title" style="font-size:20px;margin:0;"><a href="' . esc_url( $p_link ) . '" style="color:#4B1BCE;display:inline-block;text-decoration:underline;font-size:20px;">' . esc_html( $p_title ) . '</a></h2></div>';
 			}
-			$html .= '<div class="comment-box-body">';
-			$html .= '<h3 class="head-with-icon">';
-			$html .= '<span class="icon-resolved">';
+			$html .= '<div class="comment-box-body" style="border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;">';
+			$html .= '<h3 class="head-with-icon" style="margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;">';
+			$html .= '<span class="icon-resolved" style="margin-right:10px;">';
 			$html .= '<svg id="Group_19" data-name="Group 19" xmlns="http://www.w3.org/2000/svg" width="40" height="40.001" viewBox="0 0 40 40.001"><path id="Path_6" data-name="Path 6" d="M65.567,45.564a20,20,0,1,0,20,20A20,20,0,0,0,65.567,45.564ZM61.722,75.7l-7.583-7.731L57,65.164l4.753,4.847L73.609,58.151l2.828,2.828Z" transform="translate(-45.567 -45.564)" fill="#6ac359"/></svg>';
 			$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
 			$html .= '</h3>';
