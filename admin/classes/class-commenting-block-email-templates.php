@@ -60,8 +60,8 @@ class Commenting_Block_Email_Templates {
 			$html                   .= $this->cf_email_get_comments_loop();
 
 			$html .= '<table class="cf-marked-resolved-by" style="padding-bottom:20px"><tr><td valign="middle">';
-			$html .= '<span class="icon-resolved" style="padding-right:5px;line-height:1;"><img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-check.png' ).'" alt="resolved by" /></span>';
-			$html .= '<span>' . __( 'Marked as resolved by ', 'content-collaboration-inline-commenting' ) . '</span>';
+			$html .= '<span class="icon-resolved" style="padding-right:5px;line-height:1;vertical-align:middle;"><img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-check.png' ).'" alt="resolved by" /></span>';
+			$html .= '<span>' . __( 'Marked as resolved by', 'content-collaboration-inline-commenting' ) . '</span>';
 			$html .= '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank" style="color:#4B1BCE;text-decoration:none;padding-left:5px;"> ' . esc_html( $current_user_display_name ) . ' </a>';
 			$html .= '</td></tr></table>';
 			$html .= '</div>'; // .comment-box-body end
@@ -203,11 +203,11 @@ class Commenting_Block_Email_Templates {
 			if ( ! empty( $assign_to ) ) {
 				$assigned_user   = get_user_by( 'ID', $assign_to );
 				$assigned_to_who_html = "
-                <div class='comment-assigned-to' style='margin-bottom:20px;'>
-					<span class='icon-assign' style='margin-right:5px;line-height:1;vertical-align:middle;'>
+                <div class='comment-assigned-to' style='padding-bottom:20px;'>
+					<span class='icon-assign' style='padding-right:5px;line-height:1;vertical-align:middle;'>
 						<img src='".esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-assign.png' )."' alt='Assigned to' />
 					</span>
-                    ".__( 'Assigned to', 'content-collaboration-inline-commenting' )." <a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name' style='color:#4B1BCE;text-decoration:none;margin-left:5px;vertical-align:middle;'>@" . esc_html( $assigned_user->display_name ) . "</a>
+                    ".__( 'Assigned to', 'content-collaboration-inline-commenting' )."<a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name' style='color:#4B1BCE;text-decoration:none;padding-left:5px;vertical-align:middle;'>@" . esc_html( $assigned_user->display_name ) . "</a>
                 </div>
             	";
 			}
@@ -217,22 +217,22 @@ class Commenting_Block_Email_Templates {
 				$post_title_html .= "<h2 class='comment-page-title' style='font-size:20px;margin:0;'><a href='" . esc_url( $post_edit_link ) . "' target='_blank' style='font-size:20px;color:#4B1BCE;text-decoration:underline;color:#4B1BCE;'>" . esc_html( $p_title ) . "</a></h2>";
 			}
 
-			$comment_icon_html = "<img src='".esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-comment.png' )."' alt='Icon Comment' style='vertical-align:middle;margin-right:10px;' />";
+			$comment_icon_html = "<img src='".esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-comment.png' )."' alt='Icon Comment' style='vertical-align:middle;padding-right:10px;' />";
 
 			$html .= "
-            <div class='comment-box new-comment' style='background:#fff;width:90%;max-width:1024px;font-family:Arial,serif;margin:40px 0 0;'>
+            <div class='comment-box new-comment' style='background:#fff;width:90%;max-width:1024px;font-family:Arial,serif;padding-top:40px;'>
                 <div class='comment-box-header' style='margin-bottom:30px;border:1px solid #eee;border-radius:20px;padding:30px;'>
                     {$post_title_html}
                 </div>
                 <div class='comment-box-body' style='border:1px solid #eee;border-radius:20px;padding:30px;'>
-                    <h2 class='head-with-icon' style='margin:0 0 20px;font-family:Roboto,Arial,sans-serif;font-weight:600;'>
+                    <h2 class='head-with-icon' style='margin:0;padding-bottom:20px;font-family:Roboto,Arial,sans-serif;font-weight:600;'>
                         {$comment_icon_html}
                         ".__( 'Comments', 'content-collaboration-inline-commenting' )."
                     </h2>
                     <div class='commented_text' style='background-color:#F8F8F8;border:1px solid #eee;font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;'>" . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who_html}
                     {$comment_list_html}
-                    <div class='view_reply' style='margin:10px 0;'>
+                    <div class='view_reply' style='padding:10px 0;'>
                         <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "' style='padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;text-decoration:none;'>".__( 'Click here to view this comment', 'content-collaboration-inline-commenting' )."</a></div>
                     </div>
                 </div>
@@ -240,20 +240,20 @@ class Commenting_Block_Email_Templates {
 			";
 
 			$mentioned_html .= "
-            <div class='comment-box new-comment' style='background:#fff;width:90%;max-width:1024px;font-family:Arial,serif;margin:40px 0 0;'>
+            <div class='comment-box new-comment' style='background:#fff;width:90%;max-width:1024px;font-family:Arial,serif;padding-top:40px;'>
                 <div class='comment-box-header' style='margin-bottom:30px;border:1px solid #eee;border-radius:20px;padding:30px;'>
-                    <p style='margin:0 0 20px;'><span class='commenter-name'>" . esc_html( $current_user_display_name ) . "</span> - mentioned you in a comment in the following page.</p>
+                    <p style='padding-bottom:20px;margin:0;'><span class='commenter-name'>" . esc_html( $current_user_display_name ) . "</span> - mentioned you in a comment in the following page.</p>
 					{$post_title_html}
                 </div>
                 <div class='comment-box-body' style='border:1px solid #eee;border-radius:20px;padding:30px;'>
-					<h2 class='head-with-icon' style='margin:0 0 20px;font-family:Roboto,Arial,sans-serif;font-weight:600;'>
+					<h2 class='head-with-icon' style='marging:0;padding-bottom:20px;font-family:Roboto,Arial,sans-serif;font-weight:600;'>
 						{$comment_icon_html}
 						".__( 'Comments', 'content-collaboration-inline-commenting' )."
 					</h2>
                     <div class='commented_text' style='background-color:#F8F8F8;border:1px solid #eee;font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#4C5056;'>" . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who_html}
                     {$comment_list_html}
-                    <div class='view_reply' style='margin:10px 0;'>
+                    <div class='view_reply' style='padding:10px 0;'>
 					<div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "' style='padding:15px 25px;font-size:20px;background-color:#4B1BCE;border-radius:8px;color:#fff;text-decoration:none;'>".__( 'Click here to view this comment', 'content-collaboration-inline-commenting' )."</a></div>
                     </div>
                 </div>
