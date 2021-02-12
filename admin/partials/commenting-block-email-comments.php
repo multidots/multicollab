@@ -22,7 +22,7 @@
                                 <img src="<?php echo esc_url( $profile_url ) ?>" alt="avatar" style="max-width:100%;border-radius:50%;" />
                             </td>
                             <td class="comment-details">
-                                <table class="commenter-name-role" valign="middle" style="padding-bottom:7px;">
+                                <table class="commenter-name-role" valign="middle" style="width:100%;">
                                     <tr>
                                         <th align="left">
                                             <span class="commenter-name" style="font-size:18px;font-family:Roboto,Arial,sans-serif;padding-right:5px;color:#141414;font-weight:600;"><?php echo esc_html( $username ) ?></span>

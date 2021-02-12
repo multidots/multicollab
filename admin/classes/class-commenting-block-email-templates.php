@@ -59,10 +59,10 @@ class Commenting_Block_Email_Templates {
 			$this->list_of_comments = $list_of_comments;
 			$html                   .= $this->cf_email_get_comments_loop();
 
-			$html .= '<table class="cf-marked-resolved-by" style="padding-bottom:20px"><tr><td valign="middle">';
+			$html .= '<table class="cf-marked-resolved-by" style="padding-bottom:10px"><tr><td valign="middle">';
 			$html .= '<span class="icon-resolved" style="padding-right:5px;line-height:1;vertical-align:middle;"><img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-check.png' ).'" alt="resolved by" /></span>';
 			$html .= '<span>' . __( 'Marked as resolved by', 'content-collaboration-inline-commenting' ) . '</span>';
-			$html .= '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank" style="color:#4B1BCE;text-decoration:none;padding-left:5px;"> ' . esc_html( $current_user_display_name ) . ' </a>';
+			$html .= '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank" style="color:#4B1BCE;text-decoration:none;padding-left:5px;">' . esc_html( $current_user_display_name ) . '</a>';
 			$html .= '</td></tr></table>';
 			$html .= '</div>'; // .comment-box-body end
 			$html .= '</div>'; // .comment-box end
@@ -246,7 +246,7 @@ class Commenting_Block_Email_Templates {
 					{$post_title_html}
                 </div>
                 <div class='comment-box-body' style='border:1px solid #eee;border-radius:20px;padding:30px;'>
-					<h2 class='head-with-icon' style='marging:0;padding-bottom:20px;font-family:Roboto,Arial,sans-serif;font-weight:600;'>
+					<h2 class='head-with-icon' style='margin:0;padding-bottom:20px;font-family:Roboto,Arial,sans-serif;font-weight:600;'>
 						{$comment_icon_html}
 						".__( 'Comments', 'content-collaboration-inline-commenting' )."
 					</h2>
