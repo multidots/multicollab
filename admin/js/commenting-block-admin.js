@@ -237,7 +237,7 @@
 
         // Insert Display Name.
         var insertDisplayName = function( setRange, email, fullName, displayName, createTextarea ) {
-            var gapElContent = document.createTextNode( " " );
+            var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace aftetr the name.
             var anchor       = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
@@ -330,6 +330,12 @@
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( createTextarea );
                 typedText = _self.html();
+
+                // Try code
+                // if( 'Backspace' === e.key ) {
+                //     if( range.endContainer.hasClass() )
+                //     console.log(range);
+                // }
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
                 if( undefined !== typedText && typedText.length > 0 ) {
@@ -532,6 +538,8 @@
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                 }
+
+
             } );
             // Append email in textarea.
             $( document.body ).on( 'click keypress', '.cf-system-user-email-list li', function(e) {
@@ -559,9 +567,14 @@
                 // Setup the caret position after appending the Display Name.
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
                 var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
-                var el                   = currentTextareaNode.lastChild;
+                var selectChild = currentTextareaNode.childNodes.length - 1;
+                if( 'BR' === currentTextareaNode.childNodes[selectChild].nodeName ) {
+                    selectChild = currentTextareaNode.childNodes.length - 2; // It starts form zero.
+                }
+                var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var sel                  = window.getSelection();
-                range.setStart( el, 0 );
+                range.setStart( el, range.startOffset );
+                range.setEnd( el, range.endOffset );
                 range.collapse( true );
                 sel.removeAllRanges();
                 sel.addRange( range );
