@@ -41,14 +41,6 @@ class Commenting_block_Admin {
 	 */
 	private $email_class;
 
-	/**
-	 * @todo remove this comment :)
-	 
-	 * @for adeft
-	 * move the allowed attributes from being hardcoded in JS (commenting-block-admin.js)
-	 * up here so that we can put them through dev-defined filter and add necessary
-	 * custom attributes
-	 */
 	private static $allowed_attribute_tags = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text', 'downloadButtonText'];
 
 	/**
@@ -617,9 +609,6 @@ class Commenting_block_Admin {
 				'nonce'      => wp_create_nonce( COMMENTING_NONCE ),
 				'comment_id' => isset( $comment_id ) ? $comment_id : null,
 				'cached_users_list' => $get_users_list,
-				/**
-				 * For Adeft (cxl)
-				 */
 				'allowed_attribute_tags' => apply_filters( 'commenting_block_allowed_attr_tags', static::$allowed_attribute_tags)
 			] );
 
@@ -1200,11 +1189,11 @@ class Commenting_block_Admin {
 				'role__in' => [ 'Administrator', 'Editor', 'Contributor', 'Author' ],
 				'exclude'      => array( get_current_user_id() ),
 			] );
-	
+
 			// Fetch out all user's email.
 			$email_list   = [];
 			$system_users = $users->get_results();
-	
+
 			foreach ( $system_users as $user ) {
 				if ( $user->has_cap( 'edit_post', $post_id ) ) {
 					$email_list[] = [
