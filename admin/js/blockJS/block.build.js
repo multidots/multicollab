@@ -13949,7 +13949,7 @@ var Comment = function (_React$Component) {
         _this.remove = _this.remove.bind(_this);
         _this.resolve = _this.resolve.bind(_this);
         _this.cancelEdit = _this.cancelEdit.bind(_this);
-        _this.state = { editing: false, showEditedDraft: false, contentHtml: '' };
+        _this.state = { editing: false, showEditedDraft: false, contentHtml: '<br/>' };
 
         return _this;
     }

@@ -16,7 +16,7 @@ export default class Comment extends React.Component {
         this.remove = this.remove.bind(this);
         this.resolve = this.resolve.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
-        this.state = {editing: false, showEditedDraft: false, contentHtml: ''};
+        this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>'};
 
     }
 
