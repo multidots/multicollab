@@ -360,10 +360,10 @@
                 // FireFox Browser Fix.
                 // var isFireFox = !!navigator.userAgent.match(/firefox/i);
 
-                // if( typedText && typedText.length > 0 ) {
-                //     var refinedText = typedText.replace( /<br>/igm, '' );
-                //     typedText       = refinedText;
-                // }
+                if( typedText && typedText.length > 0 ) {
+                    var refinedText = typedText.replace( /<br>/igm, '' );
+                    typedText       = refinedText;
+                }
 
                 // Handeling space. As if someone type space has no intension to write email.
                 // So we make isEmail false and trackedStr to blank.
@@ -545,7 +545,7 @@
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                     var typedContent              = $( createTextarea ).html();
-                    var refinedContent            = typedContent.replace( /(^@|\s@|[&nbsp;]@)([a-z0-9]\w*)/gi, ' @' );
+                    var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
