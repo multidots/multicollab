@@ -13361,6 +13361,15 @@ var mdComment = {
                         __WEBPACK_IMPORTED_MODULE_2_react_dom___default.a.render(wp.element.createElement(__WEBPACK_IMPORTED_MODULE_0__component_board__["a" /* default */], { datatext: selectedText, lastVal: value, onChanged: onChange }), document.getElementById(selectedText));
                     }
 
+                    // Float comments column.
+                    this.floatComments(selectedText);
+                }
+            }
+        }, {
+            key: 'floatComments',
+            value: function floatComments(selectedText) {
+                if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
+
                     // Removing dark highlights from other texts,
                     // only if current active text has an attribute,
                     // and no 'focus' class active on mdspan tag.
@@ -13372,15 +13381,6 @@ var mdComment = {
                     $('#' + selectedText + '.cls-board-outer').addClass('focus');
 
                     $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
-
-                    // Float comments column.
-                    this.floatComments(selectedText);
-                }
-            }
-        }, {
-            key: 'floatComments',
-            value: function floatComments(selectedText) {
-                if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
 
                     $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                     $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
@@ -13957,9 +13957,11 @@ var Comment = function (_React$Component) {
     _createClass(Comment, [{
         key: 'componentDidUpdate',
         value: function componentDidUpdate() {
-            var editedCommentID = this.props.timestamp;
-            var commenttedText = $('#' + editedCommentID + ' textarea').val();
-            $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+            if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
+                var editedCommentID = this.props.timestamp;
+                var commenttedText = $('#' + editedCommentID + ' textarea').val();
+                $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+            }
         }
     }, {
         key: 'edit',
