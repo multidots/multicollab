@@ -378,14 +378,14 @@ class Commenting_block_Admin {
 		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
 			$resolved_drafts = $current_drafts['resolved'];
 
-			$html .= '<div class="comment-box comment-resolved" style="background:#fff;-webkit-box-sizing:border-box;box-sizing:border-box;width:70%;font-family:Arial,serif;margin:40px 0 0;">';
-			$html .= '<div class="comment-box-header" style="margin-bottom:30px;border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;">';
-			$html .= '<p style="margin:0 0 20px;"><a href="mailto:' . esc_attr( $current_user_email ) . '" class="" style="color:#4B1BCE;display:inline-block;text-decoration:none;">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'has resolved the following thread.', 'content-collaboration-inline-commenting' ) . '</p>';
+			$html .= '<div class="comment-box comment-resolved" style="background:#fff;width:70%;font-family:Arial,serif;margin:40px 0 0;">';
+			$html .= '<div class="comment-box-header" style="margin-bottom:30px;border:1px solid #eee;border-radius:20px;padding:30px;">';
+			$html .= '<p style="margin:0 0 20px;"><a href="mailto:' . esc_attr( $current_user_email ) . '" class="" style="color:#4B1BCE;text-decoration:none;">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'has resolved the following thread.', 'content-collaboration-inline-commenting' ) . '</p>';
 			if ( ! empty( $p_title ) ) {
-				$html .= '<h2 class="comment-page-title" style="font-size:20px;margin:0;"><a href="' . esc_url( $p_link ) . '" style="color:#4B1BCE;display:inline-block;text-decoration:underline;font-size:20px;">' . esc_html( $p_title ) . '</a></h2></div>';
+				$html .= '<h2 class="comment-page-title" style="font-size:20px;margin:0;"><a href="' . esc_url( $p_link ) . '" style="color:#4B1BCE;text-decoration:underline;font-size:20px;">' . esc_html( $p_title ) . '</a></h2></div>';
 			}
-			$html .= '<div class="comment-box-body" style="border:1px solid rgb(0 0 0 / 0.1);border-radius:20px;padding:30px;-webkit-box-sizing:border-box;box-sizing:border-box;">';
-			$html .= '<h3 class="head-with-icon" style="margin:0 0 20px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-ms-flex-wrap:wrap;flex-wrap:wrap;font-family:Roboto,Arial,sans-serif;font-weight:600;">';
+			$html .= '<div class="comment-box-body" style="border:1px solid #eee;border-radius:20px;padding:30px;">';
+			$html .= '<h3 class="head-with-icon" style="margin:0 0 20px;font-family:Roboto,Arial,sans-serif;font-weight:600;">';
 			$html .= '<span class="icon-resolved" style="margin-right:10px;">';
 			$html .= '<img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-check-fill.png' ).'" alt="Resolved" />';
 			$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
