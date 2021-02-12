@@ -21,9 +21,11 @@ export default class Comment extends React.Component {
     }
 
     componentDidUpdate() {
-        const editedCommentID = this.props.timestamp;
-        const commenttedText = $('#' + editedCommentID + ' textarea').val();
-        $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+        if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
+            const editedCommentID = this.props.timestamp;
+            const commenttedText = $('#' + editedCommentID + ' textarea').val();
+            $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+        }
     }
 
     edit() {

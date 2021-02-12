@@ -442,6 +442,15 @@ const mdComment = {
                     )
                 }
 
+                // Float comments column.
+                this.floatComments(selectedText);
+            }
+        }
+
+        floatComments(selectedText) {
+            if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
+
+
                 // Removing dark highlights from other texts,
                 // only if current active text has an attribute,
                 // and no 'focus' class active on mdspan tag.
@@ -454,13 +463,7 @@ const mdComment = {
 
                 $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
-                // Float comments column.
-                this.floatComments(selectedText);
-            }
-        }
 
-        floatComments(selectedText) {
-            if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
 
                 $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
