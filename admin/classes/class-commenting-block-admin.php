@@ -425,11 +425,9 @@ class Commenting_block_Admin {
 				}
 
 				// Send Email.
-				$comments          = $metas[ $el ][0];
-				$comments          = maybe_unserialize( $comments );
+				$comments          = get_post_meta( $post_ID, $el, true );
 				$commented_on_text = $comments['commentedOnText'];
 				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
-
 
 				// Notify users about the resolved thread.
 				$this->email_class->cf_email_resolved_thread( array(
@@ -507,11 +505,8 @@ class Commenting_block_Admin {
 		}
 
 		// Sending Emails to newly mentioned users.
-		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
+		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) && 0 === count( $current_drafts['resolved'] ) ) {
 			$new_drafts = $current_drafts['comments'];
-			// echo '<pre>';
-			// var_dump( $new_drafts );
-			// echo '</pre>';die();
 			foreach ( $new_drafts as $el => $drafts ) {
 				$comments          = get_post_meta( $post_ID, $el, true );
 				$commented_on_text = $comments['commentedOnText'];
