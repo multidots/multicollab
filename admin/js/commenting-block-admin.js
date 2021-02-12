@@ -1,3 +1,5 @@
+// import { find } from "lodash";
+
 /**
  * Main function to be called for required JS actions.
  */
@@ -277,6 +279,7 @@
             var currentPostID         = $( '#post_ID' ).val();
             var parentBoardClass      = '.cls-board-outer';
             var mood                  = 'create';
+            var cachedUsersList       = adminLocalizer.cached_users_list;
 
             // Browser detection.
             // var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
@@ -339,6 +342,12 @@
                             $( assignCheckBoxId ).parent().remove();
                         }
                     }
+
+                    // Remove assigner dom if there is not email in the editor.
+                    var findEmails = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i );
+                    if( ! findEmails || undefined === findEmails ) {
+                        $( `${currentBoardID} .cf-assign-to` ).remove();
+                    }
                 }
 
                 // If textarea is blank then remove email list.
@@ -351,10 +360,10 @@
                 // FireFox Browser Fix.
                 // var isFireFox = !!navigator.userAgent.match(/firefox/i);
 
-                if( typedText && typedText.length > 0 ) {
-                    var refinedText = typedText.replace( /<br>/igm, '' );
-                    typedText       = refinedText;
-                }
+                // if( typedText && typedText.length > 0 ) {
+                //     var refinedText = typedText.replace( /<br>/igm, '' );
+                //     typedText       = refinedText;
+                // }
 
                 // Handeling space. As if someone type space has no intension to write email.
                 // So we make isEmail false and trackedStr to blank.
@@ -370,7 +379,7 @@
                 if( '@' === e.key && true === e.shiftKey ) {
                     // Fetch all email list.
                     isEmail = true;
-                    var cachedUsersList       = adminLocalizer.cached_users_list;
+                    // var cachedUsersList       = adminLocalizer.cached_users_list;
                     if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
                         $( appendIn ).remove(); // Remove previous DOM.
                         $( assignablePopup ).remove(); // Remove previous DOM.
@@ -438,7 +447,7 @@
 
                     // If trackedStr is left to @
                     if( '@' === trackedStr ) {
-                        var cachedUsersList       = adminLocalizer.cached_users_list;
+                        // var cachedUsersList       = adminLocalizer.cached_users_list;
                         if ( null !== cachedUsersList || '' !== cachedUsersList ) {
                             $( appendIn ).remove(); // Remove user list popup DOM.
                             $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
@@ -468,11 +477,12 @@
                     if( '@' !== trackedStr ) {
                         let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
                         if( checkEmailSymbol ) {
-                            var cachedUsersList       = adminLocalizer.cached_users_list;
+                            // var cachedUsersList       = adminLocalizer.cached_users_list;
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr( 1 );
                             if( '' !== niddle ) {
-                                if( '' !== cachedUsersList || undefined !== cachedUsersList || null !== cachedUsersList ) {
+                                if( ! cachedUsersList || undefined !== cachedUsersList || null !== cachedUsersList ) {
+                                    console.log(cachedUsersList);
                                     cachedUsersList.forEach( function( item ) {
                                         let displayName = item.display_name;
                                         let pattern = new RegExp( niddle, 'ig' );
@@ -535,7 +545,7 @@
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                     var typedContent              = $( createTextarea ).html();
-                    var refinedContent            = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gim, ' @' );
+                    var refinedContent            = typedContent.replace( /(^@|\s@|[&nbsp;]@)([a-z0-9]\w*)/gi, ' @' );
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
@@ -587,7 +597,8 @@
                 </div>`;
 
                 if( '' !== el ) {
-                    if( $( `#${el} ${checkBoxContainer}` ).children().length <= 0 ) {
+                    if( $( `#${el} ${checkBoxContainer}` ).children().length <= 1 ) {
+                        $( `#${el} ${checkBoxContainer}` ).empty();
                         $( checkbox ).insertAfter( `#${el} ${appendTo}` );
                     }
                 }
