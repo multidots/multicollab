@@ -275,6 +275,8 @@
             return false;
         }
 
+        var isFireFox = !!navigator.userAgent.match(/firefox/i);
+
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
             var el                    = '';
@@ -559,6 +561,14 @@
                     $( assignablePopup ).remove();
                 }
 
+                // if ( e.which === 13 ) {
+                //     e.preventDefault();
+                //     // insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
+                //     document.execCommand('insertHTML', false, '<br>');
+                //     // prevent the default behaviour of return key pressed
+                //     // return false;
+                // }
+
 
             } );
             // Append email in textarea.
@@ -573,6 +583,13 @@
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                     var typedContent              = $( createTextarea ).html();
+                    if( isFireFox ) {
+                        typedContent = typedContent.replace( /(<div>)/ig,'' );
+                    } else {
+                        typedContent = typedContent.replace( /(<div>)/ig,'<br>' );
+                    }
+                    typedContent = typedContent.replace( /(<\/div>)/ig,'' );
+                    typedContent = typedContent.replace( /(<br><br>)/ig,'' );
                     var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
@@ -587,14 +604,14 @@
                 // Setup the caret position after appending the Display Name.
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
                 var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
-                var selectChild = currentTextareaNode.childNodes.length - 1;
+                var selectChild          = currentTextareaNode.childNodes.length - 1;
                 if( 'BR' === currentTextareaNode.childNodes[selectChild].nodeName ) {
                     selectChild = currentTextareaNode.childNodes.length - 2; // It starts form zero.
                 }
-                var el = currentTextareaNode.childNodes[ selectChild ];
+                var el        = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel = window.getSelection();
-                range.setStart( el, range.startOffset );
-                range.setEnd( el, range.endOffset );
+                range         = cursorSel.getRangeAt(0);
+                range.setStart( el, 1 );
                 range.collapse( true );
                 cursorSel.removeAllRanges();
                 cursorSel.addRange( range );
