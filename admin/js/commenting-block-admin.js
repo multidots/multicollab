@@ -1,5 +1,7 @@
 // import { find } from "lodash";
 
+// import { remove } from "lodash";
+
 /**
  * Main function to be called for required JS actions.
  */
@@ -237,6 +239,7 @@
 
         // Insert Display Name.
         var insertDisplayName = function( setRange, email, fullName, displayName, createTextarea ) {
+            var isFireFox = !!navigator.userAgent.match(/firefox/i);
             var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace aftetr the name.
             var anchor       = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
@@ -247,7 +250,16 @@
             var anchorContent = document.createTextNode( displayName );
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
-            anchor.after( gapElContent );
+
+            if( isFireFox ) {
+                var removeFlag = document.createElement( 'span' );
+                removeFlag.setAttribute( 'class', 'js-remove-name' );
+                removeFlag.appendChild( gapElContent );
+                anchor.after( removeFlag );
+                removeFlag.after( gapElContent );
+            } else {
+                anchor.after( gapElContent );
+            }
         }
 
         /**
@@ -281,12 +293,12 @@
             var mood                  = 'create';
             var cachedUsersList       = adminLocalizer.cached_users_list;
 
-            // Browser detection.
-            // var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
-            // var is_safari = navigator.userAgent.indexOf("Safari") > -1;
-            // if ( ( is_chrome ) && ( is_safari ) ) {
-            //     is_safari = false;
-            // }
+            // Browser detection. // (^@|\s@)([a-z0-9]\w*)
+            var isFireFox = !!navigator.userAgent.match(/firefox/i);
+            var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+            if( isSafari ) {
+                console.log( 'Safari Only' );
+            }
 
             // Grab the current board ID.
             $( document.body ).on( 'click', parentBoardClass, function() {
@@ -331,11 +343,22 @@
                 var _self = $( createTextarea );
                 typedText = _self.html();
 
-                // Try code
-                // if( 'Backspace' === e.key ) {
-                //     if( range.endContainer.hasClass() )
-                //     console.log(range);
-                // }
+                // Firefox fix for removing @mention name.
+                if( isFireFox ) {
+                    if( 'Backspace' === e.key ) {
+                        var newRange = document.createRange();
+                        var newSel   = window.getSelection();
+                        newRange     = newSel.getRangeAt(0);
+                        // console.log(newRange.endContainer)
+                        // console.log(newRange.endContainer.previousSibling.className)
+                        if( newRange.endContainer.previousSibling && 'js-mentioned' == newRange.endContainer.previousSibling.className ) {
+                            newRange.endContainer.previousSibling.remove();
+                        } else if( 'js-mentioned' === newRange.endContainer.firstElementChild.className ) {
+                            newRange.endContainer.firstElementChild.remove();
+                        }
+                    }
+
+                }
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
                 if( undefined !== typedText && typedText.length > 0 ) {
@@ -362,9 +385,6 @@
                     $( assignablePopup ).remove();
                     $( '.cf-assign-to' ).remove();
                 }
-
-                // FireFox Browser Fix.
-                // var isFireFox = !!navigator.userAgent.match(/firefox/i);
 
                 if( typedText && typedText.length > 0 ) {
                     var refinedText = typedText.replace( /<br>/igm, '' );
@@ -571,13 +591,13 @@
                 if( 'BR' === currentTextareaNode.childNodes[selectChild].nodeName ) {
                     selectChild = currentTextareaNode.childNodes.length - 2; // It starts form zero.
                 }
-                var el                   = currentTextareaNode.childNodes[ selectChild ];
-                var sel                  = window.getSelection();
+                var el = currentTextareaNode.childNodes[ selectChild ];
+                var cursorSel = window.getSelection();
                 range.setStart( el, range.startOffset );
                 range.setEnd( el, range.endOffset );
                 range.collapse( true );
-                sel.removeAllRanges();
-                sel.addRange( range );
+                cursorSel.removeAllRanges();
+                cursorSel.addRange( range );
             } );
 
 
