@@ -31,7 +31,7 @@ span.dashicon.dashicons.dashicons-admin-comments{min-width:24px;margin-right:8px
 .cls-board-outer .board .commentContainer .commentText{width:100%;font-size:13px;line-height:1.2;font-weight:500}
 .cls-board-outer .board .shareCommentContainer textarea, .cls-board-outer .board .commentContainer .commentText textarea{width:100%;display:block;height:35px;font-size:13px;border:1px solid #e2e4e7;resize:none;box-shadow:none}
 .cls-board-outer .board .shareCommentContainer textarea:focus, .cls-board-outer .board .shareCommentContainer textarea:active, .cls-board-outer .board .commentContainer .commentText textarea:focus, .cls-board-outer .board .commentContainer .commentText textarea:active{box-shadow:none;border-color:#007cba}
-.cls-board-outer .board .shareCommentContainer .btn{color:#007cba;letter-spacing:0.5px;border-radius:4px;padding:6px 10px;outline:none;cursor:pointer;margin-top:10px;font-weight:500;border:1px solid #007cba;background:#f3f5f6;font-size:12px}
+.cls-board-outer .board .shareCommentContainer .btn{color:#007cba;letter-spacing:0.5px;border-radius:4px;padding:6px 10px;outline:none;cursor:pointer;margin-top:10px;font-weight:500;border:1px solid #007cba;background:#f3f5f6;font-size:12px;min-width:auto}
 .cls-board-outer .board .shareCommentContainer .btn.btn-cancel{margin-left:10px}
 .cls-board-outer .board .shareCommentContainer textarea:focus+button, .cls-board-outer .board .shareCommentContainer.hovered button{display:inline-block}
 .cls-board-outer .board .commentContainer button{color:#007cba;font-size:12px;letter-spacing:0.5px;border-radius:4px;padding:6px 10px;outline:none;cursor:pointer;margin-top:10px;font-weight:500;border:1px solid #007cba;background:#f3f5f6;opacity:1;margin-right:10px}
