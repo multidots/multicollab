@@ -582,7 +582,7 @@
                     // Insert Display Name.
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
-                    var typedContent              = $( createTextarea ).html();
+                    var typedContent = $( createTextarea ).html();
                     if( isFireFox ) {
                         typedContent = typedContent.replace( /(<div>)/ig,'' );
                     } else {
