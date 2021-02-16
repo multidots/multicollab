@@ -218,8 +218,8 @@ export default class Board extends React.Component {
                 arr[arr.length - 1]['dtTime'] = data.dtTime;
                 arr[arr.length - 1]['timestamp'] = data.timestamp;
 
-                // Updating the assigned user info
-                if( null !== data.assignedTo.ID ) {
+                // Updating the assigned user info.
+                if( null !== data.assignedTo ) {
                     var displayName = data.assignedTo.display_name ? data.assignedTo.display_name : 'Unknown User'
                     var assignedUserDetails = `
                         <div class="cf-board-assigned-to">

@@ -504,12 +504,10 @@
                     if( '@' !== trackedStr ) {
                         let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
                         if( checkEmailSymbol ) {
-                            // var cachedUsersList       = adminLocalizer.cached_users_list;
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr( 1 );
                             if( '' !== niddle ) {
                                 if( ! cachedUsersList || undefined !== cachedUsersList || null !== cachedUsersList ) {
-                                    console.log(cachedUsersList);
                                     cachedUsersList.forEach( function( item ) {
                                         let displayName = item.display_name;
                                         let pattern = new RegExp( niddle, 'ig' );

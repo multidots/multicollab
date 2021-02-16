@@ -704,13 +704,16 @@ class Commenting_block_Admin {
 		$list_of_comments[ $last_index ]['timestamp'] = $timestamp;
 
 		// Get assigned user data.
-		$user_data   = get_user_by( 'ID', $superCareerData['assigned_to'] );
-		$assigned_to = [
-			'ID'           => $user_data->ID,
-			'display_name' => $user_data->display_name,
-			'user_email'   => $user_data->user_email,
-			'avatar'       => get_avatar_url( $user_data->ID, [ 'size' => 32 ] )
-		];
+		$assigned_to = null;
+		if( ! empty( $superCareerData['assigned_to'] ) ) {
+			$user_data   = get_user_by( 'ID', $superCareerData['assigned_to'] );
+			$assigned_to = [
+				'ID'           => $user_data->ID,
+				'display_name' => $user_data->display_name,
+				'user_email'   => $user_data->user_email,
+				'avatar'       => get_avatar_url( $user_data->ID, [ 'size' => 32 ] )
+			];
+		}
 
 		echo wp_json_encode( array(
 			'dtTime'     => $dtTime,

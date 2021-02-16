@@ -13677,8 +13677,8 @@ var Board = function (_React$Component) {
                     arr[arr.length - 1]['dtTime'] = data.dtTime;
                     arr[arr.length - 1]['timestamp'] = data.timestamp;
 
-                    // Updating the assigned user info
-                    if (null !== data.assignedTo.ID) {
+                    // Updating the assigned user info.
+                    if (null !== data.assignedTo) {
                         var displayName = data.assignedTo.display_name ? data.assignedTo.display_name : 'Unknown User';
                         var assignedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + displayName + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
                         if ($('#' + el + ' .cf-board-assigned-to').length) {
