@@ -7,8 +7,6 @@
  * @package           content-collaboration-inline-commenting
  *
  */
-// delete_transient( 'gc_users_list' );
-
 
 /**
  * When new user registered or deleted this will trigger.

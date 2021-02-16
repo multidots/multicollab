@@ -285,10 +285,11 @@ class Commenting_block_Admin {
 	 */
 	public function cf_post_status_changes( $post_ID, $post, $update ) {
 		$metas      = get_post_meta( $post_ID );
-		$p_content  = is_object( $post ) ? $post->post_content : $post;
+		$p_content  = is_object( $post ) ? $post->post_content: $post;
 		$p_link     = get_edit_post_link( $post_ID );
 		$p_title    = get_the_title( $post_ID );
 		$site_title = get_bloginfo( 'name' );
+		$html       = '';
 
 		// Get current user details.
 		$curr_user                 = wp_get_current_user();
@@ -635,9 +636,9 @@ class Commenting_block_Admin {
 	 * Add Comment function.
 	 */
 	public function cf_add_comment() {
-		$commentList = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT ); // phpcs: ignore
-		$commentList = html_entity_decode( $commentList );
-		$commentList = json_decode( $commentList, true );
+		$commentList      = filter_input( INPUT_POST, "commentList", FILTER_DEFAULT ); // phpcs:ignore
+		$commentList      = html_entity_decode( $commentList );
+		$commentList      = json_decode( $commentList, true );
 		$list_of_comments = $commentList;
 		// Get the assigned User ID.
 		$assign_to = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );

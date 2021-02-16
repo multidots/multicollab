@@ -151,7 +151,6 @@
 
             const dataid = $(this).attr('data-id');
 
-
             // Trigger card click to focus.
             $('#' + dataid).trigger('click');
 

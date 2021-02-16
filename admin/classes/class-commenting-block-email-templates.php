@@ -316,7 +316,7 @@ class Commenting_Block_Email_Templates {
 
 					// Removed current user email from the list.
 					if( ! empty( $current_user_email ) ) {
-						$key = array_search( $current_user_email, $email_list );
+						$key = array_search( $current_user_email, $email_list, true );
 						if( $key !== false ) {
 							unset( $email_list[$key] );
 						}
