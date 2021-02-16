@@ -348,15 +348,15 @@
                 // Firefox fix for removing @mention name.
                 if( isFireFox ) {
                     if( 'Backspace' === e.key ) {
-                        var newRange = document.createRange();
-                        var newSel   = window.getSelection();
-                        newRange     = newSel.getRangeAt(0);
+                        // var newRange = document.createRange();
+                        // var newSel   = window.getSelection();
+                        // newRange     = newSel.getRangeAt(0);
                         // console.log(newRange.endContainer)
                         // console.log(newRange.endContainer.previousSibling.className)
-                        if( newRange.endContainer.previousSibling && 'js-mentioned' == newRange.endContainer.previousSibling.className ) {
-                            newRange.endContainer.previousSibling.remove();
-                        } else if( 'js-mentioned' === newRange.endContainer.firstElementChild.className ) {
-                            newRange.endContainer.firstElementChild.remove();
+                        if( range.endContainer.previousSibling && 'js-mentioned' == range.endContainer.previousSibling.className ) {
+                            range.endContainer.previousSibling.remove();
+                        } else if( 'js-mentioned' === range.endContainer.firstElementChild.className ) {
+                            range.endContainer.firstElementChild.remove();
                         }
                     }
 
@@ -560,16 +560,6 @@
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                 }
-
-                // if ( e.which === 13 ) {
-                //     e.preventDefault();
-                //     // insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
-                //     document.execCommand('insertHTML', false, '<br>');
-                //     // prevent the default behaviour of return key pressed
-                //     // return false;
-                // }
-
-
             } );
             // Append email in textarea.
             $( document.body ).on( 'click keypress', '.cf-system-user-email-list li', function(e) {
@@ -584,12 +574,11 @@
 
                     var typedContent = $( createTextarea ).html();
                     if( isFireFox ) {
-                        typedContent = typedContent.replace( /(<div>)/ig,'' );
+                        typedContent = firefoxClearFix( typedContent );
                     } else {
-                        typedContent = typedContent.replace( /(<div>)/ig,'<br>' );
+                        typedContent = chromeEdgeClearFix( typedContent );
                     }
-                    typedContent = typedContent.replace( /(<\/div>)/ig,'' );
-                    typedContent = typedContent.replace( /(<br><br>)/ig,'' );
+
                     var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
@@ -611,7 +600,11 @@
                 var el        = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel = window.getSelection();
                 range         = cursorSel.getRangeAt(0);
-                range.setStart( el, 1 );
+                if( isFireFox ) {
+                    range.setStart( el, 0 );
+                } else {
+                    range.setStart( el, 1 );
+                }
                 range.collapse( true );
                 cursorSel.removeAllRanges();
                 cursorSel.addRange( range );
@@ -620,6 +613,21 @@
 
         }
         createAutoEmailMention();
+
+        // Firefox Clearfix.
+        var firefoxClearFix = function( typedContent ) {
+            typedContent = typedContent.replace( /(<div>)/ig,'' );
+            typedContent = typedContent.replace( /(<\/div>)/ig,'' );
+            return typedContent;
+        }
+
+        // Chrome, Edge Clearfix.
+        var chromeEdgeClearFix = function( typedContent ) {
+            typedContent = typedContent.replace( /(<div>)/ig,'<br>' );
+            typedContent = typedContent.replace( /(<\/div>)/ig,'' );
+            typedContent = typedContent.replace( /(<br><br><br>)/ig,'<br><br>' );
+            return typedContent;
+        }
 
         // User Assign Function.
         var assignThisToUser = function() {
