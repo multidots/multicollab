@@ -262,16 +262,7 @@
             var anchorContent = document.createTextNode( displayName );
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
-
-            if( 'firefox' === browser ) {
-                var removeFlag = document.createElement( 'span' );
-                removeFlag.setAttribute( 'class', 'js-remove-name' );
-                removeFlag.appendChild( gapElContent );
-                anchor.after( removeFlag );
-                // removeFlag.after( gapElContent );
-            } else {
-                anchor.after( gapElContent );
-            }
+            anchor.after( gapElContent );
         }
 
         /**
@@ -352,26 +343,6 @@
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( createTextarea );
                 typedText = _self.html();
-                // Firefox fix for removing @mention name.
-                if( 'firefox' === browser ) {
-                    if( 'Backspace' === e.key ) {
-                        var range = document.createRange();
-                        var newSel   = window.getSelection();
-                        range     = newSel.getRangeAt(0);
-
-                        // console.log(newRange.endContainer)
-                        // console.log(newRange.endContainer.previousSibling.className)
-                        if( range.endContainer.previousSibling && 'js-mentioned' === range.endContainer.previousSibling.className ) {
-                            range.endContainer.previousSibling.remove();
-                            // range.endContainer.remove();
-                            // $( '.js-mentioned' ).on( 'DOMNodeRemoved', function(e) {
-                            //     // alert('fals');
-                            //     $( this ).next('.js-remove-name').remove();
-                            // } )
-                        }
-
-                    }
-                }
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
                 if( undefined !== typedText && typedText.length > 0 ) {
@@ -582,16 +553,17 @@
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                     var typedContent = $( createTextarea ).html();
-                    if( 'firefox' === browser ) {
-                        typedContent = firefoxClearFix( typedContent );
-                    } else {
+                    if( 'firefox' !== browser ) {
                         typedContent = chromeEdgeClearFix( typedContent );
                     }
-                    if( 'safari' === browser ) {
-                        var refinedContent = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gi, ' @' );
-                    } else {
-                        var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
-                    }
+
+                    var refinedContent = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gim, ' @' );
+                    refinedContent     = typedContent.replace( /@\w+<a/gim, ' @<a' );
+
+                    // if( 'safari' === browser ) {
+                    // } else {
+                    //     var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
+                    // }
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
@@ -606,18 +578,10 @@
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
                 var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
                 var selectChild          = currentTextareaNode.childNodes.length - 1;
-                // if( 'BR' === currentTextareaNode.childNodes[selectChild].nodeName ) {
-                //     selectChild = currentTextareaNode.childNodes.length - 2; // It starts form zero.
-                // }
                 var el        = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel = window.getSelection();
                 range         = cursorSel.getRangeAt(0);
-                if( 'firefox' !== browser ) {
-                    range.setStart( el, 1 );
-                } else {
-                    range.setStart( el, 1 );
-
-                }
+                range.setStart( el, 1 );
                 range.collapse( true );
                 cursorSel.removeAllRanges();
                 cursorSel.addRange( range );
@@ -626,15 +590,6 @@
 
         }
         createAutoEmailMention();
-
-        // Firefox Clearfix.
-        var firefoxClearFix = function( typedContent ) {
-            typedContent = typedContent.replace( /^(<div>)/ig,'' );
-            typedContent = typedContent.replace( /(<div>)/ig,'' );
-            typedContent = typedContent.replace( /(<\/div>)/ig,'' );
-            typedContent = typedContent.replace( /(<br><br>)/ig,'<br>' );
-            return typedContent;
-        }
 
         // Chrome, Edge Clearfix.
         var chromeEdgeClearFix = function( typedContent ) {
