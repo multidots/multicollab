@@ -255,7 +255,7 @@
                 removeFlag.setAttribute( 'class', 'js-remove-name' );
                 removeFlag.appendChild( gapElContent );
                 anchor.after( removeFlag );
-                removeFlag.after( gapElContent );
+                // removeFlag.after( gapElContent );
             } else {
                 anchor.after( gapElContent );
             }
@@ -343,22 +343,25 @@
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( createTextarea );
                 typedText = _self.html();
-
                 // Firefox fix for removing @mention name.
                 if( isFireFox ) {
                     if( 'Backspace' === e.key ) {
-                        // var newRange = document.createRange();
-                        // var newSel   = window.getSelection();
-                        // newRange     = newSel.getRangeAt(0);
+                        var range = document.createRange();
+                        var newSel   = window.getSelection();
+                        range     = newSel.getRangeAt(0);
+
                         // console.log(newRange.endContainer)
                         // console.log(newRange.endContainer.previousSibling.className)
-                        if( range.endContainer.previousSibling && 'js-mentioned' == range.endContainer.previousSibling.className ) {
+                        if( range.endContainer.previousSibling && 'js-mentioned' === range.endContainer.previousSibling.className ) {
                             range.endContainer.previousSibling.remove();
-                        } else if( 'js-mentioned' === range.endContainer.firstElementChild.className ) {
-                            range.endContainer.firstElementChild.remove();
+                            range.endContainer.remove();
+                            // $( '.js-mentioned' ).on( 'DOMNodeRemoved', function(e) {
+                            //     // alert('fals');
+                            //     $( this ).next('.js-remove-name').remove();
+                            // } )
                         }
-                    }
 
+                    }
                 }
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
@@ -591,15 +594,13 @@
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
                 var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
                 var selectChild          = currentTextareaNode.childNodes.length - 1;
-                if( 'BR' === currentTextareaNode.childNodes[selectChild].nodeName ) {
-                    selectChild = currentTextareaNode.childNodes.length - 2; // It starts form zero.
-                }
+                // if( 'BR' === currentTextareaNode.childNodes[selectChild].nodeName ) {
+                //     selectChild = currentTextareaNode.childNodes.length - 2; // It starts form zero.
+                // }
                 var el        = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel = window.getSelection();
                 range         = cursorSel.getRangeAt(0);
-                if( isFireFox ) {
-                    range.setStart( el, 0 );
-                } else {
+                if( ! isFireFox ) {
                     range.setStart( el, 1 );
                 }
                 range.collapse( true );
@@ -613,8 +614,10 @@
 
         // Firefox Clearfix.
         var firefoxClearFix = function( typedContent ) {
+            typedContent = typedContent.replace( /^(<div>)/ig,'' );
             typedContent = typedContent.replace( /(<div>)/ig,'' );
             typedContent = typedContent.replace( /(<\/div>)/ig,'' );
+            typedContent = typedContent.replace( /(<br><br>)/ig,'<br>' );
             return typedContent;
         }
 
