@@ -363,7 +363,7 @@
                         // console.log(newRange.endContainer.previousSibling.className)
                         if( range.endContainer.previousSibling && 'js-mentioned' === range.endContainer.previousSibling.className ) {
                             range.endContainer.previousSibling.remove();
-                            range.endContainer.remove();
+                            // range.endContainer.remove();
                             // $( '.js-mentioned' ).on( 'DOMNodeRemoved', function(e) {
                             //     // alert('fals');
                             //     $( this ).next('.js-remove-name').remove();
@@ -614,6 +614,9 @@
                 range         = cursorSel.getRangeAt(0);
                 if( 'firefox' !== browser ) {
                     range.setStart( el, 1 );
+                } else {
+                    range.setStart( el, 1 );
+
                 }
                 range.collapse( true );
                 cursorSel.removeAllRanges();
