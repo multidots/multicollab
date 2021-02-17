@@ -19,7 +19,7 @@
                     <table class="comment-box-wrap" style="width:100%;font-family:Arial,serif;font-size:14px;color:#4C5056;">
                         <tr valign="top">
                             <td class="avatar" style="width:40px;padding-right:10px;">
-                                <img src="<?php echo esc_url( $profile_url ) ?>" alt="avatar" style="max-width:100%;border-radius:50%;" />
+                                <img src="<?php echo esc_url_raw( $profile_url ) ?>" alt="avatar" style="max-width:100%;border-radius:50%;" />
                             </td>
                             <td class="comment-details">
                                 <table class="commenter-name-role" valign="middle" style="width:100%;">
