@@ -207,6 +207,20 @@
             }
         }
 
+        // Detect Browser.
+        var browser = (function (agent) {
+            switch (true) {
+                case agent.indexOf("edge") > -1: return "MS Edge (EdgeHtml)";
+                case agent.indexOf("edg") > -1: return "MS Edge Chromium";
+                case agent.indexOf("opr") > -1 && !!window.opr: return "opera";
+                case agent.indexOf("chrome") > -1 && !!window.chrome: return "chrome";
+                case agent.indexOf("trident") > -1: return "Internet Explorer";
+                case agent.indexOf("firefox") > -1: return "firefox";
+                case agent.indexOf("safari") > -1: return "safari";
+                default: return "other";
+            }
+        })(window.navigator.userAgent.toLowerCase());
+
         // Get Caret Position
         var ie = ( typeof document.selection != "undefined" && document.selection.type != "Control" ) && true;
         var w3 = ( typeof window.getSelection != "undefined" ) && true;
@@ -238,7 +252,6 @@
 
         // Insert Display Name.
         var insertDisplayName = function( setRange, email, fullName, displayName, createTextarea ) {
-            var isFireFox = !!navigator.userAgent.match(/firefox/i);
             var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace aftetr the name.
             var anchor       = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
@@ -250,7 +263,7 @@
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
 
-            if( isFireFox ) {
+            if( 'firefox' === browser ) {
                 var removeFlag = document.createElement( 'span' );
                 removeFlag.setAttribute( 'class', 'js-remove-name' );
                 removeFlag.appendChild( gapElContent );
@@ -274,7 +287,9 @@
             return false;
         }
 
-        var isFireFox = !!navigator.userAgent.match(/firefox/i);
+        // var isFireFox = !!navigator.userAgent.match(/firefox/i);
+
+
 
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
@@ -294,12 +309,6 @@
             var mood                  = 'create';
             var cachedUsersList       = adminLocalizer.cached_users_list;
 
-            // Browser detection. // (^@|\s@)([a-z0-9]\w*)
-            var isFireFox = !!navigator.userAgent.match(/firefox/i);
-            var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
-            if( isSafari ) {
-                console.log( 'Safari Only' );
-            }
 
             // Grab the current board ID.
             $( document.body ).on( 'click', parentBoardClass, function() {
@@ -344,7 +353,7 @@
                 var _self = $( createTextarea );
                 typedText = _self.html();
                 // Firefox fix for removing @mention name.
-                if( isFireFox ) {
+                if( 'firefox' === browser ) {
                     if( 'Backspace' === e.key ) {
                         var range = document.createRange();
                         var newSel   = window.getSelection();
@@ -573,13 +582,16 @@
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
 
                     var typedContent = $( createTextarea ).html();
-                    if( isFireFox ) {
+                    if( 'firefox' === browser ) {
                         typedContent = firefoxClearFix( typedContent );
                     } else {
                         typedContent = chromeEdgeClearFix( typedContent );
                     }
-
-                    var refinedContent            = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
+                    if( 'safari' === browser ) {
+                        var refinedContent = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gi, ' @' );
+                    } else {
+                        var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
+                    }
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
@@ -600,7 +612,7 @@
                 var el        = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel = window.getSelection();
                 range         = cursorSel.getRangeAt(0);
-                if( ! isFireFox ) {
+                if( 'firefox' !== browser ) {
                     range.setStart( el, 1 );
                 }
                 range.collapse( true );
