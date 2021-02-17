@@ -136,13 +136,16 @@ export default class Comment extends React.Component {
                                 <label className="resolve-label" htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
                             </div>
                         }
-                        {this.props.userID === owner && index === 0 ?
+                        {this.props.userID === owner && index === 0 &&
                             (
                                 <div className="buttons-wrapper">
                                     <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
                                     <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
                                 </div>
-                            ) : (
+                            )
+                        }
+                        {this.props.userID === owner && index > 0 &&
+                            (
                                 <div className="buttons-wrapper">
                                     <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
                                     <i className="dashicons dashicons-trash js-trash-comment" title="Delete" onClick={this.remove.bind(this)}></i>

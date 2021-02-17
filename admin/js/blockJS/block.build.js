@@ -14089,12 +14089,13 @@ var Comment = function (_React$Component) {
                                 'Mark as a Resolved'
                             )
                         ),
-                        this.props.userID === owner && index === 0 ? wp.element.createElement(
+                        this.props.userID === owner && index === 0 && wp.element.createElement(
                             'div',
                             { className: 'buttons-wrapper' },
                             wp.element.createElement('i', { className: 'dashicons dashicons-edit js-edit-comment', title: 'Edit', onClick: this.edit }),
                             wp.element.createElement('i', { className: 'dashicons dashicons-trash js-resolve-comment', title: 'Resolve', onClick: this.resolve.bind(this) })
-                        ) : wp.element.createElement(
+                        ),
+                        this.props.userID === owner && index > 0 && wp.element.createElement(
                             'div',
                             { className: 'buttons-wrapper' },
                             wp.element.createElement('i', { className: 'dashicons dashicons-edit js-edit-comment', title: 'Edit', onClick: this.edit }),

@@ -368,7 +368,7 @@ class Commenting_Block_Email_Templates {
 							$admin_email = get_option( 'admin_email' );
 						}
 
-						if( ! empty( $email_list ) ) {
+						if( ! empty( $admin_email ) ) {
 							// Limit the page and site titles for Subject.
 							$subject = $this->cf_email_prepare_subject( 'New Comment', $p_title, $site_title );
 							wp_mail( $admin_email, $subject, $html, $headers ); // phpcs:ignore
