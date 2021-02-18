@@ -251,8 +251,8 @@
         }
 
         // Insert Display Name.
-        var insertDisplayName = function( setRange, email, fullName, displayName, createTextarea ) {
-            var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace aftetr the name.
+        var insertDisplayName = function( setRange, email, fullName, displayName ) {
+            var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace after the name.
             var anchor       = document.createElement( 'a' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
@@ -264,23 +264,6 @@
             setRange.insertNode( anchor );
             anchor.after( gapElContent );
         }
-
-        /**
-         * Check is the suggestion popup list is eligable to show or not.
-         * @param string tracker
-         * @return boolean
-         */
-        var show_suggestion = function( tracker ) {
-            var allowedStrings = [ '', '@', ' @', ';@' ];
-            if( allowedStrings.includes( tracker ) ) {
-                return true;
-            }
-            return false;
-        }
-
-        // var isFireFox = !!navigator.userAgent.match(/firefox/i);
-
-
 
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
@@ -334,11 +317,13 @@
                     createTextarea  = `#${currentCommentBoardID} .js-cf-edit-comment`;
                 }
             } );
+
             // Remove emails list on edit link click.
             $( document.body ).on( 'click', editLink, function() {
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
             } )
+
             // Triggering textarea keyup event.
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( createTextarea );
@@ -385,11 +370,11 @@
                 // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
                 cursorPos = getCaretPosition(el);
+
                 // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey ) {
                     // Fetch all email list.
                     isEmail = true;
-                    // var cachedUsersList       = adminLocalizer.cached_users_list;
                     if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
                         $( appendIn ).remove(); // Remove previous DOM.
                         $( assignablePopup ).remove(); // Remove previous DOM.
@@ -457,7 +442,6 @@
 
                     // If trackedStr is left to @
                     if( '@' === trackedStr ) {
-                        // var cachedUsersList       = adminLocalizer.cached_users_list;
                         if ( null !== cachedUsersList || '' !== cachedUsersList ) {
                             $( appendIn ).remove(); // Remove user list popup DOM.
                             $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
@@ -541,6 +525,7 @@
                     $( assignablePopup ).remove();
                 }
             } );
+
             // Append email in textarea.
             $( document.body ).on( 'click keypress', '.cf-system-user-email-list li', function(e) {
                 e.stopPropagation();
@@ -557,13 +542,8 @@
                         typedContent = chromeEdgeClearFix( typedContent );
                     }
 
-                    var refinedContent = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gim, ' @' );
-                    refinedContent     = typedContent.replace( /@\w+<a/gim, ' @<a' );
-
-                    // if( 'safari' === browser ) {
-                    // } else {
-                    //     var refinedContent = typedContent.replace( /(?<=@)\w+(?=<)/gi, '' );
-                    // }
+                    var refinedContent            = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gim, ' @' );
+                    refinedContent                = typedContent.replace( /@\w+<a/gim, ' @<a' );
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
@@ -578,16 +558,14 @@
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
                 var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
                 var selectChild          = currentTextareaNode.childNodes.length - 1;
-                var el        = currentTextareaNode.childNodes[ selectChild ];
-                var cursorSel = window.getSelection();
-                range         = cursorSel.getRangeAt(0);
+                var el                   = currentTextareaNode.childNodes[ selectChild ];
+                var cursorSel            = window.getSelection();
+                range                    = cursorSel.getRangeAt(0);
                 range.setStart( el, 1 );
                 range.collapse( true );
                 cursorSel.removeAllRanges();
                 cursorSel.addRange( range );
             } );
-
-
         }
         createAutoEmailMention();
 
@@ -606,6 +584,7 @@
             let appendTo          = '.js-cf-share-comment';
             var mentionedEmail    = '.cf-system-user-email-list li';
             let checkBoxContainer = '.cf-assign-to';
+
             // Grab the current board ID.
             $( document.body ).on( 'focus', appendTo, function() {
                 el = $( this ).parents( parentBoardClass ).attr( 'id' );
@@ -685,12 +664,13 @@
 
             $( assignListTemplate ).insertAfter( _self );
         }
+
         // Show Assiganable Email List
         var showAssingableEmailList = function() {
-            var triggerLink = '.js-cf-show-assign-list';
-            var textarea    = '';
-            var appendTo    = '';
-            var parentBoardClass  = '.cls-board-outer';
+            var triggerLink      = '.js-cf-show-assign-list';
+            var textarea         = '';
+            var appendTo         = '';
+            var parentBoardClass = '.cls-board-outer';
             $( document.body ).on( 'click', triggerLink, function(e) {
                 e.preventDefault();
                 var el      = $( this ).parents( parentBoardClass ).attr( 'id' );
@@ -699,7 +679,7 @@
                 var content = $( textarea ).html();
 
                 $( this ).removeClass( 'js-cf-show-assign-list' ).addClass( 'js-cf-hide-assign-list' );
-                // Send Ajax Request
+                // Send Ajax Request.
                 $.ajax({
                     url: ajaxurl, // eslint-disable-line
                     type: 'post',
@@ -719,7 +699,7 @@
         }
         showAssingableEmailList();
 
-        // Hide Assignable Email list
+        // Hide Assignable Email list.
         var hideAssignableEmailList = function() {
             var el                  = '';
             var triggerLink         = '.js-cf-hide-assign-list';
@@ -795,14 +775,9 @@
                     'limit': 10,
                 };
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-                $.post(ajaxurl, data, function (response) { // eslint-disable-line
-                    $( '#custom-history-popup-inner' ).html('');
-                    $(response).appendTo('#custom-history-popup-inner');
-                    // if( ! $( '#history-popup-insider' ).children().hasClass( 'user-data-row' ) ) {
-                    //     $( '#comments-toggle' ).hide();
-                    // } else {
-                    //     $( '#comments-toggle' ).show();
-                    // }
+                $.post( ajaxurl, data, function ( response ) { // eslint-disable-line
+                    $( '#custom-history-popup-inner' ).html( '' );
+                    $( response ).appendTo( '#custom-history-popup-inner' );
                 });
             }
         });
@@ -821,15 +796,6 @@
             // Hide Activity Center.
             $('#history-toggle').trigger('click');
         });
-
-        // Hide Comments from Dropdown
-        // $(document).on('click', '[aria-label="More rich text controls"]', function () {
-        //     setTimeout( function() {
-        //         if( $('body').hasClass('hide-comments') ) {
-        //             $('button.components-dropdown-menu__menu-item .dashicons-admin-comments').parents('button').toggleClass('hide-me');
-        //         }
-        //     }, 10);
-        // });
 
         // Read More Comments
         $(document).on('click', '.readmoreComment, .readlessComment', function () {
