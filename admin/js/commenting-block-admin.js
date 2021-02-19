@@ -1,7 +1,3 @@
-// import { find } from "lodash";
-
-// import { remove } from "lodash";
-
 /**
  * Main function to be called for required JS actions.
  */
