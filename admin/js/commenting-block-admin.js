@@ -470,7 +470,7 @@
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr( 1 );
                             if( '' !== niddle ) {
-                                if( ! cachedUsersList || undefined !== cachedUsersList || null !== cachedUsersList ) {
+                                if( undefined !== cachedUsersList || null !== cachedUsersList ) {
                                     cachedUsersList.forEach( function( item ) {
                                         let displayName = item.display_name;
                                         let pattern = new RegExp( niddle, 'ig' );
