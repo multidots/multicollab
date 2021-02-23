@@ -202,7 +202,7 @@ class Commenting_block_Admin {
 	 */
 	public function cf_add_setting_page() {
 
-		$settings_title = 'Editorial Comments';
+		$settings_title = 'Multicollab';
 
 		//Adding a new admin page for MYS
 		add_menu_page(

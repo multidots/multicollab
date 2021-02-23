@@ -1,13 +1,13 @@
-=== Gutenberg Commenting Feature ===
-Plugin Name: Gutenberg Commenting Feature
-Plugin URI: https://www.multidots.com/
+=== Multicollab ===
+Plugin Name: Multicollab
+Plugin URI: https://plugins.svn.wordpress.org/commenting-feature
 Author: multidots
 Author URI: https://www.multidots.com/
-Contributors: multidots
-Tags: Gutenberg,Commenting,Block,Block Commenting
-Requires at least: 4.1
-Tested up to: 5.5.1
-Stable tag: 1.0.5
+Contributors: dots
+Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg, Inline-comment
+Requires at least: 5.3.6
+Tested up to: 5.6
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

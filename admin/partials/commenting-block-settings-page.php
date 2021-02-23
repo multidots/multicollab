@@ -10,7 +10,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
 <div class="cf-plugin-settings">
     <div class="cf-plugin-header">
         <img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg' ); ?>"/>
-        <h1>Google Doc-Style Editorial Commenting for WordPress</h1>
+        <h1>Multicollab - Editorial Commenting for WordPress</h1>
     </div>
     <form id="cf-settings-form" method="post">
         <div class="cf-outer">
