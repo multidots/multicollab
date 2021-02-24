@@ -57,7 +57,7 @@ class Commenting_block_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function cf_enqueue_styles() {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -71,7 +71,7 @@ class Commenting_block_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/commenting-block-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, COMMENTING_BLOCK_URL . '/public/css/commenting-block-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -80,7 +80,7 @@ class Commenting_block_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function cf_enqueue_scripts() {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -94,7 +94,7 @@ class Commenting_block_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/commenting-block-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, COMMENTING_BLOCK_URL . '/public/js/commenting-block-public.js', array( 'jquery' ), $this->version, false );
 
 	}
 

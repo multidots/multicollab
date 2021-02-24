@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin bootstrap file
  *
@@ -13,9 +12,9 @@
  * @package           content-collaboration-inline-commenting
  *
  * @wordpress-plugin
- * Plugin Name:       Gutenberg Commenting Feature
+ * Plugin Name:       Multicollab
  * Description:       This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            multidots
  * Author URI:        https://www.multidots.com/
  * License:           GPL-2.0+
@@ -23,29 +22,26 @@
  * Text Domain:       content-collaboration-inline-commenting
  * Domain Path:       /languages
  */
-
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
-define( 'COMMENTING_BLOCK_VERSION', '1.0.3' );
+// Plugin version.
+define( 'COMMENTING_BLOCK_VERSION', '1.1.0' );
 
 // Define constants.
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
 define( 'COMMENTING_BLOCK_DIR', plugin_dir_path( __FILE__ ) );
+define( 'COMMENTING_BLOCK_BASE', plugin_basename( __FILE__ ) );
+define( 'COMMENTING_NONCE', 'BFaYbfonJ=n@R<8kId|nN8x #W[-S>1%Sazm%<' );
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-commenting-block-activator.php
  */
-function activate_commenting_block() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-activator.php';
+function cf_activate_commenting_block() {
+	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-activator.php'; // phpcs:ignore
 	Commenting_block_Activator::activate();
 }
 
@@ -53,19 +49,24 @@ function activate_commenting_block() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-commenting-block-deactivator.php
  */
-function deactivate_commenting_block() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-deactivator.php';
+function cf_deactivate_commenting_block() {
+	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-deactivator.php'; // phpcs:ignore
 	Commenting_block_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_commenting_block' );
-register_deactivation_hook( __FILE__, 'deactivate_commenting_block' );
+register_activation_hook( __FILE__, 'cf_activate_commenting_block' );
+register_deactivation_hook( __FILE__, 'cf_deactivate_commenting_block' );
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block.php';
+require COMMENTING_BLOCK_DIR . 'includes/class-commenting-block.php'; // phpcs:ignore
+
+/**
+ * Load global function file.
+ */
+require COMMENTING_BLOCK_DIR . 'includes/commenting-block-functions.php'; // phpcs:ignore
 
 /**
  * Begins execution of the plugin.
@@ -76,10 +77,18 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block.php';
  *
  * @since    1.0.0
  */
-function run_commenting_block() {
+function cf_run_commenting_block() {
 
 	$plugin = new Commenting_block();
 	$plugin->run();
 
 }
-run_commenting_block();
+
+cf_run_commenting_block();
+
+/**
+ * Redirect after plugin activation.
+ *
+ * @since 1.0.4
+ */
+add_action( 'activated_plugin', array( 'Commenting_block', 'cf_redirect_on_activate' ) );

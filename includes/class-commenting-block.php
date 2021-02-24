@@ -103,24 +103,24 @@ class Commenting_block {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-commenting-block-loader.php';
+		require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-loader.php'; // phpcs:ignore
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-commenting-block-i18n.php';
+		require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-i18n.php'; // phpcs:ignore
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-commenting-block-admin.php';
+		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-admin.php'; // phpcs:ignore
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-commenting-block-public.php';
+		require_once COMMENTING_BLOCK_DIR . 'public/class-commenting-block-public.php'; // phpcs:ignore
 
 		$this->loader = new Commenting_block_Loader();
 
@@ -154,8 +154,8 @@ class Commenting_block {
 
 		$plugin_admin = new Commenting_block_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'cf_enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'cf_enqueue_scripts' );
 		$this->loader->add_action( 'wp_ajax_cf_comments_history', $plugin_admin,'cf_comments_history' );
 		$this->loader->add_action( 'wp_ajax_cf_update_click', $plugin_admin,'cf_update_click' );
 		$this->loader->add_action( 'wp_ajax_cf_get_user', $plugin_admin,'cf_get_user' );
@@ -165,7 +165,11 @@ class Commenting_block {
 		$this->loader->add_action( 'wp_ajax_cf_resolve_thread', $plugin_admin,'cf_resolve_thread' );
 		$this->loader->add_action( 'wp_ajax_cf_reset_drafts_meta', $plugin_admin,'cf_reset_drafts_meta' );
 		$this->loader->add_action( 'wp_ajax_cf_store_in_localstorage', $plugin_admin,'cf_store_in_localstorage' );
+		$this->loader->add_action( 'wp_ajax_cf_save_settings', $plugin_admin,'cf_save_settings' );
 		$this->loader->add_action( 'wp_ajax_cf_merge_draft_stacks', $plugin_admin,'cf_merge_draft_stacks' );
+		$this->loader->add_action( 'wp_ajax_cf_get_user_email_list', $plugin_admin, 'cf_get_user_email_list' );
+		$this->loader->add_action( 'wp_ajax_cf_get_matched_user_email_list', $plugin_admin, 'cf_get_matched_user_email_list' );
+		$this->loader->add_action( 'wp_ajax_cf_get_assignable_user_list', $plugin_admin, 'cf_get_assignable_user_list' );
 		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'cf_rest_api' );
 	}
 
@@ -180,8 +184,8 @@ class Commenting_block {
 
 		$plugin_public = new Commenting_block_Public( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'cf_enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'cf_enqueue_scripts' );
 
 	}
 
@@ -225,4 +229,20 @@ class Commenting_block {
 		return $this->version;
 	}
 
+	/**
+	 * Plugin Setup (On Activation)
+	 *
+	 * @package MYS Modules
+	 * @since 1.0.0
+	 */
+	static function cf_redirect_on_activate( $plugin = false ) {
+
+		if ( COMMENTING_BLOCK_BASE === $plugin ) {
+			wp_redirect( add_query_arg( array(
+				'activated' => 1,
+				'page'      => 'editorial-comments'
+			), admin_url( 'admin.php' ) ) );
+			exit();
+		}
+	}
 }
