@@ -76,82 +76,6 @@ export default class Board extends React.Component {
         this.state = {comments: []};
     }
 
-<<<<<<< HEAD
-=======
-    removeTag(elIDRemove) {
-
-        const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-        const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-        if( null !== blockAttributes ) {
-
-            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
-            jQuery(findAttributes).each( function (i, attrb) {
-                var content = blockAttributes[attrb];
-                if( undefined !== content && -1 !== content.indexOf(elIDRemove) ) {
-
-                    if ('' !== content) {
-                        let tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = content;
-                        let childElements = tempDiv.getElementsByTagName('mdspan');
-                        for (let i = 0; i < childElements.length; i++) {
-                            if (elIDRemove === childElements[i].attributes.datatext.value) {
-                                childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                                const finalContent = tempDiv.innerHTML;
-
-                                if (attrb === 'content') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            content: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'citation') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            citation: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'value') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            value: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'caption') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            caption: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'values') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            values: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'fileName') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            fileName: finalContent
-                                        }
-                                    });
-                                } else if (attrb === 'text') {
-                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                        attributes: {
-                                            text: finalContent
-                                        }
-                                    });
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    }
-
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
     removeComment(idx, cTimestamp, elID) {
 
         var arr = this.state.comments;
@@ -283,13 +207,8 @@ export default class Board extends React.Component {
             let _this = this;
             $.post(ajaxurl, data, function (data) { // eslint-disable-line
 
-<<<<<<< HEAD
                 $('#' + el + ' .shareCommentContainer').removeClass('loading');
                 $('.fresh-board').removeClass('fresh-board');
-=======
-                jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
-                jQuery('.fresh-board').removeClass('fresh-board');
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
                 data = $.parseJSON(data);
                 if (undefined !== data.error) {
@@ -399,16 +318,9 @@ export default class Board extends React.Component {
     cancelComment() {
 
         // Reset Comments Float.
-<<<<<<< HEAD
         $('#md-span-comments .cls-board-outer').removeClass('focus');
         $('#md-span-comments .cls-board-outer').removeAttr('style');
         $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
-=======
-        jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-        jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-        jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
-        jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
         const {datatext, onChanged, lastVal} = this.props;
         const name = 'multidots/comment';

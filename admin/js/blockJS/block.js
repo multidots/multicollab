@@ -16,7 +16,6 @@ $( window ).on('load', function () {
     let loadAttempts = 0;
     const loadComments = setInterval(function () {
         loadAttempts++;
-<<<<<<< HEAD
         if ( 1 <= $('.block-editor-writing-flow').length ) {
             // Clearing interval if found.
             clearInterval( loadComments );
@@ -34,14 +33,6 @@ $( window ).on('load', function () {
             var screenWidth = window.screen.width;
             if( 1200 > screenWidth ) {
                 $( '#comments-toggle' ).trigger( 'click' );
-=======
-
-        if (loadAttempts >= 10 || (1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length)) {
-            if (0 === $('.edit-post-header-toolbar__left').length) {
-                $('.edit-post-header-toolbar').append(customButtons);
-            } else {
-                $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
             }
 
             // Fetching comments
@@ -320,83 +311,6 @@ const mdComment = {
                 onChange: PropTypes.func,
                 isActive: PropTypes.bool,
             };
-<<<<<<< HEAD
-=======
-
-        }
-
-        removeTag(elIDRemove) {
-
-            const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-            const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            if( null !== blockAttributes ) {
-
-                const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
-                jQuery(findAttributes).each( function (i, attrb) {
-                    var content = blockAttributes[attrb];
-                    if( undefined !== content && -1 !== content.indexOf(elIDRemove) ) {
-
-                        if ('' !== content) {
-                            let tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = content;
-                            let childElements = tempDiv.getElementsByTagName('mdspan');
-                            for (let i = 0; i < childElements.length; i++) {
-                                if (elIDRemove === childElements[i].attributes.datatext.value) {
-                                    childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
-                                    const finalContent = tempDiv.innerHTML;
-
-                                    if (attrb === 'content') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                content: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'citation') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                citation: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'value') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                value: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'caption') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                caption: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'values') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                values: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'fileName') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                fileName: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'text') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                text: finalContent
-                                            }
-                                        });
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                });
-            }
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
         }
 
         onToggle() {
@@ -455,16 +369,9 @@ const mdComment = {
 
             // Reset Comments Float only if the selected text has no comments on it.
             if (undefined === activeAttributes.datatext) {
-<<<<<<< HEAD
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
-=======
-                jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-                jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-                jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
-            }
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
                 //ne_pending remove the attr true
                 $('mdspan').removeAttr('data-rich-text-format-boundary');
@@ -535,7 +442,6 @@ const mdComment = {
                     )
                 }
 
-<<<<<<< HEAD
                 // Float comments column.
                 this.floatComments(selectedText);
             }
@@ -558,33 +464,6 @@ const mdComment = {
                 $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
 
-=======
-                // Removing dark highlights from other texts,
-                // only if current active text has a attribute,
-                // and no 'focus' class active on mdspan tag.
-                // This condition prevents thread popup flickering
-                // when navigating through the activity center.
-                if (1 === $('mdspan[datatext="' + selectedText + '"][data-rich-text-format-boundary]').length && !$('mdspan').hasClass('focus')) {
-
-                    // Adding focus on selected text's popup.
-                    $('.cls-board-outer').removeClass('focus');
-                    $('#' + selectedText + '.cls-board-outer').addClass('focus');
-
-                    $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
-
-                    // Float comments column.
-                    if (undefined !== selectedText) {
-                        //Active comment tab
-                        if (!$('#md-tabs .comment').hasClass('active')) {
-                            $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
-                            $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
-                        }
-                        this.floatComments(selectedText);
-                    }
-                }
-            }
-        }
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
                 $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');

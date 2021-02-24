@@ -88,17 +88,12 @@
         // Focus comment popup on click.
         $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function (e) {
 
-<<<<<<< HEAD
             // Exclude focus on specific elements.
             var target = $(e.target);
             if( 'dashicons dashicons-trash' === target[0].className
                 || 'resolve-label' === target[0].className
                 || 'resolve-cb' === target[0].className
             ) {
-=======
-            var target = $(e.target), article;
-            if( 'dashicons dashicons-trash' === target[0].className ) {
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
                 return;
             }
 
@@ -154,13 +149,10 @@
 
             // Trigger card click to focus.
             $('#' + dataid).trigger('click');
-<<<<<<< HEAD
 
             // Focus and Lock the popup to prevent on hover issue.
             $('.cls-board-outer').removeClass('locked');
             $('#' + dataid).addClass('locked');
-=======
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
             $('[datatext="' + dataid + '"]').addClass('focus');
             setTimeout(function () {

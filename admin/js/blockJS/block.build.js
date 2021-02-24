@@ -1669,97 +1669,11 @@ Tokenizer.prototype._ensureHibernation = function () {
 };
 
 
-<<<<<<< HEAD
 //Consumption
 Tokenizer.prototype._consume = function () {
     this.consumedAfterSnapshot++;
     return this.preprocessor.advance();
 };
-=======
-        _createClass(toggleComments, [{
-            key: 'removeTag',
-            value: function removeTag(elIDRemove) {
-
-                var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-                var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-                if (null !== blockAttributes) {
-
-                    var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
-                    jQuery(findAttributes).each(function (i, attrb) {
-                        var content = blockAttributes[attrb];
-                        if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                            if ('' !== content) {
-                                var tempDiv = document.createElement('div');
-                                tempDiv.innerHTML = content;
-                                var childElements = tempDiv.getElementsByTagName('mdspan');
-                                for (var _i2 = 0; _i2 < childElements.length; _i2++) {
-                                    if (elIDRemove === childElements[_i2].attributes.datatext.value) {
-                                        childElements[_i2].parentNode.replaceChild(document.createTextNode(childElements[_i2].innerText), childElements[_i2]);
-                                        var finalContent = tempDiv.innerHTML;
-
-                                        if (attrb === 'content') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    content: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'citation') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    citation: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'value') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    value: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'caption') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    caption: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'values') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    values: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'fileName') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    fileName: finalContent
-                                                }
-                                            });
-                                        } else if (attrb === 'text') {
-                                            wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                                attributes: {
-                                                    text: finalContent
-                                                }
-                                            });
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        }, {
-            key: 'onToggle',
-            value: function onToggle() {
-                var _props = this.props,
-                    value = _props.value,
-                    onChange = _props.onChange;
-                var text = value.text,
-                    start = value.start,
-                    end = value.end;
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
 Tokenizer.prototype._unconsume = function () {
     this.consumedAfterSnapshot--;
@@ -1806,17 +1720,8 @@ Tokenizer.prototype._consumeSubsequentIfMatch = function (pattern, startCp, case
     if (!isMatch)
         this._unconsumeSeveral(consumedCount);
 
-<<<<<<< HEAD
     return isMatch;
 };
-=======
-                // Reset Comments Float only if the selected text has no comments on it.
-                if (undefined === activeAttributes.datatext) {
-                    jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-                    jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-                    jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
-                }
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
 //Lookahead
 Tokenizer.prototype._lookahead = function () {
@@ -1894,7 +1799,6 @@ Tokenizer.prototype._isDuplicateAttr = function () {
     return Tokenizer.getTokenAttr(this.currentToken, this.currentAttr.name) !== null;
 };
 
-<<<<<<< HEAD
 Tokenizer.prototype._leaveAttrName = function (toState) {
     this.state = toState;
 
@@ -1905,48 +1809,6 @@ Tokenizer.prototype._leaveAttrName = function (toState) {
 Tokenizer.prototype._leaveAttrValue = function (toState) {
     this.state = toState;
 };
-=======
-                    // Removing dark highlights from other texts,
-                    // only if current active text has a attribute,
-                    // and no 'focus' class active on mdspan tag.
-                    // This condition prevents thread popup flickering
-                    // when navigating through the activity center.
-                    if (1 === $('mdspan[datatext="' + selectedText + '"][data-rich-text-format-boundary]').length && !$('mdspan').hasClass('focus')) {
-
-                        // Adding focus on selected text's popup.
-                        $('.cls-board-outer').removeClass('focus');
-                        $('#' + selectedText + '.cls-board-outer').addClass('focus');
-
-                        $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
-
-                        // Float comments column.
-                        if (undefined !== selectedText) {
-                            //Active comment tab
-                            if (!$('#md-tabs .comment').hasClass('active')) {
-                                $('#md-tabs').find('span').removeClass('active').end().find('span.comment').addClass('active');
-                                $('#md-comments-suggestions-parent').find('#md-suggestion-comments').hide().siblings('#md-span-comments').show();
-                            }
-                            this.floatComments(selectedText);
-                        }
-                    }
-                }
-            }
-        }, {
-            key: 'floatComments',
-            value: function floatComments(selectedText) {
-                if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
-                    $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
-                    $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
-                    $('#' + selectedText).offset({ top: $('[datatext="' + selectedText + '"]').offset().top });
-                }
-            }
-        }, {
-            key: 'removeSuggestion',
-            value: function removeSuggestion() {
-                var _props3 = this.props,
-                    onChange = _props3.onChange,
-                    value = _props3.value;
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
 //Appropriate end tag token
 //(see: http://www.whatwg.org/specs/web-apps/current-work/multipage/tokenization.html#appropriate-end-tag-token)
@@ -2110,87 +1972,7 @@ Tokenizer.prototype._consumeNamedEntity = function (inAttr) {
         return referencedCodePoints;
     }
 
-<<<<<<< HEAD
     this._unconsumeSeveral(consumedCount);
-=======
-    _createClass(Board, [{
-        key: 'removeTag',
-        value: function removeTag(elIDRemove) {
-
-            var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-            var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            if (null !== blockAttributes) {
-
-                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
-                jQuery(findAttributes).each(function (i, attrb) {
-                    var content = blockAttributes[attrb];
-                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                        if ('' !== content) {
-                            var tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = content;
-                            var childElements = tempDiv.getElementsByTagName('mdspan');
-                            for (var _i = 0; _i < childElements.length; _i++) {
-                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
-                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
-                                    var finalContent = tempDiv.innerHTML;
-
-                                    if (attrb === 'content') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                content: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'citation') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                citation: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'value') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                value: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'caption') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                caption: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'values') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                values: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'fileName') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                fileName: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'text') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                text: finalContent
-                                            }
-                                        });
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }, {
-        key: 'removeComment',
-        value: function removeComment(idx, cTimestamp, elID) {
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
     return null;
 };
@@ -2266,13 +2048,8 @@ _[CHARACTER_REFERENCE_IN_DATA_STATE] = function characterReferenceInDataState(cp
         if (referencedCodePoints)
             this._emitSeveralCodePoints(referencedCodePoints);
 
-<<<<<<< HEAD
         else
             this._emitChar('&');
-=======
-                    jQuery('#' + el + ' .shareCommentContainer').removeClass('loading');
-                    jQuery('.fresh-board').removeClass('fresh-board');
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
         this.state = DATA_STATE;
     }
@@ -2296,51 +2073,10 @@ _[RCDATA_STATE] = function rcdataState(cp) {
     else if (cp === $.EOF)
         this._emitEOFToken();
 
-<<<<<<< HEAD
     else
         this._emitCodePoint(cp);
 };
 
-=======
-            return wp.element.createElement(
-                __WEBPACK_IMPORTED_MODULE_0__comment__["a" /* default */],
-                {
-                    key: i,
-                    index: i,
-                    removeCommentFromBoard: this.removeComment,
-                    updateCommentFromBoard: this.updateComment,
-                    userName: username,
-                    dateTime: postedTime,
-                    profileURL: profileURL,
-                    userID: userID,
-                    status: status,
-                    lastVal: lastVal,
-                    onChanged: onChanged,
-                    selectedText: selectedText,
-                    timestamp: cTimestamp,
-                    editedDraft: editedDraft,
-                    showAvatars: localStorage.getItem("showAvatars")
-                },
-                postedComment = postedComment ? postedComment : text
-            );
-        }
-    }, {
-        key: 'cancelComment',
-        value: function cancelComment() {
-
-            // Reset Comments Float.
-            jQuery('#md-span-comments .cls-board-outer').removeClass('focus');
-            jQuery('#md-span-comments .cls-board-outer').css('opacity', '1');
-            jQuery('#md-span-comments .cls-board-outer').removeAttr('style');
-            jQuery('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
-
-            var _props2 = this.props,
-                datatext = _props2.datatext,
-                onChanged = _props2.onChanged,
-                lastVal = _props2.lastVal;
-
-            var name = 'multidots/comment';
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
 //12.2.4.4 Character reference in RCDATA state
 //------------------------------------------------------------------
@@ -2424,7 +2160,6 @@ _[TAG_OPEN_STATE] = function tagOpenState(cp) {
     else if (cp === $.SOLIDUS)
         this.state = END_TAG_OPEN_STATE;
 
-<<<<<<< HEAD
     else if (isAsciiLetter(cp)) {
         this._createStartTagToken();
         this._reconsumeInState(TAG_NAME_STATE);
@@ -2432,16 +2167,6 @@ _[TAG_OPEN_STATE] = function tagOpenState(cp) {
 
     else if (cp === $.QUESTION_MARK)
         this._reconsumeInState(BOGUS_COMMENT_STATE);
-=======
-            if (confirm('Are you sure you want to delete this comment ?')) {
-                var elID = jQuery(event.currentTarget).closest('.cls-board-outer');
-                this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
-            }
-        }
-    }, {
-        key: 'resolve',
-        value: function resolve(event) {
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
     else {
         this._emitChar('<');
@@ -2458,104 +2183,8 @@ _[END_TAG_OPEN_STATE] = function endTagOpenState(cp) {
         this._reconsumeInState(TAG_NAME_STATE);
     }
 
-<<<<<<< HEAD
     else if (cp === $.GREATER_THAN_SIGN)
         this.state = DATA_STATE;
-=======
-                // Remove Tag.
-                this.removeTag(elIDRemove);
-            } else {
-                jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
-            }
-        }
-    }, {
-        key: 'removeTag',
-        value: function removeTag(elIDRemove) {
-
-            var clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
-
-            var blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
-            if (null !== blockAttributes) {
-
-                var findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
-                jQuery(findAttributes).each(function (i, attrb) {
-                    var content = blockAttributes[attrb];
-                    if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                        if ('' !== content) {
-                            var tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = content;
-                            var childElements = tempDiv.getElementsByTagName('mdspan');
-                            for (var _i = 0; _i < childElements.length; _i++) {
-                                if (elIDRemove === childElements[_i].attributes.datatext.value) {
-                                    childElements[_i].parentNode.replaceChild(document.createTextNode(childElements[_i].innerText), childElements[_i]);
-                                    var finalContent = tempDiv.innerHTML;
-
-                                    if (attrb === 'content') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                content: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'citation') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                citation: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'value') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                value: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'caption') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                caption: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'values') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                values: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'fileName') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                fileName: finalContent
-                                            }
-                                        });
-                                    } else if (attrb === 'text') {
-                                        wp.data.dispatch('core/editor').updateBlock(clientId, {
-                                            attributes: {
-                                                text: finalContent
-                                            }
-                                        });
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }, {
-        key: 'cancelEdit',
-        value: function cancelEdit() {
-            this.setState({ editing: false });
-        }
-    }, {
-        key: 'renderNormalMode',
-        value: function renderNormalMode() {
-
-            // Display the textarea for new comments.
-            jQuery('.cls-board-outer.focus .shareCommentContainer').show();
-
-            var index = this.props.index;
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
     else if (cp === $.EOF) {
         this._reconsumeInState(DATA_STATE);
@@ -2568,7 +2197,6 @@ _[END_TAG_OPEN_STATE] = function endTagOpenState(cp) {
 };
 
 
-<<<<<<< HEAD
 //12.2.4.10 Tag name state
 //------------------------------------------------------------------
 _[TAG_NAME_STATE] = function tagNameState(cp) {
@@ -2577,149 +2205,6 @@ _[TAG_NAME_STATE] = function tagNameState(cp) {
 
     else if (cp === $.SOLIDUS)
         this.state = SELF_CLOSING_START_TAG_STATE;
-=======
-            return wp.element.createElement(
-                'div',
-                { className: "commentContainer " + commentStatus, id: this.props.timestamp },
-                wp.element.createElement(
-                    'div',
-                    { className: 'comment-header' },
-                    wp.element.createElement(
-                        'div',
-                        { className: 'comment-actions' },
-                        index === 0 && wp.element.createElement(
-                            'div',
-                            { className: 'comment-resolve' },
-                            wp.element.createElement('input', { id: "resolve_cb_" + this.props.timestamp + '_' + index, type: 'checkbox', onClick: this.resolve.bind(this), className: 'btn-comment', value: '1' }),
-                            wp.element.createElement(
-                                'label',
-                                { htmlFor: "resolve_cb_" + this.props.timestamp + '_' + index },
-                                'Mark as a Resolved'
-                            )
-                        ),
-                        this.props.userID === owner && wp.element.createElement(
-                            'div',
-                            { className: 'buttons-wrapper' },
-                            wp.element.createElement('i', { className: 'dashicons dashicons-edit', onClick: this.edit }),
-                            wp.element.createElement('i', { className: 'dashicons dashicons-trash', onClick: index === 0 ? this.resolve.bind(this) : this.remove.bind(this) })
-                        )
-                    ),
-                    wp.element.createElement(
-                        'div',
-                        { className: 'comment-details' },
-                        "1" === this.props.showAvatars && wp.element.createElement(
-                            'div',
-                            { className: 'avtar' },
-                            wp.element.createElement('img', { src: this.props.profileURL, alt: 'avatar' })
-                        ),
-                        wp.element.createElement(
-                            'div',
-                            { className: 'commenter-name-time' },
-                            wp.element.createElement(
-                                'div',
-                                { className: 'commenter-name' },
-                                this.props.userName
-                            ),
-                            wp.element.createElement(
-                                'div',
-                                { className: 'comment-time' },
-                                this.props.dateTime
-                            )
-                        )
-                    )
-                ),
-                wp.element.createElement(
-                    'div',
-                    { className: 'commentText' },
-                    wp.element.createElement(
-                        'span',
-                        { className: 'readlessTxt readMoreSpan active' },
-                        str,
-                        ' ',
-                        '' !== readmoreStr && wp.element.createElement(
-                            'a',
-                            { className: 'readmoreComment', href: 'javascript:void(0)' },
-                            'show more'
-                        )
-                    ),
-                    wp.element.createElement(
-                        'span',
-                        { className: 'readmoreTxt readMoreSpan' },
-                        readmoreStr,
-                        ' ',
-                        '' !== readmoreStr && wp.element.createElement(
-                            'a',
-                            { className: 'readlessComment', href: 'javascript:void(0)' },
-                            'show less'
-                        )
-                    )
-                )
-            );
-        }
-    }, {
-        key: 'renderEditingMode',
-        value: function renderEditingMode() {
-            var _this2 = this;
-
-            // Hide the textarea for new comments.
-            jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
-
-            return wp.element.createElement(
-                'div',
-                { className: 'commentContainer', id: this.props.timestamp },
-                wp.element.createElement(
-                    'div',
-                    { className: 'comment-header' },
-                    wp.element.createElement(
-                        'div',
-                        { className: 'comment-details' },
-                        wp.element.createElement(
-                            'div',
-                            { className: 'avtar' },
-                            wp.element.createElement('img', { src: this.props.profileURL, alt: 'avatar' })
-                        ),
-                        wp.element.createElement(
-                            'div',
-                            { className: 'commenter-name-time' },
-                            wp.element.createElement(
-                                'div',
-                                { className: 'commenter-name' },
-                                this.props.userName
-                            ),
-                            wp.element.createElement(
-                                'div',
-                                { className: 'comment-time' },
-                                this.props.dateTime
-                            )
-                        )
-                    )
-                ),
-                wp.element.createElement(
-                    'div',
-                    { className: 'commentText' },
-                    wp.element.createElement('textarea', {
-                        ref: function ref(input) {
-                            _this2.newText = input;
-                        },
-                        onChange: this.handleChange,
-                        defaultValue: this.state.showEditedDraft ? this.props.editedDraft : this.props.children })
-                ),
-                wp.element.createElement(
-                    'button',
-                    { onClick: this.save.bind(this), className: 'btn-comment save-btn' },
-                    'Save'
-                ),
-                wp.element.createElement(
-                    'button',
-                    { onClick: this.cancelEdit.bind(this), className: 'btn-comment' },
-                    'Cancel'
-                )
-            );
-        }
-    }, {
-        key: 'render',
-        value: function render() {
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
     else if (cp === $.GREATER_THAN_SIGN) {
         this.state = DATA_STATE;
