@@ -328,18 +328,15 @@
                 // Removing assignable checkbox if that user's email is not in the content or removed.
                 if( undefined !== typedText && typedText.length > 0 ) {
                     var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
-                    var emailSet = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
-                    emailSet = new Set( emailSet );
-                    var emailAddresses = Array.from( emailSet );
-                    if( null !== emailAddresses ) {
+                    var emailSet         = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
+                    emailSet             = new Set( emailSet );
+                    var emailAddresses   = Array.from( emailSet );
+                    if( undefined !== emailAddresses && emailAddresses.length > 0 ) {
                         if( assignCheckBoxId.length > 0 ) {
                             var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
                             let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
                             let isThere                 = typedText.match( checkEmailPattern );
-                            // isThere                     = new Set( isThere );
-                            // let usersEmailList          = Array.from( isThere );
                             if( ! isThere ) {
-
                                 var appendInCheckbox = [];
                                 if( undefined !== cachedUsersList || null !== cachedUsersList ) {
                                     cachedUsersList.forEach( function( item ) {
@@ -348,14 +345,13 @@
                                         }
                                     } )
                                 }
-                                console.log( appendInCheckbox )
                                 $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
                                 $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
                                 $( assignCheckBoxId ).next('i').html( `Assigned to ${appendInCheckbox[0].display_name}`  );
                             }
                         }
                     } else {
-                        $( assignCheckBoxId ).parent().remove();
+                        $( '.cf-assign-to' ).remove();
                     }
 
                     // Remove assigner dom if there is not email in the editor.
