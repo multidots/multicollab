@@ -51,7 +51,11 @@ export default class Comment extends React.Component {
     remove(event) {
 
         if (confirm('Are you sure you want to delete this comment ?')) {
+<<<<<<< HEAD
             const elID = $(event.currentTarget).closest('.cls-board-outer');
+=======
+            const elID = jQuery(event.currentTarget).closest('.cls-board-outer');
+>>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
             this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
         }
     }
@@ -87,7 +91,84 @@ export default class Comment extends React.Component {
             // Remove Tag.
             removeTag(elIDRemove); // eslint-disable-line
         } else {
+<<<<<<< HEAD
             $('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
+=======
+            jQuery('#' + elIDRemove + ' [type="checkbox"]').prop('checked', false);
+        }
+    }
+
+    removeTag(elIDRemove) {
+
+        const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block');
+
+        const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId);
+        if( null !== blockAttributes ) {
+
+            const findAttributes = ['content', 'citation', 'caption', 'value', 'values', 'fileName', 'text'];
+            jQuery(findAttributes).each( function (i, attrb) {
+                var content = blockAttributes[attrb];
+                if( undefined !== content && -1 !== content.indexOf(elIDRemove) ) {
+
+                    if ('' !== content) {
+                        let tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = content;
+                        let childElements = tempDiv.getElementsByTagName('mdspan');
+                        for (let i = 0; i < childElements.length; i++) {
+                            if (elIDRemove === childElements[i].attributes.datatext.value) {
+                                childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
+                                const finalContent = tempDiv.innerHTML;
+
+                                if (attrb === 'content') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            content: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'citation') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            citation: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'value') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            value: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'caption') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            caption: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'values') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            values: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'fileName') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            fileName: finalContent
+                                        }
+                                    });
+                                } else if (attrb === 'text') {
+                                    wp.data.dispatch('core/editor').updateBlock(clientId, {
+                                        attributes: {
+                                            text: finalContent
+                                        }
+                                    });
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+>>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
         }
     }
 
@@ -98,7 +179,11 @@ export default class Comment extends React.Component {
     renderNormalMode() {
 
         // Display the textarea for new comments.
+<<<<<<< HEAD
         $('.cls-board-outer.focus .shareCommentContainer').show();
+=======
+        jQuery('.cls-board-outer.focus .shareCommentContainer').show();
+>>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
         const {index} = this.props;
         const commentStatus = this.props.status ? this.props.status : 'draft';
@@ -132,8 +217,13 @@ export default class Comment extends React.Component {
                     <div className="comment-actions">
                         {index === 0 &&
                             <div className="comment-resolve">
+<<<<<<< HEAD
                                 <input id={"resolve_cb_" + this.props.timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="resolve-cb" value="1" />
                                 <label className="resolve-label" htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
+=======
+                                <input id={"resolve_cb_" + this.props.timestamp + '_' + index} type="checkbox" onClick={this.resolve.bind(this)} className="btn-comment" value="1" />
+                                <label htmlFor={"resolve_cb_" + this.props.timestamp + '_' + index}>{'Mark as a Resolved'}</label>
+>>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
                             </div>
                         }
                         {this.props.userID === owner && index === 0 &&
@@ -178,6 +268,7 @@ export default class Comment extends React.Component {
     renderEditingMode() {
 
         // Hide the textarea for new comments.
+<<<<<<< HEAD
         $('.cls-board-outer.focus .shareCommentContainer').hide();
 
         // Limiting User Role Character.
@@ -185,6 +276,9 @@ export default class Comment extends React.Component {
         if( 8 < userRolePartial.length ) {
             userRolePartial = userRolePartial.slice( 0, 8 ) + '...';
         }
+=======
+        jQuery('.cls-board-outer.focus .shareCommentContainer').hide();
+>>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
         return (
             <div className="commentContainer" id={this.props.timestamp}>

@@ -164,6 +164,7 @@ body.hide-comments #md-comments-suggestions-parent{visibility:hidden}
 #md-tabs span.active{background:#007cba;color:#fff}
 
 /* Hide format type when suggestion mode enable */
+<<<<<<< HEAD
 .suggestion-mode .block-editor-format-toolbar button[aria-label="Link"], .suggestion-mode .block-editor-format-toolbar button[aria-label="Unlink"]{display:none}
 .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(1), .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(3), .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(5){display:none}
 .suggestion-mode .components-popover .block-editor-link-control{display:none}
@@ -186,6 +187,67 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .custom-buttons svg{width:19px}
 .custom-buttons svg *{fill:#1e1e1e}
 .custom-buttons components-button:hover svg *{fill:#007cba}
+=======
+.suggestion-mode .block-editor-format-toolbar button[aria-label="Link"], .suggestion-mode .block-editor-format-toolbar button[aria-label="Unlink"] {
+    display: none;
+}
+
+.suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(1), .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(3), .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(5) {
+    display: none;
+}
+
+.suggestion-mode .components-popover .block-editor-link-control {
+    display: none;
+}
+
+.suggestion-mode .block-editor-block-contextual-toolbar[data-type="core/list"] .block-editor-block-toolbar__slot > .components-toolbar {
+    display: none;
+}
+
+
+.cls-board-outer.Delete .board:before {
+    border-right-color: #dc3232 !important;
+}
+
+.cls-board-outer.Delete {
+    border-color: #dc3232 !important;
+}
+
+#md-suggestion-comments .cls-board-outer .board .commentContainer .comment-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: auto;
+    margin: 0;
+}
+
+#md-suggestion-comments .btn-comment {
+    opacity: 1;
+}
+
+.comment-header .comment-actions .suggest-box-action.buttons-wrapper i {
+    font-size: 24px;
+}
+ins[data-rich-text-format-boundary="true"] {
+    background-color: rgba(0, 128, 0, 0.2);
+}
+del[data-rich-text-format-boundary="true"] {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+.is-sidebar-opened #md-tabs {
+    right: 320px;
+}
+.components-notice-list {
+    z-index: 9999;
+}
+.components-notice-list:not(:empty) ~ div #md-comments-suggestions-parent {
+    z-index: 999;
+}
+.components-notice-list:not(:empty) ~ div #md-tabs {
+    top: 160px;
+    background: transparent;
+}
+>>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
 .custom-buttons button:hover svg * {
     fill:#007cba;
