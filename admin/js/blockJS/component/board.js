@@ -150,7 +150,10 @@ export default class Board extends React.Component {
         const {datatext}  = this.props;
         var currentTextID = 'txt' + datatext;
         var newText       = $('#' + currentTextID).html();
-        newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' )
+        newText           = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' );
+        newText           = newText.replace( /(https?:\/\/[^\s]+)/ig, function( match ) {
+            return `<a href="${match}" target="_blank">${match}</a>`;
+        } );
 
         if ($(`#${currentTextID}`).text().trim().length !== 0) {
 

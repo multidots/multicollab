@@ -261,6 +261,8 @@
             anchor.after( gapElContent );
         }
 
+        // Format pasted content.
+
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
             var el                    = '';
@@ -318,6 +320,13 @@
             $( document.body ).on( 'click', editLink, function() {
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
+            } )
+
+            // Format pasted content.
+            $( document.body ).on( 'paste', createTextarea, function(e) {
+                e.preventDefault();
+                var textContent = e.originalEvent.clipboardData.getData( 'text/plain' );
+                document.execCommand( 'insertHTML', false, textContent );
             } )
 
             // Triggering textarea keyup event.
