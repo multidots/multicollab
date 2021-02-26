@@ -133,7 +133,7 @@ class Commenting_block_Admin {
 	 * @return array mixed Updated list of default columns.
 	 */
 	public function cf_columns_head( $defaults ) {
-		$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg" width=17/>' . ' Multicollab';
+		$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg" width=17/>' . ' Editorial Comments';
 
 		return $defaults;
 	}
