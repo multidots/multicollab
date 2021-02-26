@@ -583,10 +583,12 @@
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
-                range.setStart( el, 1 );
-                range.collapse( true );
-                cursorSel.removeAllRanges();
-                cursorSel.addRange( range );
+                if( 'firefox' !== browser ) {
+                    range.setStart( el, 1 );
+                    range.collapse( true );
+                    cursorSel.removeAllRanges();
+                    cursorSel.addRange( range );
+                }
             } );
         }
         createAutoEmailMention();
