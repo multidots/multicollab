@@ -227,9 +227,9 @@
                 sel = window.getSelection();
                 if (sel.rangeCount) {
                 range = sel.getRangeAt(0);
-                if ( range.commonAncestorContainer.parentNode === editableDiv) {
-                    caretPos = range.endOffset;
-                }
+                    if ( range.commonAncestorContainer.parentNode === editableDiv) {
+                        caretPos = range.endOffset;
+                    }
                 }
             } else if (document.selection && document.selection.createRange) {
                 range = document.selection.createRange();
@@ -556,10 +556,12 @@
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
-                range.setStart( el, 1 );
-                range.collapse( true );
-                cursorSel.removeAllRanges();
-                cursorSel.addRange( range );
+                if( 'firefox' !== browser ) {
+                    range.setStart( el, 1 );
+                    range.collapse( true );
+                    cursorSel.removeAllRanges();
+                    cursorSel.addRange( range );
+                }
             } );
         }
         createAutoEmailMention();
