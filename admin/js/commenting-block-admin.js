@@ -556,12 +556,14 @@
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
-                if( 'firefox' !== browser ) {
+                if( 'firefox' === browser ) {
+                    range.setStart( el, 0 );
+                } else {
                     range.setStart( el, 1 );
-                    range.collapse( true );
-                    cursorSel.removeAllRanges();
-                    cursorSel.addRange( range );
                 }
+                range.collapse( true );
+                cursorSel.removeAllRanges();
+                cursorSel.addRange( range );
             } );
         }
         createAutoEmailMention();
