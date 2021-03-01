@@ -196,7 +196,7 @@
                 $( this ).parents( 'figure' ).append( '<button class="gc-add-comment">Add Comment</button>' );
             } )
         }
-        addGCButtonOnImg();
+        // addGCButtonOnImg();
 
 
         // Make matched text highlighted.
@@ -360,6 +360,7 @@
                                         }
                                     } )
                                 }
+                                $( assignCheckBoxId ).prop( 'checked', false );
                                 $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
                                 $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
                                 $( assignCheckBoxId ).next('i').html( `Assigned to ${appendInCheckbox[0].display_name}`  );
