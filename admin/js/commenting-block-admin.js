@@ -715,6 +715,7 @@
 
                 $( this ).removeClass( 'js-cf-show-assign-list' ).addClass( 'js-cf-hide-assign-list' );
 
+                // Checked cached user list first.
                 if( undefined !== cachedUsersList || null !== cachedUsersList ) {
                     var emailSet       = content.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
                     emailSet           = new Set( emailSet );
