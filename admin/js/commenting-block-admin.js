@@ -593,7 +593,7 @@
                 if( 'firefox' === browser ) {
                     range.setStart( el, 0 );
                 } else {
-                    range.setStart( el, 1 );
+                    range.setStart( el, range.endOffset );
                 }
                 range.collapse( true );
                 cursorSel.removeAllRanges();
