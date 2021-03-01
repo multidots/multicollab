@@ -583,12 +583,14 @@
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
-                if( 'firefox' !== browser ) {
+                if( 'firefox' === browser ) {
+                    range.setStart( el, 0 );
+                } else {
                     range.setStart( el, 1 );
-                    range.collapse( true );
-                    cursorSel.removeAllRanges();
-                    cursorSel.addRange( range );
                 }
+                range.collapse( true );
+                cursorSel.removeAllRanges();
+                cursorSel.addRange( range );
             } );
         }
         createAutoEmailMention();
@@ -832,21 +834,16 @@
     $( window ).on( 'load', function () {
         $('.cid_popup_hover').parents('.wp-block.editor-block-list__block.block-editor-block-list__block').addClass('parent_cid_popup_hover');
 
-        // Handling Older WordPress Versions.
-        // The function wp.data.select("core").getCurrentUser() is not
-        // defined for v5.2.2, so getting data from PHP.
-        if( 'undefined' === typeof ( wp.data.select("core").getCurrentUser().id ) ) { // eslint-disable-line
-            // Fetch User details from AJAX.
-            $.post(ajaxurl, { // eslint-disable-line
-                'action': 'cf_get_user'
-            }, function (user) {
-                user = JSON.parse(user);
-                localStorage.setItem("userID", user.id);
-                localStorage.setItem("userName", user.name);
-                localStorage.setItem("userRole", user.role);
-                localStorage.setItem("userURL", user.url);
-            });
-        }
+        // Storing necessary user info in local storage.
+        $.post( ajaxurl, { // eslint-disable-line
+            'action': 'cf_get_user'
+        }, function ( user ) {
+            user = JSON.parse( user );
+            localStorage.setItem( "userID", user.id );
+            localStorage.setItem( "userName", user.name );
+            localStorage.setItem( "userRole", user.role );
+            localStorage.setItem( "userURL", user.url );
+        });
     });
 
     $(document).on('click', '.markup', function () {
