@@ -190,6 +190,14 @@
             }
         }
 
+        var addGCButtonOnImg = function() {
+            $( document.body ).on( 'click', 'img', function(e) {
+                e.preventDefault();
+                $( this ).parents( 'figure' ).append( '<button class="gc-add-comment">Add Comment</button>' );
+            } )
+        }
+        addGCButtonOnImg();
+
 
         // Make matched text highlighted.
         var makeMatchedTextHighlighted = function( term, markEmail, markName ) {
@@ -260,8 +268,6 @@
             setRange.insertNode( anchor );
             anchor.after( gapElContent );
         }
-
-        // Format pasted content.
 
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
@@ -666,6 +672,7 @@
         // Asignable Email List Template.
         var assignalbeList = function( _self, data ) {
             var listItem = '';
+            console.log(data);
             if( data.length > 0 ) {
                 listItem += `<ul class="cf-assignable-list">`;
                 data.forEach( function( user ) {
@@ -687,8 +694,9 @@
                     ${listItem}
                 </div>
             `;
-
-            $( assignListTemplate ).insertAfter( _self );
+            setTimeout( function() {
+                $( assignListTemplate ).insertAfter( _self );
+            }, 200 )
         }
 
         // Show Assiganable Email List
@@ -697,6 +705,7 @@
             var textarea         = '';
             var appendTo         = '';
             var parentBoardClass = '.cls-board-outer';
+            var cachedUsersList       = adminLocalizer.cached_users_list;
             $( document.body ).on( 'click', triggerLink, function(e) {
                 e.preventDefault();
                 var el      = $( this ).parents( parentBoardClass ).attr( 'id' );
@@ -705,21 +714,41 @@
                 var content = $( textarea ).html();
 
                 $( this ).removeClass( 'js-cf-show-assign-list' ).addClass( 'js-cf-hide-assign-list' );
-                // Send Ajax Request.
-                $.ajax({
-                    url: ajaxurl, // eslint-disable-line
-                    type: 'post',
-                    data: {
-                        action: 'cf_get_assignable_user_list',
-                        content: content,
-                        nonce: adminLocalizer.nonce // eslint-disable-line
-                    },
-                    beforeSend: function() {},
-                    success: function( res ) {
-                        var data = JSON.parse( res );
-                        assignalbeList( appendTo, data );
-                    }
-                })
+
+                if( undefined !== cachedUsersList || null !== cachedUsersList ) {
+                    var emailSet       = content.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
+                    emailSet           = new Set( emailSet );
+                    var emailAddresses = Array.from( emailSet );
+                    var data           = [];
+                    emailAddresses.forEach( function( email ) {
+                        var pattern = new RegExp( email )
+                        cachedUsersList.forEach( function( item ) {
+                            var userEmail = item.user_email;
+                            var isMatched = userEmail.match( pattern );
+                            if( isMatched ) {
+                                data.push( item );
+                            }
+                        } )
+                    } );
+                    assignalbeList( appendTo, data );
+                } else {
+                    // Send Ajax Request.
+                    $.ajax({
+                        url: ajaxurl, // eslint-disable-line
+                        type: 'post',
+                        data: {
+                            action: 'cf_get_assignable_user_list',
+                            content: content,
+                            nonce: adminLocalizer.nonce // eslint-disable-line
+                        },
+                        beforeSend: function() {},
+                        success: function( res ) {
+                            var data = JSON.parse( res );
+                            console.log(data)
+                            assignalbeList( appendTo, data );
+                        }
+                    })
+                }
 
             } )
         }
