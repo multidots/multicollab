@@ -13683,7 +13683,7 @@ var Board = function (_React$Component) {
                     // Updating the assigned user info.
                     if (null !== data.assignedTo) {
                         var displayName = data.assignedTo.display_name ? data.assignedTo.display_name : 'Unknown User';
-                        var assignedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + displayName + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
+                        var assignedUserDetails = '\n                        <div class="cf-board-assigned-to" data-user-id="' + data.assignedTo.ID + '" data-user-email="' + data.assignedTo.user_email + '">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + displayName + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
                         if ($('#' + el + ' .cf-board-assigned-to').length) {
                             $('#' + el + ' .cf-board-assigned-to').remove();
                         }
@@ -13814,7 +13814,7 @@ var Board = function (_React$Component) {
                 { className: 'board ' + (undefined === this.hasComments && this.currentUserProfile && 'fresh-board') },
                 undefined !== assignedTo && null !== assignedTo && wp.element.createElement(
                     'div',
-                    { className: 'cf-board-assigned-to' },
+                    { className: 'cf-board-assigned-to', 'data-user-id': assignedTo.ID, 'data-user-email': assignedTo.user_email },
                     wp.element.createElement(
                         'div',
                         { className: 'assigned-user-details' },

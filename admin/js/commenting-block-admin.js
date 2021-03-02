@@ -346,6 +346,10 @@
                     var emailSet         = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
                     emailSet             = new Set( emailSet );
                     var emailAddresses   = Array.from( emailSet );
+
+                    // Get the assigner email of the current board.
+                    var currentBoardAssingerEmail = $( `${currentBoardID} .cf-board-assigned-to` ).data( 'user-email' );
+
                     if( undefined !== emailAddresses && emailAddresses.length > 0 ) {
                         if( assignCheckBoxId.length > 0 ) {
                             var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
@@ -355,19 +359,27 @@
                                 var appendInCheckbox = [];
                                 if( undefined !== cachedUsersList || null !== cachedUsersList ) {
                                     cachedUsersList.forEach( function( item ) {
-                                        if( item.user_email === emailAddresses[0] ) {
-                                            appendInCheckbox.push( item );
+                                        if( currentBoardAssingerEmail === emailAddresses[0] ) {
+                                            if( item.user_email === emailAddresses[1] ) {
+                                                appendInCheckbox.push( item );
+                                            }
+                                        } else {
+                                            if( item.user_email === emailAddresses[0] ) {
+                                                appendInCheckbox.push( item );
+                                            }
                                         }
                                     } )
                                 }
-                                $( assignCheckBoxId ).prop( 'checked', false );
-                                $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
-                                $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
-                                $( assignCheckBoxId ).next('i').html( `Assigned to ${appendInCheckbox[0].display_name}`  );
+                                if( appendInCheckbox.length > 0 ) {
+                                    $( assignCheckBoxId ).prop( 'checked', false );
+                                    $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
+                                    $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
+                                    $( assignCheckBoxId ).next('i').html( `Assigned to ${appendInCheckbox[0].display_name}`  );
+                                }
                             }
                         }
                     } else {
-                        $( '.cf-assign-to' ).remove();
+                        $( `${currentBoardID} .cf-assign-to` ).remove();
                     }
 
                     // Remove assigner dom if there is not email in the editor.
@@ -375,6 +387,12 @@
                     if( ! findEmails || undefined === findEmails ) {
                         $( `${currentBoardID} .cf-assign-to` ).remove();
                     }
+
+                    // Removing assinger chcekbox if it is matched with current board assignees email.
+                    if( emailAddresses.length === 1 && emailAddresses[0] === currentBoardAssingerEmail ) {
+                        $( `${currentBoardID} .cf-assign-to` ).remove();
+                    }
+
                 }
 
                 // If textarea is blank then remove email list.
@@ -636,13 +654,17 @@
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                 </div>`;
 
-                if( '' !== el ) {
-                    if( $( `#${el} ${checkBoxContainer}` ).children().length <= 1 ) {
-                        $( `#${el} ${checkBoxContainer}` ).empty();
-                        $( checkbox ).insertAfter( `#${el} ${appendTo}` );
+                // Get the assigner id of the current board.
+                let currentBoardAssingerID = $( `#${el} .cf-board-assigned-to` ).data( 'user-id' );
+
+                if( thisUserId !== currentBoardAssingerID ) {
+                    if( '' !== el ) {
+                        if( $( `#${el} ${checkBoxContainer}` ).children().length <= 1 ) {
+                            $( `#${el} ${checkBoxContainer}` ).empty();
+                            $( checkbox ).insertAfter( `#${el} ${appendTo}` );
+                        }
                     }
                 }
-
             } )
 
             // On Assignable Email Click.
@@ -673,7 +695,6 @@
         // Asignable Email List Template.
         var assignalbeList = function( _self, data ) {
             var listItem = '';
-            console.log(data);
             if( data.length > 0 ) {
                 listItem += `<ul class="cf-assignable-list">`;
                 data.forEach( function( user ) {
@@ -716,6 +737,9 @@
 
                 $( this ).removeClass( 'js-cf-show-assign-list' ).addClass( 'js-cf-hide-assign-list' );
 
+                // Get the assigner id of the current board.
+                let currentBoardAssingerID = $( `#${el} .cf-board-assigned-to` ).data( 'user-id' );
+
                 // Checked cached user list first.
                 if( undefined !== cachedUsersList || null !== cachedUsersList ) {
                     var emailSet       = content.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
@@ -728,7 +752,9 @@
                             var userEmail = item.user_email;
                             var isMatched = userEmail.match( pattern );
                             if( isMatched ) {
-                                data.push( item );
+                                if( item.ID !== currentBoardAssingerID ) {
+                                    data.push( item );
+                                }
                             }
                         } )
                     } );
