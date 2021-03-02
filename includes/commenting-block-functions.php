@@ -85,7 +85,7 @@ function gc_reassigning_deleted_user( $id, $reassign, $user ) {
 		LIKE %s",
 		$like
 	) );
-	$current_user_id = get_current_user();
+	$current_user_id = get_current_user_id();
 	foreach( $results as $result ) {
 		$values = maybe_unserialize( $result->meta_value );
 
