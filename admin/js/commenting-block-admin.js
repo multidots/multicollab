@@ -322,6 +322,11 @@
                 }
             } );
 
+            // Clearing out assignable dom on edit save or edit cancel.
+            $( document.body ).on( 'click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function() {
+                $( `${currentBoardID} .cf-assign-to` ).remove();
+            } )
+
             // Remove emails list on edit link click.
             $( document.body ).on( 'click', editLink, function() {
                 $( appendIn ).remove();
