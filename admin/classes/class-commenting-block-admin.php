@@ -363,7 +363,35 @@ class Commenting_block_Admin {
 						$new_comments[]                         = $d;
 					}
 					update_post_meta( $post_ID, $el, $prev_state );
+					$metas[ $el ][0] = serialize( $prev_state );
 				}
+			}
+		}
+
+		// Publish Edited Comments.
+		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
+			$edited_drafts = $current_drafts['edited'];
+
+			foreach ( $edited_drafts as $el => $timestamps ) {
+				$prev_state = $metas[ $el ][0];
+				$prev_state = maybe_unserialize( $prev_state );
+
+				foreach ( $timestamps as $t ) {
+
+					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
+					if ( ! empty( $edited_draft ) ) {
+						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
+					}
+
+					// Change status to publish.
+					$prev_state['comments'][ $t ]['status'] = 'publish';
+
+					// Remove comment from edited_draft.
+					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
+
+				}
+				update_post_meta( $post_ID, $el, $prev_state );
+				$metas[ $el ][0] = serialize( $prev_state );
 			}
 		}
 
@@ -435,32 +463,6 @@ class Commenting_block_Admin {
 			}
 		}
 
-		// Publish Edited Comments.
-		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
-			$edited_drafts = $current_drafts['edited'];
-
-			foreach ( $edited_drafts as $el => $timestamps ) {
-				$prev_state = $metas[ $el ][0];
-				$prev_state = maybe_unserialize( $prev_state );
-
-				foreach ( $timestamps as $t ) {
-
-					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
-					if ( ! empty( $edited_draft ) ) {
-						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
-					}
-
-					// Change status to publish.
-					$prev_state['comments'][ $t ]['status'] = 'publish';
-
-					// Remove comment from edited_draft.
-					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
-
-				}
-				update_post_meta( $post_ID, $el, $prev_state );
-			}
-		}
-
 		// Flush Current Drafts Stack.
 		update_post_meta( $post_ID, 'current_drafts', '' );
 
@@ -476,6 +478,7 @@ class Commenting_block_Admin {
 					$prev_state['comments'][ $d ]['status'] = 'permanent_draft';
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
+				$metas[ $el ][0] = serialize( $prev_state );
 			}
 		}
 
