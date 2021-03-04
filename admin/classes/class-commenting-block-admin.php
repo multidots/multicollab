@@ -304,8 +304,6 @@ class Commenting_block_Admin {
 		// Initiate Email Class Object.
 		$this->cf_initiate_email_class();
 
-		// echo '<pre>';echo print_r( $current_drafts );echo '</pre>';die();
-
 		// Checking if user deleted the recently added comment.
 		if( isset( $current_drafts['deleted'] ) && 0 !== $current_drafts['deleted'] ) {
 			if( isset( $current_drafts['comments'] ) && 0 !== $current_drafts['comments'] ) {
@@ -313,34 +311,18 @@ class Commenting_block_Admin {
 					if( array_key_exists( $el, $current_drafts['comments'] ) ) {
 						$prev_state = $metas[$el][0];
 						$prev_state = maybe_unserialize( $prev_state );
-						foreach( $timestamps as $t ) {
-							unset( $prev_state['comments'][$t] );
-						}
-						$metas[$el][0] = serialize( $prev_state );
+						
 						foreach( $timestamps as $t ) {
 							$t = intval( $t );
 							$get_key = array_search( $t, $current_drafts['comments'][$el], true );
 							if( $get_key !== false ) {
 								unset( $current_drafts['comments'][$el][$get_key] );
 							}
+
+							unset( $prev_state['comments'][$t] );
 						}
+						$metas[$el][0] = serialize( $prev_state );
 					}
-				}
-			} else {
-				foreach( $current_drafts['deleted'] as $el => $timestamps ) {
-					$prev_state = $metas[ $el ][0];
-					$prev_state = maybe_unserialize( $prev_state );
-					foreach ( $timestamps as $t ) {
-						// Update the timestamp of deleted comment.
-						$previous_comment = $prev_state['comments'][ $t ];
-						if( ! empty( $previous_comment ) ) {
-							unset( $prev_state['comments'][ $t ] );
-							$prev_state['comments'][ $current_timestamp ]           = $previous_comment;
-							$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
-						}
-					}
-					update_post_meta( $post_ID, $el, $prev_state );
-					$metas[ $el ][0] = serialize( $prev_state );
 				}
 			}
 		}
@@ -353,13 +335,14 @@ class Commenting_block_Admin {
 				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
 
-				foreach ( $timestamps as $t ) {
+				foreach ( $timestamps as $key=>$t ) {
+					$local_time = current_datetime();
+					$deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
 					// Update the timestamp of deleted comment.
 					$previous_comment = $prev_state['comments'][ $t ];
 					if( ! empty( $previous_comment ) ) {
-						unset( $prev_state['comments'][ $t ] );
-						$prev_state['comments'][ $current_timestamp ]           = $previous_comment;
-						$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
+						$prev_state['comments'][ $deleted_timestamp ]           = $previous_comment;
+						$prev_state['comments'][ $deleted_timestamp ]['status'] = 'deleted';
 					}
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
