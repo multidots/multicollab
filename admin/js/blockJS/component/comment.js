@@ -37,15 +37,19 @@ export default class Comment extends React.Component {
     }
 
     save(event) {
-        var newText = this.state.contentHtml;
-        if ( '' === newText ) {
-            alert( "Please write a comment to share!" );
-            return false;
-        }
         var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
-        this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
-
-        this.setState( { editing: false } );
+        if( $( `#${elID} .js-cf-edit-comment` ).text().trim().length !== 0 ) {
+            var newText = this.state.contentHtml;
+            if ( '' === newText ) {
+                alert( "Please write a comment to share!" );
+                return false;
+            }
+            this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
+    
+            this.setState( { editing: false } );
+        } else {
+            alert( 'Please write a comment to share' );
+        }
     }
 
     remove(event) {

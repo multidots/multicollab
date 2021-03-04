@@ -311,7 +311,7 @@ class Commenting_block_Admin {
 					if( array_key_exists( $el, $current_drafts['comments'] ) ) {
 						$prev_state = $metas[$el][0];
 						$prev_state = maybe_unserialize( $prev_state );
-						
+
 						foreach( $timestamps as $t ) {
 							$t = intval( $t );
 							$get_key = array_search( $t, $current_drafts['comments'][$el], true );
