@@ -125,11 +125,16 @@ class Commenting_Block_Email_Templates {
 		return $users_emails;
 	}
 
+	/**
+	 * Filter out the actuall email address to sent the email.
+	 *
+	 * @param string $str
+	 * @return array
+	 */
 	public function cf_find_mentioned_emails( $str ) {
-		$pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
+		$pattern = '/data-email=\"([a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?)\"/i';
 		preg_match_all( $pattern, $str, $matches );
-
-		return array_unique( $matches[0] );
+		return array_unique( $matches[1] );
 	}
 
 	/**
