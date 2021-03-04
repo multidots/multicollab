@@ -304,19 +304,43 @@ class Commenting_block_Admin {
 		// Initiate Email Class Object.
 		$this->cf_initiate_email_class();
 
+		// echo '<pre>';echo print_r( $current_drafts );echo '</pre>';die();
+
 		// Checking if user deleted the recently added comment.
 		if( isset( $current_drafts['deleted'] ) && 0 !== $current_drafts['deleted'] ) {
 			if( isset( $current_drafts['comments'] ) && 0 !== $current_drafts['comments'] ) {
-				foreach( $current_drafts['deleted'] as $key => $values ) {
-					if( array_key_exists( $key, $current_drafts['comments'] ) ) {
-						foreach( $values as $value ) {
-							$value = intval( $value );
-							$get_key = array_search( $value, $current_drafts['comments'][$key], true );
+				foreach( $current_drafts['deleted'] as $el => $timestamps ) {
+					if( array_key_exists( $el, $current_drafts['comments'] ) ) {
+						$prev_state = $metas[$el][0];
+						$prev_state = maybe_unserialize( $prev_state );
+						foreach( $timestamps as $t ) {
+							unset( $prev_state['comments'][$t] );
+						}
+						$metas[$el][0] = serialize( $prev_state );
+						foreach( $timestamps as $t ) {
+							$t = intval( $t );
+							$get_key = array_search( $t, $current_drafts['comments'][$el], true );
 							if( $get_key !== false ) {
-								unset( $current_drafts['comments'][$key][$get_key] );
+								unset( $current_drafts['comments'][$el][$get_key] );
 							}
 						}
 					}
+				}
+			} else {
+				foreach( $current_drafts['deleted'] as $el => $timestamps ) {
+					$prev_state = $metas[ $el ][0];
+					$prev_state = maybe_unserialize( $prev_state );
+					foreach ( $timestamps as $t ) {
+						// Update the timestamp of deleted comment.
+						$previous_comment = $prev_state['comments'][ $t ];
+						if( ! empty( $previous_comment ) ) {
+							unset( $prev_state['comments'][ $t ] );
+							$prev_state['comments'][ $current_timestamp ]           = $previous_comment;
+							$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
+						}
+					}
+					update_post_meta( $post_ID, $el, $prev_state );
+					$metas[ $el ][0] = serialize( $prev_state );
 				}
 			}
 		}
@@ -332,11 +356,14 @@ class Commenting_block_Admin {
 				foreach ( $timestamps as $t ) {
 					// Update the timestamp of deleted comment.
 					$previous_comment = $prev_state['comments'][ $t ];
-					unset( $prev_state['comments'][ $t ] );
-					$prev_state['comments'][ $current_timestamp ]           = $previous_comment;
-					$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
+					if( ! empty( $previous_comment ) ) {
+						unset( $prev_state['comments'][ $t ] );
+						$prev_state['comments'][ $current_timestamp ]           = $previous_comment;
+						$prev_state['comments'][ $current_timestamp ]['status'] = 'deleted';
+					}
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
+				$metas[ $el ][0] = serialize( $prev_state );
 			}
 		}
 
@@ -491,13 +518,17 @@ class Commenting_block_Admin {
 
 		// Deleteing comments if users delete comments at the same moment.
 		if( ! empty( $current_drafts['deleted'] ) ) {
+			// echo '<pre>';echo print_r( $current_drafts['deleted'] );echo '</pre>';
+			// echo '<pre>';echo print_r( $current_drafts['comments'] );echo '</pre>';die();
 			foreach( $current_drafts['deleted'] as $key=>$value ) {
 				$comment = get_post_meta( $post_ID, $key, true );
+				// echo '<pre>';echo print_r( $comment );echo '</pre>';die();
 				foreach( $value as $delete_key ) {
 					unset( $comment['comments'][$delete_key] );
 				}
 				update_post_meta( $post_ID, $key, $comment );
 			}
+
 		}
 
 		// Sending Emails to newly mentioned users.
