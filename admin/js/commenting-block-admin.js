@@ -472,7 +472,6 @@
                         // Check for backspace.
                         if( 'Backspace' === e.key ) {
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                            console.log( prevCharOfEmailSymbol );
                             if ( '@' === prevCharOfEmailSymbol ) {
                                 if( '' !== typedText ) {
                                     trackedStr = '@';
@@ -485,7 +484,6 @@
                         } else {
                             trackedStr += e.key;
                         }
-                        console.log( 'tracked: ' + trackedStr );
 
                         // Check for ctrl+backspace.
                         if( 'Backspace' === e.key && true === e.ctrlKey ) {
@@ -572,6 +570,9 @@
                                     })
                                 }
                             }
+                        } else {
+                            $( appendIn ).remove(); // Remove user list popup DOM.
+                            $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
                         }
                     }
 
@@ -787,7 +788,6 @@
                         beforeSend: function() {},
                         success: function( res ) {
                             var data = JSON.parse( res );
-                            console.log(data)
                             assignalbeList( appendTo, data );
                         }
                     })
