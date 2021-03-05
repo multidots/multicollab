@@ -428,6 +428,7 @@
                 // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
+                    console.log( showSuggestion( prevCharOfEmailSymbol ) )
                     if( showSuggestion( prevCharOfEmailSymbol ) ) {
                         // Fetch all email list.
                         isEmail = true;
@@ -435,7 +436,9 @@
                             $( appendIn ).remove(); // Remove previous DOM.
                             $( assignablePopup ).remove(); // Remove previous DOM.
                             $( assignablePopup ).remove();
-                            emailList( createTextarea, cachedUsersList );
+                            setTimeout( function() {
+                                emailList( createTextarea, cachedUsersList );
+                            }, 100 );
                         } else {
                             $.ajax({
                                 url: ajaxurl, // eslint-disable-line
