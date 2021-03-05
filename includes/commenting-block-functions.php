@@ -13,7 +13,7 @@
  *
  * @return void
  */
-function gc_delete_users_transient( $user_id ) {
+function gc_delete_users_transient() {
     delete_transient( 'gc_users_list' );
 }
 add_action( 'user_register', 'gc_delete_users_transient', 10, 1 );
@@ -73,7 +73,7 @@ add_action( 'admin_init', 'gc_after_edit_load' );
  * @param object $user
  * @return void
  */
-function gc_reassigning_deleted_user( $id, $reassign, $user ) {
+function gc_reassigning_deleted_user( $id, $reassign ) {
 	global $wpdb;
 	$wild    = '%';
 	$find    = '_el';

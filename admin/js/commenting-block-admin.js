@@ -190,14 +190,6 @@
             }
         }
 
-        var addGCButtonOnImg = function() {
-            $( document.body ).on( 'click', 'img', function(e) {
-                e.preventDefault();
-                $( this ).parents( 'figure' ).append( '<button class="gc-add-comment">Add Comment</button>' );
-            } )
-        }
-        // addGCButtonOnImg();
-
 
         // Make matched text highlighted.
         var makeMatchedTextHighlighted = function( term, markEmail, markName ) {
@@ -267,6 +259,16 @@
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
             anchor.after( gapElContent );
+        }
+
+        // Cases when we should show the suggestion list.
+        var showSuggestion = function( tracker ) {
+            var allowedStrings = [ '', '@', ' @', ';', '>' ];
+            if( allowedStrings.includes( tracker ) ) {
+                return true;
+            }
+            return false;
+
         }
 
         // Create @mentioning email features.
@@ -425,30 +427,36 @@
 
                 // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey ) {
-                    // Fetch all email list.
-                    isEmail = true;
-                    if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
-                        $( appendIn ).remove(); // Remove previous DOM.
-                        $( assignablePopup ).remove(); // Remove previous DOM.
-                        $( assignablePopup ).remove();
-                        emailList( createTextarea, cachedUsersList );
+                    var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
+                    if( showSuggestion( prevCharOfEmailSymbol ) ) {
+                        // Fetch all email list.
+                        isEmail = true;
+                        if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
+                            $( appendIn ).remove(); // Remove previous DOM.
+                            $( assignablePopup ).remove(); // Remove previous DOM.
+                            $( assignablePopup ).remove();
+                            emailList( createTextarea, cachedUsersList );
+                        } else {
+                            $.ajax({
+                                url: ajaxurl, // eslint-disable-line
+                                type: 'post',
+                                data: {
+                                    action: 'cf_get_user_email_list',
+                                    postID: currentPostID,
+                                    nonce: adminLocalizer.nonce, // eslint-disable-line
+                                },
+                                beforeSend: function() {},
+                                success: function( res ) {
+                                    $( appendIn ).remove(); // Remove previous DOM.
+                                    $( assignablePopup ).remove(); // Remove previous DOM.
+                                    var data = JSON.parse( res );
+                                    emailList( createTextarea, data );
+                                }
+                            })
+                        }
                     } else {
-                        $.ajax({
-                            url: ajaxurl, // eslint-disable-line
-                            type: 'post',
-                            data: {
-                                action: 'cf_get_user_email_list',
-                                postID: currentPostID,
-                                nonce: adminLocalizer.nonce, // eslint-disable-line
-                            },
-                            beforeSend: function() {},
-                            success: function( res ) {
-                                $( appendIn ).remove(); // Remove previous DOM.
-                                $( assignablePopup ).remove(); // Remove previous DOM.
-                                var data = JSON.parse( res );
-                                emailList( createTextarea, data );
-                            }
-                        })
+                        $( appendIn ).remove();
+                        $( assignablePopup ).remove();
                     }
                 }
 
@@ -464,6 +472,7 @@
                         // Check for backspace.
                         if( 'Backspace' === e.key ) {
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
+                            console.log( prevCharOfEmailSymbol );
                             if ( '@' === prevCharOfEmailSymbol ) {
                                 if( '' !== typedText ) {
                                     trackedStr = '@';
@@ -476,6 +485,7 @@
                         } else {
                             trackedStr += e.key;
                         }
+                        console.log( 'tracked: ' + trackedStr );
 
                         // Check for ctrl+backspace.
                         if( 'Backspace' === e.key && true === e.ctrlKey ) {

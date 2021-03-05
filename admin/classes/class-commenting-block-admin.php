@@ -283,7 +283,7 @@ class Commenting_block_Admin {
 	 * @param object/string $post Post Content.
 	 * @param string $update Status of the update.
 	 */
-	public function cf_post_status_changes( $post_ID, $post, $update ) {
+	public function cf_post_status_changes( $post_ID, $post ) {
 		$metas      = get_post_meta( $post_ID );
 		$p_content  = is_object( $post ) ? $post->post_content: $post;
 		$p_link     = get_edit_post_link( $post_ID );
@@ -321,7 +321,7 @@ class Commenting_block_Admin {
 
 							unset( $prev_state['comments'][$t] );
 						}
-						$metas[$el][0] = serialize( $prev_state );
+						$metas[$el][0] = maybe_serialize( $prev_state );
 					}
 				}
 			}
@@ -346,7 +346,7 @@ class Commenting_block_Admin {
 					}
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
-				$metas[ $el ][0] = serialize( $prev_state );
+				$metas[ $el ][0] = maybe_serialize( $prev_state );
 			}
 		}
 
@@ -373,7 +373,7 @@ class Commenting_block_Admin {
 						$new_comments[]                         = $d;
 					}
 					update_post_meta( $post_ID, $el, $prev_state );
-					$metas[ $el ][0] = serialize( $prev_state );
+					$metas[ $el ][0] = maybe_serialize( $prev_state );
 				}
 			}
 		}
@@ -401,7 +401,7 @@ class Commenting_block_Admin {
 
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
-				$metas[ $el ][0] = serialize( $prev_state );
+				$metas[ $el ][0] = maybe_serialize( $prev_state );
 			}
 		}
 
@@ -488,7 +488,7 @@ class Commenting_block_Admin {
 					$prev_state['comments'][ $d ]['status'] = 'permanent_draft';
 				}
 				update_post_meta( $post_ID, $el, $prev_state );
-				$metas[ $el ][0] = serialize( $prev_state );
+				$metas[ $el ][0] = maybe_serialize( $prev_state );
 			}
 		}
 
@@ -501,11 +501,8 @@ class Commenting_block_Admin {
 
 		// Deleteing comments if users delete comments at the same moment.
 		if( ! empty( $current_drafts['deleted'] ) ) {
-			// echo '<pre>';echo print_r( $current_drafts['deleted'] );echo '</pre>';
-			// echo '<pre>';echo print_r( $current_drafts['comments'] );echo '</pre>';die();
 			foreach( $current_drafts['deleted'] as $key=>$value ) {
 				$comment = get_post_meta( $post_ID, $key, true );
-				// echo '<pre>';echo print_r( $comment );echo '</pre>';die();
 				foreach( $value as $delete_key ) {
 					unset( $comment['comments'][$delete_key] );
 				}
