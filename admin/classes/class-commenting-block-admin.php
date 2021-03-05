@@ -665,7 +665,7 @@ class Commenting_block_Admin {
 
 		// If 'commented on' text is blank, stop process.
 		if ( empty( $commentList['commentedOnText'] ) ) {
-			echo wp_json_encode( array( 'error' => 'Please select text to comment on.' ) );
+			echo wp_json_encode( array( 'error' => 'Please select text to comment onasd.' ) );
 			wp_die();
 		}
 

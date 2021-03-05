@@ -33,6 +33,11 @@ export default class Comment extends React.Component {
 
         // Handling edited value.
         var editedValue        = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
+
+        // Filtering anchor tag and return the url text only.
+        editedValue = editedValue.replace( /<a href=\"(https?:\/\/[^\s]+)\" target=\"_blank\">(https?:\/\/[^\s]+)<\/a>/igm, function( match ) {
+            return match.replace( /(<([^>]+)>)/ig, '');
+        } )
         this.state.contentHtml = editedValue;
     }
 
@@ -44,6 +49,11 @@ export default class Comment extends React.Component {
                 alert( "Please write a comment to share!" );
                 return false;
             }
+            // Adding anchor tag around the linkable text.
+            newText = newText.replace( /(https?:\/\/[^\s]+)/ig, function( match ) {
+                return `<a href="${match}" target="_blank">${match}</a>`;
+            } );
+
             this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
     
             this.setState( { editing: false } );
