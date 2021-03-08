@@ -141,9 +141,14 @@
         });
 
         // Scroll to the commented text and its popup from History Popup.
-        $(document).on('click', '.user-commented-on', function (e) {
+        $(document.body).on('click', '.user-commented-on', function (e) {
             $('#custom-history-popup, #history-toggle, .custom-buttons').toggleClass('active');
             e.preventDefault();
+
+            // Triggering comments-toggle if it is closed when clicking on a particular commented link from activity center.
+            if( $( '#comments-toggle' ).hasClass( 'active' ) ) {
+                $( '#comments-toggle' ).trigger( 'click' );
+            }
 
             const dataid = $(this).attr('data-id');
 
