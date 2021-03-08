@@ -297,8 +297,8 @@ class Commenting_block_Admin {
 		$current_user_email        = $curr_user->user_email;
 		$current_user_display_name = $curr_user->display_name;
 
-		// Publish drafts from the 'current_drafts' stack.
-		$current_drafts    = $metas['current_drafts'][0];
+		// Publish drafts from the '_current_drafts' stack.
+		$current_drafts    = $metas['_current_drafts'][0];
 		$current_drafts    = maybe_unserialize( $current_drafts );
 		$current_timestamp = current_time( 'timestamp' );
 		// Initiate Email Class Object.
@@ -474,10 +474,10 @@ class Commenting_block_Admin {
 		}
 
 		// Flush Current Drafts Stack.
-		update_post_meta( $post_ID, 'current_drafts', '' );
+		update_post_meta( $post_ID, '_current_drafts', '' );
 
-		// New Comments from past should be moved to 'permanent_drafts'.
-		$permanent_drafts = $metas['permanent_drafts'][0];
+		// New Comments from past should be moved to '_permanent_drafts'.
+		$permanent_drafts = $metas['_permanent_drafts'][0];
 		$permanent_drafts = maybe_unserialize( $permanent_drafts );
 		if ( isset( $permanent_drafts['comments'] ) && 0 !== count( $permanent_drafts['comments'] ) ) {
 			$permanent_drafts = $permanent_drafts['comments'];
@@ -493,7 +493,7 @@ class Commenting_block_Admin {
 		}
 
 		// Flush Permanent Drafts Stack.
-		update_post_meta( $post_ID, 'permanent_drafts', '' );
+		update_post_meta( $post_ID, '_permanent_drafts', '' );
 
 		// Update open comments count.
 		$comment_counts = $this->cf_get_comment_counts( $post_ID, $p_content, $metas );
@@ -685,7 +685,7 @@ class Commenting_block_Admin {
 		$arr['thread'] = $this->cf_secure_content( $commentList['thread'] );
 
 		// Update Current Drafts.
-		$current_drafts = get_post_meta( $current_post_id, 'current_drafts', true );
+		$current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
 		$current_drafts = maybe_unserialize( $current_drafts );
 		$current_drafts = empty( $current_drafts ) ? array() : $current_drafts;
 		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
@@ -693,7 +693,7 @@ class Commenting_block_Admin {
 		} else {
 			$current_drafts['comments'][ $metaId ][] = $timestamp;
 		}
-		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
+		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
 
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 			$superCareerData['comments'][ $timestamp ] = $arr;
@@ -938,12 +938,12 @@ class Commenting_block_Admin {
 		update_post_meta( $current_post_id, $metaId, $commentListOld );
 
 		// Update Current Drafts.
-		$current_drafts                        = get_post_meta( $current_post_id, 'current_drafts', true );
+		$current_drafts                        = get_post_meta( $current_post_id, '_current_drafts', true );
 		$current_drafts                        = maybe_unserialize( $current_drafts );
 		$current_drafts                        = empty( $current_drafts ) ? array() : $current_drafts;
 		$current_drafts['edited'][ $metaId ][] = $old_timestamp;
 
-		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
+		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
 
 		wp_die();
 	}
@@ -958,12 +958,12 @@ class Commenting_block_Admin {
 		$timestamp       = filter_input( INPUT_POST, "timestamp", FILTER_SANITIZE_NUMBER_INT );
 
 		// Update Current Drafts.
-		$current_drafts                         = get_post_meta( $current_post_id, 'current_drafts', true );
+		$current_drafts                         = get_post_meta( $current_post_id, '_current_drafts', true );
 		$current_drafts                         = maybe_unserialize( $current_drafts );
 		$current_drafts                         = empty( $current_drafts ) ? array() : $current_drafts;
 		$current_drafts['deleted'][ $metaId ][] = $timestamp;
 
-		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
+		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
 
 		wp_die();
 	}
@@ -1006,11 +1006,11 @@ class Commenting_block_Admin {
 		$changed = 0;
 
 		// Move previous drafts to Permanent Draft Stack.
-		$current_drafts = get_post_meta( $current_post_id, 'current_drafts', true );
+		$current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
 		$current_drafts = maybe_unserialize( $current_drafts );
 		$current_drafts = empty( $current_drafts ) ? array() : $current_drafts;
 
-		$permanent_drafts = get_post_meta( $current_post_id, 'permanent_drafts', true );
+		$permanent_drafts = get_post_meta( $current_post_id, '_permanent_drafts', true );
 		$permanent_drafts = maybe_unserialize( $permanent_drafts );
 		$permanent_drafts = empty( $permanent_drafts ) ? array() : $permanent_drafts;
 
@@ -1030,14 +1030,14 @@ class Commenting_block_Admin {
 		}
 
 		if ( 1 === $changed ) {
-			update_post_meta( $current_post_id, 'permanent_drafts', $permanent_drafts );
+			update_post_meta( $current_post_id, '_permanent_drafts', $permanent_drafts );
 		}
 
 		$timestamp                = current_time( 'timestamp' );
 		$drafts_meta              = array();
 		$drafts_meta['timestamp'] = $timestamp;
 
-		update_post_meta( $current_post_id, 'current_drafts', $drafts_meta );
+		update_post_meta( $current_post_id, '_current_drafts', $drafts_meta );
 	}
 
 	/**
@@ -1049,10 +1049,10 @@ class Commenting_block_Admin {
 		$changed = 0;
 
 		// Move previous drafts to Permanent Draft Stack.
-		$current_drafts   = get_post_meta( $current_post_id, 'current_drafts', true );
+		$current_drafts   = get_post_meta( $current_post_id, '_current_drafts', true );
 		$current_drafts   = maybe_unserialize( $current_drafts );
 		$current_drafts   = empty( $current_drafts ) ? array() : $current_drafts;
-		$permanent_drafts = get_post_meta( $current_post_id, 'permanent_drafts', true );
+		$permanent_drafts = get_post_meta( $current_post_id, '_permanent_drafts', true );
 		$permanent_drafts = maybe_unserialize( $permanent_drafts );
 
 		if ( ! empty( $permanent_drafts ) ) {
@@ -1071,11 +1071,11 @@ class Commenting_block_Admin {
 		}
 
 		if ( 1 === $changed ) {
-			update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
+			update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
 		}
 
 		// Flush Permanent Draft Stack.
-		update_post_meta( $current_post_id, 'permanent_drafts', '' );
+		update_post_meta( $current_post_id, '_permanent_drafts', '' );
 
 		echo wp_json_encode( $current_drafts );
 		wp_die();
@@ -1091,7 +1091,7 @@ class Commenting_block_Admin {
 		$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
 
 		// Update Current Drafts.
-		$current_drafts = get_post_meta( $current_post_id, 'current_drafts', true );
+		$current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
 		$current_drafts = maybe_unserialize( $current_drafts );
 		$current_drafts = empty( $current_drafts ) ? array() : $current_drafts;
 		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
@@ -1099,7 +1099,7 @@ class Commenting_block_Admin {
 		} else {
 			$current_drafts['resolved'][] = $metaId;
 		}
-		update_post_meta( $current_post_id, 'current_drafts', $current_drafts );
+		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
 
 		wp_die();
 	}
