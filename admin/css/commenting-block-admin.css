@@ -115,7 +115,7 @@ body.hide-comments #md-comments-suggestions-parent{visibility:hidden}
 @-webkit-keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
 @-moz-keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
 @keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
-.block-editor-writing-flow{float:left;padding-left:0;width:80%;width:calc(100% - 345px)}
+.block-editor-writing-flow{float:left;padding-left:0;width:80%;width:calc(100% - 345px);max-width:100%!important;margin:0 auto!important}
 .block-editor-writing-flow::after{content:'';clear:both;display:block}
 .editor-styles-wrapper .wp-block{width:100%!important;max-width:100%!important}
 .hide-me{height:0;padding:0!important;margin:0!important;display:block;overflow:hidden;outline:none!important;box-shadow:none!important}
