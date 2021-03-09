@@ -29,4 +29,20 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	/**
+	 * Finding the <mdspan> tag from the content and removing it.
+	 */
+	var gcStripOutTag = function() {
+		$( window ).on( 'load', function() {
+			var content = $( 'body' ).html();
+			var pattern =/<mdspan(.*?)>(.*?)<\/mdspan>/igm;
+			content = content.replace( pattern, function( match ) {
+				var match = pattern.exec( content )
+				return match[2];
+			} );
+			$( 'body' ).html( content );
+		} )
+	}
+	gcStripOutTag();
+
 })( jQuery );

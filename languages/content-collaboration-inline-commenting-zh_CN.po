@@ -1,0 +1,155 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Multicollab\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-09 08:21+0000\n"
+"PO-Revision-Date: 2021-03-09 09:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (China)\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.5.1; wp-5.6.2\n"
+"X-Domain: content-collaboration-inline-commenting"
+
+#: admin/classes/class-commenting-block-admin.php:796
+msgid " on"
+msgstr ""
+
+#: admin/classes/class-commenting-block-admin.php:422
+msgid " Resolved Thread Comments"
+msgstr ""
+
+#: admin/classes/class-commenting-block-email-templates.php:111
+#, php-format
+msgid "%s — %s"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:37
+msgid "About Plugin"
+msgstr ""
+
+#: admin/classes/class-commenting-block-email-templates.php:226
+msgid "Assigned to"
+msgstr ""
+
+#: admin/classes/class-commenting-block-email-templates.php:252
+#: admin/classes/class-commenting-block-email-templates.php:273
+msgid "Click here to view this comment"
+msgstr ""
+
+#: admin/classes/class-commenting-block-admin.php:795
+msgid "commented"
+msgstr ""
+
+#: admin/classes/class-commenting-block-email-templates.php:246
+#: admin/classes/class-commenting-block-email-templates.php:267
+msgid "Comments"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:84
+msgid "Contact Support"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:88
+msgid "Contact Us"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:20
+msgid "Dashboard"
+msgstr ""
+
+#: admin/classes/class-commenting-block-admin.php:798
+msgid "deleted comment of"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:58
+msgid "for all new comments even if not mentioned."
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:87
+msgid ""
+"For premium support and help with customizing this plugin for your business "
+"needs."
+msgstr ""
+
+#: admin/classes/class-commenting-block-admin.php:414
+msgid "has resolved the following thread."
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.multidots.com/"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:37
+msgid "Learn More"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:34
+msgid "Live Demo"
+msgstr ""
+
+#: admin/classes/class-commenting-block-email-templates.php:64
+msgid "Marked as resolved by"
+msgstr ""
+
+#. Name of the plugin
+msgid "Multicollab"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:13
+msgid "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
+msgstr ""
+
+#. Author of the plugin
+msgid "multidots"
+msgstr ""
+
+#: admin/classes/class-commenting-block-admin.php:878
+msgid "No comments found."
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:45
+msgid "Notification Setting"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:58
+msgid "Notify site admin"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Plugin Developer"
+msgstr ""
+
+#: admin/classes/class-commenting-block-admin.php:795
+msgid "replied"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:21
+msgid "Settings"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:50
+msgid "Settings saved!"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:27
+msgid "Thanks for installing Google Doc-Style Editorial Commenting Plugin."
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"This plugin serves the commenting feature like Google Docs within the "
+"Gutenberg Editor!"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:79
+msgid "Visit Site"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:78
+msgid "WordPress Development Experts & WordPress VIP Partner Agency"
+msgstr ""
