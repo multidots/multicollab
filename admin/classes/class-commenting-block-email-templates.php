@@ -144,7 +144,6 @@ class Commenting_Block_Email_Templates {
 				}
 			}
 		}
-		// return array_unique( $matches[1] );
 		return array_unique( $refined_user_email );
 	}
 

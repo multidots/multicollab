@@ -191,7 +191,8 @@
                         </ul>
                     </div>
                 `;
-                $( emailList ).insertAfter( appendTo );
+                emailList = DOMPurify.sanitize( emailList );
+                $( emailList ).insertAfter( appendTo ); // phpcs:ignore
             }
         }
 
@@ -241,7 +242,7 @@
                 range = document.selection.createRange();
                 if ( range.parentElement() === editableDiv) {
                     var tempEl = document.createElement("span");
-                    editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+                    editableDiv.insertBefore(tempEl, editableDiv.firstChild); // phpcs:ignore
                     var tempRange = range.duplicate();
                     tempRange.moveToElementText(tempEl);
                     tempRange.setEndPoint("EndToEnd", range);
@@ -263,7 +264,7 @@
             var anchorContent = document.createTextNode( displayName );
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
-            anchor.after( gapElContent );
+            anchor.after( gapElContent ); // phpcs:ignore
         }
 
         // Cases when we should show the suggestion list.
@@ -386,7 +387,7 @@
                                     $( assignCheckBoxId ).prop( 'checked', false );
                                     $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
                                     $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
-                                    $( assignCheckBoxId ).next('i').html( `Assigned to ${appendInCheckbox[0].display_name}`  );
+                                    $( assignCheckBoxId ).next('i').text( `Assigned to ${appendInCheckbox[0].display_name}`  );
                                 }
                             }
                         }
@@ -685,7 +686,8 @@
                     if( '' !== el ) {
                         if( $( `#${el} ${checkBoxContainer}` ).children().length <= 1 ) {
                             $( `#${el} ${checkBoxContainer}` ).empty();
-                            $( checkbox ).insertAfter( `#${el} ${appendTo}` );
+                            checkbox = DOMPurify.sanitize( checkbox );
+                            $( checkbox ).insertAfter( `#${el} ${appendTo}` ); // phpcs:ignore
                         }
                     }
                 }
@@ -740,8 +742,9 @@
                     ${listItem}
                 </div>
             `;
+            assignListTemplate = DOMPurify.sanitize( assignListTemplate );
             setTimeout( function() {
-                $( assignListTemplate ).insertAfter( _self );
+                $( assignListTemplate ).insertAfter( _self ); // phpcs:ignore
             }, 200 )
         }
 
@@ -883,7 +886,8 @@
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                 $.post( ajaxurl, data, function ( response ) { // eslint-disable-line
                     $( '#custom-history-popup-inner' ).html( '' );
-                    $( response ).appendTo( '#custom-history-popup-inner' );
+                    response = DOMPurify.sanitize( response );
+                    $( response ).appendTo( '#custom-history-popup-inner' ); // phpcs:ignore
                 });
             }
         });
@@ -995,7 +999,7 @@ var removeTag = function( elIDRemove ) { // eslint-disable-line
 
                 if ('' !== content) {
                     let tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content;
+                    tempDiv.innerHTML = content; // phpcs:ignore
                     let childElements = tempDiv.getElementsByTagName('mdspan');
                     for (let i = 0; i < childElements.length; i++) {
                         if (elIDRemove === childElements[i].attributes.datatext.value) {

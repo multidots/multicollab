@@ -600,8 +600,9 @@ class Commenting_block_Admin {
 
 		$screen = get_current_screen();
 		if ( $screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base ) {
-			wp_enqueue_script( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data' ), $this->version, false );
+			wp_enqueue_script( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify' ), $this->version, false );
 			wp_enqueue_script( 'cf-mark', COMMENTING_BLOCK_URL . '/admin/js/mark.min.js', array( 'jquery' ), $this->version, false );
+			wp_enqueue_script( 'cf-dom-purify', COMMENTING_BLOCK_URL . '/admin/js/purify.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . '/admin/js/blockJS/block.build.js', array(
 				'jquery',
 				'cf-mark',

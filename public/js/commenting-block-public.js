@@ -40,7 +40,7 @@
 				var match = pattern.exec( content )
 				return match[2];
 			} );
-			$( 'body' ).html( content );
+			$( 'body' ).html( content ); // phpcs:ignore
 		} )
 	}
 	gcStripOutTag();
