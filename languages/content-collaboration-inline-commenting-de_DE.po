@@ -17,139 +17,143 @@ msgstr ""
 
 #: admin/classes/class-commenting-block-admin.php:796
 msgid " on"
-msgstr ""
+msgstr " auf"
 
 #: admin/classes/class-commenting-block-admin.php:422
 msgid " Resolved Thread Comments"
-msgstr ""
+msgstr " Gelöste Thread-Kommentare"
 
 #: admin/classes/class-commenting-block-email-templates.php:111
 #, php-format
 msgid "%s — %s"
-msgstr ""
+msgstr "%s — %s"
 
 #: admin/partials/commenting-block-settings-page.php:37
 msgid "About Plugin"
-msgstr ""
+msgstr "Über das Plugin"
 
 #: admin/classes/class-commenting-block-email-templates.php:226
 msgid "Assigned to"
-msgstr ""
+msgstr "Zugewiesen an"
 
 #: admin/classes/class-commenting-block-email-templates.php:252
 #: admin/classes/class-commenting-block-email-templates.php:273
 msgid "Click here to view this comment"
-msgstr ""
+msgstr "Klicken Sie hier, um diesen Kommentar anzuzeigen"
 
 #: admin/classes/class-commenting-block-admin.php:795
 msgid "commented"
-msgstr ""
+msgstr "kommentiert"
 
 #: admin/classes/class-commenting-block-email-templates.php:246
 #: admin/classes/class-commenting-block-email-templates.php:267
 msgid "Comments"
-msgstr ""
+msgstr "Bemerkungen"
 
 #: admin/partials/commenting-block-settings-page.php:84
 msgid "Contact Support"
-msgstr ""
+msgstr "Kontaktieren Sie Support"
 
 #: admin/partials/commenting-block-settings-page.php:88
 msgid "Contact Us"
-msgstr ""
+msgstr "Kontaktiere uns"
 
 #: admin/partials/commenting-block-settings-page.php:20
 msgid "Dashboard"
-msgstr ""
+msgstr "Instrumententafel"
 
 #: admin/classes/class-commenting-block-admin.php:798
 msgid "deleted comment of"
-msgstr ""
+msgstr "gelöschter Kommentar von"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
-msgstr ""
+msgstr "für alle neuen Kommentare, auch wenn nicht erwähnt."
 
 #: admin/partials/commenting-block-settings-page.php:87
 msgid ""
 "For premium support and help with customizing this plugin for your business "
 "needs."
 msgstr ""
+"Für Premium-Support und Hilfe beim Anpassen dieses Plugins für Ihr Unternehmen "
+"braucht."
 
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
-msgstr ""
+msgstr "hat den folgenden Thread gelöst."
 
 #. Author URI of the plugin
 msgid "https://www.multidots.com/"
-msgstr ""
+msgstr "https://www.multidots.com/"
 
 #: admin/partials/commenting-block-settings-page.php:37
 msgid "Learn More"
-msgstr ""
+msgstr "Erfahren Sie mehr"
 
 #: admin/partials/commenting-block-settings-page.php:34
 msgid "Live Demo"
-msgstr ""
+msgstr "Live-Demo"
 
 #: admin/classes/class-commenting-block-email-templates.php:64
 msgid "Marked as resolved by"
-msgstr ""
+msgstr "Markiert als gelöst von"
 
 #. Name of the plugin
 msgid "Multicollab"
-msgstr ""
+msgstr "Multicollab"
 
 #: admin/partials/commenting-block-settings-page.php:13
 msgid "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
-msgstr ""
+msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 
 #. Author of the plugin
 msgid "multidots"
-msgstr ""
+msgstr "multidots"
 
 #: admin/classes/class-commenting-block-admin.php:878
 msgid "No comments found."
-msgstr ""
+msgstr "Keine Kommentare gefunden."
 
 #: admin/partials/commenting-block-settings-page.php:45
 msgid "Notification Setting"
-msgstr ""
+msgstr "Benachrichtigungseinstellung"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "Notify site admin"
-msgstr ""
+msgstr "Benachrichtigen Sie den Site-Administrator"
 
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
-msgstr ""
+msgstr "Plugin Entwickler"
 
 #: admin/classes/class-commenting-block-admin.php:795
 msgid "replied"
-msgstr ""
+msgstr "antwortete"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"
-msgstr ""
+msgstr "die Einstellungen"
 
 #: admin/partials/commenting-block-settings-page.php:50
 msgid "Settings saved!"
-msgstr ""
+msgstr "Einstellungen gespeichert!"
 
 #: admin/partials/commenting-block-settings-page.php:27
 msgid "Thanks for installing Google Doc-Style Editorial Commenting Plugin."
-msgstr ""
+msgstr "Vielen Dank, dass Sie das Google Doc-Style Editorial Commenting Plugin installiert haben."
 
 #. Description of the plugin
 msgid ""
 "This plugin serves the commenting feature like Google Docs within the "
 "Gutenberg Editor!"
 msgstr ""
+"Dieses Plugin dient der Kommentarfunktion wie Google Text & Tabellen innerhalb der "
+"Gutenberg Editor!"
 
 #: admin/partials/commenting-block-settings-page.php:79
 msgid "Visit Site"
-msgstr ""
+msgstr "Besucherseite"
 
 #: admin/partials/commenting-block-settings-page.php:78
 msgid "WordPress Development Experts & WordPress VIP Partner Agency"
-msgstr ""
+msgstr "WordPress-Entwicklungsexperten & WordPress VIP Partner Agency"
