@@ -387,7 +387,7 @@
                                     $( assignCheckBoxId ).prop( 'checked', false );
                                     $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
                                     $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
-                                    $( assignCheckBoxId ).next('i').text( `Assigned to ${appendInCheckbox[0].display_name}`  );
+                                    $( assignCheckBoxId ).next('i').text( `Assign to ${appendInCheckbox[0].display_name}`  );
                                 }
                             }
                         }
