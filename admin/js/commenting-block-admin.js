@@ -434,7 +434,6 @@
                 // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                    console.log( showSuggestion( prevCharOfEmailSymbol ) )
                     if( showSuggestion( prevCharOfEmailSymbol ) ) {
                         // Fetch all email list.
                         isEmail = true;
