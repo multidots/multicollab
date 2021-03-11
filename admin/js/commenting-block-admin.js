@@ -673,7 +673,7 @@
                 let checkbox        = `
                 <div class="cf-assign-to">
                     <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
+                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>Assign to ${thisDisplayName}</i>
                     </label>
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                 </div>`;
