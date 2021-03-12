@@ -111,11 +111,10 @@ button.btn-comment.btn-reject{box-shadow:none;background-color:#fff;background-i
 body.hide-comments mdspan{background:transparent!important}
 body.hide-comments #md-comments-suggestions-parent{visibility:hidden}
 .shareCommentContainer.loading::after{content:"";-webkit-animation-duration:0.75s;-moz-animation-duration:0.75s;animation-duration:0.75s;-webkit-animation-iteration-count:infinite;-moz-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-name:rotate-forever;-moz-animation-name:rotate-forever;animation-name:rotate-forever;-webkit-animation-timing-function:linear;-moz-animation-timing-function:linear;animation-timing-function:linear;height:15px;width:15px;border:3px solid #007cba;border-right-color:transparent;border-radius:50%;position:absolute;right:20px;bottom:20px}
-.cls-board-outer .board .shareCommentContainer.loading .btn-success{    /* padding-right:30px;*/}
 @-webkit-keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
 @-moz-keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
 @keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
-.block-editor-writing-flow{float:left;padding-left:0;width:80%;width:calc(100% - 345px)}
+.block-editor-writing-flow{float:left;padding-left:0;width:80%;width:calc(100% - 345px);max-width:100%!important;margin:0 auto!important}
 .block-editor-writing-flow::after{content:'';clear:both;display:block}
 .editor-styles-wrapper .wp-block{width:100%!important;max-width:100%!important}
 .hide-me{height:0;padding:0!important;margin:0!important;display:block;overflow:hidden;outline:none!important;box-shadow:none!important}
@@ -164,7 +163,6 @@ body.hide-comments #md-comments-suggestions-parent{visibility:hidden}
 #md-tabs span.active{background:#007cba;color:#fff}
 
 /* Hide format type when suggestion mode enable */
-<<<<<<< HEAD
 .suggestion-mode .block-editor-format-toolbar button[aria-label="Link"], .suggestion-mode .block-editor-format-toolbar button[aria-label="Unlink"]{display:none}
 .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(1), .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(3), .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(5){display:none}
 .suggestion-mode .components-popover .block-editor-link-control{display:none}
@@ -187,67 +185,6 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .custom-buttons svg{width:19px}
 .custom-buttons svg *{fill:#1e1e1e}
 .custom-buttons components-button:hover svg *{fill:#007cba}
-=======
-.suggestion-mode .block-editor-format-toolbar button[aria-label="Link"], .suggestion-mode .block-editor-format-toolbar button[aria-label="Unlink"] {
-    display: none;
-}
-
-.suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(1), .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(3), .suggestion-mode .components-dropdown-menu__menu[aria-label="More rich text controls"] .components-button:nth-child(5) {
-    display: none;
-}
-
-.suggestion-mode .components-popover .block-editor-link-control {
-    display: none;
-}
-
-.suggestion-mode .block-editor-block-contextual-toolbar[data-type="core/list"] .block-editor-block-toolbar__slot > .components-toolbar {
-    display: none;
-}
-
-
-.cls-board-outer.Delete .board:before {
-    border-right-color: #dc3232 !important;
-}
-
-.cls-board-outer.Delete {
-    border-color: #dc3232 !important;
-}
-
-#md-suggestion-comments .cls-board-outer .board .commentContainer .comment-actions {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: auto;
-    margin: 0;
-}
-
-#md-suggestion-comments .btn-comment {
-    opacity: 1;
-}
-
-.comment-header .comment-actions .suggest-box-action.buttons-wrapper i {
-    font-size: 24px;
-}
-ins[data-rich-text-format-boundary="true"] {
-    background-color: rgba(0, 128, 0, 0.2);
-}
-del[data-rich-text-format-boundary="true"] {
-    background-color: rgba(255, 0, 0, 0.2);
-}
-.is-sidebar-opened #md-tabs {
-    right: 320px;
-}
-.components-notice-list {
-    z-index: 9999;
-}
-.components-notice-list:not(:empty) ~ div #md-comments-suggestions-parent {
-    z-index: 999;
-}
-.components-notice-list:not(:empty) ~ div #md-tabs {
-    top: 160px;
-    background: transparent;
-}
->>>>>>> b22c5b6fe1a14aba595912d4f9e969fe18366a9b
 
 .custom-buttons button:hover svg * {
     fill:#007cba;

@@ -141,9 +141,14 @@
         });
 
         // Scroll to the commented text and its popup from History Popup.
-        $(document).on('click', '.user-commented-on', function (e) {
+        $(document.body).on('click', '.user-commented-on', function (e) {
             $('#custom-history-popup, #history-toggle, .custom-buttons').toggleClass('active');
             e.preventDefault();
+
+            // Triggering comments-toggle if it is closed when clicking on a particular commented link from activity center.
+            if( $( '#comments-toggle' ).hasClass( 'active' ) ) {
+                $( '#comments-toggle' ).trigger( 'click' );
+            }
 
             const dataid = $(this).attr('data-id');
 
@@ -158,6 +163,7 @@
             setTimeout(function () {
                 $('[datatext="' + dataid + '"]').removeClass('focus');
             }, 1500);
+
         });
 
         $('.shareCommentContainer textarea').on('click', function () {
@@ -185,7 +191,8 @@
                         </ul>
                     </div>
                 `;
-                $( emailList ).insertAfter( appendTo );
+                emailList = DOMPurify.sanitize( emailList );
+                $( emailList ).insertAfter( appendTo ); // phpcs:ignore
             }
         }
 
@@ -227,15 +234,15 @@
                 sel = window.getSelection();
                 if (sel.rangeCount) {
                 range = sel.getRangeAt(0);
-                    if ( range.commonAncestorContainer.parentNode === editableDiv) {
-                        caretPos = range.endOffset;
-                    }
+                if ( range.commonAncestorContainer.parentNode === editableDiv) {
+                    caretPos = range.endOffset;
+                }
                 }
             } else if (document.selection && document.selection.createRange) {
                 range = document.selection.createRange();
                 if ( range.parentElement() === editableDiv) {
                     var tempEl = document.createElement("span");
-                    editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+                    editableDiv.insertBefore(tempEl, editableDiv.firstChild); // phpcs:ignore
                     var tempRange = range.duplicate();
                     tempRange.moveToElementText(tempEl);
                     tempRange.setEndPoint("EndToEnd", range);
@@ -257,7 +264,17 @@
             var anchorContent = document.createTextNode( displayName );
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
-            anchor.after( gapElContent );
+            anchor.after( gapElContent ); // phpcs:ignore
+        }
+
+        // Cases when we should show the suggestion list.
+        var showSuggestion = function( tracker ) {
+            var allowedStrings = [ '', '@', ' @', ';', '>' ];
+            if( allowedStrings.includes( tracker ) ) {
+                return true;
+            }
+            return false;
+
         }
 
         // Create @mentioning email features.
@@ -313,10 +330,22 @@
                 }
             } );
 
+            // Clearing out assignable dom on edit save or edit cancel.
+            $( document.body ).on( 'click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function() {
+                $( `${currentBoardID} .cf-assign-to` ).remove();
+            } )
+
             // Remove emails list on edit link click.
             $( document.body ).on( 'click', editLink, function() {
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
+            } )
+
+            // Format pasted content.
+            $( document.body ).on( 'paste', createTextarea, function(e) {
+                e.preventDefault();
+                var textContent = e.originalEvent.clipboardData.getData( 'text/plain' );
+                document.execCommand( 'insertHTML', false, textContent );
             } )
 
             // Triggering textarea keyup event.
@@ -327,13 +356,43 @@
                 // Removing assignable checkbox if that user's email is not in the content or removed.
                 if( undefined !== typedText && typedText.length > 0 ) {
                     var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
-                    if( assignCheckBoxId.length > 0 ) {
-                        var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
-                        let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
-                        let isThere                 = typedText.match( checkEmailPattern );
-                        if( ! isThere ) {
-                            $( assignCheckBoxId ).parent().remove();
+                    var emailSet         = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
+                    emailSet             = new Set( emailSet );
+                    var emailAddresses   = Array.from( emailSet );
+
+                    // Get the assigner email of the current board.
+                    var currentBoardAssingerEmail = $( `${currentBoardID} .cf-board-assigned-to` ).data( 'user-email' );
+
+                    if( undefined !== emailAddresses && emailAddresses.length > 0 ) {
+                        if( assignCheckBoxId.length > 0 ) {
+                            var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
+                            let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
+                            let isThere                 = typedText.match( checkEmailPattern );
+                            if( ! isThere ) {
+                                var appendInCheckbox = [];
+                                if( undefined !== cachedUsersList || null !== cachedUsersList ) {
+                                    cachedUsersList.forEach( function( item ) {
+                                        if( currentBoardAssingerEmail === emailAddresses[0] ) {
+                                            if( item.user_email === emailAddresses[1] ) {
+                                                appendInCheckbox.push( item );
+                                            }
+                                        } else {
+                                            if( item.user_email === emailAddresses[0] ) {
+                                                appendInCheckbox.push( item );
+                                            }
+                                        }
+                                    } )
+                                }
+                                if( appendInCheckbox.length > 0 ) {
+                                    $( assignCheckBoxId ).prop( 'checked', false );
+                                    $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
+                                    $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
+                                    $( assignCheckBoxId ).next('i').text( `Assign to ${appendInCheckbox[0].display_name}`  );
+                                }
+                            }
                         }
+                    } else {
+                        $( `${currentBoardID} .cf-assign-to` ).remove();
                     }
 
                     // Remove assigner dom if there is not email in the editor.
@@ -341,6 +400,12 @@
                     if( ! findEmails || undefined === findEmails ) {
                         $( `${currentBoardID} .cf-assign-to` ).remove();
                     }
+
+                    // Removing assinger chcekbox if it is matched with current board assignees email.
+                    if( emailAddresses.length === 1 && emailAddresses[0] === currentBoardAssingerEmail ) {
+                        $( `${currentBoardID} .cf-assign-to` ).remove();
+                    }
+
                 }
 
                 // If textarea is blank then remove email list.
@@ -368,30 +433,38 @@
 
                 // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey ) {
-                    // Fetch all email list.
-                    isEmail = true;
-                    if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
-                        $( appendIn ).remove(); // Remove previous DOM.
-                        $( assignablePopup ).remove(); // Remove previous DOM.
-                        $( assignablePopup ).remove();
-                        emailList( createTextarea, cachedUsersList );
+                    var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
+                    if( showSuggestion( prevCharOfEmailSymbol ) ) {
+                        // Fetch all email list.
+                        isEmail = true;
+                        if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
+                            $( appendIn ).remove(); // Remove previous DOM.
+                            $( assignablePopup ).remove(); // Remove previous DOM.
+                            $( assignablePopup ).remove();
+                            setTimeout( function() {
+                                emailList( createTextarea, cachedUsersList );
+                            }, 100 );
+                        } else {
+                            $.ajax({
+                                url: ajaxurl, // eslint-disable-line
+                                type: 'post',
+                                data: {
+                                    action: 'cf_get_user_email_list',
+                                    postID: currentPostID,
+                                    nonce: adminLocalizer.nonce, // eslint-disable-line
+                                },
+                                beforeSend: function() {},
+                                success: function( res ) {
+                                    $( appendIn ).remove(); // Remove previous DOM.
+                                    $( assignablePopup ).remove(); // Remove previous DOM.
+                                    var data = JSON.parse( res );
+                                    emailList( createTextarea, data );
+                                }
+                            })
+                        }
                     } else {
-                        $.ajax({
-                            url: ajaxurl, // eslint-disable-line
-                            type: 'post',
-                            data: {
-                                action: 'cf_get_user_email_list',
-                                postID: currentPostID,
-                                nonce: adminLocalizer.nonce, // eslint-disable-line
-                            },
-                            beforeSend: function() {},
-                            success: function( res ) {
-                                $( appendIn ).remove(); // Remove previous DOM.
-                                $( assignablePopup ).remove(); // Remove previous DOM.
-                                var data = JSON.parse( res );
-                                emailList( createTextarea, data );
-                            }
-                        })
+                        $( appendIn ).remove();
+                        $( assignablePopup ).remove();
                     }
                 }
 
@@ -505,6 +578,9 @@
                                     })
                                 }
                             }
+                        } else {
+                            $( appendIn ).remove(); // Remove user list popup DOM.
+                            $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
                         }
                     }
 
@@ -559,7 +635,7 @@
                 if( 'firefox' === browser ) {
                     range.setStart( el, 0 );
                 } else {
-                    range.setStart( el, 1 );
+                    range.setStart( el, range.endOffset );
                 }
                 range.collapse( true );
                 cursorSel.removeAllRanges();
@@ -597,18 +673,23 @@
                 let checkbox        = `
                 <div class="cf-assign-to">
                     <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
+                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>Assign to ${thisDisplayName}</i>
                     </label>
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                 </div>`;
 
-                if( '' !== el ) {
-                    if( $( `#${el} ${checkBoxContainer}` ).children().length <= 1 ) {
-                        $( `#${el} ${checkBoxContainer}` ).empty();
-                        $( checkbox ).insertAfter( `#${el} ${appendTo}` );
+                // Get the assigner id of the current board.
+                let currentBoardAssingerID = $( `#${el} .cf-board-assigned-to` ).data( 'user-id' );
+
+                if( thisUserId !== currentBoardAssingerID ) {
+                    if( '' !== el ) {
+                        if( $( `#${el} ${checkBoxContainer}` ).children().length <= 1 ) {
+                            $( `#${el} ${checkBoxContainer}` ).empty();
+                            checkbox = DOMPurify.sanitize( checkbox );
+                            $( checkbox ).insertAfter( `#${el} ${appendTo}` ); // phpcs:ignore
+                        }
                     }
                 }
-
             } )
 
             // On Assignable Email Click.
@@ -660,8 +741,10 @@
                     ${listItem}
                 </div>
             `;
-
-            $( assignListTemplate ).insertAfter( _self );
+            assignListTemplate = DOMPurify.sanitize( assignListTemplate );
+            setTimeout( function() {
+                $( assignListTemplate ).insertAfter( _self ); // phpcs:ignore
+            }, 200 )
         }
 
         // Show Assiganable Email List
@@ -670,6 +753,7 @@
             var textarea         = '';
             var appendTo         = '';
             var parentBoardClass = '.cls-board-outer';
+            var cachedUsersList       = adminLocalizer.cached_users_list;
             $( document.body ).on( 'click', triggerLink, function(e) {
                 e.preventDefault();
                 var el      = $( this ).parents( parentBoardClass ).attr( 'id' );
@@ -678,21 +762,46 @@
                 var content = $( textarea ).html();
 
                 $( this ).removeClass( 'js-cf-show-assign-list' ).addClass( 'js-cf-hide-assign-list' );
-                // Send Ajax Request.
-                $.ajax({
-                    url: ajaxurl, // eslint-disable-line
-                    type: 'post',
-                    data: {
-                        action: 'cf_get_assignable_user_list',
-                        content: content,
-                        nonce: adminLocalizer.nonce // eslint-disable-line
-                    },
-                    beforeSend: function() {},
-                    success: function( res ) {
-                        var data = JSON.parse( res );
-                        assignalbeList( appendTo, data );
-                    }
-                })
+
+                // Get the assigner id of the current board.
+                let currentBoardAssingerID = $( `#${el} .cf-board-assigned-to` ).data( 'user-id' );
+
+                // Checked cached user list first.
+                if( undefined !== cachedUsersList || null !== cachedUsersList ) {
+                    var emailSet       = content.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
+                    emailSet           = new Set( emailSet );
+                    var emailAddresses = Array.from( emailSet );
+                    var data           = [];
+                    emailAddresses.forEach( function( email ) {
+                        var pattern = new RegExp( email )
+                        cachedUsersList.forEach( function( item ) {
+                            var userEmail = item.user_email;
+                            var isMatched = userEmail.match( pattern );
+                            if( isMatched ) {
+                                if( item.ID !== currentBoardAssingerID ) {
+                                    data.push( item );
+                                }
+                            }
+                        } )
+                    } );
+                    assignalbeList( appendTo, data );
+                } else {
+                    // Send Ajax Request.
+                    $.ajax({
+                        url: ajaxurl, // eslint-disable-line
+                        type: 'post',
+                        data: {
+                            action: 'cf_get_assignable_user_list',
+                            content: content,
+                            nonce: adminLocalizer.nonce // eslint-disable-line
+                        },
+                        beforeSend: function() {},
+                        success: function( res ) {
+                            var data = JSON.parse( res );
+                            assignalbeList( appendTo, data );
+                        }
+                    })
+                }
 
             } )
         }
@@ -776,7 +885,8 @@
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
                 $.post( ajaxurl, data, function ( response ) { // eslint-disable-line
                     $( '#custom-history-popup-inner' ).html( '' );
-                    $( response ).appendTo( '#custom-history-popup-inner' );
+                    response = DOMPurify.sanitize( response );
+                    $( response ).appendTo( '#custom-history-popup-inner' ); // phpcs:ignore
                 });
             }
         });
@@ -807,21 +917,16 @@
     $( window ).on( 'load', function () {
         $('.cid_popup_hover').parents('.wp-block.editor-block-list__block.block-editor-block-list__block').addClass('parent_cid_popup_hover');
 
-        // Handling Older WordPress Versions.
-        // The function wp.data.select("core").getCurrentUser() is not
-        // defined for v5.2.2, so getting data from PHP.
-        if( 'undefined' === typeof ( wp.data.select("core").getCurrentUser().id ) ) { // eslint-disable-line
-            // Fetch User details from AJAX.
-            $.post(ajaxurl, { // eslint-disable-line
-                'action': 'cf_get_user'
-            }, function (user) {
-                user = JSON.parse(user);
-                localStorage.setItem("userID", user.id);
-                localStorage.setItem("userName", user.name);
-                localStorage.setItem("userRole", user.role);
-                localStorage.setItem("userURL", user.url);
-            });
-        }
+        // Storing necessary user info in local storage.
+        $.post( ajaxurl, { // eslint-disable-line
+            'action': 'cf_get_user'
+        }, function ( user ) {
+            user = JSON.parse( user );
+            localStorage.setItem( "userID", user.id );
+            localStorage.setItem( "userName", user.name );
+            localStorage.setItem( "userRole", user.role );
+            localStorage.setItem( "userURL", user.url );
+        });
     });
 
     $(document).on('click', '.markup', function () {
@@ -893,7 +998,7 @@ var removeTag = function( elIDRemove ) { // eslint-disable-line
 
                 if ('' !== content) {
                     let tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content;
+                    tempDiv.innerHTML = content; // phpcs:ignore
                     let childElements = tempDiv.getElementsByTagName('mdspan');
                     for (let i = 0; i < childElements.length; i++) {
                         if (elIDRemove === childElements[i].attributes.datatext.value) {

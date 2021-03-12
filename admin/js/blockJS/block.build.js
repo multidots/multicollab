@@ -13609,6 +13609,9 @@ var Board = function (_React$Component) {
             var currentTextID = 'txt' + datatext;
             var newText = $('#' + currentTextID).html();
             newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
+            newText = newText.replace(/(https?:\/\/[^\s]+)/ig, function (match) {
+                return '<a href="' + match + '" target="_blank">' + match + '</a>';
+            });
 
             if ($('#' + currentTextID).text().trim().length !== 0) {
 
@@ -13680,7 +13683,7 @@ var Board = function (_React$Component) {
                     // Updating the assigned user info.
                     if (null !== data.assignedTo) {
                         var displayName = data.assignedTo.display_name ? data.assignedTo.display_name : 'Unknown User';
-                        var assignedUserDetails = '\n                        <div class="cf-board-assigned-to">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + displayName + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
+                        var assignedUserDetails = '\n                        <div class="cf-board-assigned-to" data-user-id="' + data.assignedTo.ID + '" data-user-email="' + data.assignedTo.user_email + '">\n                            <div class="assigned-user-details">\n                                <div class="user-avatar">\n                                    <img src="' + data.assignedTo.avatar + '" alt="' + data.assignedTo.display_name + '" />\n                                </div>\n                                <div class="user-info">\n                                    <span class="badge">Assigned to</span>\n                                    <p class="display-name">' + displayName + '</p>\n                                </div>\n                            </div>\n                        </div>\n                    ';
                         if ($('#' + el + ' .cf-board-assigned-to').length) {
                             $('#' + el + ' .cf-board-assigned-to').remove();
                         }
@@ -13811,7 +13814,7 @@ var Board = function (_React$Component) {
                 { className: 'board ' + (undefined === this.hasComments && this.currentUserProfile && 'fresh-board') },
                 undefined !== assignedTo && null !== assignedTo && wp.element.createElement(
                     'div',
-                    { className: 'cf-board-assigned-to' },
+                    { className: 'cf-board-assigned-to', 'data-user-id': assignedTo.ID, 'data-user-email': assignedTo.user_email },
                     wp.element.createElement(
                         'div',
                         { className: 'assigned-user-details' },
@@ -13970,20 +13973,34 @@ var Comment = function (_React$Component) {
 
             // Handling edited value.
             var editedValue = this.state.showEditedDraft ? this.props.editedDraft : this.props.children;
+
+            // Filtering anchor tag and return the url text only.
+            editedValue = editedValue.replace(/<a href=\"(https?:\/\/[^\s]+)\" target=\"_blank\">(https?:\/\/[^\s]+)<\/a>/igm, function (match) {
+                return match.replace(/(<([^>]+)>)/ig, '');
+            });
             this.state.contentHtml = editedValue;
         }
     }, {
         key: 'save',
         value: function save(event) {
-            var newText = this.state.contentHtml;
-            if ('' === newText) {
-                alert("Please write a comment to share!");
-                return false;
-            }
             var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
-            this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, this.props.dateTime, elID);
+            if ($('#' + elID + ' .js-cf-edit-comment').text().trim().length !== 0) {
+                var newText = this.state.contentHtml;
+                if ('' === newText) {
+                    alert("Please write a comment to share!");
+                    return false;
+                }
+                // Adding anchor tag around the linkable text.
+                newText = newText.replace(/(https?:\/\/[^\s]+)/ig, function (match) {
+                    return '<a href="' + match + '" target="_blank">' + match + '</a>';
+                });
 
-            this.setState({ editing: false });
+                this.props.updateCommentFromBoard(newText, this.props.index, this.props.timestamp, this.props.dateTime, elID);
+
+                this.setState({ editing: false });
+            } else {
+                alert('Please write a comment to share');
+            }
         }
     }, {
         key: 'remove',

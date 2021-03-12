@@ -13,7 +13,7 @@
  *
  * @return void
  */
-function gc_delete_users_transient( $user_id ) {
+function gc_delete_users_transient() {
     delete_transient( 'gc_users_list' );
 }
 add_action( 'user_register', 'gc_delete_users_transient', 10, 1 );
@@ -64,3 +64,53 @@ function gc_after_edit_load() {
 	}
 }
 add_action( 'admin_init', 'gc_after_edit_load' );
+
+/**
+ * Reaasigning Deleted User.
+ *
+ * @param int $id
+ * @param int $reassign
+ * @param object $user
+ * @return void
+ */
+function gc_reassigning_deleted_user( $id, $reassign ) {
+	global $wpdb;
+	$wild    = '%';
+	$find    = '_el';
+	$like    = $wpdb->esc_like( $find ) . $wild;
+	$results = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore
+		"SELECT post_id, meta_value, meta_key
+		FROM {$wpdb->prefix}postmeta
+		WHERE meta_key
+		LIKE %s",
+		$like
+	) );
+	$current_user_id = get_current_user_id();
+	foreach( $results as $result ) {
+		$values = maybe_unserialize( $result->meta_value );
+
+		if ( null !== $reassign ) {
+			foreach( $values['comments'] as $key=>$value ) {
+				if( $id === $value['userData'] ) {
+					$values['comments'][$key]['userData'] = $reassign;
+				}
+			}
+			if( $id === intval( $values['assigned_to'] ) ) {
+				$values['assigned_to'] = $reassign;
+			}
+		} else {
+			foreach( $values['comments'] as $key=>$value ) {
+				if( $id === $value['userData'] ) {
+					$values['comments'][$key]['userData'] = $current_user_id;
+				}
+			}
+			if( $id === intval( $values['assigned_to'] ) ) {
+				$values['assigned_to'] = $current_user_id;
+			}
+
+		}
+		update_post_meta( $result->post_id, $result->meta_key, $values );
+	}
+
+}
+add_action( 'delete_user', 'gc_reassigning_deleted_user', 10, 3 );

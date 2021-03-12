@@ -122,15 +122,6 @@ This plugin is compatible with a range of Gutenberg blocks allowing comments to 
 <li>Media & Text</li>
 </ul>
 
-== 💁 Plugin compatibility with web browser ==
-
-<ul>
-<li>Chrome</li>
-<li>EDGE</li>
-<li>Firefox</li>
-</ul>
-<strong>Note:</strong> Safari browser is not compatible with this plugin.
-
 == 💁 How to Contribute to the Gutenberg Block Commenting Plugin ==
 
 All types of contributions are most welcome.
@@ -149,7 +140,7 @@ All types of contributions are most welcome.
 
 == 💁 Support ==
 
-This repository is not for support. Please use it for contributions only. To get help/support, please email us at <a href="mailto:help@multidots.com">help@multidots.com</a> or <a href ="https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/" target="_blank">contact us</a>.
+This repository is not for support. Please use it for contributions only. To get help/support, please email us at <a href="mailto:help@multidots.com">help@multidots.com</a>
 
 == Installation ==
 
@@ -184,6 +175,21 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 5. Email Notifications
 
 == Changelog ==
+= 1.2.0 - 12.03.2021 =
+* New - Copy/Paste content gets formatted when we add in the editor. If a url is pasted then that converts into a clickable url.
+* New - Deleted users content reassigned to the new assigned user.
+* New - Multilingual Compatible.
+* Fixed - In activity center edit/delete operation is fixed.
+* Fixed - Multiple deletion operations of comments get fixed.
+* Fixed - Do not allow whitespace on edit reply.
+* Fixed - @mention Editor issue fixed.
+* Fixed - On reply edit pasted url was not saving. Issue fixed.
+* Fixed - register_rest_route warning error on WP dashboard fixed.
+* Fixed - If all the comment is hidden and user click any of the comment from activity centre then we have to show that comment.
+* Fixed - In small screen resolution like 1024*768 we are not able to give comment.
+* Fixed - Safari browser compatibility.
+* Fixed - Meta tags are removed from the admin panel.
+
 = 1.1.0 - 24.02.2021 =
 * New – Mention Team Members in Comment and invite them to collaborate by @mentioned user name
 * New – Assign comments thread to team members
@@ -194,7 +200,7 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 * New –  Admin settings panel.
 * New –  Send email notification to admin if notification enabled.
 * New –  All major browser supports (Chrome, EDGE, Firefox)  Note: Safari browser is not compatible with this plugin)
-* Fixed – Compatible with WordPress version 5.3.6 and 5.6.x
+* Fixed – Compatible with WordPress version 5.3.6 to 5.6.2
 * Fixed – Few other fixes and improvements.
 * Fixed – Improve performance of the plugin 
 * Fixed – Checked WordPress Accessibility

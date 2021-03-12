@@ -33,19 +33,33 @@ export default class Comment extends React.Component {
 
         // Handling edited value.
         var editedValue        = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
+
+        // Filtering anchor tag and return the url text only.
+        editedValue = editedValue.replace( /<a href=\"(https?:\/\/[^\s]+)\" target=\"_blank\">(https?:\/\/[^\s]+)<\/a>/igm, function( match ) {
+            return match.replace( /(<([^>]+)>)/ig, '');
+        } )
         this.state.contentHtml = editedValue;
     }
 
     save(event) {
-        var newText = this.state.contentHtml;
-        if ( '' === newText ) {
-            alert( "Please write a comment to share!" );
-            return false;
-        }
         var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
-        this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
+        if( $( `#${elID} .js-cf-edit-comment` ).text().trim().length !== 0 ) {
+            var newText = this.state.contentHtml;
+            if ( '' === newText ) {
+                alert( "Please write a comment to share!" );
+                return false;
+            }
+            // Adding anchor tag around the linkable text.
+            newText = newText.replace( /(https?:\/\/[^\s]+)/ig, function( match ) {
+                return `<a href="${match}" target="_blank">${match}</a>`;
+            } );
 
-        this.setState( { editing: false } );
+            this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
+    
+            this.setState( { editing: false } );
+        } else {
+            alert( 'Please write a comment to share' );
+        }
     }
 
     remove(event) {

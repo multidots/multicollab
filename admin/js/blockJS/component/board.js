@@ -150,7 +150,10 @@ export default class Board extends React.Component {
         const {datatext}  = this.props;
         var currentTextID = 'txt' + datatext;
         var newText       = $('#' + currentTextID).html();
-        newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' )
+        newText           = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' );
+        newText           = newText.replace( /(https?:\/\/[^\s]+)/ig, function( match ) {
+            return `<a href="${match}" target="_blank">${match}</a>`;
+        } );
 
         if ($(`#${currentTextID}`).text().trim().length !== 0) {
 
@@ -222,7 +225,7 @@ export default class Board extends React.Component {
                 if( null !== data.assignedTo ) {
                     var displayName = data.assignedTo.display_name ? data.assignedTo.display_name : 'Unknown User'
                     var assignedUserDetails = `
-                        <div class="cf-board-assigned-to">
+                        <div class="cf-board-assigned-to" data-user-id="${data.assignedTo.ID}" data-user-email="${data.assignedTo.user_email}">
                             <div class="assigned-user-details">
                                 <div class="user-avatar">
                                     <img src="${data.assignedTo.avatar}" alt="${data.assignedTo.display_name}" />
@@ -346,7 +349,7 @@ export default class Board extends React.Component {
         return (
             <div className={`board ${undefined === this.hasComments && this.currentUserProfile && 'fresh-board'}`}>
                 { undefined !== assignedTo && null !== assignedTo &&
-                    <div className="cf-board-assigned-to">
+                    <div className="cf-board-assigned-to" data-user-id={ assignedTo.ID } data-user-email={ assignedTo.user_email }>
                         <div className="assigned-user-details">
                             <div className="user-avatar">
                                 <img src={ assignedTo.avatar } alt={ assignedTo.display_name } />
