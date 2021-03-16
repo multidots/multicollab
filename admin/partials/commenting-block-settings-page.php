@@ -31,10 +31,10 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                                 </div>
                                 <div class="cf-video-links">
                                     <div class="cf-link-wrap">
-                                        <a href="<?php echo esc_url( 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/?demo=start' ); ?>" class="cf-button button button-primary" target="_blank" id="cf-demo"><?php esc_html_e( 'Live Demo', 'content-collaboration-inline-commenting' ); ?></a>
+                                        <a href="<?php echo esc_url( 'https://www.multidots.com/multicollab/?demo=start' ); ?>" class="cf-button button button-primary" target="_blank" id="cf-demo"><?php esc_html_e( 'Live Demo', 'content-collaboration-inline-commenting' ); ?></a>
                                     </div>
                                     <div class="cf-link-wrap">
-                                        <p><a href="<?php echo esc_url( 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/' ); ?>" class="cf-link" target="_blank" id="cf-demo"><?php esc_html_e( 'Learn More', 'content-collaboration-inline-commenting' ); ?></a> <?php esc_html_e( 'About Plugin', 'content-collaboration-inline-commenting' ); ?></p>
+                                        <p><a href="<?php echo esc_url( 'https://www.multidots.com/multicollab/' ); ?>" class="cf-link" target="_blank" id="cf-demo"><?php esc_html_e( 'Learn More', 'content-collaboration-inline-commenting' ); ?></a> <?php esc_html_e( 'About Plugin', 'content-collaboration-inline-commenting' ); ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                     </div>
                     <div class="cf-card-body">
                         <p><?php esc_html_e( 'For premium support and help with customizing this plugin for your business needs.', 'content-collaboration-inline-commenting' ) ?></p>
-                        <a href="<?php echo esc_url( 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/#mdinc-contact-form-1' ); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e( 'Contact Us', 'content-collaboration-inline-commenting' ); ?></a>
+                        <a href="<?php echo esc_url( 'https://www.multidots.com/multicollab/#commenting-contact-form' ); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e( 'Contact Us', 'content-collaboration-inline-commenting' ); ?></a>
                     </div>
                 </div>
             </div>
