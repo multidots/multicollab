@@ -787,7 +787,7 @@ class Commenting_block_Admin {
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['username']          = $username;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['profileURL']        = $profile_url;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dtTime']            = $dtTime;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = 'resolved thread';
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = __( 'resolved thread', 'content-collaboration-inline-commenting' );
 				}
 
 				$comment_count = 0;

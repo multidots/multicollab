@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-10 05:52+0000\n"
+"PO-Revision-Date: 2021-03-16 07:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.5.1; wp-5.7\n"
 "X-Domain: content-collaboration-inline-commenting"
 
-#: admin/classes/class-commenting-block-admin.php:796
+#: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
 msgstr " sur"
 
@@ -32,21 +32,21 @@ msgstr "%s — %s"
 msgid "About Plugin"
 msgstr "À propos du plugin"
 
-#: admin/classes/class-commenting-block-email-templates.php:226
+#: admin/classes/class-commenting-block-email-templates.php:225
 msgid "Assigned to"
 msgstr "Assigné à"
 
-#: admin/classes/class-commenting-block-email-templates.php:252
-#: admin/classes/class-commenting-block-email-templates.php:273
+#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr "Cliquez ici pour voir ce commentaire"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr "commenté"
 
-#: admin/classes/class-commenting-block-email-templates.php:246
-#: admin/classes/class-commenting-block-email-templates.php:267
+#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:266
 msgid "Comments"
 msgstr "commentaires"
 
@@ -62,7 +62,7 @@ msgstr "Nous contacter"
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: admin/classes/class-commenting-block-admin.php:798
+#: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "commentaire supprimé de"
 
@@ -75,8 +75,8 @@ msgid ""
 "For premium support and help with customizing this plugin for your business "
 "needs."
 msgstr ""
-"Pour un support premium et de l'aide pour personnaliser ce plugin pour votre entreprise "
-"Besoins."
+"Pour un support premium et de l'aide pour personnaliser ce plugin pour votre "
+"entreprise Besoins."
 
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
@@ -110,7 +110,7 @@ msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 msgid "multidots"
 msgstr "multidots"
 
-#: admin/classes/class-commenting-block-admin.php:878
+#: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr "Aucun commentaire trouvé."
 
@@ -126,9 +126,13 @@ msgstr "Notifier l'administrateur du site"
 msgid "Plugin Developer"
 msgstr "Développeur de plugins"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
 msgstr "a répondu"
+
+#: admin/classes/class-commenting-block-admin.php:790
+msgid "resolved thread"
+msgstr "thread résolu"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"
@@ -140,7 +144,9 @@ msgstr "Paramètres sauvegardés!"
 
 #: admin/partials/commenting-block-settings-page.php:27
 msgid "Thanks for installing Google Doc-Style Editorial Commenting Plugin."
-msgstr "Merci d'avoir installé le plugin de commentaire éditorial de Google Doc-Style."
+msgstr ""
+"Merci d'avoir installé le plugin de commentaire éditorial de Google Doc-"
+"Style."
 
 #. Description of the plugin
 msgid ""

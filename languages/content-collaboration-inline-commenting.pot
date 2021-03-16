@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-09 08:21+0000\n"
+"POT-Creation-Date: 2021-03-16 06:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Loco-Version: 2.5.1; wp-5.6.2\n"
 "X-Domain: content-collaboration-inline-commenting"
 
-#: admin/classes/class-commenting-block-admin.php:796
+#: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
 msgstr ""
 
@@ -33,21 +33,21 @@ msgstr ""
 msgid "About Plugin"
 msgstr ""
 
-#: admin/classes/class-commenting-block-email-templates.php:226
+#: admin/classes/class-commenting-block-email-templates.php:225
 msgid "Assigned to"
 msgstr ""
 
-#: admin/classes/class-commenting-block-email-templates.php:252
-#: admin/classes/class-commenting-block-email-templates.php:273
+#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr ""
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr ""
 
-#: admin/classes/class-commenting-block-email-templates.php:246
-#: admin/classes/class-commenting-block-email-templates.php:267
+#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:266
 msgid "Comments"
 msgstr ""
 
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: admin/classes/class-commenting-block-admin.php:798
+#: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 msgid "multidots"
 msgstr ""
 
-#: admin/classes/class-commenting-block-admin.php:878
+#: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr ""
 
@@ -125,8 +125,12 @@ msgstr ""
 msgid "Plugin Developer"
 msgstr ""
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
+msgstr ""
+
+#: admin/classes/class-commenting-block-admin.php:790
+msgid "resolved thread"
 msgstr ""
 
 #: admin/partials/commenting-block-settings-page.php:21

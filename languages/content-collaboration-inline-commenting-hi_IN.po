@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-10 09:05+0000\n"
+"PO-Revision-Date: 2021-03-16 07:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: Hindi\n"
 "Language: hi_IN\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.5.1; wp-5.7\n"
 "X-Domain: content-collaboration-inline-commenting"
 
-#: admin/classes/class-commenting-block-admin.php:796
+#: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
 msgstr " पर"
 
@@ -32,21 +32,21 @@ msgstr "%s — %s"
 msgid "About Plugin"
 msgstr "प्लगइन के बारे में"
 
-#: admin/classes/class-commenting-block-email-templates.php:226
+#: admin/classes/class-commenting-block-email-templates.php:225
 msgid "Assigned to"
 msgstr "को सौंपना"
 
-#: admin/classes/class-commenting-block-email-templates.php:252
-#: admin/classes/class-commenting-block-email-templates.php:273
+#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr "इस टिप्पणी को देखने के लिए यहां क्लिक करें"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr "टिप्पणी की"
 
-#: admin/classes/class-commenting-block-email-templates.php:246
-#: admin/classes/class-commenting-block-email-templates.php:267
+#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:266
 msgid "Comments"
 msgstr "टिप्पणियाँ"
 
@@ -62,7 +62,7 @@ msgstr "संपर्क करें"
 msgid "Dashboard"
 msgstr "डैशबोर्ड"
 
-#: admin/classes/class-commenting-block-admin.php:798
+#: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "की टिप्पणी को हटा दिया गया"
 
@@ -75,8 +75,8 @@ msgid ""
 "For premium support and help with customizing this plugin for your business "
 "needs."
 msgstr ""
-"अपने व्यवसाय के लिए इस प्लगइन को कस्टमाइज़ करने में प्रीमियम सहायता और मदद के लिए "
-"जरूरत है।"
+"अपने व्यवसाय के लिए इस प्लगइन को कस्टमाइज़ करने में प्रीमियम सहायता और मदद "
+"के लिए जरूरत है।"
 
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
@@ -110,7 +110,7 @@ msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 msgid "multidots"
 msgstr "multidots"
 
-#: admin/classes/class-commenting-block-admin.php:878
+#: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr "कोई टिप्पणी नहीं मिली।"
 
@@ -126,13 +126,17 @@ msgstr "साइट व्यवस्थापक को सूचित क�
 msgid "Plugin Developer"
 msgstr "प्लगइन डेवलपर"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
 msgstr "ने उत्तर दिया"
 
+#: admin/classes/class-commenting-block-admin.php:790
+msgid "resolved thread"
+msgstr "सुलझा हुआ धागा"
+
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"
-msgstr "Settings"
+msgstr "समायोजन"
 
 #: admin/partials/commenting-block-settings-page.php:50
 msgid "Settings saved!"
