@@ -3,3 +3,4 @@ composer.json
 composer.lock
 vendor
 .vscode
+.DS_Store
