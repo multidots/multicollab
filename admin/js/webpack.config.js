@@ -2,7 +2,7 @@ module.exports = {
     entry: './blockJS/block.js',
     output: {
         path: __dirname,
-        filename: 'blockJS/block.build.js',
+        filename: 'blockJS/block.build.min.js',
     },
     module: {
         loaders: [
