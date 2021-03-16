@@ -858,7 +858,7 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-title'>
 									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span> ";
 
-					if ( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] || 'true' === $c['resolved'] ) {
+					if ( 'deleted comment of' === $c['status'] || __( 'resolved thread', 'content-collaboration-inline-commenting'  ) === $c['status'] || 'true' === $c['resolved'] ) {
 						$html .= esc_html( $commented_on_text );
 					} else {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . "</a>";
