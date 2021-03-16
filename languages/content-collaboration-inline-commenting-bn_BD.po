@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-16 06:59+0000\n"
+"PO-Revision-Date: 2021-03-16 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Bengali (Bangladesh)\n"
 "Language: bn_BD\n"
@@ -65,6 +65,10 @@ msgstr "ড্যাশবোর্ড"
 #: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "মুছে ফেলা মন্তব্য"
+
+#: admin/classes/class-commenting-block-admin.php:136
+msgid "Editorial Comments"
+msgstr "সম্পাদকীয় মন্তব্য"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
@@ -133,6 +137,10 @@ msgstr "জবাব দিল"
 #: admin/classes/class-commenting-block-admin.php:790
 msgid "resolved thread"
 msgstr "সমাধান থ্রেড"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "Save Changes"
+msgstr "পরিবর্তনগুলোর সংরক্ষন"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"

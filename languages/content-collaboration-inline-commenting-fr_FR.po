@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-16 07:10+0000\n"
+"PO-Revision-Date: 2021-03-16 12:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -65,6 +65,10 @@ msgstr "Tableau de bord"
 #: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "commentaire supprimé de"
+
+#: admin/classes/class-commenting-block-admin.php:136
+msgid "Editorial Comments"
+msgstr "Commentaires éditoriaux"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
@@ -133,6 +137,10 @@ msgstr "a répondu"
 #: admin/classes/class-commenting-block-admin.php:790
 msgid "resolved thread"
 msgstr "thread résolu"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "Save Changes"
+msgstr "Sauvegarder les modifications"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"

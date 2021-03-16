@@ -57,7 +57,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                                         </div>
                                         <label for="cf_admin_notif"><?php esc_html_e( 'Notify site admin', 'content-collaboration-inline-commenting' ); ?> (<?php echo esc_html( get_option( 'admin_email') ) ?>) <?php esc_html_e( 'for all new comments even if not mentioned.', 'content-collaboration-inline-commenting' ); ?></label>
                                     </div>
-                                    <?php submit_button( "Save Changes" ); ?>
+                                    <?php submit_button( __( 'Save Changes', 'content-collaboration-inline-commenting' )); ?>
                                 </div>
                             </div>
                         </div>

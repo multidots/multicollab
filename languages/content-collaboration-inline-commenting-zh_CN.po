@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-16 07:12+0000\n"
+"PO-Revision-Date: 2021-03-16 12:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: Chinese (China)\n"
 "Language: zh_CN\n"
@@ -65,6 +65,10 @@ msgstr "仪表板"
 #: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "已删除的评论"
+
+#: admin/classes/class-commenting-block-admin.php:136
+msgid "Editorial Comments"
+msgstr "编辑评论"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
@@ -131,6 +135,10 @@ msgstr "回覆"
 #: admin/classes/class-commenting-block-admin.php:790
 msgid "resolved thread"
 msgstr "解决的线程"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "Save Changes"
+msgstr "Save Changes"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"
