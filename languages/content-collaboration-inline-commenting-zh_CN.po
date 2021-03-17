@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-16 12:45+0000\n"
+"PO-Revision-Date: 2021-03-17 05:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: Chinese (China)\n"
 "Language: zh_CN\n"
@@ -138,7 +138,7 @@ msgstr "解决的线程"
 
 #: admin/partials/commenting-block-settings-page.php:60
 msgid "Save Changes"
-msgstr "Save Changes"
+msgstr "保存更改"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"
