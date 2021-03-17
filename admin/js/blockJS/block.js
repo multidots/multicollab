@@ -21,8 +21,9 @@ $( window ).on('load', function () {
             clearInterval( loadComments );
 
             // Appending history popup on load.
-            const customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
-            $( '.edit-post-layout' ).append( customHistoryPopup );
+            let customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
+            customHistoryPopup = DOMPurify.sanitize( customHistoryPopup );
+            $( '.edit-post-layout' ).append( customHistoryPopup ); // phpcs:ignore
 
             // Adjusting edit post header height
             var headerHeight = $('.edit-post-layout .edit-post-header').outerHeight();
@@ -81,7 +82,7 @@ function showSettings() {
         let commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
         commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
 
-        const customButtons = '<div class="components-dropdown custom-buttons"><span aria-expanded="false" class="components-button has-icon" aria-label="Tools" title="Editorial Comments Settings"><span id="history-toggle" data-count="0"><img src="' + commentingPluginUrl + 'admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>';
+        const customButtons = `<div class="components-dropdown custom-buttons"><span aria-expanded="false" class="components-button has-icon" aria-label="Tools" title="Editorial Comments Settings"><span id="history-toggle" data-count="0"><img src="${commentingPluginUrl}admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>`;
 
         let loadAttempts = 0;
         const loadIcons = setInterval(function () {
@@ -90,9 +91,9 @@ function showSettings() {
             if (loadAttempts >= 10 || (1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length)) {
                 // Same condition used (#history-toggle.length) as WordPress wipes out it some times.
                 if (0 === $('.edit-post-header-toolbar__left').length) {
-                    $('.edit-post-header-toolbar').append(customButtons);
+                    $('.edit-post-header-toolbar').append(DOMPurify.sanitize( customButtons )); // phpcs:ignore
                 } else {
-                    $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(customButtons);
+                    $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(DOMPurify.sanitize( customButtons )); // phpcs:ignore
                 }
             }
 
@@ -206,7 +207,8 @@ function bring_back_comments() {
                 $.each(timestamps, function (el, t) {
                     $('#' + t).removeClass('publish').addClass('reverted_back added');
                     /*taking extra care to display new threads*/
-                    $('head').append('<style>[id="' + t + '"]{display: block !important}</style>');
+                    var appendStyle = `<style>[id="${t}"]{display: block !important}</style>`
+                    $('head').append(DOMPurify.sanitize( appendStyle )); // phpcs:ignore
                 });
             });
         }

@@ -606,6 +606,7 @@ class Commenting_block_Admin {
 			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . '/admin/js/blockJS/block.build.min.js', array(
 				'jquery',
 				'cf-mark',
+				'cf-dom-purify',
 				'wp-blocks',
 				'wp-i18n',
 				'wp-element',
