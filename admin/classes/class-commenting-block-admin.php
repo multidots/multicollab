@@ -603,7 +603,7 @@ class Commenting_block_Admin {
 			wp_enqueue_script( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify' ), $this->version, false );
 			wp_enqueue_script( 'cf-mark', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-dom-purify', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . '/admin/assets/js/src/block.build.min.js', array(
+			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . '/admin/assets/js/dist/block.build.min.js', array(
 				'jquery',
 				'cf-mark',
 				'cf-dom-purify',
