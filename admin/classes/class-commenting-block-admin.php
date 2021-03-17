@@ -603,7 +603,7 @@ class Commenting_block_Admin {
 			wp_enqueue_script( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify' ), $this->version, false );
 			wp_enqueue_script( 'cf-mark', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-dom-purify', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . '/admin/assets/js/dist/block.build.min.js', array(
+			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . 'admin/assets/js/dist/block.build.min.js', array(
 				'jquery',
 				'cf-mark',
 				'cf-dom-purify',
@@ -631,6 +631,22 @@ class Commenting_block_Admin {
 
 			wp_enqueue_script( 'jquery-ui-draggable' );
 			wp_enqueue_script( 'jquery-ui-droppable' );
+
+			wp_enqueue_script(
+				'cf-acitivity-center',
+				COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCenter.build.min.js',
+				[
+					'wp-plugins',
+					'wp-editor',
+					'wp-edit-post',
+					'wp-i18n',
+					'wp-element',
+					'wp-components',
+					'wp-data'
+				],
+				'1.3.0',
+				true
+			);
 		}
 
 	}
