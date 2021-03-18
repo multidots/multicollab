@@ -178,7 +178,6 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 = 1.2.0 - 12.03.2021 =
 * New - Copy/Paste content gets formatted when we add in the editor. If a url is pasted then that converts into a clickable url.
 * New - Deleted users content reassigned to the new assigned user.
-* New - Multilingual Compatible.
 * Fixed - In activity center edit/delete operation is fixed.
 * Fixed - Multiple deletion operations of comments get fixed.
 * Fixed - Do not allow whitespace on edit reply.
