@@ -6,15 +6,34 @@ const { registerPlugin } = wp.plugins;
 const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editPost;
 const { PanelBody, PanelRow } = wp.components;
 
-registerPlugin( "cf-activity-center", {
-    icon: "admin-plugins",
-    render: () => {
+
+class Comments extends React.Component {
+    constructor( props ) {
+        super( props )
+    }
+
+    componentDidMount() {
+        const url = `${activityLocalizer.apiUrl}/cf/v2/activities`;
+        axios.get( url, {
+            params: {
+                postID: 58
+            }
+        } )
+        .then( ( res ) => {
+            console.log( res.data )
+        } )
+        .catch( ( error ) => {
+            console.log( error )
+        } )
+    }
+
+    render() {
         return (
             <Fragment>
                 <PluginSidebarMoreMenuItem target="cf-activity-center">
                     { __( "Activity Center", "cf-activity-center" ) }
                 </PluginSidebarMoreMenuItem>
-                    <PluginSidebar
+                <PluginSidebar
                         name="cf-activity-center"
                         title={ __( "Activity Center", "cf-activity-center" ) }
                     >
@@ -27,4 +46,9 @@ registerPlugin( "cf-activity-center", {
             </Fragment>
         )
     }
+}
+
+registerPlugin( "cf-activity-center", {
+    icon: "admin-plugins",
+    render: Comments
 });

@@ -625,7 +625,7 @@ class Commenting_block_Admin {
 			wp_enqueue_script( 'jquery-ui-droppable' );
 
 			wp_enqueue_script(
-				'cf-acitivity-centre',
+				'cf-activity-centre',
 				COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCentre.build.min.js',
 				[
 					'wp-plugins',

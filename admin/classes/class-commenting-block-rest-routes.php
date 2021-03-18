@@ -27,9 +27,10 @@ class Commenting_Block_Rest_Routes {
      */
     public function create_rest_routes() {
         register_rest_route( $this->namespace, '/activities', [
-            'methods'  => 'GET',
-            'callback' => [ $this, 'get_activities' ],
-            'permission_callback' => [ $this, 'check_activity_permits' ]
+            'methods'             => 'GET',
+            'callback'            => [ $this, 'get_activities' ],
+            'permission_callback' => [ $this, 'check_activity_permits' ],
+			'args'                => [ 'postID' ]
         ] );
     }
 
@@ -41,7 +42,7 @@ class Commenting_Block_Rest_Routes {
         // $limit           = filter_input( INPUT_POST, "limit", FILTER_SANITIZE_NUMBER_INT );
 		// $limit           = isset( $limit ) ? $limit : 10;
 		// $current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
-
+		echo '<pre>';echo print_r( $_GET['postID'] );echo '</pre>';die('hard');
 		$limit = 10;
 		$current_post_id = 58;
 
