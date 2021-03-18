@@ -8,7 +8,7 @@ const BUILD_DIR = path.resolve( __dirname, 'dist' );
 // Entry Scripts
 const entry = {
     block: `${JS_DIR}/block.js`,
-    activityCenter: `${JS_DIR}/activityCenter.js`,
+    activityCentre: `${JS_DIR}/activityCentre.js`,
 }
 
 // Output Scripts

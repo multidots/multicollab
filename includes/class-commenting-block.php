@@ -117,6 +117,11 @@ class Commenting_block {
 		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-admin.php'; // phpcs:ignore
 
 		/**
+		 * This class is responsible for defining all custom rest route endpoints.
+		 */
+		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-rest-routes.php'; // phpcs:ignore
+
+		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */

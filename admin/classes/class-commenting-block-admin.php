@@ -8,14 +8,6 @@
  * @package    content-collaboration-inline-commenting
  */
 
-/**
- * The admin-specific functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
- * @package    content-collaboration-inline-commenting
- */
 class Commenting_block_Admin {
 
 	/**
@@ -633,8 +625,8 @@ class Commenting_block_Admin {
 			wp_enqueue_script( 'jquery-ui-droppable' );
 
 			wp_enqueue_script(
-				'cf-acitivity-center',
-				COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCenter.build.min.js',
+				'cf-acitivity-centre',
+				COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCentre.build.min.js',
 				[
 					'wp-plugins',
 					'wp-editor',
@@ -647,6 +639,10 @@ class Commenting_block_Admin {
 				'1.3.0',
 				true
 			);
+			wp_localize_script( 'cf-activity-centre', 'activityLocalizer', [
+				'nonce' => wp_create_nonce( 'wp_rest' ),
+				'apiUrl' => home_url( '/wp-json' )
+			] );
 		}
 
 	}
