@@ -92,14 +92,3 @@ cf_run_commenting_block();
  * @since 1.0.4
  */
 add_action( 'activated_plugin', array( 'Commenting_block', 'cf_redirect_on_activate' ) );
-
-
-/**
- * Load plugin textdomain.
- *
- * @since 1.2.0
- */
-function cf_load_textdomain() {
-	load_plugin_textdomain( 'content-collaboration-inline-commenting', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-}
-add_action( 'init', 'cf_load_textdomain' );
