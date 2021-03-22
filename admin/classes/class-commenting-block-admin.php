@@ -133,7 +133,7 @@ class Commenting_block_Admin {
 	 * @return array mixed Updated list of default columns.
 	 */
 	public function cf_columns_head( $defaults ) {
-		$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg" width=17/>' . ' Editorial Comments';
+		$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg" width=17/>' . __( 'Editorial Comments', 'content-collaboration-inline-commenting' );
 
 		return $defaults;
 	}
@@ -603,9 +603,10 @@ class Commenting_block_Admin {
 			wp_enqueue_script( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify' ), $this->version, false );
 			wp_enqueue_script( 'cf-mark', COMMENTING_BLOCK_URL . '/admin/js/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-dom-purify', COMMENTING_BLOCK_URL . '/admin/js/purify.min.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . '/admin/js/blockJS/block.build.js', array(
+			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . '/admin/js/blockJS/block.build.min.js', array(
 				'jquery',
 				'cf-mark',
+				'cf-dom-purify',
 				'wp-blocks',
 				'wp-i18n',
 				'wp-element',
@@ -787,7 +788,7 @@ class Commenting_block_Admin {
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['username']          = $username;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['profileURL']        = $profile_url;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dtTime']            = $dtTime;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = 'resolved thread';
+					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = __( 'resolved thread', 'content-collaboration-inline-commenting' );
 				}
 
 				$comment_count = 0;
@@ -858,7 +859,7 @@ class Commenting_block_Admin {
 					$html .= "<div class='user-title'>
 									<span class='user-name'>" . esc_html( $c['username'] ) . " " . esc_html( $c['status'] ) . "</span> ";
 
-					if ( 'deleted comment of' === $c['status'] || 'resolved thread' === $c['status'] || 'true' === $c['resolved'] ) {
+					if ( 'deleted comment of' === $c['status'] || __( 'resolved thread', 'content-collaboration-inline-commenting'  ) === $c['status'] || 'true' === $c['resolved'] ) {
 						$html .= esc_html( $commented_on_text );
 					} else {
 						$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . "</a>";

@@ -240,7 +240,7 @@ export default class Board extends React.Component {
                     if( $( `#${el} .cf-board-assigned-to` ).length ) {
                         $( `#${el} .cf-board-assigned-to` ).remove();
                     }
-                    $( assignedUserDetails ).insertBefore( `#${el} .boardTop` )
+                    $( assignedUserDetails ).insertBefore( DOMPurify.sanitize( `#${el} .boardTop` ) ); // phpcs:ignore
                 }
 
                 // Update hasComment prop for dynamic button text.
