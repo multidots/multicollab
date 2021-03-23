@@ -640,8 +640,9 @@ class Commenting_block_Admin {
 				true
 			);
 			wp_localize_script( 'cf-activity-centre', 'activityLocalizer', [
-				'nonce' => wp_create_nonce( 'wp_rest' ),
-				'apiUrl' => home_url( '/wp-json' )
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+				'apiUrl'  => home_url( '/wp-json' ),
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			] );
 		}
 
