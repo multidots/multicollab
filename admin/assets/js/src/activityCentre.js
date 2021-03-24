@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 const { __ } = wp.i18n;
 const { Fragment } = wp.element;
 const { registerPlugin } = wp.plugins;
 const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editPost;
-const { PanelBody, PanelRow } = wp.components;
+const { PanelBody, TabPanel, ToggleControl } = wp.components;
 import icons from './component/icons';
 const $ = jQuery; // eslint-disable-line
 
@@ -12,43 +12,20 @@ class Comments extends React.Component {
     constructor( props ) {
         super( props )
         this.state = {
-            isLoading: true,
-            comments: [],
             total: 0,
             limit: 10,
             offset: 0,
+            threads: [],
+            isLoading: false,
+            showComments: true,
         }
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
         // Binding Methods.
-        this.resolveThread = this.resolveThread.bind( this )
-        this.loadmore = this.loadmore.bind( this )
-    }
-
-    /**
-     * Get Initial Comments
-     */
-    getInitialComments() {
-        const url = `${activityLocalizer.apiUrl}/cf/v2/activities`;
-        axios.get( url, {
-            params: {
-                postID: this.postID,
-                limit: this.state.limit,
-                offset: this.state.offset
-            }
-        } )
-        .then( ( res ) => {
-            var comments = [ ...this.state.comments ];
-            comments.push( Object.values( res.data.comments ).reverse() )
-            this.setState({
-                comments: comments,
-                total: res.data.total
-            })
-        } )
-        .catch( ( error ) => {
-            console.log( error )
-        } )
+        this.loadmore           = this.loadmore.bind( this );
+        this.resolveThread      = this.resolveThread.bind( this );
+        this.handleShowComments = this.handleShowComments.bind( this );
     }
 
     /**
@@ -64,11 +41,12 @@ class Comments extends React.Component {
             }
         } )
         .then( ( res ) => {
-            var comments = [ ...this.state.comments ];
-            comments.push( Object.values( res.data.comments ).reverse() )
+            var threads = [ ...this.state.threads ];
+            threads.push( res.data.threads )
             this.setState({
-                comments: comments,
-                total: res.data.total
+                threads: threads,
+                total: res.data.total,
+                isLoading: false
             })
         } )
         .catch( ( error ) => {
@@ -85,7 +63,8 @@ class Comments extends React.Component {
         const newOffset = parseInt( this.state.offset, 10 ) + parseInt( this.state.limit, 10 );
         this.setState({
             limit: newLimit,
-            offset: newOffset
+            offset: newOffset,
+            isLoading: true
         })
     }
 
@@ -119,126 +98,217 @@ class Comments extends React.Component {
         
     }
 
-    componentDidMount() {
-        this.getComments(); // Calling getComments() to get the comments related to this post.
-    }
-
-    componentDidUpdate( prevProps, prevState ) {
-        var This = this;
-        const unsubscribe = wp.data.subscribe( function () {
-            let select = wp.data.select('core/editor');
-            var isSavingPost = select.isSavingPost();
-            var isAutosavingPost = select.isAutosavingPost();
+    /**
+     * Track if post updated or published.
+     */
+    isPostUpdated() {
+        const _this = this;
+        wp.data.subscribe( function () {
+            let select                    = wp.data.select('core/editor');
+            var isSavingPost              = select.isSavingPost();
+            var isAutosavingPost          = select.isAutosavingPost();
             var didPostSaveRequestSucceed = select.didPostSaveRequestSucceed();
             if ( isSavingPost && !isAutosavingPost && didPostSaveRequestSucceed ) {
-                This.setState({
-                    comments: [],
+                _this.setState({
+                    threads: [],
                     limit: 10,
                     offset: 0
                 })
-                This.getInitialComments();
-                console.log('submitted');
-
+                _this.getComments();
+                console.log( 'submitted' )
             }
-            unsubscribe();
         })
-
-        // If offset changes then load more comments.
-        // if( prevState.offset !== this.state.offset ) {
-        //     This.getComments();
-        // }
     }
 
+    /**
+     * Handle Show Comments
+     */
+    handleShowComments( e ) {
+        this.setState({
+            showComments: ! this.state.showComments
+        })
+        $( '#comments-toggle' ).trigger( 'click' );
+    }
+
+    componentDidMount() {
+        this.getComments(); // Calling getComments() to get the comments related to this post.
+        this.isPostUpdated();
+
+    }
+
+    componentDidUpdate( prevProps, prevState ) {
+        // If offset changes then load more comments.
+        if( prevState.offset !== this.state.offset ) {
+            this.getComments();
+        }
+    }
+
+
     render() {
-        const { comments, total, offset, limit } = this.state;
+        const { threads, total, offset, limit, isLoading, showComments } = this.state;
         return (
             <Fragment>
                 <PluginSidebarMoreMenuItem target="cf-activity-center">
-                    { __( "Activity Center", "cf-activity-center" ) }
+                    { __( "Multicollab", "cf-activity-center" ) }
                 </PluginSidebarMoreMenuItem>
                 <PluginSidebar
                         name="cf-activity-center"
-                        title={ __( "Activity Center", "cf-activity-center" ) }
+                        title={ __( "Multicollab", "cf-activity-center" ) }
                 >
-                    <PanelBody>
-                        <div className="cf-activity-centre js-activity-centre">
-                            { undefined !== comments && comments.map( ( cmnts ) => {
-                                return(
-                                    cmnts.map( ( cmntChunks ) => {
-                                        const cmnt = Object.values( cmntChunks );
-                                        return(
-                                            cmnt.map( ( c ) => {
-                                                return(
-                                                    <div className="user-data-row" id={ c.dataid } key={ c.dataid }>
-                                                        <div className="user-data-box">
-                                                            <div className="user-avatar">
-                                                                <img alt={ c.username } src={ c.profileURL } />
-                                                            </div>
-                                                            <div className="user-data">
-                                                                <div className="user-data-header">
-                                                                    <span class="user-name">{ c.username } </span>
-                                                                    <span class="user-commented-date">{ c.dtTime }</span>
-                                                                </div>
-                                                                <div className="user-commented-on">
-                                                                    <span className="user-comment-status">{ __( c.status, 'content-collaboration-inline-commenting' ) }</span>
-                                                                    <blockquote>
-                                                                        { __( 'resolved thread', 'content-collaboration-inline-commenting' ) === c.status
-                                                                        || __( 'deleted comment of', 'content-collaboration-inline-commenting' ) === c.status
-                                                                        || 'true' === c.resolved ?
-                                                                            (
-                                                                                __( c.commented_on_text, 'content-collaboration-inline-commenting' )
-                                                                            ) : (
-                                                                                <a class="user-commented-on" data-id={ c.dataid } href="javascript:void(0)">{ __( c.commented_on_text, 'content-collaboration-inline-commenting' ) }</a>
-                                                                            )
-                                                                        }
-                                                                    </blockquote>
-                                                                </div>
-                                                                <div class="user-comment" dangerouslySetInnerHTML={{ __html: c.thread }}></div>
-                                                                { 'true' !== c.resolved && (
-                                                                    <div className="user-action">
-                                                                        { __( 'commented on', 'content-collaboration-inline-commenting' ) === c.status && (
-                                                                            <React.Fragment>
-                                                                                <a href="javascript:void(0)"
-                                                                                    className="user-cmnt-reply"
-                                                                                    data-elid={ c.dataid }
-                                                                                >
-                                                                                    Reply
-                                                                                </a>
-                                                                                <a href="javascript:void(0)"
-                                                                                    className="user-thread-resolve js-resolve-comment"
-                                                                                    onClick={ this.resolveThread.bind( this ) }
-                                                                                    data-elid={ c.dataid }
-                                                                                >
-                                                                                    Resolve
-                                                                                </a>
-                                                                            </React.Fragment>
-                                                                        ) }
-                                                                        { __( 'replied on', 'content-collaboration-inline-commenting' ) === c.status && (
-                                                                            <React.Fragment>
-                                                                                <a href="javascript:void(0)"
-                                                                                    className="user-cmnt-reply"
-                                                                                    data-elid={ c.dataid }
-                                                                                >
-                                                                                    Delete
-                                                                                </a>
-                                                                            </React.Fragment>
-                                                                        ) }
+                    <TabPanel className="my-tab-panel"
+                        tabs={ [
+                            {
+                                name: 'cf-activity-centre',
+                                title: 'Activity Centre',
+                            },
+                            {
+                                name: 'cf-settings',
+                                title: 'Settings',
+                            },
+                        ] }>
+                        {
+                            ( tab ) => {
+                                if( 'cf-activity-centre' === tab.name ) {
+                                    return (
+                                        <div className="cf-activity-centre js-activity-centre">
+                                            { undefined !== threads && threads.length < 0 && (
+                                                <div className="user-data-row">
+                                                    <strong>{ __( 'No recent activities found!', 'content-collaboration-inline-commenting' ) }</strong>
+                                                </div>
+                                            ) }
+                                            { undefined !== threads && threads.map( ( thread ) => {
+                                                return (
+                                                    thread.map( ( th ) => {
+                                                        return(
+                                                            <div className="user-data-row" id={ th.elID } key={ th.elID }>
+                                                                {
+                                                                    th.activities.map( ( c, index ) => {
+                                                                        return (
+                                                                            <div className="user-data-box">
+                                                                                <div className="user-avatar">
+                                                                                    <img src={ c.userData.avatarUrl } alt={ c.userData.username } />
+                                                                                </div>
+                                                                                <div className="user-data">
+                                                                                    <div className="user-data-header">
+                                                                                        <span class="user-name">{ c.userData.username } </span>
+                                                                                        <time class="user-commented-date">{ c.timestamp }</time>
+                                                                                    </div>
+                                                                                    <div className="user-commented-on">
+                                                                                        { 0 >= index && (
+                                                                                            <React.Fragment>
+                                                                                                <span className="user-comment-status">{ __( 'Selected Text:', 'content-collaboration-inline-commenting' ) }</span>
+                                                                                                <blockquote>
+                                                                                                    { 'deleted' === c.status || 'true' === th.resolved ?
+                                                                                                        (
+                                                                                                            __( th.selectedText, 'content-collaboration-inline-commenting' )
+                                                                                                        ) : (
+                                                                                                            <a class="user-commented-on" data-id={ th.elID } href="javascript:void(0)">{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
+                                                                                                        )
+                                                                                                    }
+                                                                                                </blockquote>
+                                                                                            </React.Fragment>
+                                                                                        ) }
+                                                                                    </div>
+                                                                                    <div class="user-comment">
+                                                                                        { 0 < index && 'deleted' === c.status ? (
+                                                                                            <del dangerouslySetInnerHTML={{ __html: c.thread }}></del>
+                                                                                        ) : (
+                                                                                            <span dangerouslySetInnerHTML={{ __html: c.thread }}></span>
+                                                                                        ) }
+                                                                                    </div>
+                                                                                    { 'true' !== th.resolved && (
+                                                                                        <div className="user-action">
+                                                                                            { 'publish' === c.status && 0 >= index && (
+                                                                                                <React.Fragment>
+                                                                                                    <a href="javascript:void(0)"
+                                                                                                        className="user-cmnt-reply"
+                                                                                                        data-elid={ th.elID }
+                                                                                                    >
+                                                                                                        { __( 'Reply', 'content-collaboration-inline-commenting' ) }
+                                                                                                    </a>
+                                                                                                    <a href="javascript:void(0)"
+                                                                                                        className="user-thread-resolve js-resolve-comment"
+                                                                                                        onClick={ this.resolveThread.bind( this ) }
+                                                                                                        data-elid={ th.elID }
+                                                                                                    >
+                                                                                                        { __( 'Resolve', 'content-collaboration-inline-commenting' ) }
+                                                                                                    </a>
+                                                                                                </React.Fragment>
+                                                                                            ) }
+                                                                                            { 'publish' === c.status && 0 < index && (
+                                                                                                <React.Fragment>
+                                                                                                    <a href="javascript:void(0)"
+                                                                                                        className="user-cmnt-reply"
+                                                                                                        data-elid={ th.elID }
+                                                                                                    >
+                                                                                                        { __( 'Edit', 'content-collaboration-inline-commenting' ) }
+                                                                                                    </a>
+                                                                                                    <a href="javascript:void(0)"
+                                                                                                        className="user-cmnt-reply"
+                                                                                                        data-elid={ th.elID }
+                                                                                                    >
+                                                                                                        { __( 'Delete', 'content-collaboration-inline-commenting' ) }
+                                                                                                    </a>
+                                                                                                </React.Fragment>
+                                                                                            ) }
+                                                                                        </div>
+                                                                                    ) }
+                                                                                </div>
+                                                                            </div>
+                                                                        )
+                                                                    } )
+                                                                }
+                                                                { 'true' === th.resolved && undefined !== th.resolvedBy && (
+                                                                    <div className="user-data-box">
+                                                                        <div className="user-avatar">
+                                                                            <img src={ th.resolvedBy.avatarUrl } alt={ th.resolvedBy.username } />
+                                                                        </div>
+                                                                        <div className="user-data">
+                                                                            <div className="user-data-header">
+                                                                                <span class="user-name">{ th.resolvedBy.username } </span>
+                                                                                <time class="user-commented-date">{ th.resolvedTimestamp }</time>
+                                                                            </div>
+                                                                            <div className="user-comment">
+                                                                                <strong>{ __( 'Marked as resolved.', 'content-collaboration-inline-commenting' ) }</strong>
+                                                                            </div>
+                                                                        </div>
+
                                                                     </div>
                                                                 ) }
                                                             </div>
-                                                        </div>
-                                                    </div>
+                                                        )
+                                                    } )
                                                 )
-                                            } )
-                                        )
-                                    } )
-                                )
-                            } )}
-                            { total > (offset + limit) && (
-                                <a href="javascript:void(0)" className="cf-loadmore-activity js-loadmore" onClick={ this.loadmore.bind(this) }>Load More</a>
-                            )}
-                        </div>
-                    </PanelBody>
+                                            } ) }
+
+                                            { total > (offset + limit) && (
+                                                <a href="javascript:void(0)" className="cf-loadmore-activity js-loadmore" onClick={ this.loadmore.bind(this) }>
+                                                    { true ===  isLoading ? (
+                                                        __( 'Loading...', 'content-collaboration-inline-commenting' )
+                                                    ) :(
+                                                        __( 'Load More', 'content-collaboration-inline-commenting' )
+                                                    )}
+                                                </a>
+                                            )}
+                                        </div>
+                                    )
+                                }
+                                if( 'cf-settings' === tab.name ) {
+                                    return(
+                                        <PanelBody>
+                                            <ToggleControl
+                                                label="Show All Comments"
+                                                help={ showComments ? 'All comments will show on the content area.' : 'All comments will be hidden.' }
+                                                checked={ showComments }
+                                                onChange={ this.handleShowComments.bind( this ) }
+                                            />
+                                        </PanelBody>
+                                    )
+                                }
+                            }
+                        }
+                    </TabPanel>
+
                 </PluginSidebar>
             </Fragment>
         )

@@ -70,88 +70,51 @@ class Commenting_Block_Rest_Routes {
 			$current_post_id, $like, $limit, $offset
 		), ARRAY_A );
 
-		$total_comments = 0;
-		foreach ( $results as $v ) {
-			$dataid            = str_replace( '_', '', $v['meta_key'] );
-			$v                 = maybe_unserialize( $v['meta_value'] );
-			$comments          = $v['comments'];
-			$commented_on_text = $v['commentedOnText'];
-			$resolved          = isset( $v['resolved'] ) ? $v['resolved'] : 'false';
-
-			if ( 'true' === $resolved ) {
-
-				$udata = isset( $v['resolved_by'] ) ? $v['resolved_by'] : 0;
-				if ( ! array_key_exists( $udata, $userData ) ) {
-					$user_info = get_userdata( $udata );
-
-					$userData[ $udata ]['username']   = $username = $user_info->display_name;
-					$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-				} else {
-					$username    = $userData[ $udata ]['username'];
-					$profile_url = $userData[ $udata ]['profileURL'];
-				}
-
-				$timestamp = isset( $v['resolved_timestamp'] ) ? (int) $v['resolved_timestamp'] : '';
-				if ( ! empty( $timestamp ) ) {
-					$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
-				}
-
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dataid']            = $dataid;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['commented_on_text'] = $commented_on_text;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['username']          = $username;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['profileURL']        = $profile_url;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dtTime']            = $dtTime;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = __( 'resolved thread', 'content-collaboration-inline-commenting' );
+		$threads = [];
+		foreach( $results as $row ) {
+			$cmnts = [];
+			$elID = str_replace( '_', '', $row['meta_key'] );
+			$comments = maybe_unserialize( $row['meta_value'] );
+			// echo '<pre>';echo print_r( $comments );echo '</pre>';
+			foreach( $comments['comments'] as $timestamp => $comment ) {
+				$user_info = get_userdata( $comment['userData'] );
+				$cmnts[] = [
+					'status' => $comment['status'],
+					'timestamp' => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
+					'userData' => [
+						'username' => $user_info->display_name,
+						'avatarUrl' => get_avatar_url( $user_info->user_email ),
+					],
+					'thread' => $comment['thread']
+				];
 			}
 
-			$comment_count = 0;
-			foreach ( $comments as $timestamp => $c ) {
-
-				$cstatus        = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
-				$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
-				$comment_status = isset( $c['status'] ) ? $c['status'] : '';
-				$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
-
-				// Stop displaying history of comments in draft mode.
-				if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
-					continue;
+			$resolved_by = [];
+			if( 'true' === $comments['resolved'] ) {
+				if( isset( $comments['resolved_by'] ) ) {
+					$resolved_user = get_userdata( $comments['resolved_by'] );
+					$resolved_by = [
+						'username' => $resolved_user->display_name,
+						'avatarUrl' => get_avatar_url( $resolved_user->user_email ),
+					];
 				}
-
-				$udata = $c['userData'];
-
-				if ( ! array_key_exists( $udata, $userData ) ) {
-					$user_info = get_userdata( $udata );
-
-					$userData[ $udata ]['username']   = $username = $user_info->display_name;
-					$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-				} else {
-					$username    = $userData[ $udata ]['username'];
-					$profile_url = $userData[ $udata ]['profileURL'];
-				}
-
-				$thread = $c['thread'];
-				if ( ! empty( $timestamp ) ) {
-					$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
-				}
-
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $cstatus;
-				$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['resolved']          = $resolved;
-				$comment_count ++;
-				$total_comments ++;
 			}
+
+			$threads[] = [
+				'elID'              => $elID,
+				'activities'        => $cmnts,
+				'selectedText'      => $comments['commentedOnText'],
+				'resolved'          => isset( $comments['resolved'] ) ? $comments['resolved']: 'false',
+				'resolvedTimestamp' => isset( $comments['resolved_timestamp'] ) ? gmdate( $time_format . ' ' . $date_format, intval( $comments['resolved_timestamp'] ) ): '',
+				'resolvedBy'        => $resolved_by,
+			];
 		}
 
-        krsort( $prepareDataTable, SORT_NUMERIC );
 		$response = [
-			'comments' => $prepareDataTable,
-			'total' => $total
+			'threads' => $threads,
+			'total'   => $total,
 		];
+		// die();
 		return rest_ensure_response( $response );
     }
 
