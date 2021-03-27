@@ -39,8 +39,6 @@ class Commenting_Block_Rest_Routes {
 
     public function get_activities( $data ) {
        	$current_post_id = intval( $data->get_param( 'postID' ) );
-		$userData         = array();
-		$prepareDataTable = array();
 
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
@@ -64,10 +62,8 @@ class Commenting_Block_Rest_Routes {
 			SELECT *
 			FROM {$wpdb->prefix}postmeta
 			WHERE post_id=%d AND meta_key LIKE %s
-			ORDER BY meta_id DESC
-			LIMIT %d OFFSET %d
 			",
-			$current_post_id, $like, $limit, $offset
+			$current_post_id, $like
 		), ARRAY_A );
 
 		$threads = [];
@@ -75,7 +71,6 @@ class Commenting_Block_Rest_Routes {
 			$cmnts = [];
 			$elID = str_replace( '_', '', $row['meta_key'] );
 			$comments = maybe_unserialize( $row['meta_value'] );
-			// echo '<pre>';echo print_r( $comments );echo '</pre>';
 			foreach( $comments['comments'] as $timestamp => $comment ) {
 				$user_info = get_userdata( $comment['userData'] );
 				$cmnts[] = [
@@ -104,11 +99,16 @@ class Commenting_Block_Rest_Routes {
 				'elID'              => $elID,
 				'activities'        => $cmnts,
 				'selectedText'      => $comments['commentedOnText'],
-				'resolved'          => isset( $comments['resolved'] ) ? $comments['resolved']: 'false',
+				'resolved'          => isset( $comments['resolved'] ) ? $comments['resolved'] : 'false',
 				'resolvedTimestamp' => isset( $comments['resolved_timestamp'] ) ? gmdate( $time_format . ' ' . $date_format, intval( $comments['resolved_timestamp'] ) ): '',
 				'resolvedBy'        => $resolved_by,
+				'updatedAt'			=> $comments['updated_at'],
 			];
 		}
+
+		array_multisort( array_column( $threads, 'updatedAt' ), SORT_DESC, $threads );
+
+		// echo '<pre>';echo print_r( $threads );echo '</pre>';die();
 
 		$response = [
 			'threads' => $threads,

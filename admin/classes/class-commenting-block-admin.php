@@ -337,6 +337,7 @@ class Commenting_block_Admin {
 						$prev_state['comments'][ $deleted_timestamp ]['status'] = 'deleted';
 					}
 				}
+				$prev_state['updated_at'] = $current_timestamp;
 				update_post_meta( $post_ID, $el, $prev_state );
 				$metas[ $el ][0] = maybe_serialize( $prev_state );
 			}
@@ -364,6 +365,7 @@ class Commenting_block_Admin {
 						$prev_state['comments'][ $d ]['status'] = 'publish';
 						$new_comments[]                         = $d;
 					}
+					$prev_state['updated_at'] = $current_timestamp;
 					update_post_meta( $post_ID, $el, $prev_state );
 					$metas[ $el ][0] = maybe_serialize( $prev_state );
 				}
@@ -392,6 +394,7 @@ class Commenting_block_Admin {
 					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
 
 				}
+				$prev_state['updated_at'] = $current_timestamp;
 				update_post_meta( $post_ID, $el, $prev_state );
 				$metas[ $el ][0] = maybe_serialize( $prev_state );
 			}
@@ -440,10 +443,12 @@ class Commenting_block_Admin {
 									$prev_state['comments'][$unpublished_comment]['status'] = 'publish';
 								}
 							}
+							$prev_state['updated_at'] = $current_timestamp;
 							update_post_meta( $post_ID, $el, $prev_state );
 						}
 					}
 				} else {
+					$prev_state['updated_at'] = $current_timestamp;
 					update_post_meta( $post_ID, $el, $prev_state );
 				}
 
@@ -712,6 +717,7 @@ class Commenting_block_Admin {
 
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 			$superCareerData['comments'][ $timestamp ] = $arr;
+			$superCareerData['updated_at']             = $timestamp;
 			if ( $assign_to > 0 ) {
 				$superCareerData['assigned_to']         = $assign_to;
 				$superCareerData['sent_assigned_email'] = false;
@@ -720,6 +726,7 @@ class Commenting_block_Admin {
 			$superCareerData                           = array();
 			$superCareerData['comments'][ $timestamp ] = $arr;
 			$superCareerData['commentedOnText']        = $commentList['commentedOnText'];
+			$superCareerData['updated_at']             = $timestamp;
 			if ( $assign_to > 0 ) {
 				$superCareerData['assigned_to']         = $assign_to;
 				$superCareerData['sent_assigned_email'] = false;

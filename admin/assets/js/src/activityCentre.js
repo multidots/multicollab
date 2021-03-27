@@ -23,6 +23,7 @@ class Comments extends React.Component {
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
         // Binding Methods.
+        this.reply              = this.reply.bind( this );
         this.loadmore           = this.loadmore.bind( this );
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
@@ -99,6 +100,23 @@ class Comments extends React.Component {
     }
 
     /**
+     * Reply on a thread.
+     */
+    reply( e ) {
+        e.preventDefault();
+        var elID = e.target.dataset.elid;
+        var findMdSpan = '.mdspan-comment';
+        $( findMdSpan ).each( function() {
+            var datatext = $( this ).attr( 'datatext' );
+            if( elID === datatext ) {
+                $( '.cls-board-outer' ).removeClass( 'focus' ).removeAttr( 'style' ); // Resetting before trigger.
+                $( this ).attr( 'data-rich-text-format-boundary', 'true' );
+                $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } );
+            }
+        } );
+    }
+
+    /**
      * Track if post updated or published.
      */
     isPostUpdated() {
@@ -115,7 +133,6 @@ class Comments extends React.Component {
                     offset: 0
                 })
                 _this.getComments();
-                console.log( 'submitted' )
             }
         })
     }
@@ -184,7 +201,7 @@ class Comments extends React.Component {
                                                                 {
                                                                     th.activities.map( ( c, index ) => {
                                                                         return (
-                                                                            <div className="user-data-box">
+                                                                            <div className="user-data-box" key={ index }>
                                                                                 <div className="user-avatar">
                                                                                     <img src={ c.userData.avatarUrl } alt={ c.userData.username } />
                                                                                 </div>
@@ -223,6 +240,7 @@ class Comments extends React.Component {
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-cmnt-reply"
                                                                                                         data-elid={ th.elID }
+                                                                                                        onClick={ this.reply.bind( this ) }
                                                                                                     >
                                                                                                         { __( 'Reply', 'content-collaboration-inline-commenting' ) }
                                                                                                     </a>
