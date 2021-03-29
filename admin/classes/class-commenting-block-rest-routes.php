@@ -45,17 +45,6 @@ class Commenting_Block_Rest_Routes {
 		// Modify Query
 		global $wpdb;
 		$like   = $wpdb->esc_like( '_el' ) . '%';
-		$limit  = intval( $data->get_param( 'limit' ) );
-		$offset = intval( $data->get_param( 'offset' ) );
-
-		$total = $wpdb->get_var( $wpdb->prepare("
-			SELECT COUNT(meta_id) as total
-			FROM {$wpdb->prefix}postmeta
-			WHERE post_id=%d AND meta_key LIKE %s
-			ORDER BY meta_id DESC
-			",
-			$current_post_id, $like,
-		) );
 
 		$results = $wpdb->get_results( $wpdb->prepare("
 			SELECT *
@@ -73,13 +62,14 @@ class Commenting_Block_Rest_Routes {
 			foreach( $comments['comments'] as $timestamp => $comment ) {
 				$user_info = get_userdata( $comment['userData'] );
 				$cmnts[] = [
-					'status' => $comment['status'],
-					'timestamp' => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
-					'userData' => [
-						'username' => $user_info->display_name,
+					'id'         => $timestamp,
+					'status'     => $comment['status'],
+					'timestamp'  => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
+					'userData'   => [
+						'username'  => $user_info->display_name,
 						'avatarUrl' => get_avatar_url( $user_info->user_email ),
 					],
-					'thread' => $comment['thread']
+					'thread'     => $comment['thread']
 				];
 			}
 
@@ -109,7 +99,6 @@ class Commenting_Block_Rest_Routes {
 
 		$response = [
 			'threads' => $threads,
-			'total'   => $total,
 		];
 		return rest_ensure_response( $response );
     }

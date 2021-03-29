@@ -13,8 +13,6 @@ class Comments extends React.Component {
         super( props )
         this.state = {
             total: 0,
-            limit: 10,
-            offset: 0,
             threads: [],
             isLoading: false,
             showComments: true,
@@ -23,8 +21,9 @@ class Comments extends React.Component {
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
         // Binding Methods.
+        this.edit               = this.edit.bind( this );
         this.reply              = this.reply.bind( this );
-        this.loadmore           = this.loadmore.bind( this );
+        this.delete             = this.delete.bind( this );
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
     }
@@ -37,8 +36,6 @@ class Comments extends React.Component {
         axios.get( url, {
             params: {
                 postID: this.postID,
-                limit: this.state.limit,
-                offset: this.state.offset
             }
         } )
         .then( ( res ) => {
@@ -46,27 +43,13 @@ class Comments extends React.Component {
             threads.push( res.data.threads )
             this.setState({
                 threads: threads,
-                total: res.data.total,
+                total: threads.length ? threads.length : 0,
                 isLoading: false
             })
         } )
         .catch( ( error ) => {
             console.log( error )
         } )
-    }
-
-    /**
-     * Load More Comments.
-     */
-    loadmore( e ) {
-        e.preventDefault();
-        const newLimit = this.state.limit;
-        const newOffset = parseInt( this.state.offset, 10 ) + parseInt( this.state.limit, 10 );
-        this.setState({
-            limit: newLimit,
-            offset: newOffset,
-            isLoading: true
-        })
     }
 
     /**
@@ -114,6 +97,26 @@ class Comments extends React.Component {
                 $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } );
             }
         } );
+    }
+
+    /**
+     * Edit a message.
+     */
+    edit( e ) {
+        e.preventDefault();
+        var elID = e.target.dataset.elid;
+        var editID = e.target.dataset.editid;
+        $( `#${elID} #${editID} .js-edit-comment` ).trigger( 'click' );
+    }
+
+    /**
+     * Delete a message.
+     */
+    delete( e ) {
+        e.preventDefault();
+        var elID = e.target.dataset.elid;
+        var deleteID = e.target.dataset.deleteid;
+        $( `#${elID} #${deleteID} .js-trash-comment` ).trigger( 'click' );
     }
 
     /**
@@ -271,12 +274,16 @@ class Comments extends React.Component {
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-cmnt-reply"
                                                                                                         data-elid={ th.elID }
+                                                                                                        data-editid={ c.id }
+                                                                                                        onClick={ this.edit.bind( this ) }
                                                                                                     >
                                                                                                         { __( 'Edit', 'content-collaboration-inline-commenting' ) }
                                                                                                     </a>
                                                                                                     <a href="javascript:void(0)"
-                                                                                                        className="user-cmnt-reply"
+                                                                                                        className="user-cmnt-delete"
                                                                                                         data-elid={ th.elID }
+                                                                                                        data-deleteid={ c.id }
+                                                                                                        onClick={ this.delete.bind( this ) }
                                                                                                     >
                                                                                                         { __( 'Delete', 'content-collaboration-inline-commenting' ) }
                                                                                                     </a>
@@ -311,16 +318,6 @@ class Comments extends React.Component {
                                                     } )
                                                 )
                                             } ) }
-
-                                            { total > (offset + limit) && (
-                                                <a href="javascript:void(0)" className="cf-loadmore-activity js-loadmore" onClick={ this.loadmore.bind(this) }>
-                                                    { true ===  isLoading ? (
-                                                        __( 'Loading...', 'content-collaboration-inline-commenting' )
-                                                    ) :(
-                                                        __( 'Load More', 'content-collaboration-inline-commenting' )
-                                                    )}
-                                                </a>
-                                            )}
                                         </div>
                                     )
                                 }
