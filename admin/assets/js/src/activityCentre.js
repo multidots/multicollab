@@ -166,16 +166,7 @@ class Comments extends React.Component {
     componentDidMount() {
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
-
     }
-
-    componentDidUpdate( prevProps, prevState ) {
-        // If offset changes then load more comments.
-        if( prevState.offset !== this.state.offset ) {
-            // this.getComments();
-        }
-    }
-
 
     render() {
         const { threads, total, offset, limit, isLoading, showComments } = this.state;
