@@ -39,7 +39,6 @@ class Commenting_Block_Rest_Routes {
 
     public function get_activities( $data ) {
        	$current_post_id = intval( $data->get_param( 'postID' ) );
-
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
 
@@ -108,13 +107,10 @@ class Commenting_Block_Rest_Routes {
 
 		array_multisort( array_column( $threads, 'updatedAt' ), SORT_DESC, $threads );
 
-		// echo '<pre>';echo print_r( $threads );echo '</pre>';die();
-
 		$response = [
 			'threads' => $threads,
 			'total'   => $total,
 		];
-		// die();
 		return rest_ensure_response( $response );
     }
 

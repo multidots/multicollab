@@ -121,18 +121,27 @@ class Comments extends React.Component {
      */
     isPostUpdated() {
         const _this = this;
+        var counter = 1;
         wp.data.subscribe( function () {
             let select                    = wp.data.select('core/editor');
             var isSavingPost              = select.isSavingPost();
             var isAutosavingPost          = select.isAutosavingPost();
             var didPostSaveRequestSucceed = select.didPostSaveRequestSucceed();
-            if ( isSavingPost && !isAutosavingPost && didPostSaveRequestSucceed ) {
-                _this.setState({
-                    threads: [],
-                    limit: 10,
-                    offset: 0
-                })
-                _this.getComments();
+            var status = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+            if ( isSavingPost && !isAutosavingPost ) {
+                if( didPostSaveRequestSucceed ) {
+                    if( 'draft' === status || 'publish' === status ) {
+                        if( counter % 2 === 0 ) {
+                            _this.setState({
+                                threads: [],
+                                limit: 10,
+                                offset: 0
+                            })
+                            _this.getComments();
+                        }
+                    }
+                }
+                counter++;
             }
         })
     }
@@ -153,14 +162,14 @@ class Comments extends React.Component {
 
     componentDidMount() {
         this.getComments(); // Calling getComments() to get the comments related to this post.
-        this.isPostUpdated();
+        this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
 
     }
 
     componentDidUpdate( prevProps, prevState ) {
         // If offset changes then load more comments.
         if( prevState.offset !== this.state.offset ) {
-            this.getComments();
+            // this.getComments();
         }
     }
 
@@ -232,9 +241,9 @@ class Comments extends React.Component {
                                                                                     </div>
                                                                                     <div class="user-comment">
                                                                                         { 0 < index && 'deleted' === c.status ? (
-                                                                                            <del dangerouslySetInnerHTML={{ __html: c.thread }}></del>
+                                                                                            <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
                                                                                         ) : (
-                                                                                            <span dangerouslySetInnerHTML={{ __html: c.thread }}></span>
+                                                                                            <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></span> // phpcs:ignore
                                                                                         ) }
                                                                                     </div>
                                                                                     { 'true' !== th.resolved && (
