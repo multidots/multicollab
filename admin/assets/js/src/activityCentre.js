@@ -140,11 +140,15 @@ class Comments extends React.Component {
     /**
      * Handle Show Comments
      */
-    handleShowComments( e ) {
+    handleShowComments() {
+        if ( true === this.state.showComments ) {
+            $( 'body' ).addClass( 'hide-comments' );
+        } else {
+            $( 'body' ).removeClass( 'hide-comments' );
+        }
         this.setState({
             showComments: ! this.state.showComments
         })
-        $( '#comments-toggle' ).trigger( 'click' );
     }
 
     componentDidMount() {

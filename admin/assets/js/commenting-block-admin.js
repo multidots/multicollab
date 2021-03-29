@@ -851,61 +851,6 @@
         }
         manageContentEditableConsoleIssue();
 
-        // Collapseing history toggle on outside click.
-        $( document.body ).on( 'click', function(e) {
-            var historyToggle = $( '#history-toggle' );
-            var historyPopup  = $( '#custom-history-popup' );
-            if( ! historyToggle.is( e.target ) && historyToggle.has( e.target ).length === 0 ) {
-                if ( ! historyPopup.is( e.target ) && historyPopup.has( e.target ).length === 0 ) {
-                    $( '#custom-history-popup, .custom-buttons' ).removeClass( 'active' );
-                }
-            }
-        } );
-
-        // History Toggle
-        $( document.body ).on('click', '#history-toggle', function () {
-            $('#custom-history-popup, #history-toggle').toggleClass('active');
-            $(this).parents('.custom-buttons').toggleClass('active');
-
-            if ($('#custom-history-popup').hasClass('active')) {
-                $('#custom-history-popup').addClass('loaded');
-
-                /* count header height */
-                var headerHeight = $('.edit-post-layout .edit-post-header').outerHeight();
-                $('#custom-history-popup').css({top: headerHeight});
-
-                const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
-
-                // Fetch comments from db.
-                var data = {
-                    'action': 'cf_comments_history',
-                    'currentPostID': CurrentPostID,
-                    'limit': 10,
-                };
-                // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-                $.post( ajaxurl, data, function ( response ) { // eslint-disable-line
-                    $( '#custom-history-popup-inner' ).html( '' );
-                    response = DOMPurify.sanitize( response );
-                    $( response ).appendTo( '#custom-history-popup-inner' ); // phpcs:ignore
-                });
-            }
-        });
-
-        // Comments Toggle
-        $(document).on('click', '#comments-toggle', function () {
-            $('body').toggleClass('hide-comments');
-            $(this).toggleClass('active'); /* If active, comments are hidden. */
-
-            if( $(this).hasClass('active') ) {
-                $('a', this).text('Show All Comments');
-            } else {
-                $('a', this).text('Hide All Comments');
-            }
-
-            // Hide Activity Center.
-            $('#history-toggle').trigger('click');
-        });
-
         // Read More Comments
         $(document).on('click', '.readmoreComment, .readlessComment', function () {
             $(this).parents('.commentText').find('.readMoreSpan').toggleClass('active');
