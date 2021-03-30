@@ -75,6 +75,10 @@ class Comments extends React.Component {
      * Resolving Thread.
      */
     resolveThread( e ) {
+        // Open comment if not opened.
+        if( ! this.state.showComments ) {
+            this.handleShowComments();
+        }
         var elID = e.target.dataset.elid;
         var alertMessage = __( 'Are you sure you want to resolve this thread ?', 'content-collaboration-inline-commenting' );
         if ( confirm( alertMessage ) ) {
@@ -106,6 +110,11 @@ class Comments extends React.Component {
      */
     reply( e ) {
         e.preventDefault();
+        // Open comment if not opened.
+        if( ! this.state.showComments ) {
+            this.handleShowComments();
+        }
+
         var elID = e.target.dataset.elid;
         var findMdSpan = '.mdspan-comment';
         $( findMdSpan ).each( function() {
@@ -123,6 +132,11 @@ class Comments extends React.Component {
      */
     edit( e ) {
         e.preventDefault();
+        // Open comment if not opened.
+        if( ! this.state.showComments ) {
+            this.handleShowComments();
+        }
+
         var elID = e.target.dataset.elid;
         var editID = e.target.dataset.editid;
         $( `#${elID} #${editID} .js-edit-comment` ).trigger( 'click' );
@@ -133,8 +147,16 @@ class Comments extends React.Component {
      */
     delete( e ) {
         e.preventDefault();
+        // Open comment if not opened.
+        if( ! this.state.showComments ) {
+            this.handleShowComments();
+        }
+
+
         var elID = e.target.dataset.elid;
         var deleteID = e.target.dataset.deleteid;
+        $( `#${deleteID} .js-cancel-comment` ).trigger( 'click' );
+
         $( `#${elID} #${deleteID} .js-trash-comment` ).trigger( 'click' );
     }
 
@@ -143,7 +165,7 @@ class Comments extends React.Component {
      */
     isPostUpdated() {
         const _this = this;
-        var counter = 1;
+        var counter = 0;
         wp.data.subscribe( function () {
             let select                    = wp.data.select('core/editor');
             var isSavingPost              = select.isSavingPost();
@@ -153,17 +175,18 @@ class Comments extends React.Component {
             if ( isSavingPost && !isAutosavingPost ) {
                 if( didPostSaveRequestSucceed ) {
                     if( 'draft' === status || 'publish' === status ) {
-                        if( counter % 2 === 0 ) {
+                        if( counter === 1 ) {
                             _this.setState({
                                 threads: [],
                                 limit: 10,
                                 offset: 0
                             })
                             _this.getComments();
+                            counter = 0;
                         }
+                        counter++;
                     }
                 }
-                counter++;
             }
         })
     }
