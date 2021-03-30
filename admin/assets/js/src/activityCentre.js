@@ -125,28 +125,28 @@ class Comments extends React.Component {
     isPostUpdated() {
         const _this = this;
         var counter = 1;
-        wp.data.subscribe( function () {
-            let select                    = wp.data.select('core/editor');
-            var isSavingPost              = select.isSavingPost();
-            var isAutosavingPost          = select.isAutosavingPost();
-            var didPostSaveRequestSucceed = select.didPostSaveRequestSucceed();
-            var status = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
-            if ( isSavingPost && !isAutosavingPost ) {
-                if( didPostSaveRequestSucceed ) {
-                    if( 'draft' === status || 'publish' === status ) {
-                        if( counter % 2 === 0 ) {
-                            _this.setState({
-                                threads: [],
-                                limit: 10,
-                                offset: 0
-                            })
-                            _this.getComments();
-                        }
-                    }
-                }
-                counter++;
-            }
-        })
+        // wp.data.subscribe( function () {
+        //     let select                    = wp.data.select('core/editor');
+        //     var isSavingPost              = select.isSavingPost();
+        //     var isAutosavingPost          = select.isAutosavingPost();
+        //     var didPostSaveRequestSucceed = select.didPostSaveRequestSucceed();
+        //     var status = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+        //     if ( isSavingPost && !isAutosavingPost ) {
+        //         if( didPostSaveRequestSucceed ) {
+        //             if( 'draft' === status || 'publish' === status ) {
+        //                 if( counter % 2 === 0 ) {
+        //                     _this.setState({
+        //                         threads: [],
+        //                         limit: 10,
+        //                         offset: 0
+        //                     })
+        //                     _this.getComments();
+        //                 }
+        //             }
+        //         }
+        //         counter++;
+        //     }
+        // })
     }
 
     /**

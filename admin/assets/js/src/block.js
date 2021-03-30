@@ -20,22 +20,6 @@ $( window ).on('load', function () {
             // Clearing interval if found.
             clearInterval( loadComments );
 
-            // Appending history popup on load.
-            let customHistoryPopup = '<div id="custom-history-popup"><div id="comments-toggle"><a href="javascript:void(0)">Hide All Comments</a></div><div id="custom-history-popup-inner"></div>';
-            customHistoryPopup = DOMPurify.sanitize( customHistoryPopup );
-            $( '.edit-post-layout' ).append( customHistoryPopup ); // phpcs:ignore
-
-            // Adjusting edit post header height
-            var headerHeight = $('.edit-post-layout .edit-post-header').outerHeight();
-            $('#custom-history-popup').css({top: headerHeight});
-
-            // Managing comment boards for mobile view.
-            // By default in mobile view borads will be hidden.
-            var screenWidth = window.screen.width;
-            if( 1200 > screenWidth ) {
-                $( '#comments-toggle' ).trigger( 'click' );
-            }
-
             // Fetching comments
             fetchComments();
         }
@@ -45,9 +29,6 @@ $( window ).on('load', function () {
             clearInterval( loadComments );
         }
     }, 1000);
-
-    // Show setting button.
-    showSettings();
 
     $(document).on('click', '.components-notice__action', function () {
 
@@ -74,37 +55,6 @@ $( window ).on('load', function () {
 
 });
 
-// Add history button.
-function showSettings() {
-
-    if( 0 === $('#history-toggle').length ) {
-
-        let commentingPluginUrl = localStorage.getItem("commentingPluginUrl");
-        commentingPluginUrl = null === commentingPluginUrl ? 'https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/wp-content/plugins/commenting-block/' : commentingPluginUrl;
-
-        const customButtons = `<div class="components-dropdown custom-buttons"><span aria-expanded="false" class="components-button has-icon" aria-label="Tools" title="Editorial Comments Settings"><span id="history-toggle" data-count="0"><img src="${commentingPluginUrl}admin/images/commenting-logo.svg" width="18" alt="Comment Settings" /></span></button></div>`;
-
-        let loadAttempts = 0;
-        const loadIcons = setInterval(function () {
-            loadAttempts++;
-
-            if (loadAttempts >= 10 || (1 <= $('.edit-post-header-toolbar').length && 0 === $('#history-toggle').length)) {
-                // Same condition used (#history-toggle.length) as WordPress wipes out it some times.
-                if (0 === $('.edit-post-header-toolbar__left').length) {
-                    $('.edit-post-header-toolbar').append(DOMPurify.sanitize( customButtons )); // phpcs:ignore
-                } else {
-                    $('.edit-post-header-toolbar .edit-post-header-toolbar__left').append(DOMPurify.sanitize( customButtons )); // phpcs:ignore
-                }
-            }
-
-            // Stop checking after 3 attempts as WordPress is wiping
-            // out these custom buttons in first few attempts.
-            if (loadAttempts >= 3 && 1 === $('#history-toggle').length) {
-                clearInterval(loadIcons);
-            }
-        }, 2000);
-    }
-}
 
 function fetchComments() {
     var parentNode = document.createElement('div');
@@ -157,13 +107,11 @@ function fetchComments() {
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
                     $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-                    showSettings(); // Another attempt if setting icon not displayed.
                 }
                 if (loadAttempts >= 10) {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
-                    showSettings(); // Another attempt if setting icon not displayed.
                 }
             }, 1000);
         }

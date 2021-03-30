@@ -615,7 +615,7 @@ class Commenting_block_Admin {
 				'wp-api-fetch',
 				'wp-plugins',
 				'wp-edit-post',
-			), '1.0.7', true );
+			), '1.3.0', true );
 
 			$comment_id     = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
 			$get_users_list = get_transient( 'gc_users_list' );
