@@ -629,26 +629,27 @@ class Commenting_block_Admin {
 			wp_enqueue_script( 'jquery-ui-draggable' );
 			wp_enqueue_script( 'jquery-ui-droppable' );
 
-			// wp_enqueue_script(
-			// 	'cf-activity-centre',
-			// 	COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCentre.build.min.js',
-			// 	[
-			// 		'wp-plugins',
-			// 		'wp-editor',
-			// 		'wp-edit-post',
-			// 		'wp-i18n',
-			// 		'wp-element',
-			// 		'wp-components',
-			// 		'wp-data'
-			// 	],
-			// 	'1.3.0',
-			// 	true
-			// );
-			// wp_localize_script( 'cf-activity-centre', 'activityLocalizer', [
-			// 	'nonce'   => wp_create_nonce( 'wp_rest' ),
-			// 	'apiUrl'  => home_url( '/wp-json' ),
-			// 	'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			// ] );
+			wp_enqueue_script(
+				'cf-activity-centre',
+				COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCentre.build.min.js',
+				[
+					'wp-plugins',
+					'wp-editor',
+					'wp-edit-post',
+					'wp-i18n',
+					'wp-element',
+					'wp-components',
+					'wp-data',
+					'content-collaboration-inline-commenting'
+				],
+				'1.3.0',
+				true
+			);
+			wp_localize_script( 'cf-activity-centre', 'activityLocalizer', [
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+				'apiUrl'  => home_url( '/wp-json' ),
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			] );
 		}
 
 	}
