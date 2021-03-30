@@ -633,6 +633,7 @@ class Commenting_block_Admin {
 				'cf-activity-centre',
 				COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCentre.build.min.js',
 				[
+					'content-collaboration-inline-commenting',
 					'wp-plugins',
 					'wp-editor',
 					'wp-edit-post',
@@ -640,9 +641,8 @@ class Commenting_block_Admin {
 					'wp-element',
 					'wp-components',
 					'wp-data',
-					'content-collaboration-inline-commenting'
 				],
-				'1.3.0',
+				wp_rand(),
 				true
 			);
 			wp_localize_script( 'cf-activity-centre', 'activityLocalizer', [
