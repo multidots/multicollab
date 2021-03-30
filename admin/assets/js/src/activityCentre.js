@@ -17,6 +17,9 @@ class Comments extends React.Component {
             isLoading: false,
             showComments: true,
         }
+        // Triggering settings cog.
+        this.triggerSettingsCog();
+
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
@@ -26,6 +29,22 @@ class Comments extends React.Component {
         this.delete             = this.delete.bind( this );
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
+    }
+
+    /**
+     * Trigger Default Settings Button on Sidebar.
+     */
+    triggerSettingsCog() {
+        $( window ).on( 'load', function() {
+            $( '.components-button' ).each( function() {
+                var arialabel = $( this ).attr( 'aria-label' );
+                if( 'Settings' === arialabel ) {
+                    if( ! $( this ).hasClass( 'is-pressed' ) ) {
+                        $( this ).trigger( 'click' );
+                    }
+                }
+            } )
+        } )
     }
 
     /**
