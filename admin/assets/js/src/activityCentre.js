@@ -17,8 +17,6 @@ class Comments extends React.Component {
             threads: [],
             isLoading: false,
             showComments: true,
-            collapse: false,
-            collapseText: 'More',
             collapseLimit: 25,
         }
         // Triggering settings cog.
@@ -58,7 +56,7 @@ class Comments extends React.Component {
     collapseText( str ) {
         let text = str;
         if( null !== this.state.collapseLimit ) {
-            text = str.slice( 0, this.state.collapseLimit );
+            text = str.slice( 0, this.state.collapseLimit ) + ( str.length > this.state.collapseLimit ? '...' : '' );
         }
         return ( __( text, 'content-collaboration-inline-commenting' ) );
     }
@@ -67,11 +65,11 @@ class Comments extends React.Component {
         var targetID = e.target.dataset.id;
         var _this = e.target;
         if( _this.innerHTML === 'More' ) {
-            _this.innerHTML = 'Collapse';
+            _this.innerHTML = __( 'Collapse', 'content-collaboration-inline-commenting' );
             $( `#show-all-${targetID}` ).removeClass( 'js-hide' );
             $( `#show-less-${targetID}` ).addClass( 'js-hide' );
         } else {
-            _this.innerHTML = 'More';
+            _this.innerHTML = __( 'More', 'content-collaboration-inline-commenting' );
             $( `#show-all-${targetID}` ).addClass( 'js-hide' );
             $( `#show-less-${targetID}` ).removeClass( 'js-hide' );
         }
@@ -296,8 +294,8 @@ class Comments extends React.Component {
                                                                                                     { 'deleted' === c.status || 'true' === th.resolved ?
                                                                                                         (
                                                                                                             <React.Fragment>
-                                                                                                                <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID } href="javascript:void(0)">{ th.selectedText }</span>
-                                                                                                                <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ th.elID } href="javascript:void(0)">{ this.collapseText( th.selectedText ) }</span>
+                                                                                                                <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</span>
+                                                                                                                <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ th.elID }>{ this.collapseText( th.selectedText ) }</span>
                                                                                                                 { 25 <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
@@ -305,13 +303,13 @@ class Comments extends React.Component {
                                                                                                                         data-id={ c.id }
                                                                                                                         onClick={ this.toggleCollapseLink.bind( this ) }
                                                                                                                     >
-                                                                                                                        { this.state.collapseText }
+                                                                                                                        { __( 'More', 'content-collaboration-inline-commenting' ) }
                                                                                                                     </a>
                                                                                                                 ) }
                                                                                                             </React.Fragment>
                                                                                                         ) : (
                                                                                                             <React.Fragment>
-                                                                                                                <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID } href="javascript:void(0)">{ th.selectedText }</a>
+                                                                                                                <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID } href="javascript:void(0)">{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
                                                                                                                 <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ th.elID } href="javascript:void(0)">{ this.collapseText( th.selectedText ) }</a>
                                                                                                                 { 25 <= th.selectedText.length && (
                                                                                                                     <a
@@ -320,7 +318,7 @@ class Comments extends React.Component {
                                                                                                                         data-id={ c.id }
                                                                                                                         onClick={ this.toggleCollapseLink.bind( this ) }
                                                                                                                     >
-                                                                                                                        { this.state.collapseText }
+                                                                                                                        { __( 'More', 'content-collaboration-inline-commenting' ) }
                                                                                                                     </a>
                                                                                                                 ) }
                                                                                                             </React.Fragment>

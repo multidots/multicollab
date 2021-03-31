@@ -68,6 +68,7 @@ class Commenting_Block_Rest_Routes {
 					'userData'   => [
 						'username'  => $user_info->display_name,
 						'avatarUrl' => get_avatar_url( $user_info->user_email ),
+						'userRole'  => implode( ', ', $user_info->roles )
 					],
 					'thread'     => $comment['thread']
 				];
