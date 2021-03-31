@@ -273,7 +273,7 @@ class Comments extends React.Component {
                                                 return (
                                                     thread.map( ( th ) => {
                                                         return(
-                                                            <div className="user-data-row" id={ th.elID } key={ th.elID }>
+                                                            <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ th.elID } key={ th.elID }>
                                                                 {
                                                                     th.activities.map( ( c, index ) => {
                                                                         return (
