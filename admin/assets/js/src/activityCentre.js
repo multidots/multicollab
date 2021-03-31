@@ -152,7 +152,6 @@ class Comments extends React.Component {
             this.handleShowComments();
         }
 
-
         var elID = e.target.dataset.elid;
         var deleteID = e.target.dataset.deleteid;
         $( `#${deleteID} .js-cancel-comment` ).trigger( 'click' );
