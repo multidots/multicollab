@@ -6,6 +6,7 @@ const { registerPlugin } = wp.plugins;
 const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editPost;
 const { PanelBody, TabPanel, ToggleControl } = wp.components;
 import icons from './component/icons';
+import renderHTML from 'react-render-html';
 const $ = jQuery; // eslint-disable-line
 
 class Comments extends React.Component {
@@ -16,6 +17,9 @@ class Comments extends React.Component {
             threads: [],
             isLoading: false,
             showComments: true,
+            collapse: false,
+            collapseText: 'More',
+            collapseLimit: 25,
         }
         // Triggering settings cog.
         this.triggerSettingsCog();
@@ -27,6 +31,7 @@ class Comments extends React.Component {
         this.edit               = this.edit.bind( this );
         this.reply              = this.reply.bind( this );
         this.delete             = this.delete.bind( this );
+        this.toggleCollapseLink       = this.toggleCollapseLink.bind( this );
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
     }
@@ -45,6 +50,31 @@ class Comments extends React.Component {
                 }
             } )
         } )
+    }
+
+    /**
+     * Collapse Selected Text.
+     */
+    collapseText( str ) {
+        let text = str;
+        if( null !== this.state.collapseLimit ) {
+            text = str.slice( 0, this.state.collapseLimit );
+        }
+        return ( __( text, 'content-collaboration-inline-commenting' ) );
+    }
+
+    toggleCollapseLink( e ) {
+        var targetID = e.target.dataset.id;
+        var _this = e.target;
+        if( _this.innerHTML === 'More' ) {
+            _this.innerHTML = 'Collapse';
+            $( `#show-all-${targetID}` ).removeClass( 'js-hide' );
+            $( `#show-less-${targetID}` ).addClass( 'js-hide' );
+        } else {
+            _this.innerHTML = 'More';
+            $( `#show-all-${targetID}` ).addClass( 'js-hide' );
+            $( `#show-less-${targetID}` ).removeClass( 'js-hide' );
+        }
     }
 
     /**
@@ -210,7 +240,7 @@ class Comments extends React.Component {
     }
 
     render() {
-        const { threads, total, offset, limit, isLoading, showComments } = this.state;
+        const { threads, showComments } = this.state;
         return (
             <Fragment>
                 <PluginSidebarMoreMenuItem target="cf-activity-center">
@@ -265,9 +295,36 @@ class Comments extends React.Component {
                                                                                                 <blockquote>
                                                                                                     { 'deleted' === c.status || 'true' === th.resolved ?
                                                                                                         (
-                                                                                                            __( th.selectedText, 'content-collaboration-inline-commenting' )
+                                                                                                            <React.Fragment>
+                                                                                                                <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID } href="javascript:void(0)">{ th.selectedText }</span>
+                                                                                                                <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ th.elID } href="javascript:void(0)">{ this.collapseText( th.selectedText ) }</span>
+                                                                                                                { 25 <= th.selectedText.length && (
+                                                                                                                    <a
+                                                                                                                        href="javascript:void(0)"
+                                                                                                                        className="cf-show-more"
+                                                                                                                        data-id={ c.id }
+                                                                                                                        onClick={ this.toggleCollapseLink.bind( this ) }
+                                                                                                                    >
+                                                                                                                        { this.state.collapseText }
+                                                                                                                    </a>
+                                                                                                                ) }
+                                                                                                            </React.Fragment>
                                                                                                         ) : (
-                                                                                                            <a class="user-commented-on" data-id={ th.elID } href="javascript:void(0)">{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
+                                                                                                            <React.Fragment>
+                                                                                                                <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID } href="javascript:void(0)">{ th.selectedText }</a>
+                                                                                                                <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ th.elID } href="javascript:void(0)">{ this.collapseText( th.selectedText ) }</a>
+                                                                                                                { 25 <= th.selectedText.length && (
+                                                                                                                    <a
+                                                                                                                        href="javascript:void(0)"
+                                                                                                                        className="cf-show-more"
+                                                                                                                        data-id={ c.id }
+                                                                                                                        onClick={ this.toggleCollapseLink.bind( this ) }
+                                                                                                                    >
+                                                                                                                        { this.state.collapseText }
+                                                                                                                    </a>
+                                                                                                                ) }
+                                                                                                            </React.Fragment>
+
                                                                                                         )
                                                                                                     }
                                                                                                 </blockquote>

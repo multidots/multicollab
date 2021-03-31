@@ -234,7 +234,7 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .custom-buttons svg{width:19px}
 .custom-buttons svg *{fill:#1e1e1e}
 .custom-buttons components-button:hover svg *{fill:#007cba}
-
+.js-hide { display: none; }
 .custom-buttons button:hover svg * {
     fill:#007cba;
 }
@@ -277,7 +277,16 @@ body.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cf-board-assigned-to .assigned-user-details .user-avatar{width:32px}
 .cf-board-assigned-to .assigned-user-details .user-avatar img{border-radius:50%;margin-right:10px}
 .cf-board-assigned-to .assigned-user-details .user-info p.display-name{margin:0;line-height:20px;font-weight:600;font-size:14px}
-
+.cf-show-more{
+  background: #fff;
+  text-decoration: none;
+  padding: 1px 5px;
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: 4px;
+  border: 1px dotted #4f94d4;
+  border-radius: 15px;
+ }
 /* Editorial comments page */
 .cf-plugin-settings{-webkit-box-sizing:border-box;box-sizing:border-box;padding-right:20px}
 .cf-plugin-settings *{-webkit-box-sizing:border-box;box-sizing:border-box}
