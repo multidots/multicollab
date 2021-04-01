@@ -656,7 +656,7 @@
         var assignThisToUser = function() {
             let el                = '';
             var parentBoardClass  = '.cls-board-outer';
-            let appendTo          = '.js-cf-share-comment';
+            let appendTo          = '.js-cf-share-comment-wrapper';
             var mentionedEmail    = '.cf-system-user-email-list li';
             let checkBoxContainer = '.cf-assign-to';
 
@@ -680,7 +680,6 @@
 
                 // Get the assigner id of the current board.
                 let currentBoardAssingerID = $( `#${el} .cf-board-assigned-to` ).data( 'user-id' );
-
                 if( thisUserId !== currentBoardAssingerID ) {
                     if( '' !== el ) {
                         if( $( `#${el} ${checkBoxContainer}` ).children().length <= 1 ) {

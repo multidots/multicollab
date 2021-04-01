@@ -214,14 +214,16 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                    <ContentEditable
-                        innerRef={ this.contentEditable }
-                        html={ this.state.contentHtml }
-                        disabled={ false }
-                        onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
-                        id={ `edit-${this.props.timestamp}` }
-                        className="cf-share-comment js-cf-edit-comment"
-                    />
+                    <div className="cf-share-comment-wrapper js-cf-share-comment-wrapper">
+                        <ContentEditable
+                            innerRef={ this.contentEditable }
+                            html={ this.state.contentHtml }
+                            disabled={ false }
+                            onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
+                            id={ `edit-${this.props.timestamp}` }
+                            className="cf-share-comment js-cf-edit-comment"
+                        />
+                    </div>
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}

@@ -572,7 +572,7 @@ class Commenting_block_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/css/commenting-block-admin.css', array(), '1.0.3', 'all' );
+		wp_enqueue_style( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/css/commenting-block-admin.css', array(), wp_rand(), 'all' );
 
 	}
 
@@ -597,7 +597,7 @@ class Commenting_block_Admin {
 
 		$screen = get_current_screen();
 		if ( $screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base ) {
-			wp_enqueue_script( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify' ), $this->version, false );
+			wp_enqueue_script( $this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify' ), wp_rand(), false );
 			wp_enqueue_script( 'cf-mark', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-dom-purify', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . 'admin/assets/js/dist/block.build.min.js', array(
@@ -615,7 +615,7 @@ class Commenting_block_Admin {
 				'wp-api-fetch',
 				'wp-plugins',
 				'wp-edit-post',
-			), '1.3.0', true );
+			), wp_rand(), true );
 
 			$comment_id     = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
 			$get_users_list = get_transient( 'gc_users_list' );
