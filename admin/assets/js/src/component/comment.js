@@ -29,6 +29,8 @@ export default class Comment extends React.Component {
     }
 
     edit() {
+        $( '.js-cancel-comment' ).trigger( 'click' ); // Resetting all opend edit comment box.
+
         this.setState({editing: true});
 
         // Handling edited value.

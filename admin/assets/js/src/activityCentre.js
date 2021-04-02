@@ -6,7 +6,6 @@ const { registerPlugin } = wp.plugins;
 const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editPost;
 const { PanelBody, TabPanel, ToggleControl } = wp.components;
 import icons from './component/icons';
-import renderHTML from 'react-render-html';
 const $ = jQuery; // eslint-disable-line
 
 class Comments extends React.Component {
@@ -38,6 +37,7 @@ class Comments extends React.Component {
      * Trigger Default Settings Button on Sidebar.
      */
     triggerSettingsCog() {
+        var _this = this;
         $( window ).on( 'load', function() {
             $( '.components-button' ).each( function() {
                 var arialabel = $( this ).attr( 'aria-label' );
@@ -48,6 +48,7 @@ class Comments extends React.Component {
                 }
             } )
         } )
+
     }
 
     /**
@@ -148,9 +149,9 @@ class Comments extends React.Component {
         $( findMdSpan ).each( function() {
             var datatext = $( this ).attr( 'datatext' );
             if( elID === datatext ) {
-                $( '.cls-board-outer' ).removeClass( 'focus' ).removeAttr( 'style' ); // Resetting before trigger.
+                $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
                 $( this ).attr( 'data-rich-text-format-boundary', 'true' );
-                $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } );
+                $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
             }
         } );
     }
@@ -167,6 +168,8 @@ class Comments extends React.Component {
 
         var elID = e.target.dataset.elid;
         var editID = e.target.dataset.editid;
+        $( '.js-cancel-comment' ).trigger( 'click' );
+        $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
         $( `#${elID} #${editID} .js-edit-comment` ).trigger( 'click' );
     }
 
@@ -253,10 +256,12 @@ class Comments extends React.Component {
                             {
                                 name: 'cf-activity-centre',
                                 title: 'Activity Centre',
+                                className: 'cf-sidebar-activity-centre'
                             },
                             {
                                 name: 'cf-settings',
                                 title: 'Settings',
+                                className: 'cf-sidebar-settings'
                             },
                         ] }>
                         {

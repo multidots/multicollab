@@ -294,18 +294,14 @@ const mdComment = {
 
             onChange(applyFormat(value, {type: name, attributes: {datatext: currentTime}}));
 
-            // Making hide comment triggered when clicking on the ReichToolbar Comment menu.
-            // This occurs if user hide comments before and now wants to add Comment.
-            if( $( '#comments-toggle' ).hasClass('active') ) {
-                $( '#comments-toggle' ).trigger( 'click' );
-                $( '#custom-history-popup' ).removeClass( 'active' );
-                $( '.custom-buttons' ).removeClass( 'active' );
-            }
+            // Toogle hide-comments class if the comments is hidden when try to add new one.
+            $( 'body' ).toggleClass( 'hide-comments' )
 
         }
 
         getSelectedText() {
             const { onChange, value, activeAttributes } = this.props;
+
 
             // Prevent on locked mode + fix for unnecessary calls on hover.
             if ($('.cls-board-outer').hasClass('locked') ) {
@@ -395,6 +391,7 @@ const mdComment = {
                 // Float comments column.
                 this.floatComments(selectedText);
             }
+            $( '.js-cancel-comment' ).trigger( 'click' ); // Closing all opened edit comment box.
         }
 
         floatComments(selectedText) {
