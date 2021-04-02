@@ -295,7 +295,9 @@ const mdComment = {
             onChange(applyFormat(value, {type: name, attributes: {datatext: currentTime}}));
 
             // Toogle hide-comments class if the comments is hidden when try to add new one.
-            $( 'body' ).toggleClass( 'hide-comments' )
+            if( $( 'body' ).hasClass( 'hide-comments' ) ) {
+                $( 'body' ).removeClass( 'hide-comments' )
+            }
 
         }
 
