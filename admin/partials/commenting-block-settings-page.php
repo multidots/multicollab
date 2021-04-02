@@ -9,7 +9,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
 ?>
 <div class="cf-plugin-settings">
     <div class="cf-plugin-header">
-        <img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/images/commenting-logo.svg' ); ?>"/>
+        <img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ); ?>"/>
         <h1><?php esc_html_e( 'Multicollab - Google Doc-Style Editorial Commenting for WordPress', 'content-collaboration-inline-commenting' ); ?></h1>
     </div>
     <form id="cf-settings-form" method="post">
@@ -72,7 +72,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                     <div class="cf-card-body">
                         <div class="cf-dev-img">
                             <a href="<?php echo esc_url( 'https://www.multidots.com/' ); ?>" target="_blank">
-                                <img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/images/mdinc-logo.svg' ); ?>"/>
+                                <img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/mdinc-logo.svg' ); ?>"/>
                             </a>
                         </div>
                         <p><?php esc_html_e( 'WordPress Development Experts & WordPress VIP Partner Agency', 'content-collaboration-inline-commenting' ); ?></p>
