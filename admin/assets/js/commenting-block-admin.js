@@ -344,8 +344,10 @@
             // Format pasted content.
             $( document.body ).on( 'paste', createTextarea, function(e) {
                 e.preventDefault();
-                var textContent = e.originalEvent.clipboardData.getData( 'text/plain' );
-                document.execCommand( 'insertHTML', false, textContent );
+                if( '' !== createTextarea ) {
+                    var textContent = e.originalEvent.clipboardData.getData( 'text/plain' );
+                    document.execCommand( 'insertHTML', false, textContent );
+                }
             } )
 
             // Triggering textarea keyup event.

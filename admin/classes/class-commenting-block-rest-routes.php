@@ -59,6 +59,7 @@ class Commenting_Block_Rest_Routes {
 			$cmnts = [];
 			$elID = str_replace( '_', '', $row['meta_key'] );
 			$comments = maybe_unserialize( $row['meta_value'] );
+
 			foreach( $comments['comments'] as $timestamp => $comment ) {
 				$user_info = get_userdata( $comment['userData'] );
 				$cmnts[] = [
@@ -85,6 +86,14 @@ class Commenting_Block_Rest_Routes {
 				}
 			}
 
+			$assigned_user = [];
+			if( isset( $comments['assigned_to'] ) ) {
+				$assigned_user_info = get_userdata( $comments['assigned_to'] );
+				$assigned_user = [
+					'username' => $assigned_user_info->display_name
+				];
+			}
+
 			$threads[] = [
 				'elID'              => $elID,
 				'activities'        => $cmnts,
@@ -93,6 +102,7 @@ class Commenting_Block_Rest_Routes {
 				'resolvedTimestamp' => isset( $comments['resolved_timestamp'] ) ? gmdate( $time_format . ' ' . $date_format, intval( $comments['resolved_timestamp'] ) ): '',
 				'resolvedBy'        => $resolved_by,
 				'updatedAt'			=> $comments['updated_at'],
+				'assignedTo'		=> $assigned_user,
 			];
 		}
 
