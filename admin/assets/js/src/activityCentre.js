@@ -272,7 +272,7 @@ class Comments extends React.Component {
                                                     <strong>{ __( 'No recent activities found!', 'content-collaboration-inline-commenting' ) }</strong>
                                                 </div>
                                             ) }
-                                            
+
                                             { true === isLoading && (
                                                 <div className="user-data-row">
                                                     <strong>{ __( 'Loading...', 'content-collaboration-inline-commenting' ) }</strong>
@@ -353,6 +353,7 @@ class Comments extends React.Component {
                                                                                                             className="user-cmnt-reply"
                                                                                                             data-elid={ th.elID }
                                                                                                             onClick={ this.reply.bind( this ) }
+                                                                                                            title={ __( 'Reply', 'content-collaboration-inline-commenting' ) }
                                                                                                         >
                                                                                                             { __( 'Reply', 'content-collaboration-inline-commenting' ) }
                                                                                                         </a>
@@ -360,6 +361,7 @@ class Comments extends React.Component {
                                                                                                             className="user-thread-resolve js-resolve-comment"
                                                                                                             onClick={ this.resolveThread.bind( this ) }
                                                                                                             data-elid={ th.elID }
+                                                                                                            title={ __( 'Resolve', 'content-collaboration-inline-commenting' ) }
                                                                                                         >
                                                                                                             { __( 'Resolve', 'content-collaboration-inline-commenting' ) }
                                                                                                         </a>
@@ -372,6 +374,7 @@ class Comments extends React.Component {
                                                                                                             data-elid={ th.elID }
                                                                                                             data-editid={ c.id }
                                                                                                             onClick={ this.edit.bind( this ) }
+                                                                                                            title={ __( 'Edit', 'content-collaboration-inline-commenting' ) }
                                                                                                         >
                                                                                                             { __( 'Edit', 'content-collaboration-inline-commenting' ) }
                                                                                                         </a>
@@ -380,6 +383,7 @@ class Comments extends React.Component {
                                                                                                             data-elid={ th.elID }
                                                                                                             data-deleteid={ c.id }
                                                                                                             onClick={ this.delete.bind( this ) }
+                                                                                                            title={ __( 'Delete', 'content-collaboration-inline-commenting' ) }
                                                                                                         >
                                                                                                             { __( 'Delete', 'content-collaboration-inline-commenting' ) }
                                                                                                         </a>

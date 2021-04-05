@@ -355,6 +355,10 @@
                 var _self = $( createTextarea );
                 typedText = _self.html();
 
+                if( '<br>' === typedText ) {
+                    typedText = ''
+                }
+
                 // Removing assignable checkbox if that user's email is not in the content or removed.
                 if( undefined !== typedText && typedText.length > 0 ) {
                     var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
