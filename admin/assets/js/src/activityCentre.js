@@ -12,9 +12,8 @@ class Comments extends React.Component {
     constructor( props ) {
         super( props )
         this.state = {
-            total: 0,
             threads: [],
-            isLoading: false,
+            isLoading: true,
             showComments: true,
             collapseLimit: 25,
         }
@@ -37,7 +36,6 @@ class Comments extends React.Component {
      * Trigger Default Settings Button on Sidebar.
      */
     triggerSettingsCog() {
-        var _this = this;
         $( window ).on( 'load', function() {
             $( '.components-button' ).each( function() {
                 var arialabel = $( this ).attr( 'aria-label' );
@@ -80,6 +78,8 @@ class Comments extends React.Component {
      * Get All Comments Related to this Post.
      */
     getComments() {
+        // Set Loaidng to true;
+        this.setState( { isLoading: true } );
         const url = `${activityLocalizer.apiUrl}/cf/v2/activities`;
         axios.get( url, {
             params: {
@@ -87,15 +87,17 @@ class Comments extends React.Component {
             }
         } )
         .then( ( res ) => {
-            var threads = [ ...this.state.threads ];
             if( res.data.threads.length > 0 ) {
-                threads.push( res.data.threads )
+                this.setState({
+                    threads: res.data.threads,
+                    isLoading: false
+                })
+            } else {
+                this.setState({
+                    threads: null,
+                    isLoading: false
+                })
             }
-            this.setState({
-                threads: threads,
-                total: threads.length ? threads.length : 0,
-                isLoading: false
-            })
         } )
         .catch( ( error ) => {
             console.log( error )
@@ -198,7 +200,6 @@ class Comments extends React.Component {
      */
     isPostUpdated() {
         const _this = this;
-        var counter = 1;
         wp.data.subscribe( function () {
             let select                    = wp.data.select('core/editor');
             var isSavingPost              = select.isSavingPost();
@@ -208,16 +209,10 @@ class Comments extends React.Component {
             if ( isSavingPost && !isAutosavingPost ) {
                 if( didPostSaveRequestSucceed ) {
                     if( 'draft' === status || 'publish' === status ) {
-                        console.log( 'trigger' )
-                        if( counter % 3 === 0 ) {
-                            _this.setState({
-                                threads: [],
-                                limit: 10,
-                                offset: 0
-                            })
-                            _this.getComments();
-                        }
-                        counter++;
+                        _this.setState({
+                            threads: [],
+                        })
+                        _this.getComments();
                     }
                 }
             }
@@ -244,7 +239,7 @@ class Comments extends React.Component {
     }
 
     render() {
-        const { threads, showComments } = this.state;
+        const { threads, showComments, isLoading } = this.state;
         return (
             <Fragment>
                 <PluginSidebarMoreMenuItem target="cf-activity-center">
@@ -272,16 +267,21 @@ class Comments extends React.Component {
                                 if( 'cf-activity-centre' === tab.name ) {
                                     return (
                                         <div className="cf-activity-centre js-activity-centre">
-                                            { threads.length <= 0 && (
+                                            { null === threads && (
                                                 <div className="user-data-row">
                                                     <strong>{ __( 'No recent activities found!', 'content-collaboration-inline-commenting' ) }</strong>
                                                 </div>
                                             ) }
-                                            { undefined !== threads && threads.map( ( thread ) => {
+                                            
+                                            { true === isLoading && (
+                                                <div className="user-data-row">
+                                                    <strong>{ __( 'Loading...', 'content-collaboration-inline-commenting' ) }</strong>
+                                                </div>
+                                            ) }
+
+                                            { undefined !== threads && null !== threads && threads.map( ( th ) => {
                                                 return (
-                                                    thread.map( ( th ) => {
-                                                        return(
-                                                            <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ th.elID } key={ th.elID }>
+                                                    <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ th.elID } key={ th.elID }>
                                                                 {
                                                                     th.activities.map( ( c, index ) => {
                                                                         if( 'permanent_draft' !== c.status || 'draft' !== c.status ) {
@@ -411,8 +411,6 @@ class Comments extends React.Component {
                                                                     </div>
                                                                 ) }
                                                             </div>
-                                                        )
-                                                    } )
                                                 )
                                             } ) }
                                         </div>
