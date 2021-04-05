@@ -356,10 +356,10 @@
                 typedText = _self.html();
 
                 // Clearing out any junk left when clearing the textarea.
-                if( '<br>' === _self.html() || '&nbsp;' === _self.html() ) {
-                    typedText = '';
-                    $( createTextarea ).html( '' );
-                }
+                // if( '<br>' === _self.html() || '&nbsp;' === _self.html() ) {
+                //     typedText = '';
+                //     $( createTextarea ).html( '' );
+                // }
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
                 if( undefined !== typedText && typedText.length > 0 ) {

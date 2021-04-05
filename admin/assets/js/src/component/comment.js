@@ -224,6 +224,7 @@ export default class Comment extends React.Component {
                             onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
                             id={ `edit-${this.props.timestamp}` }
                             className="cf-share-comment js-cf-edit-comment"
+                            placeholder="Edit your comments..."
                         />
                     </div>
                 </div>
