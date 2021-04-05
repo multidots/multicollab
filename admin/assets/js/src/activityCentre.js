@@ -253,7 +253,7 @@ class Comments extends React.Component {
                         tabs={ [
                             {
                                 name: 'cf-activity-centre',
-                                title: 'Activity Centre',
+                                title: 'Activities',
                                 className: 'cf-sidebar-activity-centre'
                             },
                             {

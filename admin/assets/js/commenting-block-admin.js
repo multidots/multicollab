@@ -355,8 +355,10 @@
                 var _self = $( createTextarea );
                 typedText = _self.html();
 
-                if( '<br>' === typedText ) {
-                    typedText = ''
+                // Clearing out any junk left when clearing the textarea.
+                if( '<br>' === _self.html() || '&nbsp;' === _self.html() ) {
+                    typedText = '';
+                    $( createTextarea ).html( '' );
                 }
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
@@ -708,7 +710,7 @@
                 let thisDisplayName = $( this ).data( 'display-name' );
                 let checkbox = `
                     <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i> Assign to ${thisDisplayName}</i>
+                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>Assign to ${thisDisplayName}</i>
                     </label>
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                 `;
