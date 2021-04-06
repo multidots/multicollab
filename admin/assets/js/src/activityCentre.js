@@ -18,6 +18,8 @@ class Comments extends React.Component {
             collapseLimit: 25,
         }
 
+        // Triggering settings cog.
+        this.triggerSettingsCog();
 
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
@@ -268,9 +270,7 @@ class Comments extends React.Component {
     }
 
     componentDidMount() {
-        // Triggering settings cog.
-        // this.triggerSettingsCog();
-        this.removeCommentsDiv();
+        // this.removeCommentsDiv();
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
     }
