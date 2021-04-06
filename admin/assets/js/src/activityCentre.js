@@ -442,7 +442,7 @@ class Comments extends React.Component {
                                                                     } )
                                                                 }
                                                                 { 'true' === th.resolved && undefined !== th.resolvedBy && (
-                                                                    <div className="user-data-box">
+                                                                    <div className="user-data-box cf-mark-as-resolved">
                                                                         <div className="user-avatar">
                                                                             <img src={ th.resolvedBy.avatarUrl } alt={ th.resolvedBy.username } />
                                                                         </div>
