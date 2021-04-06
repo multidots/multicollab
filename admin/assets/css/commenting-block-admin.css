@@ -252,14 +252,13 @@
   .cf-board-assigned-to .assigned-user-details .user-avatar img{border-radius:50%;margin-right:10px}
   .cf-board-assigned-to .assigned-user-details .user-info p.display-name{margin:0;line-height:20px;font-weight:600;font-size:14px}
   .cf-show-more{
-    background: #fff;
-    text-decoration: none;
-    padding: 1px 5px;
     display: inline-block;
-    margin-left: 5px;
+    margin-left: 10px;
     margin-top: 4px;
-    border: 1px dotted #4f94d4;
-    border-radius: 15px;
+    color: #0568C1 !important;
+    font-size: 10px;
+    font-weight: 500;
+    font-style: normal;
    }
   /* Editorial comments page */
   .cf-plugin-settings{-webkit-box-sizing:border-box;box-sizing:border-box;padding-right:20px}
@@ -314,7 +313,7 @@
   .cf-tabs-main .cf-tabs-content .cf-video-links{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin:30px 0 0}
   .cf-tabs-main .cf-tabs-content .cf-video-links .cf-link-wrap{margin:10px 30px 10px 0}
   /*=====================Comment activity css-05-04-2021===============*/
-  .user-data-row{border-top:1px solid #e9eaed;width: 100%;padding: 25px 30px 15px 10px;background-color: #fff;-webkit-transition: all 500ms;transition: all 500ms;}
+  .user-data-row{border-top:2px solid #E0E0E0;width: 100%;padding: 25px 30px 15px 10px;background-color: #fff;-webkit-transition: all 500ms;transition: all 500ms;}
   .user-data-row.cf-thread-resolved {background-color: #F3F5F6;}
   .user-data-row:hover {background-color: rgb(0 124 186 / 10%);}
   .user-data-row:last-child{padding-bottom: 5px;}
@@ -327,7 +326,16 @@
   .user-data-row .user-data-box .user-commented-on blockquote {border-left: 3px solid #0568C1;padding: 0 0 2px 0;font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin: 0 0 15px;}
   .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;}
   .user-data-row .user-assigned-to {font-size: 12px;color: #939393;font-weight: 500;font-style:italic;margin-top: 10px;}
-  .user-data-row .user-data-box:first-child .user-commented-on, .user-data-row .user-data-box:first-child .user-comment, .user-data-row .user-data-box:first-child .user-assigned-to {margin-left: 14px;}
+  .user-data-row .user-data-box:first-child .user-data-wrapper{margin-left: 14px;}
+  .user-data-box.cf-mark-as-resolved .user-data-header {display: block;}
+  button#tab-panel-0-cf-activity-centre.is-active, button#tab-panel-0-cf-settings.is-active {box-shadow: inset 0 0 0 2px transparent, inset 0 -2px 0 0 #1f53da;}
+  button#tab-panel-0-cf-activity-centre, button#tab-panel-0-cf-settings {width: 50%;background-color: #F9FAFA;font-size: 12px;font-weight: 600;line-height: 16px;padding: 3px 42px;position: relative;}
+  button#tab-panel-0-cf-activity-centre::before,button#tab-panel-0-cf-settings::before {content: "";position: absolute;left: 20px;top: 18px;background-repeat: no-repeat;width: 14px;height: 18px;}
+  button#tab-panel-0-cf-activity-centre::before{background-image: url(../images/activity-center.svg);}
+  button#tab-panel-0-cf-settings::before {background-image: url(../images/settings.svg);}
+  .user-data-box.cf-mark-as-resolved time.user-commented-date {font-size: 10px;font-weight: 500;color: #939393;}
+  .user-data-row .user-commented-on{font-size: 12px;color: #000000;}
+   /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
     .cf-tabs-main .cf-tab-inner{min-height:auto}
     .cf-plugin-settings .cf-left{width:calc(100% - 320px);padding:0 10px 0 0}
