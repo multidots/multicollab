@@ -106,11 +106,9 @@ class Comments extends React.Component {
         } )
         .then( ( res ) => {
             if( res.data.threads.length > 0 ) {
-                $( 'body' ).removeClass( 'hide-comments' ); // Show comment boxes if there are data available.
                 this.setState({
                     threads: res.data.threads,
                     isLoading: false,
-                    showComments: true
                 })
             } else {
                 this.setState({
