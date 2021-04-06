@@ -104,9 +104,11 @@ class Comments extends React.Component {
         } )
         .then( ( res ) => {
             if( res.data.threads.length > 0 ) {
+                $( 'body' ).removeClass( 'hide-comments' ); // Show comment boxes if there are data available.
                 this.setState({
                     threads: res.data.threads,
-                    isLoading: false
+                    isLoading: false,
+                    showComments: true
                 })
             } else {
                 this.setState({
@@ -263,7 +265,7 @@ class Comments extends React.Component {
     }
 
     componentDidMount() {
-        // this.removeCommentsDiv();
+        this.removeCommentsDiv();
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
     }
@@ -276,8 +278,8 @@ class Comments extends React.Component {
                     { __( "Multicollab", "cf-activity-center" ) }
                 </PluginSidebarMoreMenuItem>
                 <PluginSidebar
-                        name="cf-activity-center"
-                        title={ __( "Multicollab", "cf-activity-center" ) }
+                    name="cf-activity-center"
+                    title={ __( `Multicollab`, "cf-activity-center" ) }
                 >
                     <TabPanel className="my-tab-panel"
                         tabs={ [
