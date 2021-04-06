@@ -17,8 +17,7 @@ class Comments extends React.Component {
             showComments: true,
             collapseLimit: 25,
         }
-        // Triggering settings cog.
-        this.triggerSettingsCog();
+
 
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
@@ -54,6 +53,7 @@ class Comments extends React.Component {
                         }
                     } )
                 }
+                console.log( 'triggered' );
     
                 // Clearing interval if not found in 10 attemps.
                 if ( loadAttempts >= 10 ) {
@@ -161,7 +161,7 @@ class Comments extends React.Component {
      */
     reply( e ) {
         e.preventDefault();
-        
+
         // Resetting all reply comment textarea.
         $( '.js-cancel-comment' ).trigger( 'click' );
 
@@ -268,6 +268,8 @@ class Comments extends React.Component {
     }
 
     componentDidMount() {
+        // Triggering settings cog.
+        // this.triggerSettingsCog();
         this.removeCommentsDiv();
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
