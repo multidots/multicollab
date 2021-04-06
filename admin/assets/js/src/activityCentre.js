@@ -161,7 +161,10 @@ class Comments extends React.Component {
      */
     reply( e ) {
         e.preventDefault();
+        
+        // Resetting all reply comment textarea.
         $( '.js-cancel-comment' ).trigger( 'click' );
+
         // Open comment if not opened.
         if( ! this.state.showComments ) {
             this.handleShowComments();
