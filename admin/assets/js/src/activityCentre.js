@@ -18,8 +18,8 @@ class Comments extends React.Component {
             collapseLimit: 25,
         }
 
-        // Triggering settings cog.
-        // this.triggerSettingsCog();
+        // Append activity counter.
+        this.appendActivityCounter();
 
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
@@ -35,18 +35,11 @@ class Comments extends React.Component {
     }
 
     /**
-     * Trigger Default Settings Button on Sidebar.
+     * Append activity counter.
      */
-    triggerSettingsCog() {
+    appendActivityCounter() {
         $( window ).on( 'load', function() {
-            $( '.interface-pinned-items .components-button' ).each( function() {
-                var arialabel = $( this ).attr( 'aria-label' );
-                if( 'Settings' === arialabel ) {
-                    if( ! $( this ).hasClass( 'is-pressed' ) ) {
-                        $( this ).trigger( 'click' );
-                    }
-                }
-            } )
+            $( '.cf-sidebar-activity-centre' ).append(`<span id="history-toggle" data-count="0"></span>`);
         } )
     }
 
@@ -114,6 +107,7 @@ class Comments extends React.Component {
             this.handleShowComments();
         }
         var elID = e.target.dataset.elid;
+        elID     = elID.replace( 'cf-', '' );
         var alertMessage = __( 'Are you sure you want to resolve this thread ?', 'content-collaboration-inline-commenting' );
         if ( confirm( alertMessage ) ) {
 
@@ -154,6 +148,7 @@ class Comments extends React.Component {
         }
 
         var elID = e.target.dataset.elid;
+        elID     = elID.replace( 'cf-', '' );
         var findMdSpan = '.mdspan-comment';
         $( findMdSpan ).each( function() {
             var datatext = $( this ).attr( 'datatext' );
@@ -176,7 +171,11 @@ class Comments extends React.Component {
         }
 
         var elID = e.target.dataset.elid;
+        elID     = elID.replace( 'cf-', '' );
+
         var editID = e.target.dataset.editid;
+        editID     = editID.replace( 'cf-', '' );
+
         $( '.js-cancel-comment' ).trigger( 'click' );
         $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
         $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
@@ -194,9 +193,12 @@ class Comments extends React.Component {
         }
 
         var elID = e.target.dataset.elid;
-        var deleteID = e.target.dataset.deleteid;
-        $( `#${deleteID} .js-cancel-comment` ).trigger( 'click' );
+        elID     = elID.replace( 'cf-', '' );
 
+        var deleteID = e.target.dataset.deleteid;
+        deleteID     = deleteID.replace( 'cf-', '' );
+
+        $( `#${deleteID} .js-cancel-comment` ).trigger( 'click' );
         $( `#${elID} #${deleteID} .js-trash-comment` ).trigger( 'click' );
     }
 
@@ -299,7 +301,7 @@ class Comments extends React.Component {
 
                                             { undefined !== threads && null !== threads && threads.map( ( th ) => {
                                                 return (
-                                                    <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ th.elID } key={ th.elID }>
+                                                    <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ `cf-${`cf-${th.elID}`}` } key={ `cf-${`cf-${th.elID}`}` }>
                                                         {
                                                             th.activities.map( ( c, index ) => {
                                                                 if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
@@ -312,9 +314,8 @@ class Comments extends React.Component {
                                                                                     </div>
                                                                                     <div className="user-display-name">
                                                                                         <span class="user-name">{ c.userData.username } </span>
-                                                                                        { 0 >= index && (
-                                                                                            <time class="user-commented-date">{ c.timestamp }</time>
-                                                                                        ) }
+                                                                                        <time class="user-commented-date">{ c.timestamp }</time>
+
                                                                                     </div>
                                                                                 </div>
                                                                                 <div className="user-data-wrapper">
@@ -325,8 +326,8 @@ class Comments extends React.Component {
                                                                                                     { 'deleted' === c.status || 'true' === th.resolved ?
                                                                                                         (
                                                                                                             <React.Fragment>
-                                                                                                                <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</span>
-                                                                                                                <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ th.elID }>{ this.collapseText( th.selectedText ) }</span>
+                                                                                                                <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ `cf-${th.elID}` }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</span>
+                                                                                                                <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ `cf-${th.elID}` }>{ this.collapseText( th.selectedText ) }</span>
                                                                                                                 { 25 <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
@@ -340,8 +341,8 @@ class Comments extends React.Component {
                                                                                                             </React.Fragment>
                                                                                                         ) : (
                                                                                                             <React.Fragment>
-                                                                                                                <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-elid={ th.elID } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
-                                                                                                                <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-elid={ th.elID } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ this.collapseText( th.selectedText ) }</a>
+                                                                                                                <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-elid={ `cf-${th.elID}` } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
+                                                                                                                <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-elid={ `cf-${th.elID}` } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ this.collapseText( th.selectedText ) }</a>
                                                                                                                 { 25 <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
@@ -367,9 +368,9 @@ class Comments extends React.Component {
                                                                                             <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></span> // phpcs:ignore
                                                                                         ) }
                                                                                     </div>
-                                                                                    { 'publish' === c.status && 0 >= index && (
+                                                                                    { 'publish' === c.status && 0 >= index && undefined !== th.assignedTo.username && (
                                                                                         <div className="user-assigned-to">
-                                                                                            <span>{ __( 'Assigned to', 'content-collaboration-inline-commenting' ) } @someone</span>
+                                                                                            <span>{ __( 'Assigned to', 'content-collaboration-inline-commenting' ) } @{th.assignedTo.username}</span>
                                                                                         </div>
                                                                                     ) }
                                                                                     { 'true' !== th.resolved && (
@@ -378,7 +379,7 @@ class Comments extends React.Component {
                                                                                                 <React.Fragment>
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-cmnt-reply"
-                                                                                                        data-elid={ th.elID }
+                                                                                                        data-elid={ `cf-${th.elID}` }
                                                                                                         onClick={ this.reply.bind( this ) }
                                                                                                         title={ __( 'Reply', 'content-collaboration-inline-commenting' ) }
                                                                                                     >
@@ -387,21 +388,18 @@ class Comments extends React.Component {
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-thread-resolve js-resolve-comment"
                                                                                                         onClick={ this.resolveThread.bind( this ) }
-                                                                                                        data-elid={ th.elID }
+                                                                                                        data-elid={ `cf-${th.elID}` }
                                                                                                         title={ __( 'Mark as done', 'content-collaboration-inline-commenting' ) }
                                                                                                     >
                                                                                                         { __( 'Mark as done', 'content-collaboration-inline-commenting' ) }
                                                                                                     </a>
                                                                                                 </React.Fragment>
                                                                                             ) }
-                                                                                            { 0 < index && (
-                                                                                                <time class="user-replied-date">{ c.timestamp }</time>
-                                                                                            ) }
                                                                                             { 'publish' === c.status && 0 < index && (
                                                                                                 <React.Fragment>
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-cmnt-reply"
-                                                                                                        data-elid={ th.elID }
+                                                                                                        data-elid={ `cf-${th.elID}` }
                                                                                                         data-editid={ c.id }
                                                                                                         onClick={ this.edit.bind( this ) }
                                                                                                         title={ __( 'Edit', 'content-collaboration-inline-commenting' ) }
@@ -410,7 +408,7 @@ class Comments extends React.Component {
                                                                                                     </a>
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-cmnt-delete"
-                                                                                                        data-elid={ th.elID }
+                                                                                                        data-elid={ `cf-${th.elID}` }
                                                                                                         data-deleteid={ c.id }
                                                                                                         onClick={ this.delete.bind( this ) }
                                                                                                         title={ __( 'Delete', 'content-collaboration-inline-commenting' ) }

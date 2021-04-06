@@ -615,7 +615,6 @@ class Commenting_block_Admin {
 				'wp-api-fetch',
 				'wp-plugins',
 				'wp-edit-post',
-				'cf-activity-centre'
 			), wp_rand(), true );
 
 			$comment_id     = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
