@@ -19,7 +19,7 @@ class Comments extends React.Component {
         }
 
         // Triggering settings cog.
-        this.triggerSettingsCog();
+        // this.triggerSettingsCog();
 
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
@@ -39,32 +39,15 @@ class Comments extends React.Component {
      */
     triggerSettingsCog() {
         $( window ).on( 'load', function() {
-            let loadAttempts = 0;
-            const loadComments = setInterval(function () {
-                loadAttempts++;
-                if ( 1 <= $( '.components-button' ).length ) {
-                    // Clearing interval if found.
-                    clearInterval( loadComments );
-    
-                    $( '.components-button' ).each( function() {
-                        var arialabel = $( this ).attr( 'aria-label' );
-                        if( 'Settings' === arialabel ) {
-                            if( ! $( this ).hasClass( 'is-pressed' ) ) {
-                                $( this ).trigger( 'click' );
-                            }
-                        }
-                    } )
+            $( '.interface-pinned-items .components-button' ).each( function() {
+                var arialabel = $( this ).attr( 'aria-label' );
+                if( 'Settings' === arialabel ) {
+                    if( ! $( this ).hasClass( 'is-pressed' ) ) {
+                        $( this ).trigger( 'click' );
+                    }
                 }
-                console.log( 'triggered' );
-    
-                // Clearing interval if not found in 10 attemps.
-                if ( loadAttempts >= 10 ) {
-                    clearInterval( loadComments );
-                }
-            }, 1000);
-
+            } )
         } )
-
     }
 
     /**
@@ -319,10 +302,10 @@ class Comments extends React.Component {
                                                     <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ th.elID } key={ th.elID }>
                                                                 {
                                                                     th.activities.map( ( c, index ) => {
-                                                                        if( 'permanent_draft' !== c.status || 'draft' !== c.status ) {
+                                                                        if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
                                                                             return (
                                                                                 <div className="user-data-box" key={ index }>
-
+                                                                                    {c.status}
                                                                                     <div className="user-data">
                                                                                         <div className="user-data-header">
                                                                                             <div className="user-avatar">
@@ -335,109 +318,111 @@ class Comments extends React.Component {
                                                                                                 ) }
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div className="user-commented-on">
-                                                                                            { 0 >= index && (
-                                                                                                <React.Fragment>
-                                                                                                    <blockquote>
-                                                                                                        { 'deleted' === c.status || 'true' === th.resolved ?
-                                                                                                            (
-                                                                                                                <React.Fragment>
-                                                                                                                    <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</span>
-                                                                                                                    <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ th.elID }>{ this.collapseText( th.selectedText ) }</span>
-                                                                                                                    { 25 <= th.selectedText.length && (
-                                                                                                                        <a
-                                                                                                                            href="javascript:void(0)"
-                                                                                                                            className="cf-show-more"
-                                                                                                                            data-id={ c.id }
-                                                                                                                            onClick={ this.toggleCollapseLink.bind( this ) }
-                                                                                                                        >
-                                                                                                                            { __( 'More', 'content-collaboration-inline-commenting' ) }
-                                                                                                                        </a>
-                                                                                                                    ) }
-                                                                                                                </React.Fragment>
-                                                                                                            ) : (
-                                                                                                                <React.Fragment>
-                                                                                                                    <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-elid={ th.elID } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
-                                                                                                                    <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-elid={ th.elID } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ this.collapseText( th.selectedText ) }</a>
-                                                                                                                    { 25 <= th.selectedText.length && (
-                                                                                                                        <a
-                                                                                                                            href="javascript:void(0)"
-                                                                                                                            className="cf-show-more"
-                                                                                                                            data-id={ c.id }
-                                                                                                                            onClick={ this.toggleCollapseLink.bind( this ) }
-                                                                                                                        >
-                                                                                                                            { __( 'More', 'content-collaboration-inline-commenting' ) }
-                                                                                                                        </a>
-                                                                                                                    ) }
-                                                                                                                </React.Fragment>
-    
-                                                                                                            )
-                                                                                                        }
-                                                                                                    </blockquote>
-                                                                                                </React.Fragment>
-                                                                                            ) }
-                                                                                        </div>
-                                                                                        <div class="user-comment">
-                                                                                            { 0 < index && 'deleted' === c.status ? (
-                                                                                                <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
-                                                                                            ) : (
-                                                                                                <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></span> // phpcs:ignore
-                                                                                            ) }
-                                                                                        </div>
-                                                                                        { 'publish' === c.status && 0 >= index && (
-                                                                                            <div className="user-assigned-to">
-                                                                                                <span>{ __( 'Assigned to', 'content-collaboration-inline-commenting' ) } @someone</span>
-                                                                                            </div>
-                                                                                        ) }
-                                                                                        { 'true' !== th.resolved && (
-                                                                                            <div className="user-action">
-                                                                                                { 'publish' === c.status && 0 >= index && (
+                                                                                        <div className="user-data-wrapper">
+                                                                                            <div className="user-commented-on">
+                                                                                                { 0 >= index && (
                                                                                                     <React.Fragment>
-                                                                                                        <a href="javascript:void(0)"
-                                                                                                            className="user-cmnt-reply"
-                                                                                                            data-elid={ th.elID }
-                                                                                                            onClick={ this.reply.bind( this ) }
-                                                                                                            title={ __( 'Reply', 'content-collaboration-inline-commenting' ) }
-                                                                                                        >
-                                                                                                            { __( 'Reply', 'content-collaboration-inline-commenting' ) }
-                                                                                                        </a>
-                                                                                                        <a href="javascript:void(0)"
-                                                                                                            className="user-thread-resolve js-resolve-comment"
-                                                                                                            onClick={ this.resolveThread.bind( this ) }
-                                                                                                            data-elid={ th.elID }
-                                                                                                            title={ __( 'Mark as done', 'content-collaboration-inline-commenting' ) }
-                                                                                                        >
-                                                                                                            { __( 'Mark as done', 'content-collaboration-inline-commenting' ) }
-                                                                                                        </a>
-                                                                                                    </React.Fragment>
-                                                                                                ) }
-                                                                                                { 0 < index && (
-                                                                                                    <time class="user-replied-date">{ c.timestamp }</time>
-                                                                                                ) }
-                                                                                                { 'publish' === c.status && 0 < index && (
-                                                                                                    <React.Fragment>
-                                                                                                        <a href="javascript:void(0)"
-                                                                                                            className="user-cmnt-reply"
-                                                                                                            data-elid={ th.elID }
-                                                                                                            data-editid={ c.id }
-                                                                                                            onClick={ this.edit.bind( this ) }
-                                                                                                            title={ __( 'Edit', 'content-collaboration-inline-commenting' ) }
-                                                                                                        >
-                                                                                                            { __( 'Edit', 'content-collaboration-inline-commenting' ) }
-                                                                                                        </a>
-                                                                                                        <a href="javascript:void(0)"
-                                                                                                            className="user-cmnt-delete"
-                                                                                                            data-elid={ th.elID }
-                                                                                                            data-deleteid={ c.id }
-                                                                                                            onClick={ this.delete.bind( this ) }
-                                                                                                            title={ __( 'Delete', 'content-collaboration-inline-commenting' ) }
-                                                                                                        >
-                                                                                                            { __( 'Delete', 'content-collaboration-inline-commenting' ) }
-                                                                                                        </a>
+                                                                                                        <blockquote>
+                                                                                                            { 'deleted' === c.status || 'true' === th.resolved ?
+                                                                                                                (
+                                                                                                                    <React.Fragment>
+                                                                                                                        <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ th.elID }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</span>
+                                                                                                                        <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ th.elID }>{ this.collapseText( th.selectedText ) }</span>
+                                                                                                                        { 25 <= th.selectedText.length && (
+                                                                                                                            <a
+                                                                                                                                href="javascript:void(0)"
+                                                                                                                                className="cf-show-more"
+                                                                                                                                data-id={ c.id }
+                                                                                                                                onClick={ this.toggleCollapseLink.bind( this ) }
+                                                                                                                            >
+                                                                                                                                { __( 'More', 'content-collaboration-inline-commenting' ) }
+                                                                                                                            </a>
+                                                                                                                        ) }
+                                                                                                                    </React.Fragment>
+                                                                                                                ) : (
+                                                                                                                    <React.Fragment>
+                                                                                                                        <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-elid={ th.elID } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
+                                                                                                                        <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-elid={ th.elID } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ this.collapseText( th.selectedText ) }</a>
+                                                                                                                        { 25 <= th.selectedText.length && (
+                                                                                                                            <a
+                                                                                                                                href="javascript:void(0)"
+                                                                                                                                className="cf-show-more"
+                                                                                                                                data-id={ c.id }
+                                                                                                                                onClick={ this.toggleCollapseLink.bind( this ) }
+                                                                                                                            >
+                                                                                                                                { __( 'More', 'content-collaboration-inline-commenting' ) }
+                                                                                                                            </a>
+                                                                                                                        ) }
+                                                                                                                    </React.Fragment>
+        
+                                                                                                                )
+                                                                                                            }
+                                                                                                        </blockquote>
                                                                                                     </React.Fragment>
                                                                                                 ) }
                                                                                             </div>
-                                                                                        ) }
+                                                                                            <div class="user-comment">
+                                                                                                { 0 < index && 'deleted' === c.status ? (
+                                                                                                    <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
+                                                                                                ) : (
+                                                                                                    <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></span> // phpcs:ignore
+                                                                                                ) }
+                                                                                            </div>
+                                                                                            { 'publish' === c.status && 0 >= index && (
+                                                                                                <div className="user-assigned-to">
+                                                                                                    <span>{ __( 'Assigned to', 'content-collaboration-inline-commenting' ) } @someone</span>
+                                                                                                </div>
+                                                                                            ) }
+                                                                                            { 'true' !== th.resolved && (
+                                                                                                <div className="user-action">
+                                                                                                    { 'publish' === c.status && 0 >= index && (
+                                                                                                        <React.Fragment>
+                                                                                                            <a href="javascript:void(0)"
+                                                                                                                className="user-cmnt-reply"
+                                                                                                                data-elid={ th.elID }
+                                                                                                                onClick={ this.reply.bind( this ) }
+                                                                                                                title={ __( 'Reply', 'content-collaboration-inline-commenting' ) }
+                                                                                                            >
+                                                                                                                { __( 'Reply', 'content-collaboration-inline-commenting' ) }
+                                                                                                            </a>
+                                                                                                            <a href="javascript:void(0)"
+                                                                                                                className="user-thread-resolve js-resolve-comment"
+                                                                                                                onClick={ this.resolveThread.bind( this ) }
+                                                                                                                data-elid={ th.elID }
+                                                                                                                title={ __( 'Mark as done', 'content-collaboration-inline-commenting' ) }
+                                                                                                            >
+                                                                                                                { __( 'Mark as done', 'content-collaboration-inline-commenting' ) }
+                                                                                                            </a>
+                                                                                                        </React.Fragment>
+                                                                                                    ) }
+                                                                                                    { 0 < index && (
+                                                                                                        <time class="user-replied-date">{ c.timestamp }</time>
+                                                                                                    ) }
+                                                                                                    { 'publish' === c.status && 0 < index && (
+                                                                                                        <React.Fragment>
+                                                                                                            <a href="javascript:void(0)"
+                                                                                                                className="user-cmnt-reply"
+                                                                                                                data-elid={ th.elID }
+                                                                                                                data-editid={ c.id }
+                                                                                                                onClick={ this.edit.bind( this ) }
+                                                                                                                title={ __( 'Edit', 'content-collaboration-inline-commenting' ) }
+                                                                                                            >
+                                                                                                                { __( 'Edit', 'content-collaboration-inline-commenting' ) }
+                                                                                                            </a>
+                                                                                                            <a href="javascript:void(0)"
+                                                                                                                className="user-cmnt-delete"
+                                                                                                                data-elid={ th.elID }
+                                                                                                                data-deleteid={ c.id }
+                                                                                                                onClick={ this.delete.bind( this ) }
+                                                                                                                title={ __( 'Delete', 'content-collaboration-inline-commenting' ) }
+                                                                                                            >
+                                                                                                                { __( 'Delete', 'content-collaboration-inline-commenting' ) }
+                                                                                                            </a>
+                                                                                                        </React.Fragment>
+                                                                                                    ) }
+                                                                                                </div>
+                                                                                            ) }
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             )
