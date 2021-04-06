@@ -263,7 +263,7 @@ class Comments extends React.Component {
     }
 
     componentDidMount() {
-        this.removeCommentsDiv();
+        // this.removeCommentsDiv();
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
     }
@@ -317,18 +317,22 @@ class Comments extends React.Component {
                                                                         if( 'permanent_draft' !== c.status || 'draft' !== c.status ) {
                                                                             return (
                                                                                 <div className="user-data-box" key={ index }>
-                                                                                    <div className="user-avatar">
-                                                                                        <img src={ c.userData.avatarUrl } alt={ c.userData.username } />
-                                                                                    </div>
+
                                                                                     <div className="user-data">
                                                                                         <div className="user-data-header">
-                                                                                            <span class="user-name">{ c.userData.username } </span>
-                                                                                            <time class="user-commented-date">{ c.timestamp }</time>
+                                                                                            <div className="user-avatar">
+                                                                                                <img src={ c.userData.avatarUrl } alt={ c.userData.username } />
+                                                                                            </div>
+                                                                                            <div className="user-display-name">
+                                                                                                <span class="user-name">{ c.userData.username } </span>
+                                                                                                { 0 >= index && (
+                                                                                                    <time class="user-commented-date">{ c.timestamp }</time>
+                                                                                                ) }
+                                                                                            </div>
                                                                                         </div>
                                                                                         <div className="user-commented-on">
                                                                                             { 0 >= index && (
                                                                                                 <React.Fragment>
-                                                                                                    <span className="user-comment-status">{ __( 'Selected Text:', 'content-collaboration-inline-commenting' ) }</span>
                                                                                                     <blockquote>
                                                                                                         { 'deleted' === c.status || 'true' === th.resolved ?
                                                                                                             (
@@ -375,6 +379,11 @@ class Comments extends React.Component {
                                                                                                 <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></span> // phpcs:ignore
                                                                                             ) }
                                                                                         </div>
+                                                                                        { 'publish' === c.status && 0 >= index && (
+                                                                                            <div className="user-assigned-to">
+                                                                                                <span>{ __( 'Assigned to', 'content-collaboration-inline-commenting' ) } @someone</span>
+                                                                                            </div>
+                                                                                        ) }
                                                                                         { 'true' !== th.resolved && (
                                                                                             <div className="user-action">
                                                                                                 { 'publish' === c.status && 0 >= index && (
@@ -391,11 +400,14 @@ class Comments extends React.Component {
                                                                                                             className="user-thread-resolve js-resolve-comment"
                                                                                                             onClick={ this.resolveThread.bind( this ) }
                                                                                                             data-elid={ th.elID }
-                                                                                                            title={ __( 'Resolve', 'content-collaboration-inline-commenting' ) }
+                                                                                                            title={ __( 'Mark as done', 'content-collaboration-inline-commenting' ) }
                                                                                                         >
-                                                                                                            { __( 'Resolve', 'content-collaboration-inline-commenting' ) }
+                                                                                                            { __( 'Mark as done', 'content-collaboration-inline-commenting' ) }
                                                                                                         </a>
                                                                                                     </React.Fragment>
+                                                                                                ) }
+                                                                                                { 0 < index && (
+                                                                                                    <time class="user-replied-date">{ c.timestamp }</time>
                                                                                                 ) }
                                                                                                 { 'publish' === c.status && 0 < index && (
                                                                                                     <React.Fragment>

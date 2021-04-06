@@ -44,7 +44,6 @@ span.dashicon.dashicons.dashicons-admin-comments{min-width:24px;margin-right:8px
 #custom-history-popup table{width:100%;text-align:center}
 .user-avatar{
   margin-right: 5px;
-  float: left;
   width: 30px;
   border-radius: 50%;
   height: 30px;
@@ -57,7 +56,6 @@ span.dashicon.dashicons.dashicons-admin-comments{min-width:24px;margin-right:8px
 .user-title{float:left;width:60%;width:calc(100% - 265px);font-size:15px}
 .user-data-box{overflow:hidden; display: flex; justify-content: flex-start;}
 .user-data-row{border-top:1px solid #e9eaed;padding:15px 10px; width: 100%;}
-/* .user-data-row:first-child{ border-top: none; padding-top: 0px; } */
 .user-data-row .user-data-box {
   margin-left: 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
