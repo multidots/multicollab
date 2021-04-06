@@ -62,17 +62,19 @@ class Commenting_Block_Rest_Routes {
 
 			foreach( $comments['comments'] as $timestamp => $comment ) {
 				$user_info = get_userdata( $comment['userData'] );
-				$cmnts[] = [
-					'id'         => $timestamp,
-					'status'     => $comment['status'],
-					'timestamp'  => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
-					'userData'   => [
-						'username'  => $user_info->display_name,
-						'avatarUrl' => get_avatar_url( $user_info->user_email ),
-						'userRole'  => implode( ', ', $user_info->roles )
-					],
-					'thread'     => $comment['thread']
-				];
+				if( 'draft' !== $comment['status'] && 'permanent_draft' !== $comment['status'] ) {
+					$cmnts[] = [
+						'id'         => $timestamp,
+						'status'     => $comment['status'],
+						'timestamp'  => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
+						'userData'   => [
+							'username'  => $user_info->display_name,
+							'avatarUrl' => get_avatar_url( $user_info->user_email ),
+							'userRole'  => implode( ', ', $user_info->roles )
+						],
+						'thread'     => $comment['thread']
+					];
+				}
 			}
 
 			$resolved_by = [];

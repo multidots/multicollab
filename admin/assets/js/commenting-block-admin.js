@@ -15,7 +15,6 @@
 
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
-
     // On Document Ready Event.
     $( document ).ready(function () {
 
@@ -342,15 +341,11 @@
             } )
 
             // Format pasted content.
-            // if( '' !== createTextarea ) {
-                $( document.body ).on( 'paste', createTextarea, function(e) {
-                    // alert('why');
-                    e.preventDefault();
-                    var textContent = e.originalEvent.clipboardData.getData( 'text/plain' );
-                    // document.execCommand( 'insertHTML', false, textContent );
-                    document.querySelector( createTextarea ).innerText += textContent;
-                } )
-            // }
+            $( document.body ).on( 'paste', createTextarea, function(e) {
+                e.preventDefault();
+                var textContent = e.originalEvent.clipboardData.getData( 'text/plain' );
+                document.querySelector( createTextarea ).innerText += textContent;
+            } )
 
             // Triggering textarea keyup event.
             $( document.body ).on( 'keyup', createTextarea, function(e) {
