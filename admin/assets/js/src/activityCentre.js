@@ -37,14 +37,29 @@ class Comments extends React.Component {
      */
     triggerSettingsCog() {
         $( window ).on( 'load', function() {
-            $( '.components-button' ).each( function() {
-                var arialabel = $( this ).attr( 'aria-label' );
-                if( 'Settings' === arialabel ) {
-                    if( ! $( this ).hasClass( 'is-pressed' ) ) {
-                        $( this ).trigger( 'click' );
-                    }
+            let loadAttempts = 0;
+            const loadComments = setInterval(function () {
+                loadAttempts++;
+                if ( 1 <= $( '.components-button' ).length ) {
+                    // Clearing interval if found.
+                    clearInterval( loadComments );
+    
+                    $( '.components-button' ).each( function() {
+                        var arialabel = $( this ).attr( 'aria-label' );
+                        if( 'Settings' === arialabel ) {
+                            if( ! $( this ).hasClass( 'is-pressed' ) ) {
+                                $( this ).trigger( 'click' );
+                            }
+                        }
+                    } )
                 }
-            } )
+    
+                // Clearing interval if not found in 10 attemps.
+                if ( loadAttempts >= 10 ) {
+                    clearInterval( loadComments );
+                }
+            }, 1000);
+
         } )
 
     }
