@@ -615,6 +615,7 @@ class Commenting_block_Admin {
 				'wp-api-fetch',
 				'wp-plugins',
 				'wp-edit-post',
+				'cf-activity-centre'
 			), wp_rand(), true );
 
 			$comment_id     = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
@@ -633,7 +634,6 @@ class Commenting_block_Admin {
 				'cf-activity-centre',
 				COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCentre.build.min.js',
 				[
-					'content-collaboration-inline-commenting',
 					'wp-plugins',
 					'wp-editor',
 					'wp-edit-post',
