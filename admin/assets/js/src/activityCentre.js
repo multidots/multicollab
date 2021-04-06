@@ -30,6 +30,7 @@ class Comments extends React.Component {
         this.toggleCollapseLink       = this.toggleCollapseLink.bind( this );
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
+
     }
 
     /**
@@ -189,6 +190,7 @@ class Comments extends React.Component {
         var elID = e.target.dataset.elid;
         var editID = e.target.dataset.editid;
         $( '.js-cancel-comment' ).trigger( 'click' );
+        $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
         $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
         $( `#${elID} #${editID} .js-edit-comment` ).trigger( 'click' );
     }
@@ -248,7 +250,20 @@ class Comments extends React.Component {
         })
     }
 
+    /**
+     * Remove Editor Comments Box if there is no more comments in the activity center.
+     */
+    removeCommentsDiv() {
+        if( this.state.threads.length <= 0 ) {
+            $( 'body' ).addClass( 'hide-comments' );
+            this.setState({
+                showComments: false
+            })
+        }
+    }
+
     componentDidMount() {
+        this.removeCommentsDiv();
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
     }

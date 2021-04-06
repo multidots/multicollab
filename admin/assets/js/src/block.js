@@ -76,6 +76,8 @@ function fetchComments() {
         // If no comment tag exist, remove the loader and temp style tag immediately.
         const span_count = $('.wp-block mdspan').length;
         if (0 === span_count) {
+            $( '#md-comments-suggestions-parent' ).remove();
+            $( '.block-editor-writing-flow' ).css( { width: '100% !important' } )
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
         } else {
