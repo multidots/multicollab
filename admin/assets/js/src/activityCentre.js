@@ -305,7 +305,6 @@ class Comments extends React.Component {
                                                                         if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
                                                                             return (
                                                                                 <div className="user-data-box" key={ index }>
-                                                                                    {c.status}
                                                                                     <div className="user-data">
                                                                                         <div className="user-data-header">
                                                                                             <div className="user-avatar">
