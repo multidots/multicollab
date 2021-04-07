@@ -125,7 +125,7 @@
   button.btn-comment.btn-reject{box-shadow:none;background-color:#fff;background-image:none;cursor:pointer;border-radius:2px;border-width:1px;border-color:transparent!important;min-width:24px;vertical-align:middle;margin:0 8px 0 0;line-height:1}
   .cls-board-outer .board .commentContainer:last-child{margin-bottom:0}
   .comment-header button{margin-top:0!important}
-  .cls-board-outer.focus{position:absolute;top:100px;z-index:9;opacity:1;right:45px;left:initial;transition:all 0.5s}
+  .cls-board-outer.focus{position:absolute;top:100px;z-index:9;opacity:1;right:45px;left:initial;transition:all 0.5s;cursor: auto;}
   .custom-buttons .components-button{box-shadow:none!important;height:36px;min-width:36px;padding:6px;box-sizing:border-box;position:relative;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}
   .custom-buttons .components-button:hover{color:#4B1BCE}
   .shareCommentContainer.loading{position:relative}
@@ -260,6 +260,7 @@
     font-weight: 500;
     font-style: normal;
    }
+   .cf-show-more:focus{box-shadow: none;}
   /* Editorial comments page */
   .cf-plugin-settings{-webkit-box-sizing:border-box;box-sizing:border-box;padding-right:20px}
   .cf-plugin-settings *{-webkit-box-sizing:border-box;box-sizing:border-box}
@@ -324,6 +325,7 @@
   .user-data-row .user-data-box .user-commented-date {font-size: 11px;line-height: 15px;color: #191E23;font-weight: 400;}
   .user-data-row .user-data-box .user-commented-on blockquote {border-left: 3px solid #0568C1;padding: 0 0 2px 15px;font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin: 0 0 15px;}
   .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;}
+  .user-data-box.user-reply .user-comment{word-break: break-all;}
   .user-data-row .user-assigned-to {font-size: 12px;color: #939393;font-weight: 500;font-style:italic;margin-top: 10px;}
   .user-data-row .user-data-box:first-child .user-data-wrapper{margin-left: 14px;}
   .user-data-box.cf-mark-as-resolved .user-data-header {display: block;}
@@ -343,6 +345,9 @@
   .user-cmnt-delete {position: relative;padding-left: 10px;}
   .user-thread-resolve.js-resolve-comment {position: relative;padding-left: 12px;}
   .user-data-box.user-reply .user-action a {font-size: 10px;font-weight: 500;line-height: 14px;color: #0568C1;}
+  .user-action a:focus{box-shadow: none !important;text-decoration: underline;}
+  .user-data-row .user-comment a{color: #0568C1;}
+  .comment-header .comment-actions .buttons-wrapper i:hover{cursor: pointer;}
    /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
     .cf-tabs-main .cf-tab-inner{min-height:auto}
