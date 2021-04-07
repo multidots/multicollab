@@ -260,6 +260,7 @@
     font-weight: 500;
     font-style: normal;
    }
+   .cf-show-more:focus{box-shadow: none;}
   /* Editorial comments page */
   .cf-plugin-settings{-webkit-box-sizing:border-box;box-sizing:border-box;padding-right:20px}
   .cf-plugin-settings *{-webkit-box-sizing:border-box;box-sizing:border-box}
@@ -323,7 +324,8 @@
   .user-data-row .user-data-box .user-name{font-size: 14px;text-transform: capitalize;line-height: 19px;color: #000000;width: 100%;float:left;font-weight: 600;}
   .user-data-row .user-data-box .user-commented-date {font-size: 11px;line-height: 15px;color: #191E23;font-weight: 400;}
   .user-data-row .user-data-box .user-commented-on blockquote {border-left: 3px solid #0568C1;padding: 0 0 2px 15px;font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin: 0 0 15px;}
-  .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;word-break: break-all;}
+  .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;}
+  .user-data-box.user-reply .user-comment{word-break: break-all;}
   .user-data-row .user-assigned-to {font-size: 12px;color: #939393;font-weight: 500;font-style:italic;margin-top: 10px;}
   .user-data-row .user-data-box:first-child .user-data-wrapper{margin-left: 14px;}
   .user-data-box.cf-mark-as-resolved .user-data-header {display: block;}
@@ -344,6 +346,7 @@
   .user-thread-resolve.js-resolve-comment {position: relative;padding-left: 12px;}
   .user-data-box.user-reply .user-action a {font-size: 10px;font-weight: 500;line-height: 14px;color: #0568C1;}
   .user-action a:focus{box-shadow: none !important;text-decoration: underline;}
+  .user-data-row .user-comment a{color: #0568C1;}
    /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
     .cf-tabs-main .cf-tab-inner{min-height:auto}
