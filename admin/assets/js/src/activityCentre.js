@@ -317,7 +317,7 @@ class Comments extends React.Component {
                                                                                                             <React.Fragment>
                                                                                                                 <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ `cf-${th.elID}` }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</span>
                                                                                                                 <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ `cf-${th.elID}` }>{ this.collapseText( th.selectedText ) }</span>
-                                                                                                                { 25 <= th.selectedText.length && (
+                                                                                                                { null !== th.selectedText && 25 <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
                                                                                                                         className="cf-show-more"
@@ -332,7 +332,7 @@ class Comments extends React.Component {
                                                                                                             <React.Fragment>
                                                                                                                 <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-elid={ `cf-${th.elID}` } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
                                                                                                                 <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-elid={ `cf-${th.elID}` } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ this.collapseText( th.selectedText ) }</a>
-                                                                                                                { 25 <= th.selectedText.length && (
+                                                                                                                { null !== th.selectedText && 25 <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
                                                                                                                         className="cf-show-more"
