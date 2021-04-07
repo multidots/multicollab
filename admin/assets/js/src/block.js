@@ -309,7 +309,6 @@ const mdComment = {
         getSelectedText() {
             const { onChange, value, activeAttributes } = this.props;
 
-
             // Prevent on locked mode + fix for unnecessary calls on hover.
             if ($('.cls-board-outer').hasClass('locked') ) {
                 return;
@@ -399,6 +398,7 @@ const mdComment = {
                 this.floatComments(selectedText);
             }
             $( '.js-cancel-comment' ).trigger( 'click' ); // Closing all opened edit comment box.
+            $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
         }
 
         floatComments(selectedText) {

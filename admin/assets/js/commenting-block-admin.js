@@ -13,6 +13,13 @@
      *
      */
 
+    // Resetting All Class From Activity Center
+    $( document ).on( 'click', '.cls-board-outer', function() {
+        var boardID = $( this ).attr( 'id' )
+        $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+        $( `#cf-${boardID}` ).addClass( 'active' );
+    } )
+
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
     // On Document Ready Event.
