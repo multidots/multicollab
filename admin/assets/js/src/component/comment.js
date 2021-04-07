@@ -239,7 +239,6 @@ export default class Comment extends React.Component {
     }
 
     render() {
-        console.log( 'state: ' + this.state.editing )
         if (this.state.editing) {
             return this.renderEditingMode();
         } else {

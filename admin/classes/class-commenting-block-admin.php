@@ -652,6 +652,7 @@ class Commenting_block_Admin {
 				'nonce'   => wp_create_nonce( 'wp_rest' ),
 				'apiUrl'  => home_url( '/wp-json' ),
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'currentUserID' => get_current_user_id(),
 			] );
 		}
 

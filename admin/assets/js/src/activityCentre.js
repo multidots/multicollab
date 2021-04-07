@@ -29,6 +29,9 @@ class Comments extends React.Component {
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
 
+        // Grab the current user id.
+        this.currentUserID = activityLocalizer.currentUserID
+
     }
 
     /**
@@ -242,13 +245,13 @@ class Comments extends React.Component {
     }
 
     componentDidMount() {
-        // this.removeCommentsDiv();
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
     }
 
     render() {
         const { threads, showComments, isLoading } = this.state;
+
         return (
             <Fragment>
                 <PluginSidebarMoreMenuItem target="cf-activity-center">
@@ -317,14 +320,14 @@ class Comments extends React.Component {
                                                                                                             <React.Fragment>
                                                                                                                 <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ `cf-${th.elID}` }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</span>
                                                                                                                 <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ `cf-${th.elID}` }>{ this.collapseText( th.selectedText ) }</span>
-                                                                                                                { null !== th.selectedText && 25 <= th.selectedText.length && (
+                                                                                                                { null !== th.selectedText && 45 <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
                                                                                                                         className="cf-show-more"
                                                                                                                         data-id={ c.id }
                                                                                                                         onClick={ this.toggleCollapseLink.bind( this ) }
                                                                                                                     >
-                                                                                                                        { __( 'More', 'content-collaboration-inline-commenting' ) }
+                                                                                                                        { __( 'Show all', 'content-collaboration-inline-commenting' ) }
                                                                                                                     </a>
                                                                                                                 ) }
                                                                                                             </React.Fragment>
@@ -332,14 +335,14 @@ class Comments extends React.Component {
                                                                                                             <React.Fragment>
                                                                                                                 <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-elid={ `cf-${th.elID}` } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
                                                                                                                 <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-elid={ `cf-${th.elID}` } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ this.collapseText( th.selectedText ) }</a>
-                                                                                                                { null !== th.selectedText && 25 <= th.selectedText.length && (
+                                                                                                                { null !== th.selectedText && 45 <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
                                                                                                                         className="cf-show-more"
                                                                                                                         data-id={ c.id }
                                                                                                                         onClick={ this.toggleCollapseLink.bind( this ) }
                                                                                                                     >
-                                                                                                                        { __( 'More', 'content-collaboration-inline-commenting' ) }
+                                                                                                                        { __( 'Show all', 'content-collaboration-inline-commenting' ) }
                                                                                                                     </a>
                                                                                                                 ) }
                                                                                                             </React.Fragment>
@@ -364,7 +367,7 @@ class Comments extends React.Component {
                                                                                     ) }
                                                                                     { 'true' !== th.resolved && (
                                                                                         <div className="user-action">
-                                                                                            { 'publish' === c.status && 0 >= index && (
+                                                                                            { 'publish' === c.status && 0 >= index && parseInt( this.currentUserID, 10 ) === c.userData.id && (
                                                                                                 <React.Fragment>
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-cmnt-reply"
@@ -384,7 +387,7 @@ class Comments extends React.Component {
                                                                                                     </a>
                                                                                                 </React.Fragment>
                                                                                             ) }
-                                                                                            { 'publish' === c.status && 0 < index && (
+                                                                                            { 'publish' === c.status && 0 < index && parseInt( this.currentUserID, 10 ) === c.userData.id && (
                                                                                                 <React.Fragment>
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-cmnt-reply"

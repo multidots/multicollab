@@ -68,6 +68,7 @@ class Commenting_Block_Rest_Routes {
 						'status'     => $comment['status'],
 						'timestamp'  => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
 						'userData'   => [
+							'id'        => intval( $user_info->ID ),
 							'username'  => $user_info->display_name,
 							'avatarUrl' => get_avatar_url( $user_info->user_email ),
 							'userRole'  => implode( ', ', $user_info->roles )
