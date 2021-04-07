@@ -29,7 +29,7 @@ export default class Comment extends React.Component {
     }
 
     edit() {
-        $( '.js-cancel-comment' ).trigger( 'click' ); // Resetting all opend edit comment box.
+        // $( '.js-cancel-comment' ).trigger( 'click' ); // Resetting all opend edit comment box.
 
         this.setState({editing: true});
 
@@ -239,7 +239,7 @@ export default class Comment extends React.Component {
     }
 
     render() {
-
+        console.log( 'state: ' + this.state.editing )
         if (this.state.editing) {
             return this.renderEditingMode();
         } else {

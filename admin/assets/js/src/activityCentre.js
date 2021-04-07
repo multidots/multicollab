@@ -36,7 +36,7 @@ class Comments extends React.Component {
      */
     collapseText( str ) {
         let text = str;
-        if( null !== this.state.collapseLimit ) {
+        if( null !== this.state.collapseLimit && null !== text ) {
             text = str.slice( 0, this.state.collapseLimit ) + ( str.length > this.state.collapseLimit ? '...' : '' );
         }
         return ( __( text, 'content-collaboration-inline-commenting' ) );
