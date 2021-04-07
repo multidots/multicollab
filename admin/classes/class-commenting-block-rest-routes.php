@@ -96,16 +96,18 @@ class Commenting_Block_Rest_Routes {
 				];
 			}
 
-			$threads[] = [
-				'elID'              => $elID,
-				'activities'        => $cmnts,
-				'selectedText'      => $comments['commentedOnText'],
-				'resolved'          => isset( $comments['resolved'] ) ? $comments['resolved'] : 'false',
-				'resolvedTimestamp' => isset( $comments['resolved_timestamp'] ) ? gmdate( $time_format . ' ' . $date_format, intval( $comments['resolved_timestamp'] ) ): '',
-				'resolvedBy'        => $resolved_by,
-				'updatedAt'			=> $comments['updated_at'],
-				'assignedTo'		=> $assigned_user,
-			];
+			if( ! empty( $cmnts ) ) {
+				$threads[] = [
+					'elID'              => $elID,
+					'activities'        => $cmnts,
+					'selectedText'      => $comments['commentedOnText'],
+					'resolved'          => isset( $comments['resolved'] ) ? $comments['resolved'] : 'false',
+					'resolvedTimestamp' => isset( $comments['resolved_timestamp'] ) ? gmdate( $time_format . ' ' . $date_format, intval( $comments['resolved_timestamp'] ) ): '',
+					'resolvedBy'        => $resolved_by,
+					'updatedAt'			=> $comments['updated_at'],
+					'assignedTo'		=> $assigned_user,
+				];
+			}
 		}
 
 		array_multisort( array_column( $threads, 'updatedAt' ), SORT_DESC, $threads );

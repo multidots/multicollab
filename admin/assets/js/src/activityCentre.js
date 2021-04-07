@@ -290,7 +290,7 @@ class Comments extends React.Component {
 
                                             { undefined !== threads && null !== threads && threads.map( ( th ) => {
                                                 return (
-                                                    <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ `cf-${`cf-${th.elID}`}` } key={ `cf-${`cf-${th.elID}`}` }>
+                                                    <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ `cf-${`${th.elID}`}` } key={ `cf-${`${th.elID}`}` }>
                                                         {
                                                             th.activities.map( ( c, index ) => {
                                                                 if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
