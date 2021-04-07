@@ -166,13 +166,17 @@ class Commenting_block_Admin {
 
 		foreach ( $metas as $key => $val ) {
 			if ( substr( $key, 0, 3 ) === '_el' ) {
+
 				$key = str_replace( '_el', '', $key );
 				if ( strpos( $val[0], 'resolved' ) === false && strpos( $content, $key ) !== false ) {
 					$open_counts ++;
 				}
+
 				$total_count ++;
+
 			}
 		}
+		// die();
 
 		// Confirm open counts with the meta value, if not
 		// matched, update it. Just for double confirmation.
