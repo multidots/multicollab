@@ -226,7 +226,7 @@
   #adminmenuwrap .toplevel_page_editorial-comments .wp-menu-image img{width:20px}
   
   /* Email Mentioning Popup */
-  .cf-share-comment-wrapper{width: 100%;height: auto;border:1px solid #007cba;border-radius:5px;padding: 5px;}
+  .cf-share-comment-wrapper{width: 100%;height: auto;border:1px solid #007cba;border-radius:5px;padding: 8px 5px;}
   .cf-share-comment{display:inline-block;background-color:#fff;color:#222;border-radius:5px}
   [contenteditable=true]:empty::before{content:attr(placeholder);pointer-events:none;display:block}
   .js-mentioned{font-weight:600;text-decoration:none}
