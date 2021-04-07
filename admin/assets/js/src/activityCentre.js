@@ -138,6 +138,7 @@ class Comments extends React.Component {
         var elID = e.target.dataset.elid;
         elID     = elID.replace( 'cf-', '' );
         var findMdSpan = '.mdspan-comment';
+        $( findMdSpan ).attr( 'data-rich-text-format-boundary', 'false' );
         $( findMdSpan ).each( function() {
             var datatext = $( this ).attr( 'datatext' );
             if( elID === datatext ) {
@@ -294,7 +295,7 @@ class Comments extends React.Component {
                                                             th.activities.map( ( c, index ) => {
                                                                 if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
                                                                     return (
-                                                                        <div className="user-data-box" key={ index }>
+                                                                        <div className={ 0 < index ? 'user-data-box user-reply' : 'user-data-box' } key={ index }>
                                                                             <div className="user-data">
                                                                                 <div className="user-data-header">
                                                                                     <div className="user-avatar">
