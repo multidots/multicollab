@@ -18,9 +18,6 @@ class Comments extends React.Component {
             collapseLimit: 25,
         }
 
-        // Append activity counter.
-        this.appendActivityCounter();
-
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
@@ -32,15 +29,6 @@ class Comments extends React.Component {
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
 
-    }
-
-    /**
-     * Append activity counter.
-     */
-    appendActivityCounter() {
-        $( window ).on( 'load', function() {
-            $( '.cf-sidebar-activity-centre' ).append(`<span id="history-toggle" data-count="0"></span>`);
-        } )
     }
 
     /**

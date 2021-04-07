@@ -22,6 +22,10 @@ $( window ).on('load', function () {
 
             // Fetching comments
             fetchComments();
+
+            // Appneding Notification Counter On Activities Tab.
+            const notificationCounter = `<span id="history-toggle" data-count="0"></span>`;
+            $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
         }
 
         // Clearing interval if not found in 10 attemps.
