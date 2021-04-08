@@ -79,7 +79,7 @@
   #custom-history-popup table td{padding:15px 0}
   #comments-toggle.active, #history-toggle.active{color:#4B1BCE}
   #history-toggle{line-height:normal}
-  #history-toggle::before{content:attr(data-count);position:absolute;top:5px;right:31px;background:#f02849;color:#FFFFFF;padding:2px;border-radius:10px;font-size:9px;font-weight:600;width:18px;height:18px;text-align:center;box-sizing:border-box;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center}
+  #history-toggle::before{content:attr(data-count);position:absolute;top:16px;right:15px;background:#f02849;color:#FFFFFF;padding:2px;border-radius:10px;font-size:8px;font-weight:600;width:16px;height:16px;line-height:16px;text-align:center;box-sizing:border-box;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center}
   .block-editor-editor-skeleton__body{position:relative}
   .comment-header .buttons-holder .buttons-wrapper{display:none;position:absolute;background:#fff;box-shadow:rgba(60, 64, 67, 0.15) 0 2px 6px 2px;right:0;border-radius:4px;padding-top:5px;z-index:1}
   .comment-header .buttons-holder.is_active .buttons-wrapper{display:block}
@@ -254,13 +254,13 @@
   .cf-board-assigned-to .assigned-user-details .user-info p.display-name{margin:0;line-height:20px;font-weight:600;font-size:14px}
   .cf-show-more{
     display: inline-block;
-    margin-left: 10px;
     color: #0568C1 !important;
     font-size: 10px;
     font-weight: 500;
     font-style: normal;
    }
    .cf-show-more:focus{box-shadow: none;}
+   .user-data-row .user-commented-on.show-less, .user-data-row .user-commented-on.show-all {margin-right: 10px;}
    .cls-board-outer .board .commentContainer .commentText a.js-mentioned {color: #0568C1;}
   /* Editorial comments page */
   .cf-plugin-settings{-webkit-box-sizing:border-box;box-sizing:border-box;padding-right:20px}
@@ -326,7 +326,7 @@
   .user-data-row .user-data-box .user-commented-date {font-size: 11px;line-height: 15px;color: #191E23;font-weight: 400;}
   .user-data-row .user-data-box .user-commented-on blockquote {border-left: 3px solid #0568C1;padding: 0 0 2px 15px;font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin: 0 0 15px;}
   .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;word-break: break-word;}
-  .user-data-row .user-assigned-to {font-size: 12px;color: #939393;font-weight: 500;font-style:italic;margin-top: 10px;}
+  .user-data-row .user-assigned-to {font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin-top: 10px;}
   .user-data-row .user-data-box:first-child .user-data-wrapper{margin-left: 14px;}
   .user-data-box.cf-mark-as-resolved .user-data-header {display: block;}
   .cf-sidebar-activity-centre.is-active, .cf-sidebar-settings.is-active {box-shadow:none !important;}
@@ -348,8 +348,10 @@
   .user-action a:focus{box-shadow: none !important;text-decoration: underline;}
   .user-data-row .user-comment a{color: #0568C1;}
   .comment-header .comment-actions .buttons-wrapper i:hover,.readmoreComment:hover, .readlessComment:hover{cursor: pointer;}
-  .user-data-row .user-assigned-to span::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 2px;background-repeat: no-repeat;width: 14px;height: 14px;}
-  .user-data-row .user-assigned-to span {position: relative;padding-left: 20px;}
+  .user-data-row .user-assigned-to > span::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 3px;background-repeat: no-repeat;width: 14px;height: 14px;}
+  .user-data-row .user-assigned-to > span {position: relative;}
+  .user-data-row .user-assigned-to span a {color: #0568C1;text-decoration: none;text-transform: capitalize;}
+  .assign-avatar-data {padding-left: 19px;display: block;}
   .user-data-row .user-comment strong::before {content: "";background-image: url(../images/marked.svg);position: absolute;left: 0px;top: 1px;background-repeat: no-repeat;width: 14px;height: 14px;}
   .user-data-row .user-comment strong {font-size: 10px;font-weight: 500;font-style: italic;color: #000000;position: relative;padding-left: 18px;}
    /*=====================Comment activity css-05-04-2021===============*/
