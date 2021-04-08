@@ -47,6 +47,7 @@
     margin-right: 10px;
     width: 32px;
     height: 32px;
+    flex-shrink: 0;
   
   }
   .user-time{float:right;width:200px;text-align:right;color:#191e23;font-size:14px}
