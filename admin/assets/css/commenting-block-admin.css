@@ -326,7 +326,7 @@
   .user-data-box .user-data-header {display: flex;align-items: center;margin-bottom: 17px;justify-content: flex-start;}
   .user-data-box.user-reply .user-data-header,.user-data-box.cf-mark-as-resolved .user-data-header {margin-bottom: 10px;}
   .user-data-row .user-avatar img{max-height: 32px;}
-  .user-data-row .user-data-box .user-name{font-size: 14px;line-height: 19px;color: #000000;width: 100%;float:left;font-weight: 600;}
+  .user-data-row .user-data-box .user-name{font-size: 14px;line-height: 19px;color: #000000;width: 100%;float:left;font-weight: 600;text-transform: capitalize;}
   .user-data-row .user-data-box .user-commented-date {font-size: 11px;line-height: 15px;color: #191E23;font-weight: 400;}
   .user-data-row .user-data-box .user-commented-on blockquote {border-left: 3px solid #0568C1;padding: 0 0 2px 15px;font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin: 0 0 15px;}
   .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;word-break: break-word;}
@@ -360,6 +360,7 @@
   .user-data-row .user-comment strong {font-size: 10px;font-weight: 500;font-style: italic;color: #000000;position: relative;padding-left: 18px;}
   .user-data-row:not(.active) .user-data-box:first-child .user-action .user-cmnt-reply:hover, .user-data-row:not(.active) .user-data-box:first-child .user-action .user-thread-resolve:hover {color: #0568C1;}
   .user-data-row:not(.active) .user-data-box:first-child .user-action .user-cmnt-reply, .user-data-row:not(.active) .user-data-box:first-child .user-action .user-thread-resolve {color: #939393;}
+  .user-data-row .user-assigned-to .assign-avatar-data a, .user-data-row .user-comment a, .cf-board-assigned-to .assigned-user-details .user-info p.display-name, .comment-header .commenter-name-time .commenter-name, .cls-board-outer .board .commentContainer .commentText a.js-mentioned {text-transform: capitalize;}
    /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
     .cf-tabs-main .cf-tab-inner{min-height:auto}
