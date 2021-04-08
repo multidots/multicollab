@@ -25,7 +25,7 @@ class Comments extends React.Component {
         this.edit               = this.edit.bind( this );
         this.reply              = this.reply.bind( this );
         this.delete             = this.delete.bind( this );
-        this.toggleCollapseLink       = this.toggleCollapseLink.bind( this );
+        this.toggleCollapseLink = this.toggleCollapseLink.bind( this );
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
 
@@ -45,6 +45,9 @@ class Comments extends React.Component {
         return ( __( text, 'content-collaboration-inline-commenting' ) );
     }
 
+    /**
+     * Changing collapse link text.
+     */
     toggleCollapseLink( e ) {
         var targetID = e.target.dataset.id;
         var _this = e.target;
@@ -253,36 +256,32 @@ class Comments extends React.Component {
     }
 
     /**
-     * Remove Editor Comments Box if there is no more comments in the activity center.
+     * Appned Counter on Activity Center.
      */
-    removeCommentsDiv() {
-        if( this.state.threads.length <= 0 ) {
-            $( 'body' ).addClass( 'hide-comments' );
-            this.setState({
-                showComments: false
-            })
-        }
+    appendCounter() {
+        wp.data.subscribe( function() {
+            var isPluginSidebarOpen = wp.data.select( 'core/edit-post' ).isPluginSidebarOpened();
+            var isEditorSidebarOpen = wp.data.select( 'core/edit-post' ).isEditorSidebarOpened();
+            if( isPluginSidebarOpen && !isEditorSidebarOpen ) {
+                var openBoards = $('.cls-board-outer:visible').length;
+                setTimeout( function() {
+                    if( $( '#history-toggle' ).length <= 0 ) {
+                        const notificationCounter = `<span id="history-toggle" data-test="testing" data-count="${openBoards}"></span>`;
+                        $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
+                    }
+                }, 300 )
+            }
+        } );
     }
 
     componentDidMount() {
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
-
+        this.appendCounter(); // Appending counter.
     }
 
     render() {
         const { threads, showComments, isLoading, collapseLimit } = this.state;
-
-        let isPluginSidebarOpen = wp.data.select( 'core/edit-post' ).isPluginSidebarOpened();
-        if( isPluginSidebarOpen) {
-            var openBoards = $('.cls-board-outer:visible').length;
-            setTimeout( function() {
-                if( $( '#history-toggle' ).length <= 0 ) {
-                    const notificationCounter = `<span id="history-toggle" data-test="testing" data-count="${openBoards}"></span>`;
-                    $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
-                }
-            }, 300 )
-        }
 
         return (
             <Fragment>
