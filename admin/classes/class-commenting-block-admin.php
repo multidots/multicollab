@@ -417,7 +417,7 @@ class Commenting_block_Admin {
 			$html .= '<div class="comment-box-body" style="border:1px solid #eee;border-radius:20px;padding:30px;">';
 			$html .= '<h3 class="head-with-icon" style="margin:0;padding-bottom:20px;font-family:Roboto,Arial,sans-serif;font-weight:600;">';
 			$html .= '<span class="icon-resolved" style="padding-right:10px;vertical-align:middle;">';
-			$html .= '<img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/images/icon-check-fill.png' ).'" alt="Resolved" />';
+			$html .= '<img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/assets/images/icon-check-fill.png' ).'" alt="Resolved" />';
 			$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
 			$html .= '</h3>';
 

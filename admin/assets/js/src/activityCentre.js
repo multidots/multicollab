@@ -132,7 +132,7 @@ class Comments extends React.Component {
 
         // Setting active class.
         this.setActiveBoard( elID );
-        
+
     }
 
     /**
@@ -209,7 +209,7 @@ class Comments extends React.Component {
 
         $( `#${deleteID} .js-cancel-comment` ).trigger( 'click' );
         $( `#${elID} #${deleteID} .js-trash-comment` ).trigger( 'click' );
-        
+
         // Setting active class.
         this.setActiveBoard( elID );
     }
@@ -267,10 +267,20 @@ class Comments extends React.Component {
     componentDidMount() {
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
+
     }
 
     render() {
         const { threads, showComments, isLoading } = this.state;
+
+        let isPluginSidebarOpen = wp.data.select( 'core/edit-post' ).isPluginSidebarOpened();
+        if( isPluginSidebarOpen) {
+            var openBoards = $('.cls-board-outer:visible').length;
+            setTimeout( function() {
+                const notificationCounter = `<span id="history-toggle" data-count="${openBoards}"></span>`;
+                $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
+            }, 300 )
+        }
 
         return (
             <Fragment>
