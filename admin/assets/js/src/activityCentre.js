@@ -394,7 +394,7 @@ class Comments extends React.Component {
                                                                                     </div>
                                                                                     { 'publish' === c.status && 0 >= index && undefined !== th.assignedTo.username && (
                                                                                         <div className="user-assigned-to">
-                                                                                            <span>{ __( 'Assigned to', 'content-collaboration-inline-commenting' ) } <a href={`mailto:${th.assignedTo.email}`} title={th.assignedTo.username}>@{th.assignedTo.username}</a></span>
+                                                                                            <span>{ __( 'Assigned to', 'content-collaboration-inline-commenting' ) } <a href={`mailto:${th.assignedTo.email}`} title={th.assignedTo.username}> {th.assignedTo.username}</a></span>
                                                                                         </div>
                                                                                     ) }
                                                                                     { 'true' !== th.resolved && (
