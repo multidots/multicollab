@@ -233,7 +233,7 @@
   .cf-mentioned-user-popup, .cf-assignable-list-popup{display:block;width:87%;height:auto;position:absolute;z-index:10;border-radius:4px;background:#fff;box-shadow:0 1px 6px 0 rgba(0, 0, 0, 0.16)}
   .cf-mentioned-user-popup{margin-top: 10px;}
   .cf-mentioned-user-popup ul, .cf-assignable-list-popup ul{padding:0!important;margin:0!important}
-  .cf-mentioned-user-popup ul li, .cf-assignable-list-popup ul li{list-style:none;display:flex;justify-content:flex-start;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(0, 0, 0, 0.1);transition:all 0.3s ease-in-out}
+  .cf-mentioned-user-popup ul li, .cf-assignable-list-popup ul li{list-style:none;display:flex;cursor:pointer;justify-content:flex-start;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(0, 0, 0, 0.1);transition:all 0.3s ease-in-out}
   .cf-mentioned-user-popup ul li:hover, .cf-assignable-list-popup ul li:hover{background-color:rgba(0, 0, 0, 0.05)}
   .cf-mentioned-user-popup ul li:last-child, .cf-assignable-list-popup ul li:last-child{border-bottom:0}
   .cf-mentioned-user-popup ul li img, .cf-assignable-list-popup ul li img{border-radius:50%}
@@ -243,8 +243,11 @@
   .cf-user-info mark{background-color:transparent;font-weight:600;padding:0}
   .readmoreComment, .readlessComment{text-decoration:underline;color:#0568C1}
   .comment-flash{background-color:rgba(252, 239, 69, 0.2);transition:all 0.3s ease-in-out}
-  .cf-assign-to{display:flex;align-items:center;justify-content:flex-end;width:100%;margin:10px 0}
-  .cf-assign-to label{width:100%;}
+  .cf-assign-to{display:flex;justify-content:space-between;width:100%;margin:10px 0}
+  .cf-assign-to label{position: relative;}
+  .cf-assign-to label i {display: block;padding-left: 22px;}
+  .cf-assign-to .js-cf-show-assign-list:hover{cursor: pointer;}
+  .cf-assign-to input[type=checkbox] {position: absolute;top: 7px;}
   .cf-no-assignee{display:block;padding:10px 12px;}
   .cf-board-assigned-to{width:100%;height:auto;position:relative;z-index:0}
   .cf-board-assigned-to .assigned-user-details{display:flex;align-items:center;justify-content:flex-start;padding:10px 20px;background-color:rgb(232, 240, 254);color:rgb(60, 64, 67)}
@@ -322,7 +325,7 @@
   .user-data-box .user-data-header {display: flex;align-items: center;margin-bottom: 17px;justify-content: flex-start;}
   .user-data-box.user-reply .user-data-header,.user-data-box.cf-mark-as-resolved .user-data-header {margin-bottom: 10px;}
   .user-data-row .user-avatar img{max-height: 32px;}
-  .user-data-row .user-data-box .user-name{font-size: 14px;text-transform: capitalize;line-height: 19px;color: #000000;width: 100%;float:left;font-weight: 600;}
+  .user-data-row .user-data-box .user-name{font-size: 14px;line-height: 19px;color: #000000;width: 100%;float:left;font-weight: 600;}
   .user-data-row .user-data-box .user-commented-date {font-size: 11px;line-height: 15px;color: #191E23;font-weight: 400;}
   .user-data-row .user-data-box .user-commented-on blockquote {border-left: 3px solid #0568C1;padding: 0 0 2px 15px;font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin: 0 0 15px;}
   .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;word-break: break-word;}
@@ -354,6 +357,8 @@
   .assign-avatar-data {padding-left: 19px;display: block;}
   .user-data-row .user-comment strong::before {content: "";background-image: url(../images/marked.svg);position: absolute;left: 0px;top: 1px;background-repeat: no-repeat;width: 14px;height: 14px;}
   .user-data-row .user-comment strong {font-size: 10px;font-weight: 500;font-style: italic;color: #000000;position: relative;padding-left: 18px;}
+  .user-data-row:not(.active) .user-action .user-cmnt-reply:hover, .user-data-row:not(.active) .user-action .user-thread-resolve:hover {color: #0568C1;}
+  .user-data-row:not(.active) .user-action .user-cmnt-reply, .user-data-row:not(.active) .user-action .user-thread-resolve {color: #939393;}
    /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
     .cf-tabs-main .cf-tab-inner{min-height:auto}
