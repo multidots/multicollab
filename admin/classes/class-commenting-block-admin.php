@@ -637,6 +637,7 @@ class Commenting_block_Admin {
 				'cf-activity-centre',
 				COMMENTING_BLOCK_URL . 'admin/assets/js/dist/activityCentre.build.min.js',
 				[
+					'content-collaboration-inline-commenting',
 					'wp-plugins',
 					'wp-editor',
 					'wp-edit-post',

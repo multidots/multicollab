@@ -93,7 +93,8 @@ class Commenting_Block_Rest_Routes {
 			if( isset( $comments['assigned_to'] ) ) {
 				$assigned_user_info = get_userdata( $comments['assigned_to'] );
 				$assigned_user = [
-					'username' => $assigned_user_info->display_name
+					'username' => $assigned_user_info->display_name,
+					'email' => $assigned_user_info->user_email,
 				];
 			}
 
