@@ -358,8 +358,8 @@
   .assign-avatar-data {padding-left: 19px;display: block;}
   .user-data-row .user-comment strong::before {content: "";background-image: url(../images/marked.svg);position: absolute;left: 0px;top: 1px;background-repeat: no-repeat;width: 14px;height: 14px;}
   .user-data-row .user-comment strong {font-size: 10px;font-weight: 500;font-style: italic;color: #000000;position: relative;padding-left: 18px;}
-  .user-data-row:not(.active) .user-action .user-cmnt-reply:hover, .user-data-row:not(.active) .user-action .user-thread-resolve:hover {color: #0568C1;}
-  .user-data-row:not(.active) .user-action .user-cmnt-reply, .user-data-row:not(.active) .user-action .user-thread-resolve {color: #939393;}
+  .user-data-row:not(.active) .user-data-box:first-child .user-action .user-cmnt-reply:hover, .user-data-row:not(.active) .user-data-box:first-child .user-action .user-thread-resolve:hover {color: #0568C1;}
+  .user-data-row:not(.active) .user-data-box:first-child .user-action .user-cmnt-reply, .user-data-row:not(.active) .user-data-box:first-child .user-action .user-thread-resolve {color: #939393;}
    /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
     .cf-tabs-main .cf-tab-inner{min-height:auto}
