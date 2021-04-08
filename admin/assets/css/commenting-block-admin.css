@@ -53,7 +53,6 @@
   #custom-history-popup #history-popup-insider::before{content:'Activity Center';font-size:20px;display:block;margin:0 0 20px;font-weight:700}
   .user-title{float:left;width:60%;width:calc(100% - 265px);font-size:15px}
   .user-data-box{overflow:hidden; display: flex; justify-content: flex-start;}
-  .user-data {width: 100%;}
   .user-comment-status {
     display: block;
     font-size: 13px;
