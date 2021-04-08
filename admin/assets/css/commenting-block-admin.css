@@ -349,8 +349,8 @@
   .user-action a:focus{box-shadow: none !important;text-decoration: underline;}
   .user-data-row .user-comment a{color: #0568C1;}
   .comment-header .comment-actions .buttons-wrapper i:hover,.readmoreComment:hover, .readlessComment:hover{cursor: pointer;}
-  .user-data-row .user-assigned-to > span::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 3px;background-repeat: no-repeat;width: 14px;height: 14px;}
-  .user-data-row .user-assigned-to > span {position: relative;}
+  .user-data-row .user-assigned-to div::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 3px;background-repeat: no-repeat;width: 14px;height: 14px;}
+  .user-data-row .user-assigned-to div {position: relative;}
   .user-data-row .user-assigned-to span a {color: #0568C1;text-decoration: none;}
   .assign-avatar-data {padding-left: 19px;display: block;}
   .user-data-row .user-comment strong::before {content: "";background-image: url(../images/marked.svg);position: absolute;left: 0px;top: 1px;background-repeat: no-repeat;width: 14px;height: 14px;}
