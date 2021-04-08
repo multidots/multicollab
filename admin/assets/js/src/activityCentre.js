@@ -15,7 +15,7 @@ class Comments extends React.Component {
             threads: [],
             isLoading: true,
             showComments: true,
-            collapseLimit: 25,
+            collapseLimit: 45,
         }
 
         // Get the Page ID.
@@ -48,12 +48,12 @@ class Comments extends React.Component {
     toggleCollapseLink( e ) {
         var targetID = e.target.dataset.id;
         var _this = e.target;
-        if( _this.innerHTML === 'More' ) {
+        if( _this.innerHTML === 'Show all' ) {
             _this.innerHTML = __( 'Collapse', 'content-collaboration-inline-commenting' );
             $( `#show-all-${targetID}` ).removeClass( 'js-hide' );
             $( `#show-less-${targetID}` ).addClass( 'js-hide' );
         } else {
-            _this.innerHTML = __( 'More', 'content-collaboration-inline-commenting' );
+            _this.innerHTML = __( 'Show all', 'content-collaboration-inline-commenting' );
             $( `#show-all-${targetID}` ).addClass( 'js-hide' );
             $( `#show-less-${targetID}` ).removeClass( 'js-hide' );
         }
@@ -271,14 +271,16 @@ class Comments extends React.Component {
     }
 
     render() {
-        const { threads, showComments, isLoading } = this.state;
+        const { threads, showComments, isLoading, collapseLimit } = this.state;
 
         let isPluginSidebarOpen = wp.data.select( 'core/edit-post' ).isPluginSidebarOpened();
         if( isPluginSidebarOpen) {
             var openBoards = $('.cls-board-outer:visible').length;
             setTimeout( function() {
-                const notificationCounter = `<span id="history-toggle" data-count="${openBoards}"></span>`;
-                $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
+                if( $( '#history-toggle' ).length <= 0 ) {
+                    const notificationCounter = `<span id="history-toggle" data-test="testing" data-count="${openBoards}"></span>`;
+                    $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
+                }
             }, 300 )
         }
 
@@ -350,7 +352,7 @@ class Comments extends React.Component {
                                                                                                             <React.Fragment>
                                                                                                                 <span id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-id={ `cf-${th.elID}` }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</span>
                                                                                                                 <span id={`show-less-${c.id}`}class="user-commented-on show-less" data-id={ `cf-${th.elID}` }>{ this.collapseText( th.selectedText ) }</span>
-                                                                                                                { null !== th.selectedText && 45 <= th.selectedText.length && (
+                                                                                                                { null !== th.selectedText && collapseLimit <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
                                                                                                                         className="cf-show-more"
@@ -365,7 +367,7 @@ class Comments extends React.Component {
                                                                                                             <React.Fragment>
                                                                                                                 <a id={`show-all-${c.id}`} class="user-commented-on show-all js-hide" data-elid={ `cf-${th.elID}` } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ __( th.selectedText, 'content-collaboration-inline-commenting' ) }</a>
                                                                                                                 <a id={`show-less-${c.id}`}class="user-commented-on show-less" data-elid={ `cf-${th.elID}` } href="javascript:void(0)" onClick={ this.reply.bind( this ) }>{ this.collapseText( th.selectedText ) }</a>
-                                                                                                                { null !== th.selectedText && 45 <= th.selectedText.length && (
+                                                                                                                { null !== th.selectedText && collapseLimit <= th.selectedText.length && (
                                                                                                                     <a
                                                                                                                         href="javascript:void(0)"
                                                                                                                         className="cf-show-more"
