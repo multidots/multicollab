@@ -290,10 +290,21 @@ class Comments extends React.Component {
         } );
     }
 
+    /**
+     * Add active class in activities thread on selected text click.
+     */
+    activeBoardOnSelectedText() {
+        $( document.body ).on( 'click', '.mdspan-comment', function() {
+            var datatext = $( this ).attr( 'datatext' );
+            $( `#cf-${datatext}` ).addClass( 'active' );
+        } )
+    }
+
     componentDidMount() {
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
         this.appendCounter(); // Appending counter.
+        this.activeBoardOnSelectedText(); // Add active class in activities thread on selected text click.
     }
 
     render() {

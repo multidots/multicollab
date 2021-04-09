@@ -239,10 +239,10 @@
             if (window.getSelection) {
                 sel = window.getSelection();
                 if (sel.rangeCount) {
-                range = sel.getRangeAt(0);
-                if ( range.commonAncestorContainer.parentNode === editableDiv) {
-                    caretPos = range.endOffset;
-                }
+                    range = sel.getRangeAt(0);
+                    if ( range.commonAncestorContainer.parentNode === editableDiv) {
+                        caretPos = range.endOffset;
+                    }
                 }
             } else if (document.selection && document.selection.createRange) {
                 range = document.selection.createRange();
@@ -373,7 +373,11 @@
                 document.querySelector( createTextarea ).innerText += textContent;
             } )
 
-            // Triggering textarea keyup event.
+            /**
+             * ========================================
+             * Triggering textarea keyup event.
+             * ========================================
+             */
             $( document.body ).on( 'keyup', createTextarea, function(e) {
                 var _self = $( createTextarea );
                 typedText = _self.html();
@@ -463,7 +467,7 @@
                 cursorPos = getCaretPosition(el);
 
                 // If @ is pressed and shiftkey is true.
-                if( '@' === e.key && true === e.shiftKey ) {
+                if( '@' === e.key && true === e.shiftKey && typedText.length > 0 ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
                     if( showSuggestion( prevCharOfEmailSymbol ) ) {
                         // Fetch all email list.
@@ -499,7 +503,7 @@
                     }
                 }
 
-                if( true === isEmail ) {
+                if( true === isEmail && typedText.length > 0 ) {
                     var checkKeys = function( key ) {
                         if( key === e.key ) {
                             return true;
@@ -538,7 +542,7 @@
                             }
                         }
                     }
-                    console.log( trackedStr )
+
                     // If trackedStr is left to @
                     if( '@' === trackedStr ) {
                         if ( null !== cachedUsersList || '' !== cachedUsersList ) {
