@@ -22,10 +22,6 @@ $( window ).on('load', function () {
 
             // Fetching comments
             fetchComments();
-
-            // Appneding Notification Counter On Activities Tab.
-            // const notificationCounter = `<span id="history-toggle" data-count="0"></span>`;
-            // $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
         }
 
         // Clearing interval if not found in 10 attemps.
@@ -397,7 +393,7 @@ const mdComment = {
                 // Float comments column.
                 this.floatComments(selectedText);
             }
-            $( '.js-cancel-comment' ).trigger( 'click' ); // Closing all opened edit comment box.
+            // $( '.js-cancel-comment' ).trigger( 'click' ); // Closing all opened edit comment box.
             $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
         }
 

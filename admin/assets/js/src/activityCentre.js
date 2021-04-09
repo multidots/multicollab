@@ -170,8 +170,8 @@ class Comments extends React.Component {
         elID     = elID.replace( 'cf-', '' );
 
         $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
-        $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
-
+        // $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
+        $( `#${elID}` ).trigger( 'click' );
         // Highlight selected text from editor.
         this.highlightSelectedText( elID );
 
@@ -197,7 +197,8 @@ class Comments extends React.Component {
 
         $( '.js-cancel-comment' ).trigger( 'click' );
         $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
-        $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
+        // $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
+        $( `#${elID}` ).trigger( 'click' );
         $( `#${elID} #${editID} .js-edit-comment` ).trigger( 'click' );
 
         // Highlight selected text from editor.

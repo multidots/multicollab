@@ -331,6 +331,9 @@ export default class Board extends React.Component {
         if ( 0 === $('#'+ datatext + ' .boardTop .commentContainer').length ) {
             onChanged(removeFormat(lastVal, name));
         }
+
+        // Removing the active class form activity center on cancel.
+        $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
     }
 
     componentDidMount() {
