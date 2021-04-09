@@ -101,6 +101,20 @@ class Comments extends React.Component {
     }
 
     /**
+     * Highlight Selected Text From Editor.
+     */
+    highlightSelectedText( elID ) {
+        var findMdSpan = '.mdspan-comment';
+        $( findMdSpan ).attr( 'data-rich-text-format-boundary', 'false' );
+        $( findMdSpan ).each( function() {
+            var datatext = $( this ).attr( 'datatext' );
+            if( elID === datatext ) {
+                $( this ).attr( 'data-rich-text-format-boundary', 'true' );
+            }
+        } );
+    }
+
+    /**
      * Resolving Thread.
      */
     resolveThread( e ) {
@@ -154,16 +168,12 @@ class Comments extends React.Component {
 
         var elID = e.target.dataset.elid;
         elID     = elID.replace( 'cf-', '' );
-        var findMdSpan = '.mdspan-comment';
-        $( findMdSpan ).attr( 'data-rich-text-format-boundary', 'false' );
-        $( findMdSpan ).each( function() {
-            var datatext = $( this ).attr( 'datatext' );
-            if( elID === datatext ) {
-                $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
-                $( this ).attr( 'data-rich-text-format-boundary', 'true' );
-                $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
-            }
-        } );
+
+        $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
+        $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
+
+        // Highlight selected text from editor.
+        this.highlightSelectedText( elID );
 
         // Setting active class.
         this.setActiveBoard( elID );
@@ -190,6 +200,9 @@ class Comments extends React.Component {
         $( `#${elID}` ).addClass( 'focus' ).offset( { top: $( `[datatext="${elID}"]` ).offset().top } ).css( { opacity: 1 } );
         $( `#${elID} #${editID} .js-edit-comment` ).trigger( 'click' );
 
+        // Highlight selected text from editor.
+        this.highlightSelectedText( elID );
+
         // Setting active class.
         this.setActiveBoard( elID );
     }
@@ -212,6 +225,9 @@ class Comments extends React.Component {
 
         $( `#${deleteID} .js-cancel-comment` ).trigger( 'click' );
         $( `#${elID} #${deleteID} .js-trash-comment` ).trigger( 'click' );
+
+        // Highlight selected text from editor.
+        this.highlightSelectedText( elID );
 
         // Setting active class.
         this.setActiveBoard( elID );
@@ -398,7 +414,7 @@ class Comments extends React.Component {
                                                                                     ) }
                                                                                     { 'true' !== th.resolved && (
                                                                                         <div className="user-action">
-                                                                                            { 'publish' === c.status && 0 >= index && parseInt( this.currentUserID, 10 ) === c.userData.id && (
+                                                                                            { 'publish' === c.status && 0 >= index && (
                                                                                                 <React.Fragment>
                                                                                                     <a href="javascript:void(0)"
                                                                                                         className="user-cmnt-reply"

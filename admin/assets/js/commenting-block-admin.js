@@ -538,7 +538,7 @@
                             }
                         }
                     }
-
+                    console.log( trackedStr )
                     // If trackedStr is left to @
                     if( '@' === trackedStr ) {
                         if ( null !== cachedUsersList || '' !== cachedUsersList ) {
