@@ -413,15 +413,10 @@
     .cf-tabs-main .cf-tabs li{margin:0 10px}
     .cf-plugin-settings{padding-left:10px}
     .cf-plugin-settings .cf-plugin-header h1{font-size:22px}
+    .cf-sidebar-activity-centre, .cf-sidebar-settings{width: 50%;}
+    .cf-assign-to input[type=checkbox] {position: absolute;top: 4px;}
+    .cf-assign-to label i {padding-left: 34px;}
   }
-  @media (max-width:767px){
-    .cf-assign-to input[type=checkbox] {
-        position: absolute;
-        top: 4px;
-    }
-    .cf-assign-to label i {
-        padding-left: 34px;
-    }
-  }
+ 
   
   
