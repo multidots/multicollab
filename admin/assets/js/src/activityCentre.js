@@ -35,6 +35,17 @@ class Comments extends React.Component {
     }
 
     /**
+     * Collapse Comment Board in mobile on load.
+     */
+    collapseBoardOnMobile() {
+        var checkWidth = window.innerWidth;
+        if( 767 >= checkWidth ) {
+            this.setState( { showComments: false } );
+            $( 'body' ).addClass( 'hide-comments' );
+        }
+    }
+
+    /**
      * Collapse Selected Text.
      */
     collapseText( str ) {
@@ -302,6 +313,7 @@ class Comments extends React.Component {
     }
 
     componentDidMount() {
+        this.collapseBoardOnMobile();
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
         this.appendCounter(); // Appending counter.
