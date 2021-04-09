@@ -126,6 +126,16 @@ class Comments extends React.Component {
     }
 
     /**
+     * CLosing Sidebar On Mobile
+     */
+    closingSidebarOnMobile() {
+        var checkWidth = window.innerWidth;
+        if( 767 >= checkWidth ) {
+            wp.data.dispatch('core/edit-post').closeGeneralSidebar()
+        }
+    }
+
+    /**
      * Resolving Thread.
      */
     resolveThread( e ) {
@@ -161,6 +171,9 @@ class Comments extends React.Component {
         // Setting active class.
         this.setActiveBoard( elID );
 
+        // Closing Sidebar On Mobile.
+        this.closingSidebarOnMobile();
+
     }
 
     /**
@@ -188,6 +201,9 @@ class Comments extends React.Component {
 
         // Setting active class.
         this.setActiveBoard( elID );
+
+        // Closing Sidebar On Mobile.
+        this.closingSidebarOnMobile();
     }
 
     /**
@@ -217,6 +233,9 @@ class Comments extends React.Component {
 
         // Setting active class.
         this.setActiveBoard( elID );
+
+        // Closing Sidebar On Mobile.
+        this.closingSidebarOnMobile();
     }
 
     /**
@@ -243,6 +262,9 @@ class Comments extends React.Component {
 
         // Setting active class.
         this.setActiveBoard( elID );
+
+        // Closing Sidebar On Mobile.
+        this.closingSidebarOnMobile();
     }
 
     /**
