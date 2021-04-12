@@ -479,7 +479,7 @@
                 cursorPos = getCaretPosition(el);
 
                 // If @ is pressed and shiftkey is true.
-                if( '@' === e.key && true === e.shiftKey && typedText.length > 0 ) {
+                if( '@' === e.key && true === e.shiftKey && typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
                     if( showSuggestion( prevCharOfEmailSymbol ) ) {
                         // Fetch all email list.
@@ -554,9 +554,8 @@
                             }
                         }
                     }
-
                     // If trackedStr is left to @
-                    if( '@' === trackedStr ) {
+                    if( '@' === trackedStr && $( createTextarea ).is(':focus') === true ) {
                         if ( null !== cachedUsersList || '' !== cachedUsersList ) {
                             $( appendIn ).remove(); // Remove user list popup DOM.
                             $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
@@ -583,7 +582,7 @@
                     }
 
                     // If trackedStr contains other chars with @ as well.
-                    if( '@' !== trackedStr ) {
+                    if( '@' !== trackedStr && $( createTextarea ).is(':focus') === true ) {
                         let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
                         if( checkEmailSymbol ) {
                             var refinedCachedusersList = [];
