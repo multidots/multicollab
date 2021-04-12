@@ -336,7 +336,7 @@
   .cf-sidebar-activity-centre.is-active, .cf-sidebar-settings.is-active {position: relative;box-shadow:none !important;}
   .cf-sidebar-activity-centre.is-active::after, .cf-sidebar-settings.is-active::after {content: "";position: absolute;left: 0;bottom: -2px;width: 100%;height: 2px;background-color: #1f53da;overflow: auto;visibility: visible;}
   .cf-sidebar-activity-centre.components-tab-panel__tabs-item:focus:not(:disabled), .cf-sidebar-settings.components-tab-panel__tabs-item:focus:not(:disabled) {box-shadow:none !important;}
-  .cf-sidebar-activity-centre, .cf-sidebar-settings {color:#000000;background-color: #F9FAFA;font-size: 12px;font-weight: 600;line-height: 16px;padding: 3px 47px;position: relative;}
+  .cf-sidebar-activity-centre, .cf-sidebar-settings {color:#000000;background-color: #F9FAFA;font-size: 12px;font-weight: 600;line-height: 16px;padding: 3px 46px;position: relative;}
   .components-tab-panel__tabs-item.cf-sidebar-activity-centre::before,.components-tab-panel__tabs-item.cf-sidebar-settings::before {content: "";position: absolute;left: 20px;top: 18px;background-repeat: no-repeat;width: 14px;height: 18px;}
   .cf-sidebar-activity-centre::before{background-image: url(../images/activity-center.svg);}
   .cf-sidebar-settings::before {background-image: url(../images/settings.svg);}
@@ -413,6 +413,10 @@
     .cf-tabs-main .cf-tabs li{margin:0 10px}
     .cf-plugin-settings{padding-left:10px}
     .cf-plugin-settings .cf-plugin-header h1{font-size:22px}
+    .cf-sidebar-activity-centre, .cf-sidebar-settings{width: 50%;}
+    .cf-assign-to input[type=checkbox] {position: absolute;top: 4px;}
+    .cf-assign-to label i {padding-left: 34px;}
   }
+ 
   
   
