@@ -136,6 +136,23 @@ class Comments extends React.Component {
     }
 
     /**
+     * Add active class on activity center thread on post status change.
+     */
+    addActiveClassOnPostStatusChange() {
+        const addActiveClass = setInterval( () => {
+            var activeBoard = $( '.cls-board-outer.focus' ).attr( 'id' );
+            if( undefined !== activeBoard ) {
+                if( $( `#cf-${activeBoard}` ).hasClass( 'active' ) ) {
+                    clearInterval( addActiveClass );
+                }
+                $( `#cf-${activeBoard}` ).addClass( 'active' );
+            } else {
+                clearInterval( addActiveClass )
+            }
+        }, 1000 )
+    }
+
+    /**
      * Resolving Thread.
      */
     resolveThread( e ) {
@@ -285,6 +302,7 @@ class Comments extends React.Component {
                             threads: [],
                         })
                         _this.getComments();
+                        _this.addActiveClassOnPostStatusChange();
                     }
                 }
             }
