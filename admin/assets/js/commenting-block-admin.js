@@ -682,10 +682,10 @@
                     range.setStart( el, 0 );
                 } else {
                     range.setStart( el, range.endOffset );
+                    range.collapse( true );
+                    cursorSel.removeAllRanges();
+                    cursorSel.addRange( range );
                 }
-                range.collapse( true );
-                cursorSel.removeAllRanges();
-                cursorSel.addRange( range );
             } );
         }
         createAutoEmailMention();
