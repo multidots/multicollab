@@ -346,7 +346,7 @@
                     }
                 } )
             }
-            $( document.body ).on( 'focus keyup', '.js-cf-edit-comment', function() {
+            $( document.body ).on( 'focus keyup paste', '.js-cf-edit-comment', function() {
                 mood = 'edit';
                 el   = $( this ).parents( parentBoardClass ).attr( 'id' );
                 currentCommentBoardID = $( this ).parents( '.commentContainer' ).attr( 'id' );
@@ -367,10 +367,22 @@
             } )
 
             // Format pasted content.
-            $( document.body ).on( 'paste', createTextarea, function(e) {
+            $( document ).on( 'paste', createTextarea, function(e) {
                 e.preventDefault();
-                var textContent = e.originalEvent.clipboardData.getData( 'text/plain' );
-                document.querySelector( createTextarea ).innerText += textContent;
+                var textContent      = e.originalEvent.clipboardData.getData( 'text/plain' );
+
+                const pastedRange = document.getSelection().getRangeAt(0);
+                pastedRange.deleteContents();
+
+                const textNode = document.createTextNode( textContent );
+                pastedRange.insertNode( textNode );
+                pastedRange.selectNodeContents( textNode );
+                pastedRange.collapse( false );
+
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange( pastedRange );
+
             } )
 
             /**
