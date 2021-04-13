@@ -377,7 +377,7 @@
     .cf-tabs-main .cf-tab-inner{min-height:auto}
     .cf-plugin-settings .cf-left{width:calc(100% - 320px);padding:0 10px 0 0}
     .cf-plugin-settings .cf-right{width:320px;padding:0 10px}
-    .cf-plugin-settings .cf-card h3{font-size:26px}
+    .cf-plugin-settings .cf-card h3{font-size:26px; }
     .cf-plugin-settings p{font-size:16px}
     .cf-plugin-settings .cf-button, .cf-plugin-settings .submit .button{font-size:16px;padding:10px 15px;min-width:130px}
   }
