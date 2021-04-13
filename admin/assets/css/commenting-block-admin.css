@@ -352,7 +352,7 @@
   .user-cmnt-delete {position: relative;padding-left: 10px;}
   .user-thread-resolve.js-resolve-comment {position: relative;padding-left: 12px;}
   .user-data-box.user-reply .user-action a {font-size: 10px;font-weight: 500;line-height: 14px;color: #0568C1;}
-  .user-action a:focus{box-shadow: none !important;text-decoration: underline;} 
+  .user-action a:focus{box-shadow: none !important;text-decoration: underline; } 
   .user-data-row .user-comment a{color: #0568C1;}
   .comment-header .comment-actions .buttons-wrapper i:hover,.readmoreComment:hover, .readlessComment:hover{cursor: pointer;}
   .user-data-row .user-assigned-to span::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 3px;background-repeat: no-repeat;width: 14px;height: 14px;}
