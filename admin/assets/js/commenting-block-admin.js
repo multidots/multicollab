@@ -19,7 +19,7 @@
         $( findMdSpan ).each( function() {
             var datatext = $( this ).attr( 'datatext' );
             if( undefined === datatext ) {
-                $( this ).replaceWith( $( this ).html());
+                $( this ).replaceWith( $( this ).text());
 
             }
         } );
@@ -694,7 +694,7 @@
                 if( 'firefox' === browser ) {
                     // Do your stuff for firefox.
                 } else {
-                    range.setStart( el, 0 );
+                    range.setStart( el, range.startOffset );
                     range.collapse( true );
                     cursorSel.removeAllRanges();
                     cursorSel.addRange( range );

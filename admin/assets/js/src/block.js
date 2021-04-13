@@ -310,7 +310,7 @@ const mdComment = {
             $( findMdSpan ).each( function() {
                 var datatext = $( this ).attr( 'datatext' );
                 if( undefined === datatext ) {
-                    $( this ).replaceWith( $( this ).html());
+                    $( this ).replaceWith( $( this ).text());
                 }
             } );
 
