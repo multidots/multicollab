@@ -371,18 +371,19 @@
                 e.preventDefault();
                 var textContent      = e.originalEvent.clipboardData.getData( 'text/plain' );
 
-                const pastedRange = document.getSelection().getRangeAt(0);
-                pastedRange.deleteContents();
-
-                const textNode = document.createTextNode( textContent );
-                pastedRange.insertNode( textNode );
-                pastedRange.selectNodeContents( textNode );
-                pastedRange.collapse( false );
-
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange( pastedRange );
-
+                if( $( createTextarea ).is(':focus') === true ) {
+                    const pastedRange = window.getSelection().getRangeAt(0);
+                    pastedRange.deleteContents();
+    
+                    const textNode = document.createTextNode( textContent );
+                    pastedRange.insertNode( textNode );
+                    pastedRange.selectNodeContents( textNode );
+                    pastedRange.collapse( false );
+    
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange( pastedRange );
+                }
             } )
 
             /**
@@ -679,7 +680,7 @@
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
                 if( 'firefox' === browser ) {
-                    range.setStart( el, 0 );
+                    // Do your stuff for firefox.
                 } else {
                     range.setStart( el, range.endOffset );
                     range.collapse( true );
