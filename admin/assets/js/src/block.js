@@ -305,6 +305,15 @@ const mdComment = {
         getSelectedText() {
             const { onChange, value, activeAttributes } = this.props;
 
+            // Stripping out unwanted <mdspan> tags from the content.
+            var findMdSpan = 'mdspan';
+            $( findMdSpan ).each( function() {
+                var datatext = $( this ).attr( 'datatext' );
+                if( undefined === datatext ) {
+                    $( this ).replaceWith( $( this ).html());
+                }
+            } );
+
             // Prevent on locked mode + fix for unnecessary calls on hover.
             if ($('.cls-board-outer').hasClass('locked') ) {
                 return;
