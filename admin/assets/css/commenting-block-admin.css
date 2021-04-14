@@ -330,7 +330,7 @@
   .user-data-row .user-data-box .user-commented-date {font-size: 11px;line-height: 15px;color: #191E23;font-weight: 400;}
   .user-data-row .user-data-box .user-commented-on blockquote {border-left: 3px solid #0568C1;padding: 0 0 2px 15px;font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin: 0 0 15px;}
   .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;word-break: break-word;}
-  .user-data-row .user-assigned-to,.assign-avatar-data {font-size: 12px;color: #3c4043;font-weight: 500;font-style:italic;margin-top: 10px;}
+  .user-data-row .user-assigned-to,.assign-avatar-data {font-size: 12px;color: #3c4043;font-weight: 500;font-style:italic;}
   .user-data-row .user-data-box:first-child .user-data-wrapper{margin-left: 14px;}
   .user-data-box.cf-mark-as-resolved .user-data-header {display: block;}
   .cf-sidebar-activity-centre.is-active, .cf-sidebar-settings.is-active {position: relative;box-shadow:none !important;}
@@ -355,10 +355,12 @@
   .user-action a:focus{box-shadow: none !important;text-decoration: underline;} 
   .user-data-row .user-comment a{color: #0568C1;}
   .comment-header .comment-actions .buttons-wrapper i:hover,.readmoreComment:hover, .readlessComment:hover{cursor: pointer;}
-  .user-data-row .user-assigned-to span::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 3px;background-repeat: no-repeat;width: 14px;height: 14px;}
-  .user-data-row .user-assigned-to span {position: relative; }
+  /* .user-data-row .user-assigned-to > span::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 3px;background-repeat: no-repeat;width: 14px;height: 14px;} */
+  .user-data-row .user-assigned-to > .icon{background-image: url(../images/assigned-user.svg);background-repeat: no-repeat;width: 24px;height: 14px;display: inline-block;}
+  .user-data-row .user-assigned-to > span {position: relative; }
+  .user-assigned-to {display: flex;align-items: center;margin-top: 10px;}
   .user-data-row .user-assigned-to span a {color: #0568C1;text-decoration: none;}
-  .assign-avatar-data {padding-left: 19px;display: block;}
+  .assign-avatar-data {padding-left: 7px;display: block;}
   .user-data-row .user-comment strong::before {content: "";background-image: url(../images/marked.svg);position: absolute;left: 0px;top: 1px;background-repeat: no-repeat;width: 14px;height: 14px;}
   .user-data-row .user-comment strong {font-size: 10px;font-weight: 500;font-style: italic;color: #000000;position: relative;padding-left: 18px;}
   .user-data-row:not(.active) .user-data-box:first-child .user-action .user-cmnt-reply:hover, .user-data-row:not(.active) .user-data-box:first-child .user-action .user-thread-resolve:hover {color: #0568C1;}
