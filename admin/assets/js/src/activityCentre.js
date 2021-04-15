@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import renderHTML from 'react-render-html';
 const { __ } = wp.i18n;
 const { Fragment } = wp.element;
 const { registerPlugin } = wp.plugins;
@@ -466,14 +467,20 @@ class Comments extends React.Component {
                                                                                     </div>
                                                                                     <div class="user-comment">
                                                                                         { 0 < index && 'deleted' === c.status ? (
+
                                                                                             <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
                                                                                         ) : (
-                                                                                            <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></span> // phpcs:ignore
+                                                                                            // <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(  ) }}></span> // phpcs:ignore
+                                                                                            <span>{ renderHTML( c.thread ) }</span>
                                                                                         ) }
                                                                                     </div>
                                                                                     { 'publish' === c.status && 0 >= index && undefined !== th.assignedTo.username && (
-                                                                                        <div className="user-assigned-to">
-                                                                                            <span><span className="assign-avatar-data">{ __( 'Assigned to', 'content-collaboration-inline-commenting' ) } <a href={`mailto:${th.assignedTo.email}`} title={th.assignedTo.username}> {th.assignedTo.username}</a></span></span>
+                                                                                        <div class="user-assigned-to">
+                                                                                            <span class="icon"></span>
+                                                                                            <span class="assign-avatar-data">
+                                                                                                { __( 'Assigned to', 'content-collaboration-inline-commenting' ) }
+                                                                                                <a href={`mailto:${th.assignedTo.email}`} title={th.assignedTo.username}> {th.assignedTo.username}</a>
+                                                                                            </span>
                                                                                         </div>
                                                                                     ) }
                                                                                     { 'true' !== th.resolved && (
