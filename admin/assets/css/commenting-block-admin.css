@@ -330,6 +330,7 @@
   .user-data-row .user-data-box .user-commented-date {font-size: 11px;line-height: 15px;color: #191E23;font-weight: 400;}
   .user-data-row .user-data-box .user-commented-on blockquote {border-left: 3px solid #0568C1;padding: 0 0 2px 15px;font-size: 12px;color: #000000;font-weight: 500;font-style:italic;margin: 0 0 15px;}
   .user-data-row .user-comment {margin-top: 10px;font-size: 12px;color: #000000;line-height: 16px;font-weight: 500;word-break: break-word;}
+  .user-data-row .user-comment .js-mentioned { word-break: break-word; }
   .user-data-row .user-assigned-to,.assign-avatar-data {font-size: 12px;color: #3c4043;font-weight: 500;font-style:italic;}
   .user-data-row .user-data-box:first-child .user-data-wrapper{margin-left: 14px;}
   .user-data-box.cf-mark-as-resolved .user-data-header {display: block;}
