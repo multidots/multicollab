@@ -386,7 +386,7 @@
                 if( $( createTextarea ).is(':focus') === true ) {
                     const pastedRange = window.getSelection().getRangeAt(0);
                     pastedRange.deleteContents();
-    
+
                     const textNode = document.createTextNode( textContent );
                     pastedRange.insertNode( textNode );
                     pastedRange.selectNodeContents( textNode );
