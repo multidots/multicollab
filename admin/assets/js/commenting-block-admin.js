@@ -19,8 +19,7 @@
         $( findMdSpan ).each( function() {
             var datatext = $( this ).attr( 'datatext' );
             if( undefined === datatext ) {
-                $( this ).replaceWith( $( this ).text());
-
+                $( this ).replaceWith( DOMPurify.sanitize( $( this ).text() ) ); // phpcs:ignore
             }
         } );
     } )

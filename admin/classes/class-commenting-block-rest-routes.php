@@ -33,10 +33,21 @@ class Commenting_Block_Rest_Routes {
         ] );
     }
 
+	/**
+	 * Ensuring Rest Permission
+	 *
+	 * @return void
+	 */
 	public function check_activity_permits() {
 		return true;
 	}
 
+	/**
+	 * Callback to send the rest response.
+	 *
+	 * @param array $data
+	 * @return array
+	 */
     public function get_activities( $data ) {
        	$current_post_id = intval( $data->get_param( 'postID' ) );
 		$date_format = get_option( 'date_format' );
@@ -46,13 +57,7 @@ class Commenting_Block_Rest_Routes {
 		global $wpdb;
 		$like   = $wpdb->esc_like( '_el' ) . '%';
 
-		$results = $wpdb->get_results( $wpdb->prepare("
-			SELECT *
-			FROM {$wpdb->prefix}postmeta
-			WHERE post_id=%d AND meta_key LIKE %s
-			",
-			$current_post_id, $like
-		), ARRAY_A );
+		$results = $wpdb->get_results( $wpdb->prepare("SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id=%d AND meta_key LIKE %s", $current_post_id, $like ), ARRAY_A ); // phpcs:ignore
 
 		$threads = [];
 		foreach( $results as $row ) {

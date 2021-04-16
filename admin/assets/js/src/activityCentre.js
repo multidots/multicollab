@@ -64,11 +64,11 @@ class Comments extends React.Component {
         var targetID = e.target.dataset.id;
         var _this = e.target;
         if( _this.innerHTML === 'Show all' ) {
-            _this.innerHTML = __( 'Collapse', 'content-collaboration-inline-commenting' );
+            _this.innerHTML = __( 'Collapse', 'content-collaboration-inline-commenting' ); // phpcs:ignore
             $( `#show-all-${targetID}` ).removeClass( 'js-hide' );
             $( `#show-less-${targetID}` ).addClass( 'js-hide' );
         } else {
-            _this.innerHTML = __( 'Show all', 'content-collaboration-inline-commenting' );
+            _this.innerHTML = __( 'Show all', 'content-collaboration-inline-commenting' ); // phpcs:ignore
             $( `#show-all-${targetID}` ).addClass( 'js-hide' );
             $( `#show-less-${targetID}` ).removeClass( 'js-hide' );
         }
