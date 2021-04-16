@@ -229,7 +229,7 @@
   .cf-share-comment-wrapper{width: 100%;height: auto;border:1px solid #007cba;border-radius:5px;padding: 8px 5px;}
   .cf-share-comment{display:inline-block;width:100%;background-color:#fff;color:#222;border-radius:5px;word-break: break-word;}
   [contenteditable=true]:empty::before{content:attr(placeholder);pointer-events:none;display:block}
-  .cls-board-outer .js-mentioned{font-weight:600;text-decoration:none; pointer-events: none;}
+  .cls-board-outer .js-mentioned{font-weight:600;text-decoration:none;}
   .cf-system-user-email-list{max-height:300px;overflow-y: scroll;}
   .cf-mentioned-user-popup, .cf-assignable-list-popup{display:block;width:87%;height:auto;position:absolute;z-index:10;border-radius:4px;background:#fff;box-shadow:0 1px 6px 0 rgba(0, 0, 0, 0.16)}
   .cf-mentioned-user-popup{margin-top: 10px;}
@@ -264,7 +264,7 @@
    }
    .cf-show-more:focus{box-shadow: none;}
    .user-data-row .user-commented-on.show-less, .user-data-row .user-commented-on.show-all {margin-right: 10px;}
-   .cls-board-outer .board .commentContainer .commentText a.js-mentioned {color: #0568C1;}
+   .cls-board-outer .board .commentContainer .commentText a.js-mentioned,.cls-board-outer .board .commentContainer .commentText a {color: #0568C1;}
   /* Editorial comments page */
   .cf-plugin-settings{-webkit-box-sizing:border-box;box-sizing:border-box;padding-right:20px}
   .cf-plugin-settings *{-webkit-box-sizing:border-box;box-sizing:border-box}
@@ -376,6 +376,8 @@
   .components-button.is-toggled,.edit-post-header .components-button.is-pressed,.components-button.is-pressed {color: #fff;background: #1e1e1e;}
   .components-icon-button:not(:disabled):not([aria-disabled=true]):not(.is-default):hover {background-color: transparent;color: #191e23;box-shadow: none;}
   .cf-assign-to label i {font-size: 13px;font-style: italic;font-weight: 400;color: rgb(40, 48, 61);}
+  .cf-share-comment .js-mentioned {display: inline-block;word-break: break-word;}
+  .user-data-row .user-comment :not(.js-mentioned) {display: inline-block;}
    /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
     .cf-tabs-main .cf-tab-inner{min-height:auto}
