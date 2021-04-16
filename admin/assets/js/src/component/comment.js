@@ -52,9 +52,10 @@ export default class Comment extends React.Component {
                 return false;
             }
             // Adding anchor tag around the linkable text.
-            newText = newText.replace( /(https?:\/\/[^\/]+(\/[\w-]+)+)/ig, function( match ) {
-                return `<a href="${match}" target="_blank">${match}</a>`;
-            } );
+            newText           = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*);/ig, function( match ) {
+            match = match.replace( /&nbsp;/, ' ' );
+            return `<a href="${match}" target="_blank">${match}</a>`;
+        } );
 
             this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
     
