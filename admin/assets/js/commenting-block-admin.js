@@ -274,12 +274,13 @@
         var insertDisplayName = function( setRange, email, fullName, displayName ) {
             var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace after the name.
             var anchor       = document.createElement( 'a' );
+            var splitDisplayName = displayName.split( ' ' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
             anchor.setAttribute( 'title', fullName );
             anchor.setAttribute( 'data-email', email );
             anchor.setAttribute( 'class', 'js-mentioned' );
-            var anchorContent = document.createTextNode( displayName );
+            var anchorContent = document.createTextNode( splitDisplayName[0] );
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
             anchor.after( gapElContent ); // phpcs:ignore
@@ -293,25 +294,6 @@
             }
             return false;
 
-        }
-
-        function insertAtCursor(myField, myValue) {
-            //IE support
-            if (document.selection) {
-                myField.focus();
-                sel = document.selection.createRange();
-                sel.text = myValue;
-            }
-            //MOZILLA and others
-            else if (myField.selectionStart || myField.selectionStart == '0') {
-                var startPos = myField.selectionStart;
-                var endPos = myField.selectionEnd;
-                myField.value = myField.value.substring(0, startPos)
-                    + myValue
-                    + myField.value.substring(endPos, myField.value.length);
-            } else {
-                myField.value += myValue;
-            }
         }
 
         // Create @mentioning email features.
@@ -391,7 +373,7 @@
                     pastedRange.insertNode( textNode );
                     pastedRange.selectNodeContents( textNode );
                     pastedRange.collapse( false );
-    
+
                     const selection = window.getSelection();
                     selection.removeAllRanges();
                     selection.addRange( pastedRange );
@@ -528,7 +510,7 @@
                     }
                 }
 
-                if( true === isEmail && typedText.length > 0 ) {
+                if( true === isEmail && typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
                     var checkKeys = function( key ) {
                         if( key === e.key ) {
                             return true;
@@ -567,6 +549,7 @@
                             }
                         }
                     }
+                    
                     // If trackedStr is left to @
                     if( '@' === trackedStr && $( createTextarea ).is(':focus') === true ) {
                         if ( null !== cachedUsersList || '' !== cachedUsersList ) {
