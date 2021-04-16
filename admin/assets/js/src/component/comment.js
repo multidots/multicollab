@@ -52,7 +52,7 @@ export default class Comment extends React.Component {
                 return false;
             }
             // Adding anchor tag around the linkable text.
-            newText = newText.replace( /(https?:\/\/[^\s]+)/ig, function( match ) {
+            newText = newText.replace( /(https?:\/\/[^\/]+(\/[\w-]+)+)/ig, function( match ) {
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
 

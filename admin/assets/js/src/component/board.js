@@ -151,7 +151,7 @@ export default class Board extends React.Component {
         var currentTextID = 'txt' + datatext;
         var newText       = $('#' + currentTextID).html();
         newText           = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' );
-        newText           = newText.replace( /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@?^=%&amp;\/~\+#])?/ig, function( match ) {
+        newText           = newText.replace( /(https?:\/\/[^\/]+(\/[\w-]+)+)/ig, function( match ) {
             return `<a href="${match}" target="_blank">${match}</a>`;
         } );
 
