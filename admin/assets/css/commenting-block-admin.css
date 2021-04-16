@@ -229,7 +229,7 @@
   .cf-share-comment-wrapper{width: 100%;height: auto;border:1px solid #007cba;border-radius:5px;padding: 8px 5px;}
   .cf-share-comment{display:inline-block;width:100%;background-color:#fff;color:#222;border-radius:5px;word-break: break-word;}
   [contenteditable=true]:empty::before{content:attr(placeholder);pointer-events:none;display:block}
-  .cls-board-outer .js-mentioned{font-weight:600;text-decoration:none; pointer-events: none;}
+  .cls-board-outer .js-mentioned{font-weight:600;text-decoration:none;}
   .cf-system-user-email-list{max-height:300px;overflow-y: scroll;}
   .cf-mentioned-user-popup, .cf-assignable-list-popup{display:block;width:87%;height:auto;position:absolute;z-index:10;border-radius:4px;background:#fff;box-shadow:0 1px 6px 0 rgba(0, 0, 0, 0.16)}
   .cf-mentioned-user-popup{margin-top: 10px;}
