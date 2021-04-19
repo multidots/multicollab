@@ -29,15 +29,13 @@ export default class Comment extends React.Component {
     }
 
     edit() {
-        // $( '.js-cancel-comment' ).trigger( 'click' ); // Resetting all opend edit comment box.
-
         this.setState({editing: true});
 
         // Handling edited value.
         var editedValue        = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
 
         // Filtering anchor tag and return the url text only.
-        editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)(?=&|$)\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)(?=&|$)<\/a>/igm, function( match ) {
+        editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)<\/a>/igm, function( match ) {
             return match.replace( /(<([^>]+)>)/ig, '');
         } )
         this.state.contentHtml = editedValue;
@@ -52,10 +50,11 @@ export default class Comment extends React.Component {
                 return false;
             }
             // Adding anchor tag around the linkable text.
-            newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)(?=&|$)/ig, function( match ) {
-            match = match.replace( /&nbsp;/, ' ' );
-            return `<a href="${match}" target="_blank">${match}</a>`;
-        } );
+            newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
+                match = match.replace( /&nbsp/igm, '' );
+                return `<a href="${match}" target="_blank">${match}</a>`;
+            } );
+            newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
 
             this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
     
