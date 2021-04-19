@@ -470,7 +470,7 @@ class Comments extends React.Component {
 
                                                                                             <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
                                                                                         ) : (
-                                                                                            <span>{ renderHTML( DOMPurify.sanitize( c.thread ) ) }</span> // phpcs:ignore
+                                                                                            <span>{ renderHTML(  c.thread ) }</span> // phpcs:ignore
                                                                                         ) }
                                                                                     </div>
                                                                                     { 'publish' === c.status && 0 >= index && undefined !== th.assignedTo.username && (
