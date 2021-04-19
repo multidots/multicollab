@@ -378,6 +378,7 @@
   .cf-assign-to label i {font-size: 13px;font-style: italic;font-weight: 400;color: rgb(40, 48, 61);}
   .cf-share-comment .js-mentioned {display: inline-block;word-break: break-word;}
   .user-data-row .user-comment :not(.js-mentioned){display: inline-block;}
+  .user-data-row .user-comment del a {text-decoration: line-through;}
    /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
     .cf-tabs-main .cf-tab-inner{min-height:auto}
