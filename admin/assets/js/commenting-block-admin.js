@@ -302,12 +302,14 @@
                 target.addEventListener('paste', (event) => {
                     let paste = (event.clipboardData || window.clipboardData).getData('text');
                     const selection = window.getSelection();
+                    const range = selection.getRangeAt( 0 );
                     if (!selection.rangeCount) return false;
                     selection.deleteFromDocument();
-                    selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-
+                    range.insertNode( document.createTextNode( paste ) );
+                    range.collapse( false );
+                    selection.removeAllRanges();
+                    selection.addRange( range );
                     event.preventDefault();
-
                 });
             }
         }
@@ -376,25 +378,6 @@
                 $( assignablePopup ).remove();
             } )
 
-            // Format pasted content.
-            // $( document.body ).on( 'paste', createTextarea, function(e) {
-            //     // e.preventDefault();
-            //     var textContent      = e.originalEvent.clipboardData.getData( 'text/plain' );
-
-            //     if( $( createTextarea ).is(':focus') === true ) {
-            //         const pastedRange = window.getSelection().getRangeAt(0);
-            //         pastedRange.deleteContents();
-
-            //         const textNode = document.createTextNode( textContent );
-            //         pastedRange.insertNode( textNode );
-            //         pastedRange.selectNodeContents( textNode );
-            //         pastedRange.collapse( false );
-
-            //         const selection = window.getSelection();
-            //         selection.removeAllRanges();
-            //         selection.addRange( pastedRange );
-            //     }
-            // } )
             // For pasting in a new reply.
             $( document ).on( 'click', '.js-cf-share-comment', function() {
                 var textAreaID = $( this ).attr( 'id' );
@@ -406,11 +389,6 @@
                 var textAreaID = $( this ).attr( 'id' );
                 formatPastedContent( textAreaID );
             } );
-
-            // $( document ).on( 'click', createTextarea, function() {
-            //     var textAreaID = $( this ).attr( 'id' );
-            //     console.log( textAreaID );
-            // } )
 
             /**
              * ========================================
@@ -425,12 +403,6 @@
                 if( '<br>' === _self.html() || '&nbsp;' === _self.html() ) {
                     typedText = '';
                     $( createTextarea ).html( '' );
-                }
-
-                // For pasting content in comment area.
-                if( '' !== $( createTextarea ).attr( 'id' ) ) {
-                    formatPastedContent( $( createTextarea ).attr( 'id' ) );
-
                 }
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.

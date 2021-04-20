@@ -306,12 +306,14 @@ const mdComment = {
                 target.addEventListener('paste', (event) => {
                     let paste = (event.clipboardData || window.clipboardData).getData('text');
                     const selection = window.getSelection();
+                    const range = selection.getRangeAt( 0 );
                     if (!selection.rangeCount) return false;
                     selection.deleteFromDocument();
-                    selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-
+                    range.insertNode( document.createTextNode( paste ) );
+                    range.collapse( false );
+                    selection.removeAllRanges();
+                    selection.addRange( range );
                     event.preventDefault();
-
                 });
             }
 
