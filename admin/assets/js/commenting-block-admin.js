@@ -302,13 +302,12 @@
                 target.addEventListener('paste', (event) => {
                     let paste = (event.clipboardData || window.clipboardData).getData('text');
                     const selection = window.getSelection();
-                    const range = selection.getRangeAt( 0 );
+                    const pastedRange = selection.getRangeAt( 0 );
                     if (!selection.rangeCount) return false;
                     selection.deleteFromDocument();
-                    range.insertNode( document.createTextNode( paste ) );
-                    range.collapse( false );
+                    pastedRange.insertNode( document.createTextNode( paste ) );
                     selection.removeAllRanges();
-                    selection.addRange( range );
+                    selection.addRange( pastedRange );
                     event.preventDefault();
                 });
             }
