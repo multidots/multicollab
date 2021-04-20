@@ -300,6 +300,21 @@ const mdComment = {
                 $( 'body' ).removeClass( 'hide-comments' )
             }
 
+            var textAreaID = `txt${currentTime}`;
+            if( '' !== textAreaID && null !== textAreaID ) {
+                const target = document.getElementById(textAreaID);
+                target.addEventListener('paste', (event) => {
+                    let paste = (event.clipboardData || window.clipboardData).getData('text');
+                    const selection = window.getSelection();
+                    if (!selection.rangeCount) return false;
+                    selection.deleteFromDocument();
+                    selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+
+                    event.preventDefault();
+
+                });
+            }
+
         }
 
         getSelectedText() {
@@ -404,6 +419,8 @@ const mdComment = {
             }
             // $( '.js-cancel-comment' ).trigger( 'click' ); // Closing all opened edit comment box.
             $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+
+
         }
 
         floatComments(selectedText) {
