@@ -295,23 +295,24 @@
 
         }
 
-        // Format Pasted content.
-        var formatPastedContent = function(textAreaID) {
-            if( '' !== textAreaID && null !== textAreaID ) {
-                const target = document.getElementById(textAreaID);
-                target.addEventListener('paste', (event) => {
-                    let paste = (event.clipboardData || window.clipboardData).getData('text');
-                    const selection = window.getSelection();
-                    const pastedRange = selection.getRangeAt( 0 );
-                    if (!selection.rangeCount) return false;
-                    selection.deleteFromDocument();
-                    pastedRange.insertNode( document.createTextNode( paste ) );
-                    selection.removeAllRanges();
-                    selection.addRange( pastedRange );
-                    event.preventDefault();
-                });
-            }
+        // Format Pasted Content.
+        var formatPastedContent = function() {
+            $( document.body ).on( 'paste', '.js-cf-share-comment, .js-cf-edit-comment', function(e) {
+                e.preventDefault();
+                let paste = (e.originalEvent || e).clipboardData.getData('text/plain');
+                const selection = window.getSelection();
+                const pastedRange = selection.getRangeAt( 0 );
+                if (!selection.rangeCount) return false;
+                selection.deleteFromDocument();
+                pastedRange.insertNode( document.createTextNode( paste ) );
+                pastedRange.collapse( false );
+                selection.removeAllRanges();
+                selection.addRange( pastedRange );
+                e.preventDefault();
+            } )
+
         }
+        formatPastedContent();
 
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
@@ -375,18 +376,6 @@
             $( document.body ).on( 'click', editLink, function() {
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
-            } )
-
-            // For pasting in a new reply.
-            $( document ).on( 'click', '.js-cf-share-comment', function() {
-                var textAreaID = $( this ).attr( 'id' );
-                formatPastedContent( textAreaID );
-            } );
-
-            // For pasting in edit reply.
-            $( document ).on( 'click', '.js-cf-edit-comment', function() {
-                var textAreaID = $( this ).attr( 'id' );
-                formatPastedContent( textAreaID );
             } );
 
             /**
