@@ -172,8 +172,9 @@ class Commenting_block_Admin {
 					$open_counts ++;
 				}
 
-				$total_count ++;
-
+				if ( strpos( $val[0], 'publish' ) !== false ) {
+					$total_count ++;
+				}
 			}
 		}
 		// die();

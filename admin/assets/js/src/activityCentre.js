@@ -127,7 +127,7 @@ class Comments extends React.Component {
     }
 
     /**
-     * CLosing Sidebar On Mobile
+     * CLosing Sidebar On Mobile.
      */
     closingSidebarOnMobile() {
         var checkWidth = window.innerWidth;
