@@ -184,8 +184,8 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                    <span className='readlessTxt readMoreSpan active'>{renderHTML(str)} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
-                    <span className='readmoreTxt readMoreSpan'>{renderHTML(readmoreStr)} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
+                    <span className='readlessTxt readMoreSpan active'>{renderHTML(DOMPurify.sanitize(str))} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
+                    <span className='readmoreTxt readMoreSpan'>{renderHTML(DOMPurify.sanitize(readmoreStr))} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
                 </div>
             </div>
         );
@@ -219,7 +219,7 @@ export default class Comment extends React.Component {
                     <div className="cf-share-comment-wrapper js-cf-share-comment-wrapper">
                         <ContentEditable
                             innerRef={ this.contentEditable }
-                            html={ this.state.contentHtml }
+                            html={ DOMPurify.sanitize(this.state.contentHtml) }
                             disabled={ false }
                             onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
                             id={ `edit-${this.props.timestamp}` }

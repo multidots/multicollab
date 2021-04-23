@@ -295,6 +295,25 @@
 
         }
 
+        // Format Pasted Content.
+        var formatPastedContent = function() {
+            $( document.body ).on( 'paste', '.js-cf-share-comment, .js-cf-edit-comment', function(e) {
+                e.preventDefault();
+                let paste = (e.originalEvent || e).clipboardData.getData('text/plain');
+                const selection = window.getSelection();
+                const pastedRange = selection.getRangeAt( 0 );
+                if (!selection.rangeCount) return false;
+                selection.deleteFromDocument();
+                pastedRange.insertNode( document.createTextNode( paste ) );
+                pastedRange.collapse( false );
+                selection.removeAllRanges();
+                selection.addRange( pastedRange );
+                e.preventDefault();
+            } )
+
+        }
+        formatPastedContent();
+
         // Create @mentioning email features.
         var createAutoEmailMention = function() {
             var el                    = '';
@@ -357,27 +376,7 @@
             $( document.body ).on( 'click', editLink, function() {
                 $( appendIn ).remove();
                 $( assignablePopup ).remove();
-            } )
-
-            // Format pasted content.
-            $( document ).on( 'paste', createTextarea, function(e) {
-                e.preventDefault();
-                var textContent      = e.originalEvent.clipboardData.getData( 'text/plain' );
-
-                if( $( createTextarea ).is(':focus') === true ) {
-                    const pastedRange = window.getSelection().getRangeAt(0);
-                    pastedRange.deleteContents();
-
-                    const textNode = document.createTextNode( textContent );
-                    pastedRange.insertNode( textNode );
-                    pastedRange.selectNodeContents( textNode );
-                    pastedRange.collapse( false );
-
-                    const selection = window.getSelection();
-                    selection.removeAllRanges();
-                    selection.addRange( pastedRange );
-                }
-            } )
+            } );
 
             /**
              * ========================================

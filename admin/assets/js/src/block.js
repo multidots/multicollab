@@ -404,6 +404,8 @@ const mdComment = {
             }
             // $( '.js-cancel-comment' ).trigger( 'click' ); // Closing all opened edit comment box.
             $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+
+
         }
 
         floatComments(selectedText) {
