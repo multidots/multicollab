@@ -300,7 +300,8 @@ const mdComment = {
 
             referenceNode.appendChild(newNode);
             $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-
+			 //Activate Show All comment button in setting panel
+            $('.components-form-toggle').addClass('is-checked');
             onChange(toggleFormat(value, {type: name}),
                 ReactDOM.render(
                     <Board datatext={currentTime} onChanged={onChange} lastVal={value} freshBoard={1} commentedOnText={commentedOnText}/>,
