@@ -95,6 +95,7 @@ export default class Board extends React.Component {
             wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
         });
         this.setState({comments: arr});
+
     }
 
     updateComment(newText, idx, cTimestamp, dateTime, metaID) {
@@ -211,10 +212,17 @@ export default class Board extends React.Component {
 
             $('#' + el + ' .shareCommentContainer').addClass('loading');
             let _this = this;
+            if($("#md-span-comments").is(':empty')){
+                $('body').removeClass("commentOn");
+            } else{
+                $('body').addClass("commentOn");
+            }
             $.post(ajaxurl, data, function (data) { // eslint-disable-line
 
                 $('#' + el + ' .shareCommentContainer').removeClass('loading');
                 $('.fresh-board').removeClass('fresh-board');
+                
+                
 
                 data = $.parseJSON(data);
                 if (undefined !== data.error) {

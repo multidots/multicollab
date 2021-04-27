@@ -67,8 +67,10 @@ export default class Comment extends React.Component {
     remove(event) {
 
         if (confirm('Are you sure you want to delete this comment ?')) {
+           
             const elID = $(event.currentTarget).closest('.cls-board-outer');
             this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
+           
         }
     }
 
@@ -98,6 +100,11 @@ export default class Comment extends React.Component {
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
                 $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+                if($("#md-span-comments").is(':empty')){
+                    $('body').removeClass("commentOn");
+                } else{
+                    $('body').addClass("commentOn");
+                }
             });
 
             // Remove Tag.
@@ -118,6 +125,7 @@ export default class Comment extends React.Component {
 
         const {index} = this.props;
         const commentStatus = this.props.status ? this.props.status : 'draft';
+        console.log(commentStatus);
 
         var owner = '';
         try {

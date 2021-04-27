@@ -13,6 +13,8 @@ const $ = jQuery;                                                       // eslin
 // Window Load functions.
 $( window ).on('load', function () {
 
+
+
     let loadAttempts = 0;
     const loadComments = setInterval(function () {
         loadAttempts++;
@@ -23,12 +25,24 @@ $( window ).on('load', function () {
             // Fetching comments
             fetchComments();
         }
+       
+
+        if($("#md-span-comments").is(':empty')){
+            $('body').removeClass("commentOn");
+        }
+        else{
+            $('body').addClass("commentOn");
+        }
+        console.log( $("#md-span-comments").is(':empty'));
+       
 
         // Clearing interval if not found in 10 attemps.
         if ( loadAttempts >= 10 ) {
             clearInterval( loadComments );
         }
     }, 1000);
+
+   
 
     $(document).on('click', '.components-notice__action', function () {
 
@@ -77,14 +91,15 @@ function fetchComments() {
         const span_count = $('.wp-block mdspan').length;
 
         if (0 === span_count) {
-            $( '.block-editor-writing-flow' ).css( { width: '100% !important' } )
+            $( '.commentOn .block-editor-writing-flow' ).css( { width: '100% !important' } )
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
         } else {
+           
             $('.wp-block mdspan').each(function () {
                 selectedText = $(this).attr('datatext');
                 if ($('#' + selectedText).length === 0) {
-
+                 
                     var newNode = document.createElement('div');
                     newNode.setAttribute("id", selectedText);
                     newNode.setAttribute("class", "cls-board-outer is_active");
@@ -419,6 +434,7 @@ const mdComment = {
                 // when navigating through the activity center.
 
                 // Adding focus on selected text's popup.
+            
                 $('.cls-board-outer').removeClass('focus');
                 $('#' + selectedText + '.cls-board-outer').addClass('focus');
 

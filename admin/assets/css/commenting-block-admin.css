@@ -135,9 +135,9 @@
   @-webkit-keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
   @-moz-keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
   @keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
-  .block-editor-writing-flow{float:left;padding-left:0;width:80%;width:calc(100% - 345px);max-width:100%!important;margin:0 auto!important}
-  .block-editor-writing-flow::after{content:'';clear:both;display:block}
-  .editor-styles-wrapper .wp-block{width:100%!important;max-width:100%!important}
+  .commentOn .block-editor-writing-flow{float:left;padding-left:0;width:80%;width:calc(100% - 345px);max-width:100%!important;margin:0 auto!important;transition: all 0.5s ease-out;}
+  .commentOn .block-editor-writing-flow::after{content:'';clear:both;display:block}
+  .commentOn .editor-styles-wrapper .wp-block{width:100%!important;max-width:100%!important;transition: all 0.5s ease-out;}
   .hide-me{height:0;padding:0!important;margin:0!important;display:block;overflow:hidden;outline:none!important;box-shadow:none!important}
   .comment-header .comment-actions{width:100%;display:flex;margin-bottom:15px}
   .comment-header .comment-details{width:100%;display:flex;align-items:center;padding-right:50px}
@@ -392,7 +392,7 @@
     .cf-tabs-main .cf-tabs .cf-tab-item{padding:15px 0}
     .cf-tabs-main .cf-tabs li{margin:0 15px}
     #md-comments-suggestions-parent{width:320px}
-    .block-editor-writing-flow{width:calc(100% - 320px)}
+    .commentOn .block-editor-writing-flow{width:calc(100% - 320px)}
     .cls-board-outer{width:260px}
     .cf-plugin-settings .cf-left{width:calc(100% - 290px)}
     .cf-plugin-settings .cf-right{width:290px}
@@ -402,7 +402,7 @@
   }
   @media (max-width:1200px){
     #md-comments-suggestions-parent{width:300px}
-    .block-editor-writing-flow{width:calc(100% - 300px)}
+    .commentOn .block-editor-writing-flow{width:calc(100% - 300px)}
     .cls-board-outer{width:240px}
     .cf-plugin-settings .cf-left{width:70%}
     .cf-plugin-settings .cf-right{width:30%}

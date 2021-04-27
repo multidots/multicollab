@@ -316,8 +316,10 @@ class Comments extends React.Component {
     handleShowComments() {
         if ( true === this.state.showComments ) {
             $( 'body' ).addClass( 'hide-comments' );
+            $( 'body' ).removeClass( 'commentOn' );
         } else {
             $( 'body' ).removeClass( 'hide-comments' );
+            $( 'body' ).addClass( 'commentOn' );
         }
         this.setState({
             showComments: ! this.state.showComments
