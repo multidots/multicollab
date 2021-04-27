@@ -117,6 +117,12 @@ export default class Comment extends React.Component {
     cancelEdit() {
         this.setState({editing: false})
     }
+    //Decode HTML Text
+    htmlDecode(input){
+        var e = document.createElement('div');
+        e.innerHTML = input;
+        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+      }
 
     renderNormalMode() {
 
@@ -125,7 +131,7 @@ export default class Comment extends React.Component {
 
         const {index} = this.props;
         const commentStatus = this.props.status ? this.props.status : 'draft';
-        console.log(commentStatus);
+       
 
         var owner = '';
         try {
@@ -192,8 +198,8 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                    <span className='readlessTxt readMoreSpan active'>{renderHTML(DOMPurify.sanitize(str))} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
-                    <span className='readmoreTxt readMoreSpan'>{renderHTML(DOMPurify.sanitize(readmoreStr))} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
+                    <span className='readlessTxt readMoreSpan active' >{renderHTML(this.htmlDecode(str))} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
+                    <span className='readmoreTxt readMoreSpan'>{renderHTML(this.htmlDecode(readmoreStr))} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
                 </div>
             </div>
         );

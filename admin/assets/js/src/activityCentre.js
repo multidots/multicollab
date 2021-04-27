@@ -362,6 +362,12 @@ class Comments extends React.Component {
         this.appendCounter(); // Appending counter.
         this.activeBoardOnSelectedText(); // Add active class in activities thread on selected text click.
     }
+    //Decode Html
+    htmlDecode(input){
+        var e = document.createElement('div');
+        e.innerHTML = input;
+        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+      }
 
     render() {
         const { threads, showComments, isLoading, collapseLimit } = this.state;
@@ -472,7 +478,7 @@ class Comments extends React.Component {
 
                                                                                             <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
                                                                                         ) : (
-                                                                                            <span>{ renderHTML(  c.thread ) }</span> // phpcs:ignore
+                                                                                            <span dangerouslySetInnerHTML={{ __html: this.htmlDecode( c.thread) }}></span> // phpcs:ignore
                                                                                         ) }
                                                                                     </div>
                                                                                     { 'publish' === c.status && 0 >= index && undefined !== th.assignedTo.username && (
