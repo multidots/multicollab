@@ -10,13 +10,14 @@ export default class Comment extends React.Component {
     constructor(props) {
 
         super(props);
+        
         this.contentEditable = React.createRef();
         this.edit = this.edit.bind(this);
         this.save = this.save.bind(this);
         this.remove = this.remove.bind(this);
         this.resolve = this.resolve.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
-        this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>'};
+        this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>' , editedTime:''};
 
     }
 
@@ -29,6 +30,7 @@ export default class Comment extends React.Component {
     }
 
     edit() {
+       
         this.setState({editing: true});
 
         // Handling edited value.
@@ -39,24 +41,35 @@ export default class Comment extends React.Component {
             return match.replace( /(<([^>]+)>)/ig, '');
         } )
         this.state.contentHtml = editedValue;
+       
+       
     }
 
     save(event) {
         var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
         if( $( `#${elID} .js-cf-edit-comment` ).text().trim().length !== 0 ) {
             var newText = this.state.contentHtml;
+           
+
             if ( '' === newText ) {
                 alert( "Please write a comment to share!" );
                 return false;
             }
+           if(true === this.state.editing){
+            var date=   new Date();
+            var editedTime = Math.floor(date.getTime()/1000);
+            this.state.editedTime = editedTime;
+           
+            }
+            
             // Adding anchor tag around the linkable text.
             newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
                 match = match.replace( /&nbsp/igm, '' );
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
             newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
-
-            this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
+           
+            this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID,this.state.editedTime );
     
             this.setState( { editing: false } );
         } else {
@@ -131,7 +144,7 @@ export default class Comment extends React.Component {
 
         const {index} = this.props;
         const commentStatus = this.props.status ? this.props.status : 'draft';
-       
+       // console.log(this.props.editedTime);
 
         var owner = '';
         try {
@@ -155,9 +168,10 @@ export default class Comment extends React.Component {
         if( 8 < userRolePartial.length ) {
             userRolePartial = userRolePartial.slice( 0, 8 ) + '...';
         }
-
+       
         return (
-            <div className={"commentContainer " + commentStatus} id={this.props.timestamp}>
+            
+            <div className={"commentContainer " + status } id={this.props.timestamp}>
                 <div className="comment-header">
                     <div className="comment-actions">
                         {index === 0 &&
@@ -193,7 +207,9 @@ export default class Comment extends React.Component {
                             <div className="commenter-name" title={ `${this.props.userName} ( ${this.props.userRole} )` }>
                                 {this.props.userName} <small>({ userRolePartial })</small>
                             </div>
-                            <div className="comment-time">{this.props.dateTime}</div>
+                            
+                            <div className="comment-time">{this.props.dateTime}
+                           </div>
                         </div>
                     </div>
                 </div>
@@ -201,6 +217,10 @@ export default class Comment extends React.Component {
                     <span className='readlessTxt readMoreSpan active' >{renderHTML(this.htmlDecode(str))} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
                     <span className='readmoreTxt readMoreSpan'>{renderHTML(this.htmlDecode(readmoreStr))} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
                 </div>
+               
+                {undefined!==this.props.editedTime &&
+                <time className="updated-time">(edited at {this.props.editedTime})</time>
+             }
             </div>
         );
     }
@@ -242,6 +262,7 @@ export default class Comment extends React.Component {
                         />
                     </div>
                 </div>
+              
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}
                 </button>
@@ -279,4 +300,5 @@ Comment.propTypes = {
     timestamp: PropTypes.number,
     editedDraft: PropTypes.string,
     children: PropTypes.string,
+    editedTime: PropTypes.string,
 };

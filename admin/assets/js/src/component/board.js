@@ -30,7 +30,7 @@ export default class Board extends React.Component {
         }, 3000);
 
         this.commentedOnText = this.props.commentedOnText;
-
+       
         if (1 !== this.props.freshBoard) {
             wp.apiFetch({path: 'cf/cf-get-comments-api/?currentPostID=' + currentPostID + '&elID=' + metaselectedText}).then(fps => { // eslint-disable-line
 
@@ -98,10 +98,10 @@ export default class Board extends React.Component {
 
     }
 
-    updateComment(newText, idx, cTimestamp, dateTime, metaID) {
+    updateComment(newText, idx, cTimestamp, dateTime, metaID,editedTime) {
 
         var arr = this.state.comments;
-
+        
         var userID = '';
         var userName = '';
         var userRole = '';
@@ -129,23 +129,31 @@ export default class Board extends React.Component {
         newArr['index']      = idx;
         newArr['status']     = 'draft reverted_back';
         newArr['timestamp']  = cTimestamp;
+        newArr['editedTime']  = editedTime;
+       
         arr[idx]             = newArr;
+       
         const CurrentPostID  = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
         metaID               = '_' + metaID;
         var data = {
             'action': 'cf_update_comment',
             'currentPostID': CurrentPostID,
             'editedComment': JSON.stringify(newArr),
-            'metaId': metaID
+            'metaId': metaID,
+           
         };
+    
         // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
         $.post(ajaxurl, data, function () { // eslint-disable-line
             // Activate 'Save Draft' or 'Publish' button
+         
             wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
+           
         });
+     
         this.setState({comments: arr})
     }
-
+   
     addNewComment(event) {
         event.preventDefault();
         const {datatext}  = this.props;
@@ -229,6 +237,7 @@ export default class Board extends React.Component {
                     alert(data.error);
                     return false;
                 }
+                
                 arr[arr.length - 1]['dtTime'] = data.dtTime;
                 arr[arr.length - 1]['timestamp'] = data.timestamp;
 
@@ -278,7 +287,8 @@ export default class Board extends React.Component {
 
         const {lastVal, onChanged, selectedText} = this.props;
 
-        let username, userRole, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft;
+        let username, userRole, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft,updatedTime;
+      
         Object.keys(text).map(i => {
             if ('userName' === i) {
                 username = text[i];
@@ -298,6 +308,11 @@ export default class Board extends React.Component {
                 cTimestamp = text[i];
             } else if ('editedDraft' === i) {
                 editedDraft = text[i];
+            }
+            else if ('updatedTime' === i) {
+               
+                updatedTime = text[i];
+               
             }
         });
 
@@ -319,6 +334,7 @@ export default class Board extends React.Component {
                 selectedText={selectedText}
                 timestamp={cTimestamp}
                 editedDraft={editedDraft}
+                editedTime ={updatedTime}
                 showAvatars={localStorage.getItem("showAvatars")}
             >{
                 postedComment = postedComment ? postedComment : text

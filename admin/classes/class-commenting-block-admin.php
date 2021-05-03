@@ -60,6 +60,7 @@ class Commenting_block_Admin {
 		// Action to add setting page.
 		add_action( 'admin_menu', array( $this, 'cf_add_setting_page' ) );
 
+		
 		// Adding new column to the posts list.
 		add_filter( 'manage_posts_columns', array( $this, 'cf_columns_head' ) );
 		add_filter( 'manage_pages_columns', array( $this, 'cf_columns_head' ) );
@@ -74,6 +75,12 @@ class Commenting_block_Admin {
 
 		// Set query to sort.
 		add_action( 'pre_get_posts', array( $this, 'cf_sort_custom_column_query' ) );
+
+		//Action to autosave comment
+	//	add_action('save_post', array( $this, 'cf_autosave_save_comment' ), 10, 3 );
+		
+	
+		
 	}
 
 	/**
@@ -380,13 +387,12 @@ class Commenting_block_Admin {
 		// Publish Edited Comments.
 		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
 			$edited_drafts = $current_drafts['edited'];
-
 			foreach ( $edited_drafts as $el => $timestamps ) {
 				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
 
 				foreach ( $timestamps as $t ) {
-
+					
 					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
 					if ( ! empty( $edited_draft ) ) {
 						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
@@ -539,6 +545,64 @@ class Commenting_block_Admin {
 			}
 		}
 	}
+
+	/**
+	 * @param int $post_ID Post ID.
+	 * @param object/string $post Post Content.
+	 */
+/*	public function cf_autosave_save_comment( $post_ID, $post ) {
+
+			$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
+			$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
+	
+			// Update Current Drafts.
+			$current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
+			echo $current_post_id;
+			echo $metaId;
+			print_r($current_drafts);
+		$p_content  = is_object( $post ) ? $post->post_content: $post;
+		$metas      = get_post_meta( $post_ID );
+		
+		// Get current user details.
+		$curr_user                 = wp_get_current_user();
+		$user_id                   = $curr_user->ID;
+		$current_user_email        = $curr_user->user_email;
+		$current_user_display_name = $curr_user->display_name;
+
+		// Publish drafts from the '_current_drafts' stack.
+		$current_drafts    = $metas['_current_drafts'][0];
+		$current_drafts    = maybe_unserialize( $current_drafts );
+		$current_timestamp = current_time( 'timestamp' );
+		$newArr = array();
+
+		foreach ( $metas as $key => $val ) {
+			//print_r($key);
+			$prev_state = $metas[ $key ];
+			$prev_state = maybe_unserialize( $prev_state );
+			//print_r($prev_state[$key][0]);
+			$new_drafts = $prev_state[$key][0]['comments'];
+			
+			foreach ( $new_drafts as $el => $drafts ) {
+				$elid = str_replace( '_', '', $el );
+				if ( strpos( $p_content, $elid ) !== false ) {
+					$prev_state   = $metas[ $el ][0];
+					$prev_state   = maybe_unserialize( $prev_state );
+					$new_comments = array();
+					
+					foreach ( $drafts as $d ) {
+						$prev_state['comments'][ $d ]['status'] = 'publish';
+						$new_comments[]   = $d;
+					}
+					$prev_state['updated_at'] = $current_timestamp;
+					update_post_meta( $post_ID, $el, $prev_state );
+					$metas[ $el ][0] = maybe_serialize( $prev_state );
+				}
+			}
+	
+
+	}
+
+	}*/
 
 	/**
 	 * Include the Email template class and initiate the object.
@@ -715,6 +779,7 @@ class Commenting_block_Admin {
 		$current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
 		$current_drafts = maybe_unserialize( $current_drafts );
 		$current_drafts = empty( $current_drafts ) ? array() : $current_drafts;
+		
 		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
 			$current_drafts['comments'][ $metaId ][] = $timestamp;
 		} else {
@@ -723,6 +788,7 @@ class Commenting_block_Admin {
 		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
 
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
+			
 			$superCareerData['comments'][ $timestamp ] = $arr;
 			$superCareerData['updated_at']             = $timestamp;
 			if ( $assign_to > 0 ) {
@@ -784,6 +850,7 @@ class Commenting_block_Admin {
 		$time_format = get_option( 'time_format' );
 
 		$total_comments = 0;
+		
 		foreach ( $all_meta as $dataid => $v ) {
 			if ( strpos( $dataid, '_el' ) === 0 ) {
 				$dataid            = str_replace( '_', '', $dataid );
@@ -950,20 +1017,27 @@ class Commenting_block_Admin {
 		$edited_comment = htmlspecialchars_decode( $edited_comment );
 		$edited_comment = html_entity_decode( $edited_comment );
 		$edited_comment = json_decode( $edited_comment, true );
-
+		$current_drafts    = $metas['_current_drafts'][0];
+		$current_drafts    = maybe_unserialize( $current_drafts );
+		$date_format = get_option( 'date_format' );
+		$time_format = get_option( 'time_format' );
+		$current_timestamp = current_time( 'timestamp' );
+	
 		// Make content secured.
 		$edited_comment['thread'] = $this->cf_secure_content( $edited_comment['thread'] );
-
-		$old_timestamp = $edited_comment['timestamp'];
+		$edited_comment['updatedTime']= gmdate( $time_format . ' ' . $date_format, intval($edited_comment['editedTime']) );
+	//	print_r($edited_comment);
+	    $old_timestamp = $edited_comment['timestamp'];
 
 		$commentListOld = get_post_meta( $current_post_id, $metaId, true );
 		$commentListOld = maybe_unserialize( $commentListOld );
-
+		
 		$edited_draft           = array();
 		$edited_draft['thread'] = $edited_comment['thread'];
 
 		$commentListOld['comments'][ $old_timestamp ]['draft_edits'] = $edited_draft;
-
+		$commentListOld['comments'][ $old_timestamp ]['editedTime'] = $edited_comment['editedTime'];
+		
 		update_post_meta( $current_post_id, $metaId, $commentListOld );
 
 		// Update Current Drafts.
@@ -1160,11 +1234,18 @@ class Commenting_block_Admin {
 
 		$superCareerData = maybe_unserialize( $commentList );
 		$comments        = $superCareerData['comments'];
-
+		//print_r($comments);
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
 
 		foreach ( $comments as $t => $val ) {
+			//print_r($val);
+			if(isset($val['editedTime'])){
+				$val['editedTime']=	gmdate( $time_format . ' ' . $date_format, intval($val['editedTime']) );
+			}
+			else{
+				$val['editedTime']='';
+			}
 			$user_info    = get_userdata( $val['userData'] );
 			$username     = $user_info->display_name;
 			$user_role    = implode( ', ', $user_info->roles );
@@ -1173,6 +1254,7 @@ class Commenting_block_Admin {
 			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
 			$cstatus      = isset( $val['status'] ) ? $val['status'] : '';
 			$edited_draft = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
+			$updatedTime = $val['editedTime'];
 
 			$date = gmdate( $time_format . ' ' . $date_format, $t );
 
@@ -1188,6 +1270,7 @@ class Commenting_block_Admin {
 						'status'      => $cstatus,
 						'timestamp'   => $t,
 						'editedDraft' => $edited_draft,
+						'updatedTime' => $updatedTime,
 					] );
 			}
 		}

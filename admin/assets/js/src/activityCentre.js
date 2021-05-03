@@ -412,10 +412,12 @@ class Comments extends React.Component {
                                             ) }
 
                                             { undefined !== threads && null !== threads && threads.map( ( th ) => {
+                                              
                                                 return (
                                                     <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ `cf-${`${th.elID}`}` } key={ `cf-${`${th.elID}`}` }>
                                                         {
                                                             th.activities.map( ( c, index ) => {
+                                                             
                                                                 if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
                                                                     return (
                                                                         <div className={ 0 < index ? 'user-data-box user-reply' : 'user-data-box' } key={ index }>
@@ -472,6 +474,7 @@ class Comments extends React.Component {
                                                                                                 </blockquote>
                                                                                             </React.Fragment>
                                                                                         ) }
+                                                                                       
                                                                                     </div>
                                                                                     <div class="user-comment">
                                                                                         { 0 < index && 'deleted' === c.status ? (
@@ -480,7 +483,11 @@ class Comments extends React.Component {
                                                                                         ) : (
                                                                                             <span dangerouslySetInnerHTML={{ __html: this.htmlDecode( c.thread) }}></span> // phpcs:ignore
                                                                                         ) }
+                                                                                        
                                                                                     </div>
+                                                                                    {c.editedTime.length>0 &&
+                                                                                      <time class="user-commented-date"> edited {c.editedTime}</time>
+                                                                                    }
                                                                                     { 'publish' === c.status && 0 >= index && undefined !== th.assignedTo.username && (
                                                                                         <div class="user-assigned-to">
                                                                                             <span class="icon"></span>

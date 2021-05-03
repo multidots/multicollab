@@ -67,11 +67,19 @@ class Commenting_Block_Rest_Routes {
 
 			foreach( $comments['comments'] as $timestamp => $comment ) {
 				$user_info = get_userdata( $comment['userData'] );
+			
+				if(isset($comment['editedTime'])){
+					$comment['editedTime']=	gmdate( $time_format . ' ' . $date_format, intval($comment['editedTime']) );
+				}
+				else{
+					$comment['editedTime']='';
+				}
 				if( 'draft' !== $comment['status'] && 'permanent_draft' !== $comment['status'] ) {
 					$cmnts[] = [
 						'id'         => $timestamp,
 						'status'     => $comment['status'],
 						'timestamp'  => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
+						'editedTime' =>  $comment['editedTime'],
 						'userData'   => [
 							'id'        => intval( $user_info->ID ),
 							'username'  => $user_info->display_name,
@@ -113,8 +121,10 @@ class Commenting_Block_Rest_Routes {
 					'resolvedBy'        => $resolved_by,
 					'updatedAt'			=> $comments['updated_at'],
 					'assignedTo'		=> $assigned_user,
+					
 				];
 			}
+			
 		}
 
 		array_multisort( array_column( $threads, 'updatedAt' ), SORT_DESC, $threads );
