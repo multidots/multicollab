@@ -33,7 +33,7 @@ $( window ).on('load', function () {
         else{
             $('body').addClass("commentOn");
         }
-        console.log( $("#md-span-comments").is(':empty'));
+      
        
 
         // Clearing interval if not found in 10 attemps.
@@ -68,6 +68,7 @@ $( window ).on('load', function () {
     });
 
 });
+
 
 
 function fetchComments() {
@@ -154,7 +155,7 @@ function bring_back_comments() {
     $.post(ajaxurl, data, function (response) { // eslint-disable-line
 
         response = JSON.parse(response);
-
+       
         if (response.resolved) {
             $.each(response.resolved, function (k, el) {
                 el = el.replace('_', '');
@@ -186,6 +187,7 @@ function bring_back_comments() {
         }
 
         if (response.edited) {
+           
             $.each(response.edited, function (el, timestamps) {
 
                 $.each(timestamps, function (el, t) {
@@ -300,7 +302,7 @@ const mdComment = {
 
             referenceNode.appendChild(newNode);
             $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-			 //Activate Show All comment button in setting panel
+             //Activate Show All comment button in setting panel
             $('.components-form-toggle').addClass('is-checked');
             onChange(toggleFormat(value, {type: name}),
                 ReactDOM.render(
@@ -347,7 +349,8 @@ const mdComment = {
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
 
                 //ne_pending remove the attr true
-                $('mdspan').removeAttr('data-rich-text-format-boundary');
+                 //comment below code to keep other rich text format like <strong>,<em>
+               // $('mdspan').removeAttr('data-rich-text-format-boundary');
             }
 
             const referenceNode = document.getElementById('md-span-comments');
@@ -425,7 +428,10 @@ const mdComment = {
         }
 
         floatComments(selectedText) {
-            if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
+            console.log(document.querySelectorAll(`[data-rich-text-format-boundary='${true}']`).length);
+            
+            //console.log($('mdspan[data-rich-text-format-boundary="true"]').length);
+            if (document.querySelectorAll(`[data-rich-text-format-boundary='${true}']`).length!== 0) {
 
 
                 // Removing dark highlights from other texts,
@@ -438,8 +444,8 @@ const mdComment = {
             
                 $('.cls-board-outer').removeClass('focus');
                 $('#' + selectedText + '.cls-board-outer').addClass('focus');
-
-                $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
+                 //comment below code to keep other rich text format like <strong>,<em>
+               // $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
 
 
@@ -447,7 +453,8 @@ const mdComment = {
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
 
                 $('#md-span-comments .cls-board-outer').css('top', 0);
-                $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
+                 //comment below code to keep other rich text format like <strong>,<em>
+               // $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
             }
         }
 
@@ -464,6 +471,7 @@ const mdComment = {
                         shortcutType="primary"
                         shortcutCharacter="m"
                         className={`toolbar-button-with-text toolbar-button__${name}`}
+                        
                     />
                     {
                         <Fragment>

@@ -107,12 +107,14 @@ export default class Comment extends React.Component {
             };
             $.post(ajaxurl, data, function () { // eslint-disable-line
                 $('#' + elIDRemove).remove();
+               
                 $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
                 // Reset Comments Float.
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
-                $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+                //comment below code to keep other rich text format like <strong>,<em>
+               // $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
                 if($("#md-span-comments").is(':empty')){
                     $('body').removeClass("commentOn");
                 } else{

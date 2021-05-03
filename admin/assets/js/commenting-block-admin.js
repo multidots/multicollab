@@ -978,16 +978,27 @@ var removeTag = function( elIDRemove ) { // eslint-disable-line
 
         jQuery(findAttributes).each(function (i, attrb) { // eslint-disable-line
             var content = blockAttributes[attrb];
+           // console.log(content);
             if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
 
                 if ('' !== content) {
                     let tempDiv = document.createElement('div');
                     tempDiv.innerHTML = content; // phpcs:ignore
                     let childElements = tempDiv.getElementsByTagName('mdspan');
+                  // console.log(childElements);
                     for (let i = 0; i < childElements.length; i++) {
                         if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
+                            //Change logic to keep other HTML Tag in content..only remove mdspan tag
+                           
+                                 var parent = childElements[i].parentNode;
+                                 while( childElements[i].firstChild ) {
+                                    parent.insertBefore(  childElements[i].firstChild, childElements[i] );
+                                 }
+                                parent.removeChild(childElements[i] );
+                                 
+                            //childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
                             const finalContent = tempDiv.innerHTML;
+                           
 
                             if ( findAttributes.indexOf(attrb) !== -1 ) {
                                 wp.data.dispatch('core/editor').updateBlock(clientId, createNewAttributeWithFinalContent(attrb, finalContent));
