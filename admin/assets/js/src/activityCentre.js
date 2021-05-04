@@ -87,6 +87,7 @@ class Comments extends React.Component {
             }
         } )
         .then( ( res ) => {
+           // console.log(res.data.threads);
             if( res.data.threads.length > 0 ) {
                 this.setState({
                     threads: res.data.threads,
@@ -108,8 +109,18 @@ class Comments extends React.Component {
      * Setup active activity board.
      */
      setActiveBoard( elID ) {
-        $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
-        $( `#cf-${elID}` ).addClass( 'active' );
+        
+         var findMdSpan = '.mdspan-comment';
+      
+         $( findMdSpan ).each( function() {
+            var datatext = $( this ).attr( 'datatext' );
+            if( elID === datatext ) {
+                $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+                $( `#cf-${elID}` ).addClass( 'active' );
+            }
+        });
+      
+    
     }
 
     /**
@@ -215,6 +226,7 @@ class Comments extends React.Component {
         $( `#${elID}` ).trigger( 'click' );
         $( `mdspan[datatext=${elID}]` ).trigger( 'click' );
 
+
         // Highlight selected text from editor.
         this.highlightSelectedText( elID );
 
@@ -240,6 +252,7 @@ class Comments extends React.Component {
 
         var editID = e.target.dataset.editid;
         editID     = editID.replace( 'cf-', '' );
+      
 
         $( '.js-cancel-comment' ).trigger( 'click' );
         $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
@@ -295,16 +308,17 @@ class Comments extends React.Component {
             var isSavingPost              = select.isSavingPost();
             var isAutosavingPost          = select.isAutosavingPost();
             var didPostSaveRequestSucceed = select.didPostSaveRequestSucceed();
-            var status = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+           // var status = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+           
             if ( isSavingPost && !isAutosavingPost ) {
                 if( didPostSaveRequestSucceed ) {
-                    if( 'draft' === status || 'publish' === status ) {
+                   // if( 'draft' === status || 'publish' === status ) {
                         _this.setState({
                             threads: [],
                         })
                         _this.getComments();
                         _this.addActiveClassOnPostStatusChange();
-                    }
+                  //  }
                 }
             }
         })
@@ -418,7 +432,7 @@ class Comments extends React.Component {
                                                         {
                                                             th.activities.map( ( c, index ) => {
                                                              
-                                                                if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
+                                                               // if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
                                                                     return (
                                                                         <div className={ 0 < index ? 'user-data-box user-reply' : 'user-data-box' } key={ index }>
                                                                             <div className="user-data">
@@ -547,7 +561,7 @@ class Comments extends React.Component {
                                                                             </div>
                                                                         </div>
                                                                     )
-                                                                }
+                                                                //}
                                                             } )
                                                         }
                                                         { 'true' === th.resolved && undefined !== th.resolvedBy && (

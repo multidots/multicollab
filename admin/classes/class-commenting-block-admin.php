@@ -485,7 +485,7 @@ class Commenting_block_Admin {
 		update_post_meta( $post_ID, '_current_drafts', '' );
 
 		// New Comments from past should be moved to '_permanent_drafts'.
-		$permanent_drafts = $metas['_permanent_drafts'][0];
+	/*	$permanent_drafts = $metas['_permanent_drafts'][0];
 		$permanent_drafts = maybe_unserialize( $permanent_drafts );
 		if ( isset( $permanent_drafts['comments'] ) && 0 !== count( $permanent_drafts['comments'] ) ) {
 			$permanent_drafts = $permanent_drafts['comments'];
@@ -501,7 +501,7 @@ class Commenting_block_Admin {
 		}
 
 		// Flush Permanent Drafts Stack.
-		update_post_meta( $post_ID, '_permanent_drafts', '' );
+		update_post_meta( $post_ID, '_permanent_drafts', '' );*/
 
 		// Update open comments count.
 		$comment_counts = $this->cf_get_comment_counts( $post_ID, $p_content, $metas );
@@ -546,63 +546,6 @@ class Commenting_block_Admin {
 		}
 	}
 
-	/**
-	 * @param int $post_ID Post ID.
-	 * @param object/string $post Post Content.
-	 */
-/*	public function cf_autosave_save_comment( $post_ID, $post ) {
-
-			$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
-			$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
-	
-			// Update Current Drafts.
-			$current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
-			echo $current_post_id;
-			echo $metaId;
-			print_r($current_drafts);
-		$p_content  = is_object( $post ) ? $post->post_content: $post;
-		$metas      = get_post_meta( $post_ID );
-		
-		// Get current user details.
-		$curr_user                 = wp_get_current_user();
-		$user_id                   = $curr_user->ID;
-		$current_user_email        = $curr_user->user_email;
-		$current_user_display_name = $curr_user->display_name;
-
-		// Publish drafts from the '_current_drafts' stack.
-		$current_drafts    = $metas['_current_drafts'][0];
-		$current_drafts    = maybe_unserialize( $current_drafts );
-		$current_timestamp = current_time( 'timestamp' );
-		$newArr = array();
-
-		foreach ( $metas as $key => $val ) {
-			//print_r($key);
-			$prev_state = $metas[ $key ];
-			$prev_state = maybe_unserialize( $prev_state );
-			//print_r($prev_state[$key][0]);
-			$new_drafts = $prev_state[$key][0]['comments'];
-			
-			foreach ( $new_drafts as $el => $drafts ) {
-				$elid = str_replace( '_', '', $el );
-				if ( strpos( $p_content, $elid ) !== false ) {
-					$prev_state   = $metas[ $el ][0];
-					$prev_state   = maybe_unserialize( $prev_state );
-					$new_comments = array();
-					
-					foreach ( $drafts as $d ) {
-						$prev_state['comments'][ $d ]['status'] = 'publish';
-						$new_comments[]   = $d;
-					}
-					$prev_state['updated_at'] = $current_timestamp;
-					update_post_meta( $post_ID, $el, $prev_state );
-					$metas[ $el ][0] = maybe_serialize( $prev_state );
-				}
-			}
-	
-
-	}
-
-	}*/
 
 	/**
 	 * Include the Email template class and initiate the object.
@@ -769,7 +712,7 @@ class Commenting_block_Admin {
 		$commentListOld  = get_post_meta( $current_post_id, $metaId, true );
 		$superCareerData = maybe_unserialize( $commentListOld );
 
-		$arr['status']   = 'draft';
+		$arr['status']   = 'publish';
 		$arr['userData'] = get_current_user_id();
 
 		// Secure content.
@@ -894,9 +837,9 @@ class Commenting_block_Admin {
 					$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
 
 					// Stop displaying history of comments in draft mode.
-					if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
+					/*if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
 						continue;
-					}
+					}*/
 
 					$udata = $c['userData'];
 
@@ -1026,7 +969,7 @@ class Commenting_block_Admin {
 		// Make content secured.
 		$edited_comment['thread'] = $this->cf_secure_content( $edited_comment['thread'] );
 		$edited_comment['updatedTime']= gmdate( $time_format . ' ' . $date_format, intval($edited_comment['editedTime']) );
-	//	print_r($edited_comment);
+		
 	    $old_timestamp = $edited_comment['timestamp'];
 
 		$commentListOld = get_post_meta( $current_post_id, $metaId, true );
@@ -1037,7 +980,8 @@ class Commenting_block_Admin {
 
 		$commentListOld['comments'][ $old_timestamp ]['draft_edits'] = $edited_draft;
 		$commentListOld['comments'][ $old_timestamp ]['editedTime'] = $edited_comment['editedTime'];
-		
+		$commentListOld['comments'][$old_timestamp]['updatedTime'] = $edited_comment['updatedTime'];
+		//print_r($commentListOld);
 		update_post_meta( $current_post_id, $metaId, $commentListOld );
 
 		// Update Current Drafts.
@@ -1103,7 +1047,7 @@ class Commenting_block_Admin {
 	/**
 	 * Reset Drafts meta.
 	 */
-	public function cf_reset_drafts_meta() {
+		/*public function cf_reset_drafts_meta() {
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 
 		$changed = 0;
@@ -1141,12 +1085,12 @@ class Commenting_block_Admin {
 		$drafts_meta['timestamp'] = $timestamp;
 
 		update_post_meta( $current_post_id, '_current_drafts', $drafts_meta );
-	}
+	}*/
 
 	/**
 	 * Merge Drafts meta.
 	 */
-	public function cf_merge_draft_stacks() {
+	/*public function cf_merge_draft_stacks() {
 		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
 
 		$changed = 0;
@@ -1183,7 +1127,7 @@ class Commenting_block_Admin {
 		echo wp_json_encode( $current_drafts );
 		wp_die();
 
-	}
+	}*/
 
 	/**
 	 * Resolve Thread function.

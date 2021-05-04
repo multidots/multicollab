@@ -127,7 +127,8 @@ export default class Board extends React.Component {
         newArr['thread']     = newText;
         newArr['userData']   = userID;
         newArr['index']      = idx;
-        newArr['status']     = 'draft reverted_back';
+       // newArr['status']     = 'draft reverted_back';
+        newArr['status']     = 'publish';
         newArr['timestamp']  = cTimestamp;
         newArr['editedTime']  = editedTime;
        
@@ -198,10 +199,12 @@ export default class Board extends React.Component {
             newArr['userName'] = userName;
             newArr['userRole'] = userRole;
             newArr['profileURL'] = userProfile;
-            newArr['status'] = 'draft reverted_back';
+            //newArr['status'] = 'draft reverted_back';
+            newArr['status'] = 'publish';
+           
 
             arr.push(newArr);
-
+          
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
             var el = currentTextID.substring(3);
@@ -286,9 +289,9 @@ export default class Board extends React.Component {
     displayComments(text, i) {
 
         const {lastVal, onChanged, selectedText} = this.props;
-
-        let username, userRole, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft,updatedTime;
       
+        let username, userRole, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft,updatedTime;
+  
         Object.keys(text).map(i => {
             if ('userName' === i) {
                 username = text[i];
@@ -394,6 +397,7 @@ export default class Board extends React.Component {
                 <div className="boardTop">
                     {
                         this.state.comments && this.state.comments.map((item, index) => {
+                           
                             return this.displayComments(item, index);
                         })
                     }
@@ -417,6 +421,7 @@ export default class Board extends React.Component {
                     <button onClick={this.addNewComment} className="btn btn-success">{buttonText}</button>
                     <button onClick={this.cancelComment} className="btn btn-cancel">Cancel</button>
                 </div>
+                
             </div>
         );
     }

@@ -59,7 +59,7 @@ export default class Comment extends React.Component {
             var date=   new Date();
             var editedTime = Math.floor(date.getTime()/1000);
             this.state.editedTime = editedTime;
-           
+          
             }
             
             // Adding anchor tag around the linkable text.
@@ -140,13 +140,13 @@ export default class Comment extends React.Component {
       }
 
     renderNormalMode() {
-
+    
         // Display the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').show();
 
         const {index} = this.props;
-        const commentStatus = this.props.status ? this.props.status : 'draft';
-       // console.log(this.props.editedTime);
+        const commentStatus = this.props.status ? this.props.status : 'publish';
+     
 
         var owner = '';
         try {
@@ -173,7 +173,7 @@ export default class Comment extends React.Component {
        
         return (
             
-            <div className={"commentContainer " + status } id={this.props.timestamp}>
+            <div className={"commentContainer " } id={this.props.timestamp}>
                 <div className="comment-header">
                     <div className="comment-actions">
                         {index === 0 &&
@@ -220,7 +220,7 @@ export default class Comment extends React.Component {
                     <span className='readmoreTxt readMoreSpan'>{renderHTML(this.htmlDecode(readmoreStr))} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
                 </div>
                
-                {undefined!==this.props.editedTime &&
+                {  ''!== this.props.editedTime && undefined !== this.props.editedTime &&
                 <time className="updated-time">(edited at {this.props.editedTime})</time>
              }
             </div>

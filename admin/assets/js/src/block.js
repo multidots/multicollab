@@ -47,7 +47,7 @@ $( window ).on('load', function () {
     $(document).on('click', '.components-notice__action', function () {
 
         if ('View the autosave' === $(this).text()) {
-            bring_back_comments();
+          //  bring_back_comments();
         }
         if ('Restore the backup' === $(this).text()) {
 
@@ -60,7 +60,7 @@ $( window ).on('load', function () {
                     }
                 });
 
-                bring_back_comments();
+              //  bring_back_comments();
             }, 500);
 
         }
@@ -72,6 +72,7 @@ $( window ).on('load', function () {
 
 
 function fetchComments() {
+   
     var parentNode = document.createElement('div');
     parentNode.setAttribute("id", 'md-comments-suggestions-parent');
 
@@ -114,6 +115,7 @@ function fetchComments() {
                     )
                 }
                 allThreads.push(selectedText);
+                
             });
 
             let loadAttempts = 0;
@@ -134,13 +136,13 @@ function fetchComments() {
         }
 
         // Reset Draft Comments Data.
-        const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
+      /*  const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
         var data = {
             'action': 'cf_reset_drafts_meta',
             'currentPostID': CurrentPostID,
         };
         $.post(ajaxurl, data, function () { // eslint-disable-line
-        });
+        });*/
     }
 }
 
@@ -428,7 +430,7 @@ const mdComment = {
         }
 
         floatComments(selectedText) {
-            console.log(document.querySelectorAll(`[data-rich-text-format-boundary='${true}']`).length);
+          
             
             //console.log($('mdspan[data-rich-text-format-boundary="true"]').length);
             if (document.querySelectorAll(`[data-rich-text-format-boundary='${true}']`).length!== 0) {
@@ -447,14 +449,22 @@ const mdComment = {
                  //comment below code to keep other rich text format like <strong>,<em>
                // $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
 
+               var findMdSpan = '.mdspan-comment';
+               $( findMdSpan ).each( function() {
+                var datatext = $( this ).attr( 'datatext' );
+                  if( datatext === selectedText ) {
+                    $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+                    $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
+    
+                    $('#md-span-comments .cls-board-outer').css('top', 0);
+                    $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
+                  }
+              });
 
-
-                $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
-                $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
-
-                $('#md-span-comments .cls-board-outer').css('top', 0);
+              
                  //comment below code to keep other rich text format like <strong>,<em>
-               // $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
+                 
+               //$('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
             }
         }
 
