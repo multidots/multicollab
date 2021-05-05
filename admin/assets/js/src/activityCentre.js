@@ -177,12 +177,6 @@ class Comments extends React.Component {
         var alertMessage = __( 'Are you sure you want to resolve this thread ?', 'content-collaboration-inline-commenting' );
         if ( confirm( alertMessage ) ) {
 
-            var data = {
-                'action': 'cf_resolve_thread',
-                'currentPostID': this.postID,
-                'metaId': `_${elID}`
-            };
-            $.post( ajaxurl, data, function () { // eslint-disable-line
                 $( `#${elID}` ).remove();
                 $( '#history-toggle' ).attr( 'data-count', $( '.cls-board-outer:visible' ).length );
 
@@ -190,7 +184,7 @@ class Comments extends React.Component {
                 $( '#md-span-comments .cls-board-outer' ).removeClass( 'focus' );
                 $( '#md-span-comments .cls-board-outer' ).removeAttr( 'style' );
                 $( '[data-rich-text-format-boundary]' ).removeAttr( 'data-rich-text-format-boundary' );
-            });
+           
             // Remove Tag.
             removeTag( elID ); // eslint-disable-line
         } else {

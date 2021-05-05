@@ -26,7 +26,19 @@ export default class Comment extends React.Component {
             const editedCommentID = this.props.timestamp;
             const commenttedText = $('#' + editedCommentID + ' textarea').val();
             $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
+           /* var el = document.getElementById('edit-'+editedCommentID);
+            console.log(el);
+            var range = document.createRange();
+            var sel = window.getSelection();
+            console.log(sel);
+            range.setStart(el, 1);
+            console.log( range);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+           el.focus();*/
         }
+    
     }
 
     edit() {
@@ -99,29 +111,19 @@ export default class Comment extends React.Component {
         if (confirm(alertMessage)) {
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
             elID = '_' + elID;
-
-            var data = {
-                'action': 'cf_resolve_thread',
-                'currentPostID': CurrentPostID,
-                'metaId': elID
-            };
-            $.post(ajaxurl, data, function () { // eslint-disable-line
+   
                 $('#' + elIDRemove).remove();
-               
                 $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
                 // Reset Comments Float.
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
-                //comment below code to keep other rich text format like <strong>,<em>
-               // $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
                 if($("#md-span-comments").is(':empty')){
                     $('body').removeClass("commentOn");
                 } else{
                     $('body').addClass("commentOn");
                 }
-            });
-
+ 
             // Remove Tag.
             removeTag(elIDRemove); // eslint-disable-line
         } else {

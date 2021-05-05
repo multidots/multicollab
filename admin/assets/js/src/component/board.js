@@ -83,17 +83,6 @@ export default class Board extends React.Component {
         arr.splice(idx, 1);
         const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
         elID = '_' + elID;
-        var data = {
-            'action': 'cf_delete_comment',
-            'currentPostID': CurrentPostID,
-            'timestamp': cTimestamp,
-            metaId: elID
-        };
-        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-        $.post(ajaxurl, data, function () { // eslint-disable-line
-            // Activate 'Save Draft' or 'Publish' button
-            wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
-        });
         this.setState({comments: arr});
 
     }
@@ -148,7 +137,7 @@ export default class Board extends React.Component {
         $.post(ajaxurl, data, function () { // eslint-disable-line
             // Activate 'Save Draft' or 'Publish' button
          
-            wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
+            //wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
            
         });
      
@@ -199,7 +188,6 @@ export default class Board extends React.Component {
             newArr['userName'] = userName;
             newArr['userRole'] = userRole;
             newArr['profileURL'] = userProfile;
-            //newArr['status'] = 'draft reverted_back';
             newArr['status'] = 'publish';
            
 
@@ -270,7 +258,7 @@ export default class Board extends React.Component {
                 _this.hasComments = 1;
 
                 // Activate 'Save Draft' or 'Publish' button
-                wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
+                //wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
 
                 // Set the state.
                 _this.setState({comments: arr});
