@@ -74,8 +74,7 @@ class Commenting_Block_Rest_Routes {
 				else{
 					$comment['editedTime']='';
 				}
-				if( 'draft' !== $comment['status'] && 'permanent_draft' !== $comment['status'] ) {
-					$cmnts[] = [
+				$cmnts[] = [
 						'id'         => $timestamp,
 						'status'     => $comment['status'],
 						'timestamp'  => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
@@ -88,7 +87,7 @@ class Commenting_Block_Rest_Routes {
 						],
 						'thread'     => $comment['thread']
 					];
-				}
+				
 			}
 
 			$resolved_by = [];
