@@ -530,8 +530,9 @@
                         }
                         return false;
                     }
-
+                   
                     if( ! keysToAvoid.find( checkKeys ) ) {
+
                         // Check for backspace.
                         if( 'Backspace' === e.key ) {
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
@@ -542,8 +543,8 @@
                                     trackedStr = '';
                                 }
                             } else {
-                                trackedStr = trackedStr.slice( 0, -1 );
-                            }
+                                    trackedStr = trackedStr.slice( 0, -1 );
+                                }
                         } else {
                             trackedStr += e.key;
                         }
@@ -551,7 +552,7 @@
                         // Check for ctrl+backspace.
                         if( 'Backspace' === e.key && true === e.ctrlKey ) {
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                            if ( '@' === prevCharOfEmailSymbol ) {
+                           if ( '@' === prevCharOfEmailSymbol ) {
                                 if( '' !== typedText ) {
                                     trackedStr = '@';
                                 } else {
@@ -647,8 +648,8 @@
                         $( assignablePopup ).remove();
                     }
                 }
-                // Clearing popup when user types any space.
-                if( 32 === e.which ) {
+                // Clearing popup when user types any space or use enterkey.
+                if( 32 === e.which || 13 === e.which ) {
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                 }
@@ -656,7 +657,7 @@
 
             // Append email in textarea.
             $( document.body ).on( 'click keypress', '.cf-system-user-email-list li', function(e) {
-                e.stopPropagation();
+                 e.stopPropagation();
                 if( e.which === 1 ) {
                     var fullName    = $( this ).data( 'full-name' );
                     var displayName = '@'+$( this ).data( 'display-name' );
