@@ -271,8 +271,7 @@ const mdComment = {
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
 
                 //ne_pending remove the attr true
-                 //comment below code to keep other rich text format like <strong>,<em>
-               // $('mdspan').removeAttr('data-rich-text-format-boundary');
+                $('mdspan').removeAttr('data-rich-text-format-boundary');
             }
 
             const referenceNode = document.getElementById('md-span-comments');
