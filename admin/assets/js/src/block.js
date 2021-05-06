@@ -25,7 +25,6 @@ $( window ).on('load', function () {
             // Fetching comments
             fetchComments();
         }
-       
 
         if($("#md-span-comments").is(':empty')){
             $('body').removeClass("commentOn");
@@ -46,9 +45,7 @@ $( window ).on('load', function () {
 
     $(document).on('click', '.components-notice__action', function () {
 
-        if ('View the autosave' === $(this).text()) {
-          //  bring_back_comments();
-        }
+      
         if ('Restore the backup' === $(this).text()) {
 
             setTimeout(function () {
@@ -59,8 +56,6 @@ $( window ).on('load', function () {
                         createBoard(selectedText, 'value', 'onChange');
                     }
                 });
-
-              //  bring_back_comments();
             }, 500);
 
         }
@@ -72,7 +67,6 @@ $( window ).on('load', function () {
 
 
 function fetchComments() {
-   
     var parentNode = document.createElement('div');
     parentNode.setAttribute("id", 'md-comments-suggestions-parent');
 
@@ -115,7 +109,6 @@ function fetchComments() {
                     )
                 }
                 allThreads.push(selectedText);
-                
             });
 
             let loadAttempts = 0;
@@ -135,81 +128,8 @@ function fetchComments() {
             }, 1000);
         }
 
-        // Reset Draft Comments Data.
-      /*  const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
-        var data = {
-            'action': 'cf_reset_drafts_meta',
-            'currentPostID': CurrentPostID,
-        };
-        $.post(ajaxurl, data, function () { // eslint-disable-line
-        });*/
-    }
-}
-
-function bring_back_comments() {
-
-    // Reset Draft Comments Data.
-    const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
-    var data = {
-        'action': 'cf_merge_draft_stacks',
-        'currentPostID': CurrentPostID,
-    };
-    $.post(ajaxurl, data, function (response) { // eslint-disable-line
-
-        response = JSON.parse(response);
        
-        if (response.resolved) {
-            $.each(response.resolved, function (k, el) {
-                el = el.replace('_', '');
-                $('#' + el).addClass('reverted_back resolved');
-                // Hide popups if their tags don't exist.
-                if (0 === $('[datatext="' + el + '"]').length) {
-                    $('#' + el).hide();
-                }
-            });
-        }
-
-        if (response.comments) {
-            $.each(response.comments, function (el, timestamps) {
-                $.each(timestamps, function (el, t) {
-                    $('#' + t).removeClass('publish').addClass('reverted_back added');
-                    /*taking extra care to display new threads*/
-                    var appendStyle = `<style>[id="${t}"]{display: block !important}</style>`
-                    $('head').append(DOMPurify.sanitize( appendStyle )); // phpcs:ignore
-                });
-            });
-        }
-
-        if (response.deleted) {
-            $.each(response.deleted, function (el, timestamps) {
-                $.each(timestamps, function (el, t) {
-                    $('#' + t).remove();
-                });
-            });
-        }
-
-        if (response.edited) {
-           
-            $.each(response.edited, function (el, timestamps) {
-
-                $.each(timestamps, function (el, t) {
-                    $('#' + t).removeClass('publish').addClass('reverted_back edited');
-
-                    // Update the component with new text.
-                    const someElement = document.getElementById(t);
-                    const myComp = FindReact(someElement);
-                    myComp.setState({showEditedDraft: true});
-
-                    $('#' + t + ' .commentText').append(' <i style="font-size:12px;color:#23282dba">(edited)</i>');
-                });
-            });
-        }
-
-        // Update unresolved comments count.
-        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-    });
-
-    return false;
+    }
 }
 
 function FindReact(dom, traverseUp = 0) {
@@ -401,6 +321,7 @@ const mdComment = {
                         removeTag(latestBoard); // eslint-disable-line
                         $('#' + latestBoard).remove();
                         $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
+                        $('body').removeClass("commentOn");
                     }
                 }
 
@@ -414,6 +335,7 @@ const mdComment = {
                 // these props were not added on load.
                 // It also helps to 'correct' the lastVal of CTRL-Z'ed Text's popup.
                 if ($('#' + selectedText).length !== 0) {
+                    $('body').addClass("commentOn");
                     ReactDOM.render(
                         <Board datatext={selectedText} lastVal={value} onChanged={onChange}/>,
                         document.getElementById(selectedText)
@@ -431,8 +353,6 @@ const mdComment = {
 
         floatComments(selectedText) {
           
-            
-            //console.log($('mdspan[data-rich-text-format-boundary="true"]').length);
             if (document.querySelectorAll(`[data-rich-text-format-boundary='${true}']`).length!== 0) {
 
 
@@ -443,28 +363,21 @@ const mdComment = {
                 // when navigating through the activity center.
 
                 // Adding focus on selected text's popup.
-            
                 $('.cls-board-outer').removeClass('focus');
                 $('#' + selectedText + '.cls-board-outer').addClass('focus');
-                 //comment below code to keep other rich text format like <strong>,<em>
-               // $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
+                $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+                $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
 
-               var findMdSpan = '.mdspan-comment';
-               $( findMdSpan ).each( function() {
-                var datatext = $( this ).attr( 'datatext' );
-                  if( datatext === selectedText ) {
-                    $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
-                    $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
-    
-                    $('#md-span-comments .cls-board-outer').css('top', 0);
-                    $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
-                  }
-              });
+                $('#md-span-comments .cls-board-outer').css('top', 0);
 
-              
-                 //comment below code to keep other rich text format like <strong>,<em>
-                 
-               //$('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
+                var findMdSpan = '.mdspan-comment';
+                $( findMdSpan ).each( function() {
+                 var datatext = $( this ).attr( 'datatext' );
+                   if( datatext === selectedText ) {
+                  
+                     $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
+                   }
+               });
             }
         }
 

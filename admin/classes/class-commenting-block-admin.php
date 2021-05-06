@@ -48,6 +48,9 @@ class Commenting_block_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 
+		// Publish Comments on status change.
+		add_action( 'post_updated', array( $this, 'cf_post_status_changes' ), 10, 3 );
+
 		// Update caps for authors and contributors.
 		add_filter( 'admin_init', array( $this, 'cf_custom_caps' ) );
 
@@ -279,6 +282,252 @@ class Commenting_block_Admin {
 
 	}
 
+	/**
+	 * @param int $post_ID Post ID.
+	 * @param object/string $post Post Content.
+	 * @param string $update Status of the update.
+	 */
+	public function cf_post_status_changes( $post_ID, $post ) {
+
+		$metas      = get_post_meta( $post_ID );
+		$p_content  = is_object( $post ) ? $post->post_content: $post;
+		$p_link     = get_edit_post_link( $post_ID );
+		$p_title    = get_the_title( $post_ID );
+		$site_title = get_bloginfo( 'name' );
+		$html       = '';
+		
+		// Get current user details.
+		$curr_user                 = wp_get_current_user();
+		$user_id                   = $curr_user->ID;
+		$current_user_email        = $curr_user->user_email;
+		$current_user_display_name = $curr_user->display_name;
+
+		// Publish drafts from the '_current_drafts' stack.
+		$current_drafts    = $metas['_current_drafts'][0];
+		$current_drafts    = maybe_unserialize( $current_drafts );
+		$current_timestamp = current_time( 'timestamp' );
+		// Initiate Email Class Object.
+		$this->cf_initiate_email_class();
+
+		// Checking if user deleted the recently added comment.
+		if( isset( $current_drafts['deleted'] ) && 0 !== $current_drafts['deleted'] ) {
+			if( isset( $current_drafts['comments'] ) && 0 !== $current_drafts['comments'] ) {
+				foreach( $current_drafts['deleted'] as $el => $timestamps ) {
+					if( array_key_exists( $el, $current_drafts['comments'] ) ) {
+						$prev_state = $metas[$el][0];
+						$prev_state = maybe_unserialize( $prev_state );
+
+						foreach( $timestamps as $t ) {
+							$t = intval( $t );
+							$get_key = array_search( $t, $current_drafts['comments'][$el], true );
+							if( $get_key !== false ) {
+								unset( $current_drafts['comments'][$el][$get_key] );
+							}
+
+							unset( $prev_state['comments'][$t] );
+						}
+						$metas[$el][0] = maybe_serialize( $prev_state );
+					}
+				}
+			}
+		}
+
+		// Publish Deleted Comments. (i.e. finally delete them.)
+		if ( isset( $current_drafts['deleted'] ) && 0 !== count( $current_drafts['deleted'] ) ) {
+			$deleted_drafts = $current_drafts['deleted'];
+
+			foreach ( $deleted_drafts as $el => $timestamps ) {
+				$prev_state = $metas[ $el ][0];
+				$prev_state = maybe_unserialize( $prev_state );
+
+				foreach ( $timestamps as $key=>$t ) {
+					$local_time = current_datetime();
+					$deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
+					// Update the timestamp of deleted comment.
+					$previous_comment = $prev_state['comments'][ $t ];
+					if( ! empty( $previous_comment ) ) {
+						$prev_state['comments'][ $deleted_timestamp ]           = $previous_comment;
+						$prev_state['comments'][ $deleted_timestamp ]['status'] = 'deleted';
+					}
+				}
+				$prev_state['updated_at'] = $current_timestamp;
+				update_post_meta( $post_ID, $el, $prev_state );
+				$metas[ $el ][0] = maybe_serialize( $prev_state );
+			}
+		}
+
+		// Publish New Comments.
+		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
+			$new_drafts = $current_drafts['comments'];
+
+			foreach ( $new_drafts as $el => $drafts ) {
+				/*
+				 * Make publish only if its tag available in the content.
+				 * Doing this to handle the CTRL-Z action.
+				 * Sometimes CTRL-Z does not removes the tag completely
+				 * but only removes its attributes, so we cant find 'datatext' attribute,
+				 * So skipping those mdspan tags which has no 'datatext' attribute.
+				 * This is also skipping the recent resolved drafts.
+				 */
+				$elid = str_replace( '_', '', $el );
+				if ( strpos( $p_content, $elid ) !== false ) {
+					$prev_state   = $metas[ $el ][0];
+					$prev_state   = maybe_unserialize( $prev_state );
+					$new_comments = array();
+					foreach ( $drafts as $d ) {
+						$prev_state['comments'][ $d ]['status'] = 'publish';
+						$new_comments[]                         = $d;
+					}
+					$prev_state['updated_at'] = $current_timestamp;
+					update_post_meta( $post_ID, $el, $prev_state );
+					$metas[ $el ][0] = maybe_serialize( $prev_state );
+				}
+			}
+		}
+
+		// Publish Edited Comments.
+		if ( isset( $current_drafts['edited'] ) && 0 !== count( $current_drafts['edited'] ) ) {
+			$edited_drafts = $current_drafts['edited'];
+			foreach ( $edited_drafts as $el => $timestamps ) {
+				$prev_state = $metas[ $el ][0];
+				$prev_state = maybe_unserialize( $prev_state );
+
+				foreach ( $timestamps as $t ) {
+					
+					$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'];
+					if ( ! empty( $edited_draft ) ) {
+						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
+					}
+
+					// Change status to publish.
+					$prev_state['comments'][ $t ]['status'] = 'publish';
+
+					// Remove comment from edited_draft.
+					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
+
+				}
+				$prev_state['updated_at'] = $current_timestamp;
+				update_post_meta( $post_ID, $el, $prev_state );
+				$metas[ $el ][0] = maybe_serialize( $prev_state );
+			}
+		}
+
+		// Mark Resolved Threads.
+		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
+			$resolved_drafts = $current_drafts['resolved'];
+
+			$html .= '<div class="comment-box comment-resolved" style="background:#fff;width:70%;font-family:Arial,serif;padding-top:40px;">';
+			$html .= '<div class="comment-box-header" style="margin-bottom:30px;border:1px solid #eee;border-radius:20px;padding:30px;">';
+			$html .= '<p style="margin:0;padding-bottom:20px;"><a href="mailto:' . esc_attr( $current_user_email ) . '" class="" style="color:#4B1BCE;text-decoration:none;">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'has resolved the following thread.', 'content-collaboration-inline-commenting' ) . '</p>';
+			if ( ! empty( $p_title ) ) {
+				$html .= '<h2 class="comment-page-title" style="font-size:20px;margin:0;"><a href="' . esc_url( $p_link ) . '" style="color:#4B1BCE;text-decoration:underline;font-size:20px;">' . esc_html( $p_title ) . '</a></h2></div>';
+			}
+			$html .= '<div class="comment-box-body" style="border:1px solid #eee;border-radius:20px;padding:30px;">';
+			$html .= '<h3 class="head-with-icon" style="margin:0;padding-bottom:20px;font-family:Roboto,Arial,sans-serif;font-weight:600;">';
+			$html .= '<span class="icon-resolved" style="padding-right:10px;vertical-align:middle;">';
+			$html .= '<img src="'.esc_url( COMMENTING_BLOCK_URL . 'admin/assets/images/icon-check-fill.png' ).'" alt="Resolved" />';
+			$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
+			$html .= '</h3>';
+
+			foreach ( $resolved_drafts as $el ) {
+				$prev_state                       = $metas[ $el ][0];
+				$prev_state                       = maybe_unserialize( $prev_state );
+				$prev_state['resolved']           = 'true';
+				$prev_state['resolved_timestamp'] = $current_timestamp;
+				$prev_state['resolved_by']        = $user_id;
+
+				if( array_key_exists( $el, $current_drafts['comments'] ) ) {
+					// If any published comment is there.
+					$can_delete = false;
+					if( count( $prev_state['comments'] ) > 0 ) {
+						foreach( $prev_state['comments'] as $prev_state_cmnt ) {
+							if( 'draft' === $prev_state_cmnt['status'] ) {
+								$can_delete = true;
+							}
+							break;
+						}
+						if( true === $can_delete ) {
+							delete_post_meta( $post_ID, $el );
+						} else {
+							$unpublished_comments = $current_drafts['comments'][$el];
+							if( ! empty( $unpublished_comments ) ) {
+								foreach( $unpublished_comments as $unpublished_comment ) {
+									$prev_state['comments'][$unpublished_comment]['status'] = 'publish';
+								}
+							}
+							$prev_state['updated_at'] = $current_timestamp;
+							update_post_meta( $post_ID, $el, $prev_state );
+						}
+					}
+				} else {
+					$prev_state['updated_at'] = $current_timestamp;
+					update_post_meta( $post_ID, $el, $prev_state );
+				}
+
+				// Send Email.
+				$comments          = get_post_meta( $post_ID, $el, true );
+				$commented_on_text = $comments['commentedOnText'];
+				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
+
+				// Notify users about the resolved thread.
+				$this->email_class->cf_email_resolved_thread( array(
+					'html'                      => $html,
+					'post_title'                => $p_title,
+					'site_title'                => $site_title,
+					'current_user_email'        => $current_user_email,
+					'current_user_display_name' => $current_user_display_name,
+					'commented_on_text'         => $commented_on_text,
+					'list_of_comments'          => $list_of_comments
+				) );
+			}
+		}
+
+		// Flush Current Drafts Stack.
+		update_post_meta( $post_ID, '_current_drafts', '' );
+
+		// Update open comments count.
+		$comment_counts = $this->cf_get_comment_counts( $post_ID, $p_content, $metas );
+		update_post_meta( $post_ID, 'open_cf_count', $comment_counts['open_counts'] );
+
+		// Deleteing comments if users delete comments at the same moment.
+		if( ! empty( $current_drafts['deleted'] ) ) {
+			foreach( $current_drafts['deleted'] as $key=>$value ) {
+				$comment = get_post_meta( $post_ID, $key, true );
+				foreach( $value as $delete_key ) {
+					unset( $comment['comments'][$delete_key] );
+				}
+				update_post_meta( $post_ID, $key, $comment );
+			}
+
+		}
+
+		// Sending Emails to newly mentioned users.
+		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) && 0 === count( $current_drafts['resolved'] ) ) {
+			$new_drafts = $current_drafts['comments'];
+			foreach ( $new_drafts as $el => $drafts ) {
+				$comments          = get_post_meta( $post_ID, $el, true );
+				$commented_on_text = $comments['commentedOnText'];
+				$assigned_to       = $comments['assigned_to'];
+				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
+
+				// Send email to the commented recipients.
+				$this->email_class->cf_email_new_comments( array(
+					'post_ID'                   => $post_ID,
+					'elid'                      => $elid,
+					'post_title'                => $p_title,
+					'post_edit_link'            => $p_link,
+					'site_title'                => $site_title,
+					'commented_on_text'         => $commented_on_text,
+					'list_of_comments'          => $list_of_comments,
+					'current_user_email'        => $current_user_email,
+					'current_user_display_name' => $current_user_display_name,
+					'new_comments'              => $new_comments,
+					'assign_to'                 => $assigned_to
+				) );
+			}
+		}
+	}
+
 
 	/**
 	 * Include the Email template class and initiate the object.
@@ -451,7 +700,6 @@ class Commenting_block_Admin {
 		// Secure content.
 		$arr['thread'] = $this->cf_secure_content( $commentList['thread'] );
 
-		
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 			
 			$superCareerData['comments'][ $timestamp ] = $arr;
@@ -558,6 +806,10 @@ class Commenting_block_Admin {
 					$comment_status = isset( $c['status'] ) ? $c['status'] : '';
 					$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
 
+					// Stop displaying history of comments in draft mode.
+					if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
+						continue;
+					}
 
 					$udata = $c['userData'];
 
@@ -687,7 +939,7 @@ class Commenting_block_Admin {
 		// Make content secured.
 		$edited_comment['thread'] = $this->cf_secure_content( $edited_comment['thread'] );
 		$edited_comment['updatedTime']= gmdate( $time_format . ' ' . $date_format, intval($edited_comment['editedTime']) );
-		
+	//	print_r($edited_comment);
 	    $old_timestamp = $edited_comment['timestamp'];
 
 		$commentListOld = get_post_meta( $current_post_id, $metaId, true );
@@ -698,13 +950,39 @@ class Commenting_block_Admin {
 
 		$commentListOld['comments'][ $old_timestamp ]['draft_edits'] = $edited_draft;
 		$commentListOld['comments'][ $old_timestamp ]['editedTime'] = $edited_comment['editedTime'];
-		$commentListOld['comments'][$old_timestamp]['updatedTime'] = $edited_comment['updatedTime'];
-	
+		
 		update_post_meta( $current_post_id, $metaId, $commentListOld );
+
+		// Update Current Drafts.
+		$current_drafts                        = get_post_meta( $current_post_id, '_current_drafts', true );
+		$current_drafts                        = maybe_unserialize( $current_drafts );
+		$current_drafts                        = empty( $current_drafts ) ? array() : $current_drafts;
+		$current_drafts['edited'][ $metaId ][] = $old_timestamp;
+
+		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
 
 		wp_die();
 	}
 
+	/**
+	 * Delete Comment function.
+	 */
+	public function cf_delete_comment() {
+
+		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
+		$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
+		$timestamp       = filter_input( INPUT_POST, "timestamp", FILTER_SANITIZE_NUMBER_INT );
+
+		// Update Current Drafts.
+		$current_drafts                         = get_post_meta( $current_post_id, '_current_drafts', true );
+		$current_drafts                         = maybe_unserialize( $current_drafts );
+		$current_drafts                         = empty( $current_drafts ) ? array() : $current_drafts;
+		$current_drafts['deleted'][ $metaId ][] = $timestamp;
+
+		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
+
+		wp_die();
+	}
 
 	/**
 	 * Save settings of the plugin.
@@ -732,6 +1010,28 @@ class Commenting_block_Admin {
 		// to get sub site URL in JS files in Multisite environment.
 
 		echo wp_json_encode( array( 'showAvatars' => $show_avatars, 'commentingPluginUrl' => COMMENTING_BLOCK_URL ) );
+		wp_die();
+	}
+
+	/**
+	 * Resolve Thread function.
+	 */
+	public function cf_resolve_thread() {
+
+		$current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
+		$metaId          = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
+
+		// Update Current Drafts.
+		$current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
+		$current_drafts = maybe_unserialize( $current_drafts );
+		$current_drafts = empty( $current_drafts ) ? array() : $current_drafts;
+		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
+			$current_drafts['resolved'][] = $metaId;
+		} else {
+			$current_drafts['resolved'][] = $metaId;
+		}
+		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
+
 		wp_die();
 	}
 

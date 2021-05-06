@@ -83,6 +83,17 @@ export default class Board extends React.Component {
         arr.splice(idx, 1);
         const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
         elID = '_' + elID;
+        var data = {
+            'action': 'cf_delete_comment',
+            'currentPostID': CurrentPostID,
+            'timestamp': cTimestamp,
+            metaId: elID
+        };
+        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+        $.post(ajaxurl, data, function () { // eslint-disable-line
+            // Activate 'Save Draft' or 'Publish' button
+            wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
+        });
         this.setState({comments: arr});
 
     }
@@ -116,7 +127,6 @@ export default class Board extends React.Component {
         newArr['thread']     = newText;
         newArr['userData']   = userID;
         newArr['index']      = idx;
-       // newArr['status']     = 'draft reverted_back';
         newArr['status']     = 'publish';
         newArr['timestamp']  = cTimestamp;
         newArr['editedTime']  = editedTime;
@@ -137,7 +147,7 @@ export default class Board extends React.Component {
         $.post(ajaxurl, data, function () { // eslint-disable-line
             // Activate 'Save Draft' or 'Publish' button
          
-            //wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
+            wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
            
         });
      
@@ -189,10 +199,9 @@ export default class Board extends React.Component {
             newArr['userRole'] = userRole;
             newArr['profileURL'] = userProfile;
             newArr['status'] = 'publish';
-           
 
             arr.push(newArr);
-          
+
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
 
             var el = currentTextID.substring(3);
@@ -258,7 +267,7 @@ export default class Board extends React.Component {
                 _this.hasComments = 1;
 
                 // Activate 'Save Draft' or 'Publish' button
-                //wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
+                wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
 
                 // Set the state.
                 _this.setState({comments: arr});
@@ -277,9 +286,9 @@ export default class Board extends React.Component {
     displayComments(text, i) {
 
         const {lastVal, onChanged, selectedText} = this.props;
-      
+
         let username, userRole, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft,updatedTime;
-  
+      
         Object.keys(text).map(i => {
             if ('userName' === i) {
                 username = text[i];
@@ -385,7 +394,6 @@ export default class Board extends React.Component {
                 <div className="boardTop">
                     {
                         this.state.comments && this.state.comments.map((item, index) => {
-                           
                             return this.displayComments(item, index);
                         })
                     }
@@ -409,7 +417,6 @@ export default class Board extends React.Component {
                     <button onClick={this.addNewComment} className="btn btn-success">{buttonText}</button>
                     <button onClick={this.cancelComment} className="btn btn-cancel">Cancel</button>
                 </div>
-                
             </div>
         );
     }
