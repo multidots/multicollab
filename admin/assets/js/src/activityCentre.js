@@ -322,12 +322,19 @@ class Comments extends React.Component {
      * Handle Show Comments
      */
     handleShowComments() {
+       var openBoards = $('.cls-board-outer:visible').length;
+       
         if ( true === this.state.showComments ) {
             $( 'body' ).addClass( 'hide-comments' );
             $( 'body' ).removeClass( 'commentOn' );
         } else {
+           
             $( 'body' ).removeClass( 'hide-comments' );
-            $( 'body' ).addClass( 'commentOn' );
+            if(0 === openBoards){
+                $( 'body' ).removeClass( 'commentOn' );
+            }else{
+                $( 'body' ).addClass( 'commentOn' );
+            }
         }
         this.setState({
             showComments: ! this.state.showComments
@@ -370,12 +377,17 @@ class Comments extends React.Component {
         this.appendCounter(); // Appending counter.
         this.activeBoardOnSelectedText(); // Add active class in activities thread on selected text click.
     }
-    //Decode Html
-    htmlDecode(input){
+    //Decode HTML Text
+    htmlDecode(input){ 
         var e = document.createElement('div');
-        e.innerHTML = input;
-        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-      }
+         e.innerHTML = input;
+          var returnString = ''; 
+          for (var index = 0; index < e.childNodes.length; index++) {
+                // case of HTML 
+                if(e.childNodes[index].nodeValue){ returnString += e.childNodes[index].nodeValue; } } 
+                return e.childNodes.length === 0 ? "" : returnString;
+               
+    } 
 
     render() {
         const { threads, showComments, isLoading, collapseLimit } = this.state;

@@ -85,13 +85,14 @@ function fetchComments() {
 
         // If no comment tag exist, remove the loader and temp style tag immediately.
         const span_count = $('.wp-block mdspan').length;
-
+        
         if (0 === span_count) {
             $( '.commentOn .block-editor-writing-flow' ).css( { width: '100% !important' } )
+            $('body').removeClass("commentOn");
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
         } else {
-           
+            $('body').addClass("commentOn");
             $('.wp-block mdspan').each(function () {
                 selectedText = $(this).attr('datatext');
                 if ($('#' + selectedText).length === 0) {
@@ -316,12 +317,25 @@ const mdComment = {
                 // leaves the new popup without adding comment.
                 if (1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length) {
                     const latestBoard = $('.board.fresh-board').parents('.cls-board-outer').attr('id');
+                    const span_count = $('.wp-block mdspan').length;
+                  
                     if (selectedText !== latestBoard) {
+                      
                         removeTag(latestBoard); // eslint-disable-line
                         $('#' + latestBoard).remove();
                         $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-                        $('body').removeClass("commentOn");
+                       if($("#md-span-comments").is(':empty'))
+                        {
+                            $('body').removeClass("commentOn");
+                           
+                        }else{
+                            $('body').addClass("commentOn");
+                        }
+                        
+                       
                     }
+                 
+                    
                 }
 
                 // Just hide these popups and only display on CTRLz
@@ -340,7 +354,7 @@ const mdComment = {
                         document.getElementById(selectedText)
                     )
                 }
-
+             
                 // Float comments column.
                 this.floatComments(selectedText);
             }
@@ -368,7 +382,6 @@ const mdComment = {
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
 
                 $('#md-span-comments .cls-board-outer').css('top', 0);
-
                 var findMdSpan = '.mdspan-comment';
                 $( findMdSpan ).each( function() {
                  var datatext = $( this ).attr( 'datatext' );
