@@ -290,6 +290,7 @@
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
             anchor.after( gapElContent ); // phpcs:ignore
+            
         }
 
         // Cases when we should show the suggestion list.
@@ -375,6 +376,7 @@
                    
                     createTextarea  = `#${currentCommentBoardID} .js-cf-edit-comment`;
                 }
+               
             } );
 
             // Clearing out assignable dom on edit save or edit cancel.
@@ -399,6 +401,7 @@
                
                 // Clearing out any junk left when clearing the textarea.
                 if( '<br>' === _self.html() || '&nbsp;' === _self.html() ) {
+                   
                     typedText = '';
                     $( createTextarea ).html( '' );
                 }
@@ -484,7 +487,7 @@
                 // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
                cursorPos = getCaretPosition(el);
-           
+               
                // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey && typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
@@ -658,6 +661,8 @@
             // Append email in textarea.
             $( document.body ).on( 'click keypress', '.cf-system-user-email-list li', function(e) {
                  e.stopPropagation();
+              
+                 
                 if( e.which === 1 ) {
                     var fullName    = $( this ).data( 'full-name' );
                     var displayName = '@'+$( this ).data( 'display-name' );
@@ -668,8 +673,10 @@
                     
                     var typedContent = $( createTextarea ).html();
                     // Remove @ before display name anchor tag and insterted in to anchor tag
+                    typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
                     typedContent = typedContent.replace(/@<a/g, '<a');
-                   
+                  
+                  
                     if( 'firefox' !== browser ) {
                         typedContent = chromeEdgeClearFix( typedContent );
                     }
@@ -685,18 +692,22 @@
                     $( assignablePopup ).remove();
                     trackedStr = '';
                 }
-
-                // Setup the caret position after appending the Display Name.
+               // Setup the caret position after appending the Display Name.
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
-                var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
-                var selectChild          = currentTextareaNode.childNodes.length - 1;
+               var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
+               var children =  currentTextareaNode.lastElementChild;
+               //Add fix to remove last <br> tag after appending the Display Name.
+                if (children.tagName && children.tagName === "BR") {
+                    currentTextareaNode.removeChild(children)
+                }
+                var selectChild          = currentTextareaNode.childNodes.length-1;
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
-              
-                if( 'firefox' === browser ) {
+               if( 'firefox' === browser ) {
                     // Do your stuff for firefox.
                 } else {
+                    
                     range.setStart( el, range.startOffset );
                     range.collapse( true );
                     cursorSel.removeAllRanges();
