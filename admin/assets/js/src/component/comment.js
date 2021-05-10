@@ -133,12 +133,22 @@ export default class Comment extends React.Component {
         this.setState({editing: false})
     }
     //Decode HTML Text
-    htmlDecode(input){
+    htmlDecode(input){ 
         var e = document.createElement('div');
-        e.innerHTML = input;
-        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-      }
+         e.innerHTML = input;
+         console.log( e.childNodes);
+          var returnString = ''; 
+          for (var index = 0; index < e.childNodes.length; index++) {
+                // case of HTML 
+                if(e.childNodes[index].nodeValue){ 
+                    returnString += e.childNodes[index].nodeValue; 
+                } 
+          } 
+         return e.childNodes.length === 0 ? "" : returnString;
+               
+    } 
 
+ 
     renderNormalMode() {
 
         // Display the textarea for new comments.
@@ -216,8 +226,9 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                    <span className='readlessTxt readMoreSpan active' >{renderHTML(this.htmlDecode(str))} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
-                    <span className='readmoreTxt readMoreSpan'>{renderHTML(this.htmlDecode(readmoreStr))} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
+               
+                    <span className='readlessTxt readMoreSpan active' >{renderHTML(str)} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
+                    <span className='readmoreTxt readMoreSpan'>{renderHTML(readmoreStr)} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
                 </div>
                
                 { ''!== this.props.editedTime && undefined !== this.props.editedTime &&

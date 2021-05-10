@@ -501,7 +501,7 @@ class Comments extends React.Component {
 
                                                                                             <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
                                                                                         ) : (
-                                                                                            <span dangerouslySetInnerHTML={{ __html: this.htmlDecode( c.thread) }}></span> // phpcs:ignore
+                                                                                            <span > {renderHTML( c.thread) }</span> // phpcs:ignore
                                                                                         ) }
                                                                                         
                                                                                     </div>
