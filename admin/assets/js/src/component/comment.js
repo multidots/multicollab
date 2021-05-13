@@ -219,7 +219,7 @@ export default class Comment extends React.Component {
                     <div className="cf-share-comment-wrapper js-cf-share-comment-wrapper">
                         <ContentEditable
                             innerRef={ this.contentEditable }
-                            html={ DOMPurify.sanitize(this.state.contentHtml) }
+                            html={ this.state.contentHtml } // phpcs:ignore
                             disabled={ false }
                             onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
                             id={ `edit-${this.props.timestamp}` }
