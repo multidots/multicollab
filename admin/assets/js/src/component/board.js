@@ -30,8 +30,8 @@ export default class Board extends React.Component {
         }, 3000);
 
         this.commentedOnText = this.props.commentedOnText;
-       
         if (1 !== this.props.freshBoard) {
+          
             wp.apiFetch({path: 'cf/cf-get-comments-api/?currentPostID=' + currentPostID + '&elID=' + metaselectedText}).then(fps => { // eslint-disable-line
 
                 const {userDetails, resolved, commentedOnText, assignedTo} = fps;
@@ -58,12 +58,12 @@ export default class Board extends React.Component {
                 } else {
                     this.hasComments = 0;
                 }
-
+                
                 this.state = {comments: [postSelections]};
                 this.setState({comments: postSelections});
             });
         } else {
-            try {
+           try {
                 this.currentUserName = wp.data.select("core").getCurrentUser().name; // eslint-disable-line
                 const currentUserProfile = wp.data.select("core").getCurrentUser().avatar_urls; // eslint-disable-line
                 this.currentUserProfile = currentUserProfile[Object.keys(currentUserProfile)[1]];
@@ -150,7 +150,7 @@ export default class Board extends React.Component {
             wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
            
         });
-     
+        
         this.setState({comments: arr})
     }
    

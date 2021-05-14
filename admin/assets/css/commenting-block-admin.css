@@ -126,7 +126,7 @@
   button.btn-comment.btn-reject{box-shadow:none;background-color:#fff;background-image:none;cursor:pointer;border-radius:2px;border-width:1px;border-color:transparent!important;min-width:24px;vertical-align:middle;margin:0 8px 0 0;line-height:1}
   .cls-board-outer .board .commentContainer:last-child{margin-bottom:0}
   .comment-header button{margin-top:0!important}
-  .cls-board-outer.focus{position:absolute;top:100px;z-index:9;opacity:1;right:45px;left:initial;transition:all 0.5s;cursor: auto;}
+  .cls-board-outer.focus{position:absolute;top:100px;z-index:9;opacity:1;right:45px;left:initial;transition:all 0.5s;cursor: auto;margin-top: -24px;}
   .custom-buttons .components-button{box-shadow:none!important;height:36px;min-width:36px;padding:6px;box-sizing:border-box;position:relative;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}
   .custom-buttons .components-button:hover{color:#4B1BCE}
   .shareCommentContainer.loading{position:relative}

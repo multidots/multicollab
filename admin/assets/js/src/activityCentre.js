@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import renderHTML from 'react-render-html';
+
+
 const { __ } = wp.i18n;
 const { Fragment } = wp.element;
 const { registerPlugin } = wp.plugins;
@@ -18,6 +20,7 @@ class Comments extends React.Component {
             showComments: true,
             collapseLimit: 45,
         }
+      
 
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
@@ -32,7 +35,6 @@ class Comments extends React.Component {
 
         // Grab the current user id.
         this.currentUserID = activityLocalizer.currentUserID
-
     }
 
     /**
@@ -377,18 +379,6 @@ class Comments extends React.Component {
         this.appendCounter(); // Appending counter.
         this.activeBoardOnSelectedText(); // Add active class in activities thread on selected text click.
     }
-    //Decode HTML Text
-    htmlDecode(input){ 
-        var e = document.createElement('div');
-         e.innerHTML = input;
-          var returnString = ''; 
-          for (var index = 0; index < e.childNodes.length; index++) {
-                // case of HTML 
-                if(e.childNodes[index].nodeValue){ returnString += e.childNodes[index].nodeValue; } } 
-                return e.childNodes.length === 0 ? "" : returnString;
-               
-    } 
-
     render() {
         const { threads, showComments, isLoading, collapseLimit } = this.state;
 
@@ -499,9 +489,9 @@ class Comments extends React.Component {
                                                                                     <div class="user-comment">
                                                                                         { 0 < index && 'deleted' === c.status ? (
 
-                                                                                            <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
+                                                                                            <del>{renderHTML(c.thread) }</del> // phpcs:ignore
                                                                                         ) : (
-                                                                                            <span > {renderHTML( c.thread) }</span> // phpcs:ignore
+                                                                                            <span > {renderHTML( c.thread )}</span> // phpcs:ignore
                                                                                         ) }
                                                                                         
                                                                                     </div>

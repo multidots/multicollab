@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import renderHTML from 'react-render-html';
 import ContentEditable from 'react-contenteditable';
-
 const $ = jQuery; // eslint-disable-line
 export default class Comment extends React.Component {
 
@@ -18,9 +17,12 @@ export default class Comment extends React.Component {
         this.resolve = this.resolve.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
         this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>' , editedTime:''};
+        this.val = props.value;
+       
+  
 
     }
-
+  
     componentDidUpdate() {
         if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
             const editedCommentID = this.props.timestamp;
@@ -35,13 +37,12 @@ export default class Comment extends React.Component {
 
         // Handling edited value.
         var editedValue        = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
-
         // Filtering anchor tag and return the url text only.
-        editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)<\/a>/igm, function( match ) {
+      /*  editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)<\/a>/igm, function( match ) {
             return match.replace( /(<([^>]+)>)/ig, '');
-        } )
+        } )*/
+      
         this.state.contentHtml = editedValue;
-       
        
     }
 
@@ -49,8 +50,7 @@ export default class Comment extends React.Component {
         var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
         if( $( `#${elID} .js-cf-edit-comment` ).text().trim().length !== 0 ) {
             var newText = this.state.contentHtml;
-           
-
+         
             if ( '' === newText ) {
                 alert( "Please write a comment to share!" );
                 return false;
@@ -63,10 +63,10 @@ export default class Comment extends React.Component {
             }
             
             // Adding anchor tag around the linkable text.
-            newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
+           /*newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
                 match = match.replace( /&nbsp/igm, '' );
                 return `<a href="${match}" target="_blank">${match}</a>`;
-            } );
+            } );*/
             newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
            
             this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID,this.state.editedTime );
@@ -136,7 +136,6 @@ export default class Comment extends React.Component {
     htmlDecode(input){ 
         var e = document.createElement('div');
          e.innerHTML = input;
-         console.log( e.childNodes);
           var returnString = ''; 
           for (var index = 0; index < e.childNodes.length; index++) {
                 // case of HTML 
@@ -144,19 +143,19 @@ export default class Comment extends React.Component {
                     returnString += e.childNodes[index].nodeValue; 
                 } 
           } 
-         return e.childNodes.length === 0 ? "" : returnString;
+         
+                return e.childNodes.length === 0 ? "" : returnString;
                
     } 
 
- 
     renderNormalMode() {
 
         // Display the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').show();
 
         const {index} = this.props;
-        const commentStatus = this.props.status ? this.props.status : 'draft';
-       // console.log(this.props.editedTime);
+        const commentStatus = this.props.status ? this.props.status : 'publish';
+      
 
         var owner = '';
         try {
@@ -172,9 +171,9 @@ export default class Comment extends React.Component {
             readmoreStr = str;
             str = str.substring(0, maxLength) + '...';
         }
-
-        // Removing contenteditable attr from the link.
-        str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
+       // Removing contenteditable attr from the link.
+       // str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
+        
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
         if( 8 < userRolePartial.length ) {
@@ -242,7 +241,7 @@ export default class Comment extends React.Component {
 
         // Hide the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').hide();
-
+     
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
         if( 8 < userRolePartial.length ) {
@@ -266,9 +265,9 @@ export default class Comment extends React.Component {
                     <div className="cf-share-comment-wrapper js-cf-share-comment-wrapper">
                         <ContentEditable
                             innerRef={ this.contentEditable }
-                            html={ DOMPurify.sanitize(this.state.contentHtml) }
+                            html={ this.state.contentHtml }
                             disabled={ false }
-                            onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
+                            onChange={  ( e ) =>  this.setState( { contentHtml: e.target.value } ) }
                             id={ `edit-${this.props.timestamp}` }
                             className="cf-share-comment js-cf-edit-comment"
                             placeholder="Edit your comments..."

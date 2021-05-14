@@ -40,10 +40,8 @@ $( window ).on('load', function () {
             clearInterval( loadComments );
         }
     }, 1000);
-
-   
-
-    $(document).on('click', '.components-notice__action', function () {
+  
+     $(document).on('click', '.components-notice__action', function () {
 
       
         if ('Restore the backup' === $(this).text()) {
@@ -208,13 +206,18 @@ const mdComment = {
             const {value, onChange} = this.props;
             let {text, start, end} = value;
             const commentedOnText = text.substring(start, end);
-
+            
+            
             // If text is not selected, show notice.
             if (start === end) {
                 alert('Please select text to comment on.');
                 return;
             }
-
+            //If comment box already open, show notice. 
+            if($('.cls-board-outer').hasClass('is-open')){
+                alert('You can not give multiple comment on same Text.');
+                return;
+            }
             var currentTime = Date.now();
             currentTime = 'el' + currentTime;
             var newNode = document.createElement('div');
@@ -269,6 +272,7 @@ const mdComment = {
             if (undefined === activeAttributes.datatext) {
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
+                $('#md-span-comments .cls-board-outer').removeClass('is-open');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
 
                 //ne_pending remove the attr true
@@ -377,18 +381,19 @@ const mdComment = {
 
                 // Adding focus on selected text's popup.
                 $('.cls-board-outer').removeClass('focus');
+                $('.cls-board-outer').removeClass('is-open');
                 $('#' + selectedText + '.cls-board-outer').addClass('focus');
                 $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
-
                 $('#md-span-comments .cls-board-outer').css('top', 0);
                 var findMdSpan = '.mdspan-comment';
                 $( findMdSpan ).each( function() {
                  var datatext = $( this ).attr( 'datatext' );
-                   if( datatext === selectedText ) {
-                  
-                     $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
-                   }
+                if( datatext === selectedText ) {
+                    $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
+                    //Adding class to prevent multiple click on same selected Text
+                    $('#' + selectedText +'.cls-board-outer').addClass('is-open');
+                }
                });
             }
         }

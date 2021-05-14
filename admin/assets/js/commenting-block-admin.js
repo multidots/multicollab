@@ -251,13 +251,12 @@
             var caretPos = 0, sel;
             if (window.getSelection) {
                 sel = window.getSelection();
-                var sel = window.getSelection();
-
-              
+                            
                 if (sel.rangeCount) {
                  
                     range = sel.getRangeAt(0);
                     if ( range.commonAncestorContainer.parentNode === editableDiv) {
+                        
                         caretPos = range.endOffset;
                     }
                 }
@@ -277,6 +276,7 @@
 
         // Insert Display Name.
         var insertDisplayName = function( setRange, email, fullName, displayName ) {
+          
             var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace after the name.
             var anchor       = document.createElement( 'a' );
            
@@ -308,7 +308,7 @@
             $( document.body ).on( 'paste', '.js-cf-share-comment, .js-cf-edit-comment', function(e) {
                 e.preventDefault();
                 let paste = (e.originalEvent || e).clipboardData.getData('text/plain');
-                
+               
                 const selection = window.getSelection();
                 const pastedRange = selection.getRangeAt( 0 );
                 if (!selection.rangeCount) return false;
@@ -373,7 +373,6 @@
                 el   = $( this ).parents( parentBoardClass ).attr( 'id' );
                 currentCommentBoardID = $( this ).parents( '.commentContainer' ).attr( 'id' );
                 if( 'edit' === mood ) {
-                   
                     createTextarea  = `#${currentCommentBoardID} .js-cf-edit-comment`;
                 }
                
@@ -396,9 +395,10 @@
              * ========================================
              */
             $( document.body ).on( 'keyup', createTextarea, function(e) {
+                
                 var _self = $( createTextarea );
                 typedText = _self.html();
-               
+              
                 // Clearing out any junk left when clearing the textarea.
                 if( '<br>' === _self.html() || '&nbsp;' === _self.html() ) {
                    
@@ -418,7 +418,6 @@
                    
                     // Get the assigner email of the current board.
                     var currentBoardAssingerEmail = $( `${currentBoardID} .cf-board-assigned-to` ).data( 'user-email' );
-
                     if( undefined !== emailAddresses && emailAddresses.length > 0 ) {
                         if( assignCheckBoxId.length > 0 ) {
                             var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
@@ -486,13 +485,28 @@
 
                 // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
-               cursorPos = getCaretPosition(el);
+                cursorPos = getCaretPosition(el);
                
+                             
                // If @ is pressed and shiftkey is true.
-                if( '@' === e.key && true === e.shiftKey && typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
+                if( '@' === e.key && true === e.shiftKey &&  typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                  
-                    if( showSuggestion( prevCharOfEmailSymbol ) ) {
+                    var showSuggestionFunc;
+                    var index = typedText.indexOf("@");
+                    var preText = typedText.charAt(index);
+                
+                    if (preText.indexOf(" ") > 0 || preText.length>0) {
+                         var words = preText.split(" ");
+                        var  prevWords = (words[words.length - 1]) ; 
+                    } 
+                                
+                  if('@' === prevWords){
+                     showSuggestionFunc = showSuggestion( prevWords );
+                  }
+                  if('@' === prevCharOfEmailSymbol){
+                     showSuggestionFunc = showSuggestion( prevCharOfEmailSymbol );
+                  }
+                  if( showSuggestionFunc ) {
                         // Fetch all email list.
                         isEmail = true;
                         if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
@@ -538,6 +552,7 @@
 
                         // Check for backspace.
                         if( 'Backspace' === e.key ) {
+                            
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
                             if ( '@' === prevCharOfEmailSymbol ) {
                                 if( '' !== typedText ) {
@@ -597,7 +612,7 @@
 
                     // If trackedStr contains other chars with @ as well.
                     if( '@' !== trackedStr && $( createTextarea ).is(':focus') === true ) {
-                        let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
+                       let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
                         if( checkEmailSymbol ) {
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr( 1 );
@@ -652,7 +667,7 @@
                     }
                 }
                 // Clearing popup when user types any space or use enterkey.
-                if( 32 === e.which || 13 === e.which ) {
+                if( 32 === e.which || 13 === e.which ||  e.which in keysToAvoid ) {
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                 }
@@ -675,8 +690,7 @@
                     // Remove @ before display name anchor tag and insterted in to anchor tag
                     typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
                     typedContent = typedContent.replace(/@<a/g, '<a');
-                  
-                  
+                                 
                     if( 'firefox' !== browser ) {
                         typedContent = chromeEdgeClearFix( typedContent );
                     }

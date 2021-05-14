@@ -903,7 +903,6 @@ class Commenting_block_Admin {
 		// Make content secured.
 		$edited_comment['thread'] = $this->cf_secure_content( $edited_comment['thread'] );
 		$edited_comment['updatedTime']= gmdate( $time_format . ' ' . $date_format, intval($edited_comment['editedTime']) );
-	//	print_r($edited_comment);
 	    $old_timestamp = $edited_comment['timestamp'];
 
 		$commentListOld = get_post_meta( $current_post_id, $metaId, true );
@@ -1025,12 +1024,10 @@ class Commenting_block_Admin {
 
 		$superCareerData = maybe_unserialize( $commentList );
 		$comments        = $superCareerData['comments'];
-		//print_r($comments);
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
 
 		foreach ( $comments as $t => $val ) {
-			//print_r($val);
 			if(isset($val['editedTime'])){
 				$val['editedTime']=	gmdate( $time_format . ' ' . $date_format, intval($val['editedTime']) );
 			}
