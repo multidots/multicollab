@@ -63,10 +63,10 @@ export default class Comment extends React.Component {
             }
             
             // Adding anchor tag around the linkable text.
-           /*newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
+           newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
                 match = match.replace( /&nbsp/igm, '' );
                 return `<a href="${match}" target="_blank">${match}</a>`;
-            } );*/
+            } );
             newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
            
             this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID,this.state.editedTime );
@@ -265,7 +265,7 @@ export default class Comment extends React.Component {
                     <div className="cf-share-comment-wrapper js-cf-share-comment-wrapper">
                         <ContentEditable
                             innerRef={ this.contentEditable }
-                            html={ this.state.contentHtml }
+                            html= {this.state.contentHtml}
                             disabled={ false }
                             onChange={  ( e ) =>  this.setState( { contentHtml: e.target.value } ) }
                             id={ `edit-${this.props.timestamp}` }
