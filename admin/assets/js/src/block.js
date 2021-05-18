@@ -245,15 +245,39 @@ const mdComment = {
             }
 
         }
-
+        getSelectionHtml() {
+            var html = "";
+            if (typeof window.getSelection != "undefined") {
+                var sel = window.getSelection();
+                if (sel.rangeCount) {
+                    var container = document.createElement("div");
+                    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                        container.appendChild(sel.getRangeAt(i).cloneContents());
+                    }
+                    html = container.innerHTML;
+                    
+                }
+            } else if (typeof document.selection != "undefined") {
+                if (document.selection.type == "Text") {
+                    html = document.selection.createRange().htmlText;
+                }
+            }
+            if(null !== html.match(/mdspan/g)){
+                alert('You have already given commnet on one of the word!');
+                return;
+            }
+          
+         
+           
+        }
         getSelectedText() {
             const { onChange, value, activeAttributes } = this.props;
-
+           
             // Stripping out unwanted <mdspan> tags from the content.
             var findMdSpan = 'mdspan';
             $( findMdSpan ).each( function() {
                 var datatext = $( this ).attr( 'datatext' );
-                if( undefined === datatext ) {
+               if( undefined === datatext ) {
                     $( this ).replaceWith( $( this ).text());
                 }
             } );
@@ -267,9 +291,11 @@ const mdComment = {
             if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
                 return;
             }
-
+            
             // Reset Comments Float only if the selected text has no comments on it.
             if (undefined === activeAttributes.datatext) {
+                //check try to give comment on word ,who has a comment  
+                this.getSelectionHtml();
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeClass('is-open');
@@ -291,7 +317,6 @@ const mdComment = {
 
             if (undefined !== this.props.value.start && null !== referenceNode) {
                 let selectedText;
-
                 $('.cls-board-outer').removeClass('has_text');
 
                 // Sync popups with highlighted texts.
