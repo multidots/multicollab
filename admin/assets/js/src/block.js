@@ -218,6 +218,11 @@ const mdComment = {
                 alert('You can not give multiple comment on same Text.');
                 return;
             }
+           var html =this.getSelectionHtml();
+           if(null !== html.match(/mdspan/g)){
+            alert('You have already given comment on one of the word!');
+            return;
+        }
             var currentTime = Date.now();
             currentTime = 'el' + currentTime;
             var newNode = document.createElement('div');
@@ -262,10 +267,7 @@ const mdComment = {
                     html = document.selection.createRange().htmlText;
                 }
             }
-            if(null !== html.match(/mdspan/g)){
-                alert('You have already given comment on one of the word!');
-                return;
-            }
+            return html;
           
          
            
@@ -295,7 +297,7 @@ const mdComment = {
             // Reset Comments Float only if the selected text has no comments on it.
             if (undefined === activeAttributes.datatext) {
                 //check try to give comment on word ,who has a comment  
-                this.getSelectionHtml();
+             
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeClass('is-open');
