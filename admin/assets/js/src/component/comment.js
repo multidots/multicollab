@@ -38,9 +38,9 @@ export default class Comment extends React.Component {
         // Handling edited value.
         var editedValue        = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
         // Filtering anchor tag and return the url text only.
-      /*  editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)<\/a>/igm, function( match ) {
+        editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)<\/a>/igm, function( match ) {
             return match.replace( /(<([^>]+)>)/ig, '');
-        } )*/
+        } )
       
         this.state.contentHtml = editedValue;
        
@@ -61,8 +61,8 @@ export default class Comment extends React.Component {
             this.state.editedTime = editedTime;
            
             }
-            
-            // Adding anchor tag around the linkable text.
+
+             // Adding anchor tag around the linkable text.
            newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
                 match = match.replace( /&nbsp/igm, '' );
                 return `<a href="${match}" target="_blank">${match}</a>`;
