@@ -263,7 +263,7 @@ const mdComment = {
                 }
             }
             if(null !== html.match(/mdspan/g)){
-                alert('You have already given commnet on one of the word!');
+                alert('You have already given comment on one of the word!');
                 return;
             }
           
