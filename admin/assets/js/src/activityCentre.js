@@ -189,6 +189,15 @@ class Comments extends React.Component {
                 $( '#md-span-comments .cls-board-outer' ).removeClass( 'focus' );
                 $( '#md-span-comments .cls-board-outer' ).removeAttr( 'style' );
                 $( '[data-rich-text-format-boundary]' ).removeAttr( 'data-rich-text-format-boundary' );
+                //if there is no comment editor will be at center position
+                if($("#md-span-comments").is(':empty'))
+                {
+                    $('body').removeClass("commentOn");
+                           
+                }else{
+                    $('body').addClass("commentOn");
+                }
+                        
             });
             // Remove Tag.
             removeTag( elID ); // eslint-disable-line
