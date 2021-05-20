@@ -333,8 +333,9 @@ class Comments extends React.Component {
      * Handle Show Comments
      */
     handleShowComments() {
-       var openBoards = $('.cls-board-outer:visible').length;
        
+       var openBoards = $('.cls-board-outer:visible').length;
+    
         if ( true === this.state.showComments ) {
             $( 'body' ).addClass( 'hide-comments' );
             $( 'body' ).removeClass( 'commentOn' );
@@ -345,6 +346,9 @@ class Comments extends React.Component {
                 $( 'body' ).removeClass( 'commentOn' );
             }else{
                 $( 'body' ).addClass( 'commentOn' );
+                $('.components-form-toggle').addClass('is-checked');
+                $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
+               
             }
         }
         this.setState({
@@ -356,6 +360,7 @@ class Comments extends React.Component {
      * Appned Counter on Activity Center.
      */
     appendCounter() {
+     
         wp.data.subscribe( function() {
             var isPluginSidebarOpen = wp.data.select( 'core/edit-post' ).isPluginSidebarOpened();
             var isEditorSidebarOpen = wp.data.select( 'core/edit-post' ).isEditorSidebarOpened();

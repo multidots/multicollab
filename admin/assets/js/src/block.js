@@ -235,6 +235,7 @@ const mdComment = {
             $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
              //Activate Show All comment button in setting panel
             $('.components-form-toggle').addClass('is-checked');
+            $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
             onChange(toggleFormat(value, {type: name}),
                 ReactDOM.render(
                     <Board datatext={currentTime} onChanged={onChange} lastVal={value} freshBoard={1} commentedOnText={commentedOnText}/>,
@@ -375,11 +376,21 @@ const mdComment = {
                     $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 });
 
+                
+                
+
                 // Adding lastVal and onChanged props to make it deletable,
                 // these props were not added on load.
                 // It also helps to 'correct' the lastVal of CTRL-Z'ed Text's popup.
                 if ($('#' + selectedText).length !== 0) {
-                    $('body').addClass("commentOn");
+                    //if body hase hide comment class
+                    if( $( 'body' ).hasClass( 'hide-comments' ) ) {
+                      
+                        $('body').removeClass("commentOn");
+                    }else{
+                        $('body').addClass("commentOn");
+                        
+                    }
                     ReactDOM.render(
                         <Board datatext={selectedText} lastVal={value} onChanged={onChange}/>,
                         document.getElementById(selectedText)

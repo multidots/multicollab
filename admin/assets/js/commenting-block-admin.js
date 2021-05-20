@@ -30,6 +30,15 @@
         $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
         $( `#cf-${boardID}` ).addClass( 'active' );
     } )
+    $(document).on('click','.cf-sidebar-settings',function(){
+        if( $('body').hasClass('commentOn')){
+            $('.components-form-toggle').addClass('is-checked');
+            $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
+        
+        }
+        
+        
+    })
 
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
@@ -258,6 +267,7 @@
                     if ( range.commonAncestorContainer.parentNode === editableDiv) {
                         
                         caretPos = range.endOffset;
+                       
                     }
                 }
             } else if (document.selection && document.selection.createRange) {
@@ -279,7 +289,7 @@
           
             var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace after the name.
             var anchor       = document.createElement( 'a' );
-           
+         
             var splitDisplayName = displayName.split( ' ' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
@@ -302,13 +312,11 @@
             return false;
 
         }
-
         // Format Pasted Content.
         var formatPastedContent = function() {
             $( document.body ).on( 'paste', '.js-cf-share-comment, .js-cf-edit-comment', function(e) {
                 e.preventDefault();
                 let paste = (e.originalEvent || e).clipboardData.getData('text/plain');
-               
                 const selection = window.getSelection();
                 const pastedRange = selection.getRangeAt( 0 );
                 if (!selection.rangeCount) return false;
@@ -486,8 +494,7 @@
                 // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
                 cursorPos = getCaretPosition(el);
-               
-                             
+                          
                // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey &&  typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
@@ -552,7 +559,7 @@
 
                         // Check for backspace.
                         if( 'Backspace' === e.key ) {
-                            
+                         
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
                             if ( '@' === prevCharOfEmailSymbol ) {
                                 if( '' !== typedText ) {
@@ -564,8 +571,8 @@
                                     trackedStr = trackedStr.slice( 0, -1 );
                                 }
                         } else {
-                            trackedStr += e.key;
-                        }
+                                trackedStr += e.key;
+                            }
 
                         // Check for ctrl+backspace.
                         if( 'Backspace' === e.key && true === e.ctrlKey ) {
@@ -690,7 +697,7 @@
                     // Remove @ before display name anchor tag and insterted in to anchor tag
                     typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
                     typedContent = typedContent.replace(/@<a/g, '<a');
-                                 
+                   
                     if( 'firefox' !== browser ) {
                         typedContent = chromeEdgeClearFix( typedContent );
                     }
@@ -710,15 +717,17 @@
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
                var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
                var children =  currentTextareaNode.lastElementChild;
-               //Add fix to remove last <br> tag after appending the Display Name.
+                //Add fix to remove last <br> tag after appending the Display Name.
                 if (children.tagName && children.tagName === "BR") {
+                   
                     currentTextareaNode.removeChild(children)
                 }
+               
                 var selectChild          = currentTextareaNode.childNodes.length-1;
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
-               if( 'firefox' === browser ) {
+                if( 'firefox' === browser ) {
                     // Do your stuff for firefox.
                 } else {
                     
@@ -726,7 +735,7 @@
                     range.collapse( true );
                     cursorSel.removeAllRanges();
                     cursorSel.addRange( range );
-                }
+                   }
             } );
         }
         createAutoEmailMention();
