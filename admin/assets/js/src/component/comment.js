@@ -1,5 +1,5 @@
 const {Fragment} = wp.element; // eslint-disable-line
-import React , { useRef, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import renderHTML from 'react-render-html';
 import ContentEditable from 'react-contenteditable';
@@ -19,18 +19,17 @@ export default class Comment extends React.Component {
         this.cancelEdit = this.cancelEdit.bind(this);
         this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>' , editedTime:'',copySuccess:''};
         this.val = props.value;
-       
-  
-
+    
     }
-  
+   
     componentDidUpdate() {
+      
         if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
             const editedCommentID = this.props.timestamp;
             const commenttedText = $('#' + editedCommentID + ' textarea').val();
             $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
         }
-        setTimeout(() => this.setState({copySuccess:''}), 3000);
+     
       
     }
 
@@ -109,6 +108,7 @@ export default class Comment extends React.Component {
           document.execCommand("copy");
           event.target.focus();
           this.setState({ copySuccess: 'Copied!' });
+          clearInterval(this.resetState());
           $temp.remove();
 
         // Create an auxiliary hidden input
@@ -126,6 +126,9 @@ export default class Comment extends React.Component {
         $('#'+elIDRemove).find('.copyinput').val(current_url);
         document.querySelector('input.copyinput').select();
         document.execCommand('copy');
+    }
+    resetState(){
+        setTimeout(() =>  this.setState({ copySuccess: '' }), 3000);
     }
 
     resolve(event) {
@@ -268,7 +271,8 @@ export default class Comment extends React.Component {
                                      <i className="dashicons dashicons-admin-links" id="url" title="Copy Link" onClick={this.copy.bind(this)}></i>
                                     <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
                                     <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
-                                     {this.state.copySuccess}
+                                    { '' !== this.state.copySuccess &&
+                                     this.state.copySuccess}
                                     <span className="copytext"></span>
                                     <input name="exampleClipboard" className="copyinput" value="" type="text"  style={{display:'none'}} readOnly/>
                                     <p id="text_element"></p>   

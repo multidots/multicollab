@@ -76,9 +76,6 @@ class Commenting_block_Admin
 
         // Set query to sort.
         add_action('pre_get_posts', array( $this, 'cf_sort_custom_column_query' ));
-
-        //Action to autosave comment
-    //	add_action('save_post', array( $this, 'cf_autosave_save_comment' ), 10, 3 );
     }
 
     /**
@@ -182,8 +179,6 @@ class Commenting_block_Admin
                 }
             }
         }
-        // die();
-
         // Confirm open counts with the meta value, if not
         // matched, update it. Just for double confirmation.
         $open_cf_count = isset($metas['open_cf_count']) ? $metas['open_cf_count'][0] : 0;
@@ -307,20 +302,45 @@ class Commenting_block_Admin
         // Initiate Email Class Object.
         $this->cf_initiate_email_class();
     
+        // Checking if user deleted the recently added comment.
+        if (isset($current_drafts['deleted']) && 0 !== $current_drafts['deleted']) {
+            if (isset($current_drafts['comments']) && 0 !== $current_drafts['comments']) {
+                foreach ($current_drafts['deleted'] as $el => $timestamps) {
+                    if (array_key_exists($el, $current_drafts['comments'])) {
+                        $prev_state = $metas[$el][0];
+                        $prev_state = maybe_unserialize($prev_state);
 
+                        foreach ($timestamps as $t) {
+                            $t = intval($t);
+                            $get_key = array_search($t, $current_drafts['comments'][$el], true);
+                            if ($get_key !== false) {
+                                unset($current_drafts['comments'][$el][$get_key]);
+                            }
 
+                            unset($prev_state['comments'][$t]);
+                        }
+                        $metas[$el][0] = maybe_serialize($prev_state);
+                    }
+                }
+            }
+        }
         // Publish Deleted Comments. (i.e. finally delete them.)
+  
         if (isset($current_drafts['deleted']) && 0 !== count($current_drafts['deleted'])) {
             $deleted_drafts = $current_drafts['deleted'];
-            
+
             foreach ($deleted_drafts as $el => $timestamps) {
                 $prev_state = $metas[ $el ][0];
                 $prev_state = maybe_unserialize($prev_state);
+
                 foreach ($timestamps as $key=>$t) {
+                    $local_time = current_datetime();
+                    $deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
+                    // Update the timestamp of deleted comment.
                     $previous_comment = $prev_state['comments'][ $t ];
                     if (! empty($previous_comment)) {
-                        $prev_state['comments'][$t ]           = $previous_comment;
-                        $prev_state['comments'][$t ]['status'] = 'deleted';
+                        $prev_state['comments'][ $deleted_timestamp ]           = $previous_comment;
+                        $prev_state['comments'][ $deleted_timestamp ]['status'] = 'deleted';
                     }
                 }
                 $prev_state['updated_at'] = $current_timestamp;
@@ -460,6 +480,16 @@ class Commenting_block_Admin
         $comment_counts = $this->cf_get_comment_counts($post_ID, $p_content, $metas);
         update_post_meta($post_ID, 'open_cf_count', $comment_counts['open_counts']);
 
+        // Deleteing comments if users delete comments at the same moment.
+        if (! empty($current_drafts['deleted'])) {
+            foreach ($current_drafts['deleted'] as $key=>$value) {
+                $comment = get_post_meta($post_ID, $key, true);
+                foreach ($value as $delete_key) {
+                    unset($comment['comments'][$delete_key]);
+                }
+                update_post_meta($post_ID, $key, $comment);
+            }
+        }
         // Sending Emails to newly mentioned users.
         if (isset($current_drafts['comments']) && 0 !== count($current_drafts['comments']) && 0 === count($current_drafts['resolved'])) {
             $new_drafts = $current_drafts['comments'];
@@ -486,6 +516,7 @@ class Commenting_block_Admin
             }
         }
     }
+
 
 
     /**
@@ -891,12 +922,7 @@ class Commenting_block_Admin
         $edited_comment = htmlspecialchars_decode($edited_comment);
         $edited_comment = html_entity_decode($edited_comment);
         $edited_comment = json_decode($edited_comment, true);
-        $current_drafts    = $metas['_current_drafts'][0];
-        $current_drafts    = maybe_unserialize($current_drafts);
-        $date_format = get_option('date_format');
-        $time_format = get_option('time_format');
-        $current_timestamp = current_time('timestamp');
-    
+      
         // Make content secured.
         $edited_comment['thread'] = $this->cf_secure_content($edited_comment['thread']);
         $edited_comment['updatedTime']= gmdate($time_format . ' ' . $date_format, intval($edited_comment['editedTime']));
@@ -973,6 +999,7 @@ class Commenting_block_Admin
         echo wp_json_encode(array( 'showAvatars' => $show_avatars, 'commentingPluginUrl' => COMMENTING_BLOCK_URL ));
         wp_die();
     }
+    
 
     /**
      * Resolve Thread function.
