@@ -1,11 +1,11 @@
 const {Fragment} = wp.element; // eslint-disable-line
-import React from 'react';
+import React , { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import renderHTML from 'react-render-html';
 import ContentEditable from 'react-contenteditable';
 const $ = jQuery; // eslint-disable-line
 export default class Comment extends React.Component {
-
+   
     constructor(props) {
 
         super(props);
@@ -15,8 +15,9 @@ export default class Comment extends React.Component {
         this.save = this.save.bind(this);
         this.remove = this.remove.bind(this);
         this.resolve = this.resolve.bind(this);
+        this.copy = this.copy.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
-        this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>' , editedTime:''};
+        this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>' , editedTime:'',copySuccess:''};
         this.val = props.value;
        
   
@@ -29,6 +30,8 @@ export default class Comment extends React.Component {
             const commenttedText = $('#' + editedCommentID + ' textarea').val();
             $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
         }
+        setTimeout(() => this.setState({copySuccess:''}), 3000);
+      
     }
 
     edit() {
@@ -86,6 +89,44 @@ export default class Comment extends React.Component {
            
         }
     }
+    copy(event) {
+       
+        var elID         = $(event.currentTarget).closest('.cls-board-outer');
+        elID             = elID[0].id;
+        const elIDRemove = elID;
+        var current_url = window.location.href+'&current_url='+elIDRemove;
+
+        $('.copytext').text('');
+        $('#'+elIDRemove).find('.copytext').text(current_url);
+        
+        $('#text_element').text('');
+        $('#'+elIDRemove).find('#text_element').text(current_url);
+
+        var $temp = $("<input>");
+        var $url = current_url;
+          $("body").append($temp);
+          $temp.val($url).select();
+          document.execCommand("copy");
+          event.target.focus();
+          this.setState({ copySuccess: 'Copied!' });
+          $temp.remove();
+
+        // Create an auxiliary hidden input
+        var aux = document.createElement("input");
+        // Get the text from the element passed into the input
+        aux.setAttribute("value", document.getElementById('text_element').innerHTML);
+        aux.select();
+
+        // Execute the copy command
+        document.execCommand("copy");
+
+        // Remove the input from the body
+        //document.body.removeChild(aux);
+
+        $('#'+elIDRemove).find('.copyinput').val(current_url);
+        document.querySelector('input.copyinput').select();
+        document.execCommand('copy');
+    }
 
     resolve(event) {
         var alertMessage = 'Are you sure you want to resolve this thread ?';
@@ -115,13 +156,13 @@ export default class Comment extends React.Component {
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
                 //comment below code to keep other rich text format like <strong>,<em>
                // $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
-                if($("#md-span-comments").is(':empty')){
+               if($("#md-span-comments").is(':empty')){
                     $('body').removeClass("commentOn");
                 } else{
                     $('body').addClass("commentOn");
                 }
             });
-
+           
             // Remove Tag.
             removeTag(elIDRemove); // eslint-disable-line
         } else {
@@ -132,23 +173,53 @@ export default class Comment extends React.Component {
     cancelEdit() {
         this.setState({editing: false})
     }
-    //Decode HTML Text
-    htmlDecode(input){ 
-        var e = document.createElement('div');
-         e.innerHTML = input;
-          var returnString = ''; 
-          for (var index = 0; index < e.childNodes.length; index++) {
-                // case of HTML 
-                if(e.childNodes[index].nodeValue){ 
-                    returnString += e.childNodes[index].nodeValue; 
-                } 
-          } 
-         
-                return e.childNodes.length === 0 ? "" : returnString;
-               
-    } 
-
     renderNormalMode() {
+
+        //code for copy URL
+		const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const current_url = urlParams.get('current_url');
+		  if(current_url){
+            const boardID = current_url;
+            const selectedText = boardID;
+            const _this = $(this);
+            let topOfText = $('[datatext="' + selectedText + '"]').offset().top;
+            $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+            if($('.cls-board-outer').hasClass('focus')){
+                $('#md-span-comments .cls-board-outer#'+current_url).css('opacity', '1');
+                $('#md-span-comments .cls-board-outer#'+current_url).offset({top: topOfText});
+            }
+            $('#md-span-comments .cls-board-outer#'+current_url).addClass('focus');
+            /*$('#md-span-comments .cls-board-outer#'+current_url).css('opacity', '0.4');*/
+            
+            var scrollTopClass = '';
+            if( 0 !== $('.interface-interface-skeleton__content').length ) {
+                // Latest WP Version
+                scrollTopClass = '.interface-interface-skeleton__content';
+
+            } else if( 0 !== $('.block-editor-editor-skeleton__content').length ) {
+                // Latest WP Version
+                scrollTopClass = '.block-editor-editor-skeleton__content';
+
+            } else if( 0 !== $('.edit-post-layout__content').length ) {
+                // Old WP Versions
+                scrollTopClass = '.edit-post-layout__content';
+
+            } else {
+                // Default
+                scrollTopClass = 'body';
+            }
+
+            topOfText = topOfText + $(scrollTopClass).scrollTop();
+
+            $(scrollTopClass).animate({
+                scrollTop: topOfText - 150
+            }, 1000);
+
+            $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
+            $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
+
+        }
 
         // Display the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').show();
@@ -194,8 +265,13 @@ export default class Comment extends React.Component {
                         {this.props.userID === owner && index === 0 &&
                             (
                                 <div className="buttons-wrapper">
+                                     <i className="dashicons dashicons-admin-links" id="url" title="Copy Link" onClick={this.copy.bind(this)}></i>
                                     <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
                                     <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
+                                     {this.state.copySuccess}
+                                    <span className="copytext"></span>
+                                    <input name="exampleClipboard" className="copyinput" value="" type="text"  style={{display:'none'}} readOnly/>
+                                    <p id="text_element"></p>   
                                 </div>
                             )
                         }
@@ -271,6 +347,7 @@ export default class Comment extends React.Component {
                             id={ `edit-${this.props.timestamp}` }
                             className="cf-share-comment js-cf-edit-comment"
                             placeholder="Edit your comments..."
+                            
                         />
                     </div>
                 </div>

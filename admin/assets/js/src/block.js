@@ -32,10 +32,7 @@ $( window ).on('load', function () {
         else{
             $('body').addClass("commentOn");
         }
-      
-       
-
-        // Clearing interval if not found in 10 attemps.
+       // Clearing interval if not found in 10 attemps.
         if ( loadAttempts >= 10 ) {
             clearInterval( loadComments );
         }
@@ -275,7 +272,14 @@ const mdComment = {
         }
         getSelectedText() {
             const { onChange, value, activeAttributes } = this.props;
-           
+            //if copy URL exist remove from existing URL
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const current_url = urlParams.get('current_url');
+            if(current_url){
+                urlParams.delete('current_url');
+                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+            }
             // Stripping out unwanted <mdspan> tags from the content.
             var findMdSpan = 'mdspan';
             $( findMdSpan ).each( function() {

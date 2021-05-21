@@ -185,6 +185,7 @@
   #md-tabs{margin-bottom:15px;display:flex;min-width:280px;justify-content:flex-end;position:fixed;right:40px;z-index:1;top:89px;background:#fff;padding:10px 0}
   #md-tabs span{text-align:center;padding:5px 20px;cursor:pointer;background:#f3f5f6;position:relative;color:#007cba;border:1px solid #007cba;font-weight:500;font-size:13px;border-radius:2px;margin-left:8px}
   #md-tabs span.active{background:#007cba;color:#fff}
+  #text_element, .copyinput,.copytext  { display: none; }
   
   /* Hide format type when suggestion mode enable */
   .suggestion-mode .block-editor-format-toolbar button[aria-label="Link"], .suggestion-mode .block-editor-format-toolbar button[aria-label="Unlink"]{display:none}
