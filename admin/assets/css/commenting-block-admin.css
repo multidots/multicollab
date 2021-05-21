@@ -143,7 +143,7 @@
   .comment-header .comment-actions{width:100%;display:flex;margin-bottom:15px}
   .comment-header .comment-details{width:100%;display:flex;align-items:center;padding-right:50px}
   .comment-header .comment-actions .comment-resolve{width:80%;width:calc(100% - 50px);display:flex;align-items:center}
-  .comment-header .comment-actions .buttons-wrapper{width:50px;text-align:right}
+  .comment-header .comment-actions .buttons-wrapper{display: flex;text-align:right}
   .comment-header .comment-actions .buttons-wrapper i{margin-left:6px;color:#9e9e9e;font-style: normal;}
   .comment-header .comment-actions .comment-resolve label{font-size:12px;color:#191e23;font-weight:400}
   .comment-header .comment-actions .comment-resolve input{margin:0 5px 0 0;opacity:1;border-color:#b3bcc0;box-shadow:none;border-radius:2px}
@@ -437,6 +437,10 @@
     .cf-sidebar-activity-centre, .cf-sidebar-settings{width: 50%;}
     .cf-assign-to input[type=checkbox] {position: absolute;top: 4px;}
     .cf-assign-to label i {padding-left: 34px;}
+  }
+  @media (max-width:785px){
+    .comment-header .comment-actions .comment-resolve input{height: 1.1rem;width: 1.1rem;}
+    .comment-header .comment-actions .buttons-wrapper i{margin-left: 5px;font-size: 18px;}
   }
  
   
