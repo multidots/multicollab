@@ -67,7 +67,7 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
             <div class="cf-right">
                 <div id="cf-developer" class="cf-card">
                     <div class="cf-card-header">
-                        <h3><?php esc_html_e( 'Plugin Developer', 'content-collaboration-inline-commenting' ); ?></h3>
+                        <h3><?php esc_html_e( 'Priority Support', 'content-collaboration-inline-commenting' ); ?></h3>
                     </div>
                     <div class="cf-card-body">
                         <div class="cf-dev-img">
@@ -75,17 +75,25 @@ $cf_admin_notif = get_option( 'cf_admin_notif' );
                                 <img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/mdinc-logo.svg' ); ?>"/>
                             </a>
                         </div>
-                        <p><?php esc_html_e( 'WordPress Development Experts & WordPress VIP Partner Agency', 'content-collaboration-inline-commenting' ); ?></p>
-                        <a href="<?php echo esc_url( 'https://www.multidots.com/' ); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e( 'Visit Site', 'content-collaboration-inline-commenting' ); ?></a>
+                        <h3 class="cf-card-title"><strong><?php esc_html_e( '$99', 'content-collaboration-inline-commenting' ); ?></strong><?php esc_html_e( ' / Annual', 'content-collaboration-inline-commenting' ); ?></h3>
+                        <ul class="cf-card-check-list">
+                            <li><?php esc_html_e( 'Response time 3 business days', 'content-collaboration-inline-commenting' ); ?></li>
+                            <li><?php esc_html_e( 'Get immediate Patch for fixes', 'content-collaboration-inline-commenting' ); ?></li>
+                            <li><?php esc_html_e( 'Email-based support', 'content-collaboration-inline-commenting' ); ?></li>
+                        </ul>
+                        <a href="<?php echo esc_url( 'https://www.multidots.com/multicollab/checkout/?add-to-cart=1208' ); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e( 'Buy Now', 'content-collaboration-inline-commenting' ); ?></a>
                     </div>
                 </div>
                 <div id="cf-contact" class="cf-card">
                     <div class="cf-card-header">
-                        <h3><?php esc_html_e( 'Contact Support', 'content-collaboration-inline-commenting' ); ?></h3>
+                        <h3><?php esc_html_e( 'Standard Support', 'content-collaboration-inline-commenting' ); ?></h3>
                     </div>
                     <div class="cf-card-body">
-                        <p><?php esc_html_e( 'For premium support and help with customizing this plugin for your business needs.', 'content-collaboration-inline-commenting' ) ?></p>
-                        <a href="<?php echo esc_url( 'https://www.multidots.com/multicollab/#commenting-contact-form' ); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e( 'Contact Us', 'content-collaboration-inline-commenting' ); ?></a>
+                        <ul class="cf-card-check-list">
+                            <li><?php esc_html_e( 'Response time within 1 to 2 Weeks.', 'content-collaboration-inline-commenting' ); ?></li>
+                            <li><?php esc_html_e( 'Get fixes in the next release.', 'content-collaboration-inline-commenting' ); ?></li>
+                        </ul>
+                        <a href="<?php echo esc_url( 'https://www.multidots.com/multicollab/#commenting-contact-form' ); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e( 'Free', 'content-collaboration-inline-commenting' ); ?></a>
                     </div>
                 </div>
             </div>
