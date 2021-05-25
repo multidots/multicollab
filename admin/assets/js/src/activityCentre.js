@@ -141,7 +141,7 @@ class Comments extends React.Component {
      */
     closingSidebarOnMobile() {
         var checkWidth = window.innerWidth;
-        if( 767 >= checkWidth ) {
+        if( 768 >= checkWidth ) {
             wp.data.dispatch('core/edit-post').closeGeneralSidebar()
         }
     }
