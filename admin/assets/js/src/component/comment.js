@@ -29,8 +29,6 @@ export default class Comment extends React.Component {
             const commenttedText = $('#' + editedCommentID + ' textarea').val();
             $('#' + editedCommentID + ' textarea').focus().val('').val(commenttedText);
         }
-     
-      
     }
 
     edit() {
@@ -222,8 +220,7 @@ export default class Comment extends React.Component {
 
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
-
-        }
+    }
 
         // Display the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').show();

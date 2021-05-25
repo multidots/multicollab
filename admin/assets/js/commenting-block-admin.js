@@ -16,19 +16,12 @@
     // Stripping out unwanted <mdspan> tags from the content.
     $( window ).on( 'load', function() {
         var findMdSpan = 'mdspan';
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const urlDataText = urlParams.get('current_url');
         $( findMdSpan ).each( function() {
             var datatext = $( this ).attr( 'datatext' );
             if( undefined === datatext ) {
                 $( this ).replaceWith( DOMPurify.sanitize( $( this ).text() ) ); // phpcs:ignore
             }
-            //if page load with copy URL
-            if(urlDataText=== datatext){
-                $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
-                $( `#cf-${urlDataText}` ).addClass( 'active' );
-            }
+         
         } );
     } )
 
@@ -37,6 +30,15 @@
         var boardID = $( this ).attr( 'id' )
         $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
         $( `#cf-${boardID}` ).addClass( 'active' );
+
+        //check if URL has a datatext param
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const current_url = urlParams.get('current_url');
+        if(current_url){
+            urlParams.delete('current_url');
+            window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+        }
     } )
     $(document).on('click','.cf-sidebar-settings',function(){
         if( $('body').hasClass('commentOn')){
@@ -90,7 +92,7 @@
             $('.cf-tab-inner').hide();
             $('#' + tabID).show();
         });
-
+        
         // Save Settings.
         $('#cf-settings-form').on('submit', function (e){
             e.preventDefault();

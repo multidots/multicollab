@@ -112,7 +112,6 @@ class Comments extends React.Component {
      */
      setActiveBoard( elID ) {
      var findMdSpan = '.mdspan-comment';
-         
         $( findMdSpan ).each( function() {
            var datatext = $( this ).attr( 'datatext' );
             if( elID === datatext ) {
@@ -404,7 +403,7 @@ class Comments extends React.Component {
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
         this.appendCounter(); // Appending counter.
         this.activeBoardOnSelectedText(); // Add active class in activities thread on selected text click.
-                     
+      
     }
     render() {
         const { threads, showComments, isLoading, collapseLimit } = this.state;
