@@ -65,6 +65,7 @@
                 // Reset Comments Float. This will reset the positions of all comments.
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
+                $('#md-span-comments .cls-board-outer').removeClass('is-open');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
 
                 if( e.target.localName === 'mdspan' ) {
@@ -138,8 +139,10 @@
             // Reset Comments Float.
             $('#md-span-comments .cls-board-outer').removeAttr('style');
             $('#md-span-comments .cls-board-outer').removeClass('focus');
+            $('#md-span-comments .cls-board-outer').removeClass('is-open');
 
             _this.addClass('focus');
+            _this.addClass('is-open');
 
             const selectedText = _this.attr('id');
             let topOfText = $('[datatext="' + selectedText + '"]').offset().top;

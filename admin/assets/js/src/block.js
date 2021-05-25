@@ -94,7 +94,7 @@ function fetchComments() {
             $('body').addClass("commentOn");
             $('.wp-block mdspan').each(function () {
                 selectedText = $(this).attr('datatext');
-                            
+                      
                 if ($('#' + selectedText).length === 0) {
                  
                     var newNode = document.createElement('div');
@@ -112,18 +112,16 @@ function fetchComments() {
              
                 allThreads.push(selectedText);
             });
-           
-            if(current_url){
-                const copyDatatext = selectedText.includes(current_url);
-              if(false === copyDatatext){
+            const copyDatatext = allThreads.includes(current_url);
+            console.log(copyDatatext);
+            if(current_url && false === copyDatatext){
                 alert('Your Comment is Deleted or Resolved! Please check with different URL');
                 urlParams.delete('current_url');
                 window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
-              }else{
+            }else{
                 $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
                 $( `#cf-${current_url}` ).addClass( 'active' );
               }
-            }
           
             let loadAttempts = 0;
             const loadComments = setInterval(function () {
