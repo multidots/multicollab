@@ -186,13 +186,14 @@ export default class Comment extends React.Component {
             const boardID = current_url;
             const selectedText = boardID;
             const _this = $(this);
+            $('#md-span-comments .cls-board-outer#'+current_url).addClass('focus');
             let topOfText = $('[datatext="' + selectedText + '"]').offset().top;
             $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
             if($('.cls-board-outer').hasClass('focus')){
                 $('#md-span-comments .cls-board-outer#'+current_url).css('opacity', '1');
                 $('#md-span-comments .cls-board-outer#'+current_url).offset({top: topOfText});
             }
-            $('#md-span-comments .cls-board-outer#'+current_url).addClass('focus');
+           
             /*$('#md-span-comments .cls-board-outer#'+current_url).css('opacity', '0.4');*/
             
             var scrollTopClass = '';

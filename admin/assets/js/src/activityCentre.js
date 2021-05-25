@@ -32,9 +32,10 @@ class Comments extends React.Component {
         this.toggleCollapseLink = this.toggleCollapseLink.bind( this );
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
-
+     
         // Grab the current user id.
         this.currentUserID = activityLocalizer.currentUserID
+
     }
 
     /**
@@ -114,9 +115,7 @@ class Comments extends React.Component {
          
         $( findMdSpan ).each( function() {
            var datatext = $( this ).attr( 'datatext' );
-           console.log('datatext' + datatext);
-           console.log('EID' + elID);
-           if( elID === datatext ) {
+            if( elID === datatext ) {
                $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
                $( `#cf-${elID}` ).addClass( 'active' );
            }
@@ -136,20 +135,6 @@ class Comments extends React.Component {
                 $( this ).attr( 'data-rich-text-format-boundary', 'true' );
             }
         } );
-    }
-
-    /**
-     *  Check if URL has a datatext id then remove it
-     */
-    removeDataText() {
-            //if copy URL exist remove from existing URL
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            const current_url = urlParams.get('current_url');
-            if(current_url){
-                urlParams.delete('current_url');
-                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
-            }
     }
 
     /**
@@ -237,7 +222,7 @@ class Comments extends React.Component {
 
         // Resetting all reply comment textarea.
         $( '.js-cancel-comment' ).trigger( 'click' );
-        this.removeDataText();
+      
 
         // Open comment if not opened.
         if( ! this.state.showComments ) {
@@ -250,7 +235,7 @@ class Comments extends React.Component {
         $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
         $( `#${elID}` ).trigger( 'click' );
         $( `mdspan[datatext=${elID}]` ).trigger( 'click' );
-
+        
         // Highlight selected text from editor.
         this.highlightSelectedText( elID );
 
@@ -282,8 +267,7 @@ class Comments extends React.Component {
         $( `#${elID}` ).trigger( 'click' );
         $( `#${elID} #${editID} .js-edit-comment` ).trigger( 'click' );
 
-        this.removeDataText();
-
+         
         // Highlight selected text from editor.
         this.highlightSelectedText( elID );
 
@@ -313,9 +297,7 @@ class Comments extends React.Component {
         $( `#${deleteID} .js-cancel-comment` ).trigger( 'click' );
         $( `#${elID} #${deleteID} .js-trash-comment` ).trigger( 'click' );
 
-
-        this.removeDataText();
-
+      
         // Highlight selected text from editor.
         this.highlightSelectedText( elID );
 
@@ -403,7 +385,14 @@ class Comments extends React.Component {
      */
     activeBoardOnSelectedText() {
         $( document.body ).on( 'click', '.mdspan-comment', function() {
-            this.removeDataText();
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const current_url = urlParams.get('current_url');
+            if(current_url){
+                urlParams.delete('current_url');
+                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+            }
+           
             var datatext = $( this ).attr( 'datatext' );
             $( `#cf-${datatext}` ).addClass( 'active' );
         } )
@@ -415,6 +404,7 @@ class Comments extends React.Component {
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
         this.appendCounter(); // Appending counter.
         this.activeBoardOnSelectedText(); // Add active class in activities thread on selected text click.
+                     
     }
     render() {
         const { threads, showComments, isLoading, collapseLimit } = this.state;
