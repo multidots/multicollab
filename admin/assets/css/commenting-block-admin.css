@@ -285,6 +285,12 @@
   .cf-plugin-settings .cf-right{width:380px;padding:0 20px}
   .cf-plugin-settings .cf-card{border:7px solid #4a1bce;margin:0 auto 30px;background-color:#fff;text-align:center;max-width:340px;-webkit-box-shadow:-3px 2px 41px 0 rgba(0, 0, 0, 0.06);box-shadow:-3px 2px 41px 0 rgba(0, 0, 0, 0.06)}
   .cf-plugin-settings .cf-card .cf-card-header{padding:15px 22px}
+  .cf-card .cf-card-title{font-size: 20px;color: #4b1cce;margin-bottom: 20px;margin-top: 38px;}
+  .cf-card .cf-card-title strong {color: #4b1cce;font-size: 40px;font-weight: 700;}
+  .cf-card-check-list {text-align: left;}
+  .cf-card-check-list li {font-size: 18px;color: #2c2a31;line-height: 25px;position: relative;padding-left: 30px;}
+  .cf-card-check-list li:before {content: "";position: absolute;left: 0;top: 6px;background-image: url(../images/right-check.svg);
+    width: 18px;height: 13px;background-repeat: no-repeat;}
   .cf-plugin-settings .cf-card .cf-card-body{padding:0 22px 30px}
   .cf-plugin-settings .cf-card h3{margin:0;font-size:28px;line-height:normal;color:#4a1bce;font-weight:700}
   .cf-plugin-settings .cf-card p{margin:0 0 20px;font-weight:500}
