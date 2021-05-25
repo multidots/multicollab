@@ -268,7 +268,7 @@ export default class Comment extends React.Component {
                         {this.props.userID === owner && index === 0 &&
                             (
                                 <div className="buttons-wrapper">
-                                     <i className="dashicons dashicons-admin-links" id="url" title="Copy Link" onClick={this.copy.bind(this)}></i>
+                                     <i className="dashicons  dashicons-admin-page" id="url" title="Copy Link" onClick={this.copy.bind(this)}></i>
                                     <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
                                     <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
                                     { '' !== this.state.copySuccess &&

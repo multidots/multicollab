@@ -16,10 +16,18 @@
     // Stripping out unwanted <mdspan> tags from the content.
     $( window ).on( 'load', function() {
         var findMdSpan = 'mdspan';
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const urlDataText = urlParams.get('current_url');
         $( findMdSpan ).each( function() {
             var datatext = $( this ).attr( 'datatext' );
             if( undefined === datatext ) {
                 $( this ).replaceWith( DOMPurify.sanitize( $( this ).text() ) ); // phpcs:ignore
+            }
+            //if page load with copy URL
+            if(urlDataText=== datatext){
+                $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+                $( `#cf-${urlDataText}` ).addClass( 'active' );
             }
         } );
     } )
