@@ -367,7 +367,7 @@
   .user-data-row .user-comment a{color: #0568C1;}
   .comment-header .comment-actions .buttons-wrapper i:hover,.readmoreComment:hover, .readlessComment:hover{cursor: pointer;}
   .comment-copied-tooltip {position: relative;}
-  .comment-copied-tooltip p {position: absolute;bottom: 25px;left: -33px;margin: 0;background-color: #fff;padding: 2px 6px;align-content: space-between;border: 1px solid #c7c7c7;font-size: 12px;line-height: normal;color: #191e23;text-align: center;width: 80px;}
+  .comment-copied-tooltip p {position: absolute;bottom: 25px;left: -33px;margin: 0 !important;background-color: #fff;padding: 2px 6px;align-content: space-between;border: 1px solid #c7c7c7;font-size: 12px !important;line-height: normal !important;color: #191e23;text-align: center;width: 80px;}
   /* .user-data-row .user-assigned-to > span::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 3px;background-repeat: no-repeat;width: 14px;height: 14px;} */
   .user-data-row .user-assigned-to > .icon{background-image: url(../images/assigned-user.svg);background-repeat: no-repeat;width: 16px;height: 14px;display: inline-block;flex-shrink: 0;}
   .user-data-row .user-assigned-to > span {position: relative; }
