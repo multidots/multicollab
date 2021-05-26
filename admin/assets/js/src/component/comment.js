@@ -63,8 +63,10 @@ export default class Comment extends React.Component {
             }
 
              // Adding anchor tag around the linkable text.
-           newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
+          
+            newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
                 match = match.replace( /&nbsp/igm, '' );
+                console.log(match);
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
             newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
@@ -105,7 +107,7 @@ export default class Comment extends React.Component {
           $temp.val($url).select();
           document.execCommand("copy");
           event.target.focus();
-          this.setState({ copySuccess: 'Copied!' });
+          this.setState({ copySuccess: 'Link Copied!' });
           clearInterval(this.resetState());
           $temp.remove();
 
@@ -137,7 +139,6 @@ export default class Comment extends React.Component {
         var elID         = $(event.currentTarget).closest('.cls-board-outer');
         elID             = elID[0].id;
         const elIDRemove = elID;
-
         if (confirm(alertMessage)) {
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
             elID = '_' + elID;
@@ -157,6 +158,7 @@ export default class Comment extends React.Component {
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
                 //comment below code to keep other rich text format like <strong>,<em>
                // $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+             
                if($("#md-span-comments").is(':empty')){
                     $('body').removeClass("commentOn");
                 } else{
@@ -266,11 +268,15 @@ export default class Comment extends React.Component {
                         {this.props.userID === owner && index === 0 &&
                             (
                                 <div className="buttons-wrapper">
-                                     <i className="dashicons  dashicons-admin-page" id="url" title="Copy Link" onClick={this.copy.bind(this)}></i>
+                                    <span className="comment-copied-tooltip">
+                                        <i className="dashicons  dashicons-admin-page" id="url" title="Copy Link" onClick={this.copy.bind(this)}></i>
+                                        { '' !== this.state.copySuccess &&
+                                        <p>{this.state.copySuccess}</p> }
+                                    </span>
+                                  
                                     <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
                                     <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
-                                    { '' !== this.state.copySuccess &&
-                                     this.state.copySuccess}
+                                    
                                     <span className="copytext"></span>
                                     <input name="exampleClipboard" className="copyinput" value="" type="text"  style={{display:'none'}} readOnly/>
                                     <p id="text_element"></p>   
