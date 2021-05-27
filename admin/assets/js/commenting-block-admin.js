@@ -21,6 +21,7 @@
             if( undefined === datatext ) {
                 $( this ).replaceWith( DOMPurify.sanitize( $( this ).text() ) ); // phpcs:ignore
             }
+         
         } );
     } )
 
@@ -29,7 +30,25 @@
         var boardID = $( this ).attr( 'id' )
         $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
         $( `#cf-${boardID}` ).addClass( 'active' );
+
+        //check if URL has a datatext param
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const current_url = urlParams.get('current_url');
+        if(current_url){
+            urlParams.delete('current_url');
+            window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+        }
     } )
+    $(document).on('click','.cf-sidebar-settings',function(){
+        if( $('body').hasClass('commentOn')){
+            $('.components-form-toggle').addClass('is-checked');
+            $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
+        
+        }
+        
+        
+    })
 
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
@@ -46,6 +65,7 @@
                 // Reset Comments Float. This will reset the positions of all comments.
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
+                $('#md-span-comments .cls-board-outer').removeClass('is-open');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
 
                 if( e.target.localName === 'mdspan' ) {
@@ -73,7 +93,7 @@
             $('.cf-tab-inner').hide();
             $('#' + tabID).show();
         });
-
+        
         // Save Settings.
         $('#cf-settings-form').on('submit', function (e){
             e.preventDefault();
@@ -119,12 +139,14 @@
             // Reset Comments Float.
             $('#md-span-comments .cls-board-outer').removeAttr('style');
             $('#md-span-comments .cls-board-outer').removeClass('focus');
+            $('#md-span-comments .cls-board-outer').removeClass('is-open');
 
             _this.addClass('focus');
+            _this.addClass('is-open');
 
             const selectedText = _this.attr('id');
             let topOfText = $('[datatext="' + selectedText + '"]').offset().top;
-
+          
             $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
             _this.css('opacity', '1');
             _this.offset({top: topOfText});
@@ -148,7 +170,7 @@
             }
 
             topOfText = topOfText + $(scrollTopClass).scrollTop();
-
+          
             $(scrollTopClass).animate({
                 scrollTop: topOfText - 150
             }, 1000);
@@ -166,7 +188,7 @@
             if( $( '#comments-toggle' ).hasClass( 'active' ) ) {
                 $( '#comments-toggle' ).trigger( 'click' );
             }
-
+          
             const dataid = $(this).attr('data-id');
 
             // Trigger card click to focus.
@@ -243,16 +265,22 @@
         // Get Caret Position
         var ie = ( typeof document.selection != "undefined" && document.selection.type != "Control" ) && true;
         var w3 = ( typeof window.getSelection != "undefined" ) && true;
-        var cursorPos = 0;
+        var cursorPos =0 ;
         var range     = '';
+
+    
         var getCaretPosition = function( editableDiv ) {
             var caretPos = 0, sel;
             if (window.getSelection) {
                 sel = window.getSelection();
+                            
                 if (sel.rangeCount) {
+                 
                     range = sel.getRangeAt(0);
                     if ( range.commonAncestorContainer.parentNode === editableDiv) {
+                        
                         caretPos = range.endOffset;
+                       
                     }
                 }
             } else if (document.selection && document.selection.createRange) {
@@ -271,8 +299,10 @@
 
         // Insert Display Name.
         var insertDisplayName = function( setRange, email, fullName, displayName ) {
+          
             var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace after the name.
             var anchor       = document.createElement( 'a' );
+         
             var splitDisplayName = displayName.split( ' ' );
             anchor.setAttribute( 'contenteditable', false );
             anchor.setAttribute( 'href', `mailto:${email}` );
@@ -283,6 +313,7 @@
             anchor.appendChild( anchorContent );
             setRange.insertNode( anchor );
             anchor.after( gapElContent ); // phpcs:ignore
+            
         }
 
         // Cases when we should show the suggestion list.
@@ -294,7 +325,6 @@
             return false;
 
         }
-
         // Format Pasted Content.
         var formatPastedContent = function() {
             $( document.body ).on( 'paste', '.js-cf-share-comment, .js-cf-edit-comment', function(e) {
@@ -359,12 +389,14 @@
                 } )
             }
             $( document.body ).on( 'focus keyup paste', '.js-cf-edit-comment', function() {
+               
                 mood = 'edit';
                 el   = $( this ).parents( parentBoardClass ).attr( 'id' );
                 currentCommentBoardID = $( this ).parents( '.commentContainer' ).attr( 'id' );
                 if( 'edit' === mood ) {
                     createTextarea  = `#${currentCommentBoardID} .js-cf-edit-comment`;
                 }
+               
             } );
 
             // Clearing out assignable dom on edit save or edit cancel.
@@ -384,25 +416,29 @@
              * ========================================
              */
             $( document.body ).on( 'keyup', createTextarea, function(e) {
+                
                 var _self = $( createTextarea );
                 typedText = _self.html();
-
+              
                 // Clearing out any junk left when clearing the textarea.
                 if( '<br>' === _self.html() || '&nbsp;' === _self.html() ) {
+                   
                     typedText = '';
                     $( createTextarea ).html( '' );
                 }
-
+               
+               
+             
                 // Removing assignable checkbox if that user's email is not in the content or removed.
+               
                 if( undefined !== typedText && typedText.length > 0 ) {
                     var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
                     var emailSet         = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
                     emailSet             = new Set( emailSet );
                     var emailAddresses   = Array.from( emailSet );
-
+                   
                     // Get the assigner email of the current board.
                     var currentBoardAssingerEmail = $( `${currentBoardID} .cf-board-assigned-to` ).data( 'user-email' );
-
                     if( undefined !== emailAddresses && emailAddresses.length > 0 ) {
                         if( assignCheckBoxId.length > 0 ) {
                             var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
@@ -437,6 +473,7 @@
 
                     // Remove assigner dom if there is not email in the editor.
                     var findEmails = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i );
+                   
                     if( ! findEmails || undefined === findEmails ) {
                         $( `${currentBoardID} .cf-assign-to` ).remove();
                     }
@@ -470,11 +507,26 @@
                 // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
                 cursorPos = getCaretPosition(el);
-
-                // If @ is pressed and shiftkey is true.
-                if( '@' === e.key && true === e.shiftKey && typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
+                  
+               // If @ is pressed and shiftkey is true.
+                if( '@' === e.key && true === e.shiftKey &&  typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                    if( showSuggestion( prevCharOfEmailSymbol ) ) {
+                    var showSuggestionFunc;
+                    var index = typedText.indexOf("@");
+                    var preText = typedText.charAt(index);
+                
+                    if (preText.indexOf(" ") > 0 || preText.length>0) {
+                         var words = preText.split(" ");
+                        var  prevWords = (words[words.length - 1]) ; 
+                    } 
+                                
+                  if('@' === prevWords){
+                     showSuggestionFunc = showSuggestion( prevWords );
+                  }
+                  if('@' === prevCharOfEmailSymbol){
+                     showSuggestionFunc = showSuggestion( prevCharOfEmailSymbol );
+                  }
+                  if( showSuggestionFunc ) {
                         // Fetch all email list.
                         isEmail = true;
                         if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
@@ -515,10 +567,12 @@
                         }
                         return false;
                     }
-
+                   
                     if( ! keysToAvoid.find( checkKeys ) ) {
+
                         // Check for backspace.
                         if( 'Backspace' === e.key ) {
+                         
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
                             if ( '@' === prevCharOfEmailSymbol ) {
                                 if( '' !== typedText ) {
@@ -527,16 +581,16 @@
                                     trackedStr = '';
                                 }
                             } else {
-                                trackedStr = trackedStr.slice( 0, -1 );
-                            }
+                                    trackedStr = trackedStr.slice( 0, -1 );
+                                }
                         } else {
-                            trackedStr += e.key;
-                        }
+                                trackedStr += e.key;
+                            }
 
                         // Check for ctrl+backspace.
                         if( 'Backspace' === e.key && true === e.ctrlKey ) {
                             let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                            if ( '@' === prevCharOfEmailSymbol ) {
+                           if ( '@' === prevCharOfEmailSymbol ) {
                                 if( '' !== typedText ) {
                                     trackedStr = '@';
                                 } else {
@@ -550,6 +604,7 @@
                     
                     // If trackedStr is left to @
                     if( '@' === trackedStr && $( createTextarea ).is(':focus') === true ) {
+                      
                         if ( null !== cachedUsersList || '' !== cachedUsersList ) {
                             $( appendIn ).remove(); // Remove user list popup DOM.
                             $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
@@ -577,7 +632,7 @@
 
                     // If trackedStr contains other chars with @ as well.
                     if( '@' !== trackedStr && $( createTextarea ).is(':focus') === true ) {
-                        let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
+                       let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
                         if( checkEmailSymbol ) {
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr( 1 );
@@ -621,17 +676,18 @@
                         } else {
                             $( appendIn ).remove(); // Remove user list popup DOM.
                             $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
+                          
                         }
                     }
 
                     // Clearing the popups when trackedStr is empty.
-                    if( ! trackedStr || '' === trackedStr ) {
+                if( ! trackedStr || '' === trackedStr ) {
                         $( appendIn ).remove();
                         $( assignablePopup ).remove();
                     }
                 }
-                // Clearing popup when user types any space.
-                if( 32 === e.which ) {
+                // Clearing popup when user types any space or use enterkey.
+                if( 32 === e.which || 13 === e.which ||  e.which in keysToAvoid ) {
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                 }
@@ -639,22 +695,28 @@
 
             // Append email in textarea.
             $( document.body ).on( 'click keypress', '.cf-system-user-email-list li', function(e) {
-                e.stopPropagation();
+                 e.stopPropagation();
+              
+                 
                 if( e.which === 1 ) {
                     var fullName    = $( this ).data( 'full-name' );
-                    var displayName = $( this ).data( 'display-name' );
+                    var displayName = '@'+$( this ).data( 'display-name' );
                     var email       = $( this ).data( 'email' );
-
+                   
                     // Insert Display Name.
                     insertDisplayName( range, email, fullName, displayName, createTextarea );
-
+                    
                     var typedContent = $( createTextarea ).html();
+                    // Remove @ before display name anchor tag and insterted in to anchor tag
+                    typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
+                    typedContent = typedContent.replace(/@<a/g, '<a');
+                                     
                     if( 'firefox' !== browser ) {
                         typedContent = chromeEdgeClearFix( typedContent );
                     }
-
-                    var refinedContent            = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gim, ' @' );
-                    refinedContent                = typedContent.replace( /@\w+<a/gim, ' @<a' );
+                    
+                    var refinedContent            = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gim, ' ' );
+                    refinedContent                = typedContent.replace( /@\w+<a/gim, ' <a' );
                     var fragments                 = document.createRange().createContextualFragment( refinedContent );
                     var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
                     var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
@@ -664,22 +726,30 @@
                     $( assignablePopup ).remove();
                     trackedStr = '';
                 }
-
-                // Setup the caret position after appending the Display Name.
+               // Setup the caret position after appending the Display Name.
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
-                var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
-                var selectChild          = currentTextareaNode.childNodes.length - 1;
+               var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
+               var children =  currentTextareaNode.lastElementChild;
+                //Add fix to remove last <br> tag after appending the Display Name.
+                if (children.tagName && children.tagName === "BR") {
+                   
+                    currentTextareaNode.removeChild(children)
+                }
+               
+                var selectChild          = currentTextareaNode.childNodes.length-1;
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
+              
                 if( 'firefox' === browser ) {
                     // Do your stuff for firefox.
                 } else {
+                    
                     range.setStart( el, range.startOffset );
                     range.collapse( true );
                     cursorSel.removeAllRanges();
                     cursorSel.addRange( range );
-                }
+                   }
             } );
         }
         createAutoEmailMention();
@@ -978,16 +1048,27 @@ var removeTag = function( elIDRemove ) { // eslint-disable-line
 
         jQuery(findAttributes).each(function (i, attrb) { // eslint-disable-line
             var content = blockAttributes[attrb];
+          
             if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
 
                 if ('' !== content) {
                     let tempDiv = document.createElement('div');
                     tempDiv.innerHTML = content; // phpcs:ignore
                     let childElements = tempDiv.getElementsByTagName('mdspan');
+                  
                     for (let i = 0; i < childElements.length; i++) {
                         if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
+                            //Change logic to keep other HTML Tag in content..only remove mdspan tag
+                           
+                                 var parent = childElements[i].parentNode;
+                                 while( childElements[i].firstChild ) {
+                                    parent.insertBefore(  childElements[i].firstChild, childElements[i] );
+                                 }
+                                parent.removeChild(childElements[i] );
+                                 
+                            //childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
                             const finalContent = tempDiv.innerHTML;
+                           
 
                             if ( findAttributes.indexOf(attrb) !== -1 ) {
                                 wp.data.dispatch('core/editor').updateBlock(clientId, createNewAttributeWithFinalContent(attrb, finalContent));
