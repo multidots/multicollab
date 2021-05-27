@@ -146,7 +146,7 @@
 
             const selectedText = _this.attr('id');
             let topOfText = $('[datatext="' + selectedText + '"]').offset().top;
-          
+
             $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
             _this.css('opacity', '1');
             _this.offset({top: topOfText});
@@ -170,7 +170,7 @@
             }
 
             topOfText = topOfText + $(scrollTopClass).scrollTop();
-          
+
             $(scrollTopClass).animate({
                 scrollTop: topOfText - 150
             }, 1000);
@@ -188,7 +188,7 @@
             if( $( '#comments-toggle' ).hasClass( 'active' ) ) {
                 $( '#comments-toggle' ).trigger( 'click' );
             }
-          
+
             const dataid = $(this).attr('data-id');
 
             // Trigger card click to focus.
@@ -507,7 +507,7 @@
                 // Get current cursor position.
                 var el    = $( createTextarea ).get(0);
                 cursorPos = getCaretPosition(el);
-                  
+                          
                // If @ is pressed and shiftkey is true.
                 if( '@' === e.key && true === e.shiftKey &&  typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
                     var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
@@ -710,7 +710,7 @@
                     // Remove @ before display name anchor tag and insterted in to anchor tag
                     typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
                     typedContent = typedContent.replace(/@<a/g, '<a');
-                                     
+                   
                     if( 'firefox' !== browser ) {
                         typedContent = chromeEdgeClearFix( typedContent );
                     }
@@ -740,7 +740,6 @@
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
-              
                 if( 'firefox' === browser ) {
                     // Do your stuff for firefox.
                 } else {

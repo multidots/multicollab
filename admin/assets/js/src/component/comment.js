@@ -66,7 +66,6 @@ export default class Comment extends React.Component {
           
             newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
                 match = match.replace( /&nbsp/igm, '' );
-                console.log(match);
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
             newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
