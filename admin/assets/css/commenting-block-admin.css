@@ -17,7 +17,8 @@
   .readMoreSpan.active{display:block}
   .cls-board-outer{position:relative;left:0;background:#fff;width:285px;box-shadow:0 6px 20px 0 rgba(27, 29, 35, 0.1);border-radius:5px;margin-bottom:15px;transition:all 0.5s;font-size:13px;cursor:pointer;border:1px solid #E2E4E7;right:0}
   .cls-board-outer .board .commentContainer{width:100%;box-sizing:border-box;position:relative;padding:15px 18px;border-top:1px solid #e9eaed;color:#191e23}
-  .cls-board-outer .board .commentContainer:first-child{border-top:0}
+  .cls-board-outer .board .commentContainer:first-child{border-top:0;padding: 24px 18px 15px;}
+  .cls-board-outer .board .commentContainer:first-child .comment-header .comment-actions {margin-bottom: 23px;}
   .cls-board-outer .board .commentContainer.loading{background:#eee9e99e}
   .cls-board-outer .board .commentContainer.draft, .cls-board-outer .board .commentContainer.permanent_draft{display:none;background:none}
   .cls-board-outer .board .commentContainer.draft.reverted_back{display:block}
@@ -144,7 +145,7 @@
   .comment-header .comment-details{width:100%;display:flex;align-items:center;padding-right:50px}
   .comment-header .comment-actions .comment-resolve{width:80%;width:calc(100% - 50px);display:flex;align-items:center}
   .comment-header .comment-actions .buttons-wrapper{display: flex;text-align:right}
-  .comment-header .comment-actions .buttons-wrapper i{margin-left:6px;color:#9e9e9e;font-style: normal;}
+  .comment-header .comment-actions .buttons-wrapper i{margin-left:6px;color:#9e9e9e;font-style: normal;line-height: normal;}
   .comment-header .comment-actions .comment-resolve label{font-size:12px;color:#191e23;font-weight:400}
   .comment-header .comment-actions .comment-resolve input{margin:0 5px 0 0;opacity:1;border-color:#b3bcc0;box-shadow:none;border-radius:2px}
   .cls-board-outer:hover .comment-header .comment-actions .buttons-wrapper i{color:#0a7fbb}
@@ -367,7 +368,7 @@
   .user-data-row .user-comment a{color: #0568C1;}
   .comment-header .comment-actions .buttons-wrapper i:hover,.readmoreComment:hover, .readlessComment:hover{cursor: pointer;}
   .comment-copied-tooltip {position: relative;}
-  .comment-copied-tooltip p {position: absolute;bottom: 25px;left: -33px;margin: 0 !important;background-color: #fff;padding: 2px 6px;align-content: space-between;border: 1px solid #c7c7c7;font-size: 12px !important;line-height: normal !important;color: #191e23;text-align: center;width: 80px;}
+  .comment-copied-tooltip p {position: absolute;bottom: 23px;left: -33px;margin: 0 !important;background-color: #fff;padding: 2px 6px;align-content: space-between;border: 1px solid #c7c7c7;font-size: 11.5px !important;line-height: normal !important;color: #191e23;text-align: center;width: 80px;}
   /* .user-data-row .user-assigned-to > span::before {content: "";background-image: url(../images/assigned-user.svg);position: absolute;left: 0;top: 3px;background-repeat: no-repeat;width: 14px;height: 14px;} */
   .user-data-row .user-assigned-to > .icon{background-image: url(../images/assigned-user.svg);background-repeat: no-repeat;width: 16px;height: 14px;display: inline-block;flex-shrink: 0;}
   .user-data-row .user-assigned-to > span {position: relative; }
@@ -391,9 +392,8 @@
   .cf-share-comment .js-mentioned {display: inline-block;word-break: break-word;}
   .user-data-row .user-comment del a {text-decoration: line-through;}
   @-moz-document url-prefix() { 
-    .commentOn .interface-interface-skeleton__sidebar {
-        overflow: hidden;
-    }
+    .commentOn .interface-interface-skeleton__sidebar {overflow-x: hidden;}
+    .commentOn .interface-complementary-area-header{padding-right: 13px;}
   }
    /*=====================Comment activity css-05-04-2021===============*/
   @media (max-width:1400px){
