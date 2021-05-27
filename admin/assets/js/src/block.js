@@ -6,8 +6,9 @@ import PropTypes from 'prop-types';
 const {__} = wp.i18n;                                                   // eslint-disable-line
 const {Fragment, Component} = wp.element;                               // eslint-disable-line
 const {toggleFormat} = wp.richText;                                     // eslint-disable-line
-const {RichTextToolbarButton} = wp.blockEditor;                         // eslint-disable-line
+const {RichTextToolbarButton, BlockControls } = wp.blockEditor;         // eslint-disable-line
 const {registerFormatType, applyFormat, removeFormat} = wp.richText;    // eslint-disable-line
+const { ToolbarGroup, ToolbarButton } = wp.components;                  // eslint-disable-line
 const $ = jQuery;                                                       // eslint-disable-line
 
 // Window Load functions.
@@ -84,7 +85,6 @@ function fetchComments() {
 
         // If no comment tag exist, remove the loader and temp style tag immediately.
         const span_count = $('.wp-block mdspan').length;
-        
         if (0 === span_count) {
             $( '.commentOn .block-editor-writing-flow' ).css( { width: '100% !important' } )
             $('body').removeClass("commentOn");
@@ -113,7 +113,6 @@ function fetchComments() {
                 allThreads.push(selectedText);
             });
             const copyDatatext = allThreads.includes(current_url);
-            console.log(copyDatatext);
             if(current_url && false === copyDatatext){
                 alert('Your Comment is Deleted or Resolved! Please check with different URL');
                 urlParams.delete('current_url');
@@ -125,8 +124,13 @@ function fetchComments() {
           
             let loadAttempts = 0;
             const loadComments = setInterval(function () {
+                var openBoards = $('.cls-board-outer:visible').length;
+                if(0 === openBoards){
+                    $('body').removeClass("commentOn");
+                    $('#md-span-comments').removeClass('comments-loader');
+                }
                 loadAttempts++;
-                if (1 <= $('#md-span-comments .commentContainer').length) {
+               if (1 <= $('#md-span-comments .commentContainer').length) {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
@@ -367,6 +371,7 @@ const mdComment = {
 
                 // Delete the popup and its highlight if user
                 // leaves the new popup without adding comment.
+              
                 if (1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length) {
                     const latestBoard = $('.board.fresh-board').parents('.cls-board-outer').attr('id');
                     const span_count = $('.wp-block mdspan').length;
@@ -383,8 +388,6 @@ const mdComment = {
                         }else{
                             $('body').addClass("commentOn");
                         }
-                        
-                       
                     }
                  
                     
@@ -471,6 +474,19 @@ const mdComment = {
                         className={`toolbar-button-with-text toolbar-button__${name}`}
                         
                     />
+                    <BlockControls>
+                      <ToolbarGroup>
+                        <ToolbarButton
+                         icon="admin-comments"
+                         isActive={isActive}
+                         label="Comment"
+                         onClick={this.onToggle}
+                         shortcutType="primary"
+                         shortcutCharacter="m"
+                         className={`toolbar-button-with-text toolbar-button__${name}`}
+                        />
+                      </ToolbarGroup>
+                    </BlockControls>
                     {
                         <Fragment>
                             {this.getSelectedText()}
