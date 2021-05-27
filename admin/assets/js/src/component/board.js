@@ -351,14 +351,14 @@ export default class Board extends React.Component {
         $('#md-span-comments .cls-board-outer').removeClass('focus');
         $('#md-span-comments .cls-board-outer').removeAttr('style');
         $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
-
+                     
         const {datatext, onChanged, lastVal} = this.props;
         const name = 'multidots/comment';
-
         if ( 0 === $('#'+ datatext + ' .boardTop .commentContainer').length ) {
             onChanged(removeFormat(lastVal, name));
         }
-
+       
+        
         // Removing the active class form activity center on cancel.
         $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
     }

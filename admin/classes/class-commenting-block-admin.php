@@ -402,11 +402,10 @@ class Commenting_block_Admin
                 $metas[ $el ][0] = maybe_serialize($prev_state);
             }
         }
-
+     
         // Mark Resolved Threads.
         if (isset($current_drafts['resolved']) && 0 !== count($current_drafts['resolved'])) {
             $resolved_drafts = $current_drafts['resolved'];
-
             $html .= '<div class="comment-box comment-resolved" style="background:#fff;width:70%;font-family:Arial,serif;padding-top:40px;">';
             $html .= '<div class="comment-box-header" style="margin-bottom:30px;border:1px solid #eee;border-radius:20px;padding:30px;">';
             $html .= '<p style="margin:0;padding-bottom:20px;"><a href="mailto:' . esc_attr($current_user_email) . '" class="" style="color:#4B1BCE;text-decoration:none;">' . esc_html($current_user_display_name) . '</a> ' . __('has resolved the following thread.', 'content-collaboration-inline-commenting') . '</p>';
@@ -490,6 +489,8 @@ class Commenting_block_Admin
                 update_post_meta($post_ID, $key, $comment);
             }
         }
+
+       
         // Sending Emails to newly mentioned users.
         if (isset($current_drafts['comments']) && 0 !== count($current_drafts['comments']) && 0 === count($current_drafts['resolved'])) {
             $new_drafts = $current_drafts['comments'];
@@ -693,6 +694,17 @@ class Commenting_block_Admin
 
         // Secure content.
         $arr['thread'] = $this->cf_secure_content($commentList['thread']);
+        
+        // Update Current Drafts.
+        $current_drafts = get_post_meta($current_post_id, '_current_drafts', true);
+        $current_drafts = maybe_unserialize($current_drafts);
+        $current_drafts = empty($current_drafts) ? array() : $current_drafts;
+        if (isset($current_drafts['comments']) && 0 !== count($current_drafts['comments'])) {
+            $current_drafts['comments'][ $metaId ][] = $timestamp;
+        } else {
+            $current_drafts['comments'][ $metaId ][] = $timestamp;
+        }
+        update_post_meta($current_post_id, '_current_drafts', $current_drafts);
 
         if (isset($superCareerData['comments']) && 0 !== count($superCareerData['comments'])) {
             $superCareerData['comments'][ $timestamp ] = $arr;
@@ -922,7 +934,9 @@ class Commenting_block_Admin
         $edited_comment = htmlspecialchars_decode($edited_comment);
         $edited_comment = html_entity_decode($edited_comment);
         $edited_comment = json_decode($edited_comment, true);
-      
+        $date_format = get_option('date_format');
+        $time_format = get_option('time_format');
+       
         // Make content secured.
         $edited_comment['thread'] = $this->cf_secure_content($edited_comment['thread']);
         $edited_comment['updatedTime']= gmdate($time_format . ' ' . $date_format, intval($edited_comment['editedTime']));

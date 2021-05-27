@@ -43,9 +43,10 @@ class Comments extends React.Component {
      */
     collapseBoardOnMobile() {
         var checkWidth = window.innerWidth;
-        if( 767 >= checkWidth ) {
+        if( 768 >= checkWidth ) {
             this.setState( { showComments: false } );
             $( 'body' ).addClass( 'hide-comments' );
+            $('body').removeClass('commentOn');
         }
     }
 
@@ -111,7 +112,9 @@ class Comments extends React.Component {
      * Setup active activity board.
      */
      setActiveBoard( elID ) {
-     var findMdSpan = '.mdspan-comment';
+        
+        var findMdSpan = '.mdspan-comment';
+        
         $( findMdSpan ).each( function() {
            var datatext = $( this ).attr( 'datatext' );
             if( elID === datatext ) {
@@ -184,7 +187,6 @@ class Comments extends React.Component {
             $.post( ajaxurl, data, function () { // eslint-disable-line
                 $( `#${elID}` ).remove();
                 $( '#history-toggle' ).attr( 'data-count', $( '.cls-board-outer:visible' ).length );
-
                 // Reset Comments Float.
                 $( '#md-span-comments .cls-board-outer' ).removeClass( 'focus' );
                 $( '#md-span-comments .cls-board-outer' ).removeAttr( 'style' );
@@ -369,8 +371,12 @@ class Comments extends React.Component {
             var isEditorSidebarOpen = wp.data.select( 'core/edit-post' ).isEditorSidebarOpened();
             if( isPluginSidebarOpen && !isEditorSidebarOpen ) {
                 var openBoards = $('.cls-board-outer:visible').length;
+               
                 setTimeout( function() {
                     if( $( '#history-toggle' ).length <= 0 ) {
+                        if(0=== openBoards){
+                            $('body').removeClass("commentOn");
+                        }
                         const notificationCounter = `<span id="history-toggle" data-test="testing" data-count="${openBoards}"></span>`;
                         $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
                     }
@@ -407,8 +413,7 @@ class Comments extends React.Component {
     }
     render() {
         const { threads, showComments, isLoading, collapseLimit } = this.state;
-
-        return (
+            return (
             <Fragment>
                 <PluginSidebarMoreMenuItem target="cf-activity-center">
                     { __( "Multicollab", "cf-activity-center" ) }

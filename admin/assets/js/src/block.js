@@ -6,9 +6,8 @@ import PropTypes from 'prop-types';
 const {__} = wp.i18n;                                                   // eslint-disable-line
 const {Fragment, Component} = wp.element;                               // eslint-disable-line
 const {toggleFormat} = wp.richText;                                     // eslint-disable-line
-const {RichTextToolbarButton, BlockControls } = wp.blockEditor;         // eslint-disable-line
+const {RichTextToolbarButton} = wp.blockEditor;                         // eslint-disable-line
 const {registerFormatType, applyFormat, removeFormat} = wp.richText;    // eslint-disable-line
-const { ToolbarGroup, ToolbarButton } = wp.components;                  // eslint-disable-line
 const $ = jQuery;                                                       // eslint-disable-line
 
 // Window Load functions.
@@ -474,19 +473,6 @@ const mdComment = {
                         className={`toolbar-button-with-text toolbar-button__${name}`}
                         
                     />
-                    <BlockControls>
-                      <ToolbarGroup>
-                        <ToolbarButton
-                         icon="admin-comments"
-                         isActive={isActive}
-                         label="Comment"
-                         onClick={this.onToggle}
-                         shortcutType="primary"
-                         shortcutCharacter="m"
-                         className={`toolbar-button-with-text toolbar-button__${name}`}
-                        />
-                      </ToolbarGroup>
-                    </BlockControls>
                     {
                         <Fragment>
                             {this.getSelectedText()}
