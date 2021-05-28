@@ -613,6 +613,13 @@ class Commenting_block_Admin
                 'cached_users_list' => $get_users_list,
                 'allowed_attribute_tags' => apply_filters('commenting_block_allowed_attr_tags', static::$allowed_attribute_tags)
             ]);
+            //set edit time timezone
+            $date_format       = get_option('date_format');
+            $time_format       = get_option('time_format');
+            $edited_timestamp = current_time('timestamp');
+            $editedDateTime =  gmdate($time_format . ' ' . $date_format);
+        
+            wp_localize_script($this->plugin_name, 'editedTimezone', array( 'editedTime' => $editedDateTime));
 
             wp_enqueue_script('jquery-ui-draggable');
             wp_enqueue_script('jquery-ui-droppable');
@@ -934,20 +941,17 @@ class Commenting_block_Admin
         $edited_comment = htmlspecialchars_decode($edited_comment);
         $edited_comment = html_entity_decode($edited_comment);
         $edited_comment = json_decode($edited_comment, true);
-        $date_format = get_option('date_format');
-        $time_format = get_option('time_format');
-       
         // Make content secured.
         $edited_comment['thread'] = $this->cf_secure_content($edited_comment['thread']);
-        $edited_comment['updatedTime']= gmdate($time_format . ' ' . $date_format, intval($edited_comment['editedTime']));
         $old_timestamp = $edited_comment['timestamp'];
-
         $commentListOld = get_post_meta($current_post_id, $metaId, true);
         $commentListOld = maybe_unserialize($commentListOld);
-        
+        $date_format       = get_option('date_format');
+        $time_format       = get_option('time_format');
+        $edited_timestamp = current_time('timestamp');
+        $edited_comment['editedTime'] =  gmdate($time_format . ' ' . $date_format, $edited_timestamp);
         $edited_draft           = array();
         $edited_draft['thread'] = $edited_comment['thread'];
-
         $commentListOld['comments'][ $old_timestamp ]['draft_edits'] = $edited_draft;
         $commentListOld['comments'][ $old_timestamp ]['editedTime'] = $edited_comment['editedTime'];
         
@@ -1074,7 +1078,7 @@ class Commenting_block_Admin
 
         foreach ($comments as $t => $val) {
             if (isset($val['editedTime'])) {
-                $val['editedTime']=	gmdate($time_format . ' ' . $date_format, intval($val['editedTime']));
+                $val['editedTime']= $val['editedTime']	;
             } else {
                 $val['editedTime']='';
             }

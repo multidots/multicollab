@@ -56,10 +56,8 @@ export default class Comment extends React.Component {
                 return false;
             }
            if(true === this.state.editing){
-            var date=   new Date();
-            var editedTime = Math.floor(date.getTime()/1000);
-            this.state.editedTime = editedTime;
-           
+             let editedTime = editedTimezone ? editedTimezone.editedTime : '';
+             this.state.editedTime = editedTime;
             }
 
              // Adding anchor tag around the linkable text.
@@ -358,13 +356,13 @@ export default class Comment extends React.Component {
                         />
                     </div>
                 </div>
-              
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}
                 </button>
                 <button onClick={this.cancelEdit.bind(this)} className="btn-comment js-cancel-comment">
                     {'Cancel'}
                 </button>
+                
             </div>
         );
     }
