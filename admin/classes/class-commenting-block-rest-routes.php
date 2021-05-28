@@ -73,7 +73,7 @@ class Commenting_Block_Rest_Routes
                 $user_info = get_userdata($comment['userData']);
                 if ('draft' !== $comment['status'] && 'permanent_draft' !== $comment['status']) {
                     if (isset($comment['editedTime'])) {
-                        $comment['editedTime']=	gmdate($time_format . ' ' . $date_format, intval($comment['editedTime']));
+                        $comment['editedTime']=	$comment['editedTime'];
                     } else {
                         $comment['editedTime']='';
                     }
