@@ -56,10 +56,8 @@ export default class Comment extends React.Component {
                 return false;
             }
            if(true === this.state.editing){
-            var date=   new Date();
-            var editedTime = Math.floor(date.getTime()/1000);
-            this.state.editedTime = editedTime;
-           
+             let editedTime = editedTimezone ? editedTimezone.editedTime : '';
+             this.state.editedTime = editedTime;
             }
 
              // Adding anchor tag around the linkable text.
@@ -68,7 +66,7 @@ export default class Comment extends React.Component {
                 match = match.replace( /&nbsp/igm, '' );
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
-            newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
+          //newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
            
             this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID,this.state.editedTime );
     
@@ -99,32 +97,24 @@ export default class Comment extends React.Component {
         
         $('#text_element').text('');
         $('#'+elIDRemove).find('#text_element').text(current_url);
-
-        var $temp = $("<input>");
+        
+   
+        //hack for safari = add style='position: absolute; top: -8888px; left: -8888px'
+        var $temp = $("<input style='position: absolute; top: -8888px; left: -8888px'>");
         var $url = current_url;
           $("body").append($temp);
           $temp.val($url).select();
           document.execCommand("copy");
           event.target.focus();
+          $temp.remove();
           this.setState({ copySuccess: 'Link Copied!' });
           clearInterval(this.resetState());
-          $temp.remove();
 
         // Create an auxiliary hidden input
         var aux = document.createElement("input");
         // Get the text from the element passed into the input
         aux.setAttribute("value", document.getElementById('text_element').innerHTML);
         aux.select();
-
-        // Execute the copy command
-        document.execCommand("copy");
-
-        // Remove the input from the body
-        //document.body.removeChild(aux);
-
-        $('#'+elIDRemove).find('.copyinput').val(current_url);
-        document.querySelector('input.copyinput').select();
-        document.execCommand('copy');
     }
     resetState(){
         setTimeout(() =>  this.setState({ copySuccess: '' }), 3000);
@@ -222,6 +212,7 @@ export default class Comment extends React.Component {
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
     }
+  
 
         // Display the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').show();
@@ -245,7 +236,7 @@ export default class Comment extends React.Component {
             str = str.substring(0, maxLength) + '...';
         }
        // Removing contenteditable attr from the link.
-       // str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
+       str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
         
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
@@ -277,7 +268,7 @@ export default class Comment extends React.Component {
                                     <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
                                     
                                     <span className="copytext"></span>
-                                    <input name="exampleClipboard" className="copyinput" value="" type="text"  style={{display:'none'}} readOnly/>
+                                    <input name="exampleClipboard" className="copyinput" defaultValue="" type="text"  style={{display:'none'}} />
                                     <p id="text_element"></p>   
                                 </div>
                             )
@@ -358,13 +349,13 @@ export default class Comment extends React.Component {
                         />
                     </div>
                 </div>
-              
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}
                 </button>
                 <button onClick={this.cancelEdit.bind(this)} className="btn-comment js-cancel-comment">
                     {'Cancel'}
                 </button>
+                
             </div>
         );
     }

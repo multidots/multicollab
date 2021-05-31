@@ -311,7 +311,7 @@ export default class Board extends React.Component {
             }
             else if ('updatedTime' === i) {
                
-                updatedTime = text[i];
+                updatedTime = text[i].toString();
                
             }
         });

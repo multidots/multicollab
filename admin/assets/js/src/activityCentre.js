@@ -526,7 +526,7 @@ class Comments extends React.Component {
                                                                                         ) }
                                                                                         
                                                                                     </div>
-                                                                                    {c.editedTime.length>0 &&
+                                                                                    {c.editedTime.length>0 &&  'deleted' !== c.status &&
                                                                                       <time class="user-commented-date"> edited {c.editedTime}</time>
                                                                                     }
                                                                                     { 'publish' === c.status && 0 >= index && undefined !== th.assignedTo.username && (
