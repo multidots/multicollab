@@ -165,7 +165,7 @@ export default class Board extends React.Component {
             return `<a href="${match}" target="_blank">${match}</a>`;
         } );
 
-        newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
+       // newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
 
         if ($(`#${currentTextID}`).text().trim().length !== 0) {
 

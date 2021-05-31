@@ -731,16 +731,18 @@
                var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
                var children =  currentTextareaNode.lastElementChild;
                 //Add fix to remove last <br> tag after appending the Display Name.
-            
+                if( 'firefox' !== browser ) {
                     if (children.tagName && children.tagName === "BR") {
                    
                         currentTextareaNode.removeChild(children)
                     }
                
+                }
                 var selectChild          = currentTextareaNode.childNodes.length-1;
                 var el                   = currentTextareaNode.childNodes[ selectChild ];
                 var cursorSel            = window.getSelection();
                 range                    = cursorSel.getRangeAt(0);
+                 //remove condition to set cursore position in firefox
                 range.setStart( el, range.startOffset );
                 range.collapse( true );
                 cursorSel.removeAllRanges();
