@@ -2,6 +2,7 @@ import Board from './component/board';
 import React from 'react'
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { isEmpty } from 'lodash';
 
 const {__} = wp.i18n;                                                   // eslint-disable-line
 const {Fragment, Component} = wp.element;                               // eslint-disable-line
@@ -89,6 +90,11 @@ function fetchComments() {
             $('body').removeClass("commentOn");
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
+            if(current_url){
+                alert('Your Comment is Deleted or Resolved! Please check with different URL');
+                urlParams.delete('current_url');
+                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+            }
         } else {
             $('body').addClass("commentOn");
             $('.wp-block mdspan').each(function () {
@@ -111,6 +117,7 @@ function fetchComments() {
              
                 allThreads.push(selectedText);
             });
+         
             const copyDatatext = allThreads.includes(current_url);
             if(current_url && false === copyDatatext){
                 alert('Your Comment is Deleted or Resolved! Please check with different URL');
