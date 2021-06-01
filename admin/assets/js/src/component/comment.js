@@ -63,10 +63,12 @@ export default class Comment extends React.Component {
              // Adding anchor tag around the linkable text.
           
             newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
-                match = match.replace( /&nbsp/igm, '' );
+                match = match.replace( /&nbsp|(;)/igm, '' );
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
-            newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
+           //remove below code for firefox @mention after space issue 
+          //newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
+     
            
             this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID,this.state.editedTime );
     
@@ -97,32 +99,24 @@ export default class Comment extends React.Component {
         
         $('#text_element').text('');
         $('#'+elIDRemove).find('#text_element').text(current_url);
-
-        var $temp = $("<input>");
+        
+   
+        //hack for safari = add style='position: absolute; top: -8888px; left: -8888px'
+        var $temp = $("<input style='position: absolute; top: -8888px; left: -8888px'>");
         var $url = current_url;
           $("body").append($temp);
           $temp.val($url).select();
           document.execCommand("copy");
           event.target.focus();
+          $temp.remove();
           this.setState({ copySuccess: 'Link Copied!' });
           clearInterval(this.resetState());
-          $temp.remove();
 
         // Create an auxiliary hidden input
         var aux = document.createElement("input");
         // Get the text from the element passed into the input
         aux.setAttribute("value", document.getElementById('text_element').innerHTML);
         aux.select();
-
-        // Execute the copy command
-        document.execCommand("copy");
-
-        // Remove the input from the body
-        //document.body.removeChild(aux);
-
-        $('#'+elIDRemove).find('.copyinput').val(current_url);
-        document.querySelector('input.copyinput').select();
-        document.execCommand('copy');
     }
     resetState(){
         setTimeout(() =>  this.setState({ copySuccess: '' }), 3000);
@@ -220,6 +214,7 @@ export default class Comment extends React.Component {
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
     }
+  
 
         // Display the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').show();
@@ -243,7 +238,7 @@ export default class Comment extends React.Component {
             str = str.substring(0, maxLength) + '...';
         }
        // Removing contenteditable attr from the link.
-       // str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
+       str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
         
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
@@ -275,7 +270,7 @@ export default class Comment extends React.Component {
                                     <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
                                     
                                     <span className="copytext"></span>
-                                    <input name="exampleClipboard" className="copyinput" value="" type="text"  style={{display:'none'}} readOnly/>
+                                    <input name="exampleClipboard" className="copyinput" defaultValue="" type="text"  style={{display:'none'}} />
                                     <p id="text_element"></p>   
                                 </div>
                             )
