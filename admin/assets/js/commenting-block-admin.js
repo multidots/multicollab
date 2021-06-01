@@ -398,6 +398,15 @@
                 }
                
             } );
+            // Restrict Br in newline in firefox
+            if( 'firefox' === browser ) {
+            $( document.body).on("keydown",function(e) {
+                if(e.keyCode == 13 && !e.shiftKey) {
+                    document.execCommand('insertHTML', false, '<br><br>');
+                    return false;
+                }
+            });
+            } 
 
             // Clearing out assignable dom on edit save or edit cancel.
             $( document.body ).on( 'click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function() {
@@ -1034,7 +1043,7 @@ var createNewAttributeWithFinalContent = function(attributeName, finalContent) {
  * @param sting elIDRemove The ID of the comment thread.
  */
 var removeTag = function( elIDRemove ) { // eslint-disable-line
-
+  
     const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block'); // eslint-disable-line
 
     const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId); // eslint-disable-line
