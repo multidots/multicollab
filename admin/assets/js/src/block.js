@@ -2,7 +2,7 @@ import Board from './component/board';
 import React from 'react'
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
+
 
 const {__} = wp.i18n;                                                   // eslint-disable-line
 const {Fragment, Component} = wp.element;                               // eslint-disable-line
