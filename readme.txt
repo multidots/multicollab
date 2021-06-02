@@ -33,6 +33,7 @@ This plugin makes the <strong>publishing experience more collaborative, meaningf
 <li>Threaded comments in the activity center.</li>
 <li>Option to “Hide” comments to focus on publishing</li>
 <li>When you delete a WordPress user, you can assign the deleted user’s comments to other WordPress users.</li>
+<li>Generate a link to a particular comment and share it with other team members.</li>
 </ul>
 
 Plugin - <a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">LIVE DEMO</a>
@@ -190,16 +191,16 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 == Changelog ==
 
 = 1.3.3 - 02.06.2021 =
-* [New Feature] — Generate a link to a particular comment and share it with other team members. 
+* [New Feature] — Generate a link to a particular comment and share it with other team members.
 * [New Feature] — Team members can see recently edited time on the comments and activity center. 
-* [New Feature] — Restricted multiple comments on the same word. 
+* [New Feature] — Team member can not add multiple comments on the same selected text.
 * [Enhancement] — If there is no comment on Page/Post, then Gutenberg editor will be center aligned.
-* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  is fixed.
-* [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed.  
-* [Bug Fix] — Issue related to "Link to a comment box from activity center" on a tablet device is fixed.   
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  related to Gutenberg Comments Panel always visible is fixed.
+* [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed.
+* [Bug Fix] — Redirect to comment from activity center issue fixed in a tablet device.  
 * [Bug Fix] — Fixed issues related to comment formatting.
 * [Bug Fix] — Old Comments not showing up on some Pages issue fixed. 
-* [Bug Fix] — Issue related to Deleted comments visibility in the activity center is fixed. 
+* [Bug Fix] — Deleted comment is visible in the activity center issue fixed.
 * [Bug Fix] — Compatible with WordPress 5.7.x.
 * [Bug Fix] — Other minor fixes.
 
