@@ -66,10 +66,7 @@ export default class Comment extends React.Component {
                 match = match.replace( /&nbsp|(;)/igm, '' );
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
-           //remove below code for firefox @mention after space issue 
-          //newText = newText.replace( /&nbsp;|(;)/igm, ' ' );
-     
-           
+
             this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID,this.state.editedTime );
     
             this.setState( { editing: false } );
@@ -147,10 +144,7 @@ export default class Comment extends React.Component {
                 // Reset Comments Float.
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
-                //comment below code to keep other rich text format like <strong>,<em>
-               // $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
-             
-               if($("#md-span-comments").is(':empty')){
+                if($("#md-span-comments").is(':empty')){
                     $('body').removeClass("commentOn");
                 } else{
                     $('body').addClass("commentOn");
@@ -184,8 +178,6 @@ export default class Comment extends React.Component {
                 $('#md-span-comments .cls-board-outer#'+current_url).css('opacity', '1');
                 $('#md-span-comments .cls-board-outer#'+current_url).offset({top: topOfText});
             }
-           
-            /*$('#md-span-comments .cls-board-outer#'+current_url).css('opacity', '0.4');*/
             
             var scrollTopClass = '';
             if( 0 !== $('.interface-interface-skeleton__content').length ) {

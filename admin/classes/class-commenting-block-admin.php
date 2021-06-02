@@ -301,7 +301,6 @@ class Commenting_block_Admin
         $current_timestamp = current_time('timestamp');
         // Initiate Email Class Object.
         $this->cf_initiate_email_class();
-    
         // Checking if user deleted the recently added comment.
         if (isset($current_drafts['deleted']) && 0 !== $current_drafts['deleted']) {
             if (isset($current_drafts['comments']) && 0 !== $current_drafts['comments']) {
@@ -328,7 +327,6 @@ class Commenting_block_Admin
   
         if (isset($current_drafts['deleted']) && 0 !== count($current_drafts['deleted'])) {
             $deleted_drafts = $current_drafts['deleted'];
-
             foreach ($deleted_drafts as $el => $timestamps) {
                 $prev_state = $metas[ $el ][0];
                 $prev_state = maybe_unserialize($prev_state);
@@ -474,7 +472,7 @@ class Commenting_block_Admin
 
         // Flush Current Drafts Stack.
         update_post_meta($post_ID, '_current_drafts', '');
-
+      
         // Update open comments count.
         $comment_counts = $this->cf_get_comment_counts($post_ID, $p_content, $metas);
         update_post_meta($post_ID, 'open_cf_count', $comment_counts['open_counts']);

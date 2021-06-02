@@ -188,6 +188,22 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 6.
 
 == Changelog ==
+
+= 1.3.3 - 22.04.2021 =
+* [New Feature] — Generate a link to a particular comment and share it with other team members. 
+* [New Feature] — Team members can see recently edited time on the comments and activity center. 
+* [New Feature] — Restricted multiple comments on the same word. 
+* [Enhancement] — If there is no comment on Page/Post, then Gutenberg editor will be center aligned. 
+* [Enhancement] — If there is no comment on Page/Post, then Gutenberg editor will be center aligned. 
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  is fixed.
+* [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed.  
+* [Bug Fix] — Issue related to "Link to a comment box from activity center" on a tablet device is fixed.   
+* [Bug Fix] — Fixed issues related to comment formatting.
+* [Bug Fix] — Old Comments not showing up on some Pages issue fixed. 
+* [Bug Fix] — Issue related to Deleted comments visibility in the activity center is fixed. 
+* [Bug Fix] — Compatible with WordPress 5.7.x.
+* [Bug Fix] — Other minor fixes.
+
 = 1.3.2 - 23.04.2021 =
 * [Bug Fix] — Compatible with WordPress 5.7.1
 * [Bug Fix] — Resolved jQuery issue and normal bugs

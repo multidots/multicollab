@@ -1070,11 +1070,9 @@ var removeTag = function( elIDRemove ) { // eslint-disable-line
                                     parent.insertBefore(  childElements[i].firstChild, childElements[i] );
                                  }
                                 parent.removeChild(childElements[i] );
-                                 
-                            //childElements[i].parentNode.replaceChild(document.createTextNode(childElements[i].innerText), childElements[i]);
+
                             const finalContent = tempDiv.innerHTML;
                            
-
                             if ( findAttributes.indexOf(attrb) !== -1 ) {
                                 wp.data.dispatch('core/editor').updateBlock(clientId, createNewAttributeWithFinalContent(attrb, finalContent));
                             }
