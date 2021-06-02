@@ -516,8 +516,6 @@ class Commenting_block_Admin
         }
     }
 
-
-
     /**
      * Include the Email template class and initiate the object.
      */
