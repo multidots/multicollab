@@ -28,7 +28,7 @@ if (! defined('WPINC')) {
 }
 
 // Plugin version.
-define('COMMENTING_BLOCK_VERSION', '1.3.2');
+define('COMMENTING_BLOCK_VERSION', '1.3.3');
 
 // Define constants.
 define('COMMENTING_BLOCK_URL', plugin_dir_url(__FILE__));

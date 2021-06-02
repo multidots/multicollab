@@ -6,8 +6,8 @@ Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.3.6
-Tested up to: 5.7
-Stable tag: 1.3.2
+Tested up to: 5.7.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -189,12 +189,11 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 
 == Changelog ==
 
-= 1.3.3 - 22.04.2021 =
+= 1.3.3 - 02.06.2021 =
 * [New Feature] — Generate a link to a particular comment and share it with other team members. 
 * [New Feature] — Team members can see recently edited time on the comments and activity center. 
 * [New Feature] — Restricted multiple comments on the same word. 
-* [Enhancement] — If there is no comment on Page/Post, then Gutenberg editor will be center aligned. 
-* [Enhancement] — If there is no comment on Page/Post, then Gutenberg editor will be center aligned. 
+* [Enhancement] — If there is no comment on Page/Post, then Gutenberg editor will be center aligned.
 * [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  is fixed.
 * [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed.  
 * [Bug Fix] — Issue related to "Link to a comment box from activity center" on a tablet device is fixed.   
