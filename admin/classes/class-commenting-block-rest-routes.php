@@ -89,7 +89,7 @@ class Commenting_Block_Rest_Routes
                             'avatarUrl' => get_avatar_url($user_info->user_email),
                             'userRole'  => implode(', ', $user_info->roles)
                         ],
-                        'thread'     => $comment['thread']
+                        'thread'     =>  isset($comment['thread']) ? $comment['thread'] : ''
                     ];
                 }
             }
@@ -129,9 +129,11 @@ class Commenting_Block_Rest_Routes
         }
         
         array_multisort(array_column($threads, 'updatedAt'), SORT_DESC, $threads);
+       
         $response = [
             'threads' => $threads,
         ];
+      
         return rest_ensure_response($response);
     }
 }
