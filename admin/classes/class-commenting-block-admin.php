@@ -296,7 +296,7 @@ class Commenting_block_Admin
         $current_user_display_name = $curr_user->display_name;
 
         // Publish drafts from the '_current_drafts' stack.
-        $current_drafts    = $metas['_current_drafts'][0];
+        $current_drafts    = isset($metas['_current_drafts'][0]) ? $metas['_current_drafts'][0] : array();
         $current_drafts    = maybe_unserialize($current_drafts);
         $current_timestamp = current_time('timestamp');
         // Initiate Email Class Object.
@@ -1068,7 +1068,7 @@ class Commenting_block_Admin
         $commentList = get_post_meta($current_post_id, $elID, true);
 
         $superCareerData = maybe_unserialize($commentList);
-        $comments        = $superCareerData['comments'];
+        $comments        = isset($superCareerData['comments']) ? $superCareerData['comments'] : array();
         $date_format = get_option('date_format');
         $time_format = get_option('time_format');
 
@@ -1111,7 +1111,7 @@ class Commenting_block_Admin
 
         // Get assigned user data
         $assigned_to = null;
-        if ($superCareerData['assigned_to'] > 0) {
+        if (isset($superCareerData['assigned_to']) && $superCareerData['assigned_to'] > 0) {
             $user_data   = get_user_by('ID', $superCareerData['assigned_to']);
             $assigned_to = [
                 'ID'           => $user_data->ID,
@@ -1123,8 +1123,8 @@ class Commenting_block_Admin
 
         $data                    = array();
         $data['userDetails']     = $userDetails;
-        $data['resolved']        = 'true' === $superCareerData['resolved'] ? 'true' : 'false';
-        $data['commentedOnText'] = $superCareerData['commentedOnText'];
+        $data['resolved']        = (isset($superCareerData['resolved']) && 'true' === $superCareerData['resolved']) ? 'true' : 'false';
+        $data['commentedOnText'] = isset($superCareerData['commentedOnText']) ? $superCareerData['commentedOnText'] : '';
         $data['assignedTo']      = $assigned_to;
 
         return rest_ensure_response($data);
