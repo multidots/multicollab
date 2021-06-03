@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.3.6
 Tested up to: 5.7.2
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -189,6 +189,9 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 6.
 
 == Changelog ==
+
+= 1.3.4 - 03.06.2021 =
+* [Enhancement] – Made few enhancements for compatibility with Safari Browser.
 
 = 1.3.3 - 02.06.2021 =
 * [New Feature] — Generate a link to a particular comment and share it with other team members.
