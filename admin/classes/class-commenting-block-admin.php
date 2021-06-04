@@ -1079,9 +1079,9 @@ class Commenting_block_Admin
                 $val['editedTime']='';
             }
             $user_info    = get_userdata($val['userData']);
-            $username     = $user_info->display_name;
-            $user_role    = implode(', ', $user_info->roles);
-            $profile_url  = get_avatar_url($user_info->user_email);
+            $username     = isset($user_info->display_name) ? $user_info->display_name : '';
+            $user_role    = isset($user_info->roles) ? implode(', ', $user_info->roles) : '';
+            $profile_url  = get_avatar_url(isset($user_info->user_email) ? $user_info->user_email : '');
             $thread       = $val['thread'];
             $cstatus      = isset($val['status']) ? $val['status'] : '';
             $cstatus      = isset($val['status']) ? $val['status'] : '';
