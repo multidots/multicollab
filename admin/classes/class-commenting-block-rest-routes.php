@@ -95,7 +95,7 @@ class Commenting_Block_Rest_Routes
             }
 
             $resolved_by = [];
-            if ('true' === $comments['resolved']) {
+            if (isset($comments['resolved']) && 'true' === $comments['resolved']) {
                 if (isset($comments['resolved_by'])) {
                     $resolved_user = get_userdata($comments['resolved_by']);
                     $resolved_by = [
@@ -121,7 +121,7 @@ class Commenting_Block_Rest_Routes
                     'resolved'          => isset($comments['resolved']) ? $comments['resolved'] : 'false',
                     'resolvedTimestamp' => isset($comments['resolved_timestamp']) ? gmdate($time_format . ' ' . $date_format, intval($comments['resolved_timestamp'])): '',
                     'resolvedBy'        => $resolved_by,
-                    'updatedAt'			=> $comments['updated_at'],
+                    'updatedAt'			=> isset($comments['updated_at']) ? $comments['updated_at'] : '',
                     'assignedTo'		=> $assigned_user,
                     
                 ];
