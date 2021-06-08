@@ -77,17 +77,17 @@ class Commenting_Block_Rest_Routes
                     } else {
                         $comment['editedTime']='';
                     }
-                
+
                     $cmnts[] = [
                         'id'         => $timestamp,
                         'status'     => $comment['status'],
                         'timestamp'  => gmdate($time_format . ' ' . $date_format, intval($timestamp)),
                         'editedTime' =>  $comment['editedTime'],
                         'userData'   => [
-                            'id'        => intval($user_info->ID),
-                            'username'  => $user_info->display_name,
-                            'avatarUrl' => get_avatar_url($user_info->user_email),
-                            'userRole'  => implode(', ', $user_info->roles)
+                            'id'        => isset($user_info->ID) ? intval($user_info->ID) : 0,
+                            'username'  => isset($user_info->display_name) ? $user_info->display_name : '',
+                            'avatarUrl' => get_avatar_url(isset($user_info->user_email) ? $user_info->user_email : ''),
+                            'userRole'  => isset($user_info->roles) ? implode(', ', $user_info->roles) : '',
                         ],
                         'thread'     =>  isset($comment['thread']) ? $comment['thread'] : ''
                     ];
@@ -95,7 +95,7 @@ class Commenting_Block_Rest_Routes
             }
 
             $resolved_by = [];
-            if ('true' === $comments['resolved']) {
+            if (isset($comments['resolved']) && 'true' === $comments['resolved']) {
                 if (isset($comments['resolved_by'])) {
                     $resolved_user = get_userdata($comments['resolved_by']);
                     $resolved_by = [
@@ -121,7 +121,7 @@ class Commenting_Block_Rest_Routes
                     'resolved'          => isset($comments['resolved']) ? $comments['resolved'] : 'false',
                     'resolvedTimestamp' => isset($comments['resolved_timestamp']) ? gmdate($time_format . ' ' . $date_format, intval($comments['resolved_timestamp'])): '',
                     'resolvedBy'        => $resolved_by,
-                    'updatedAt'			=> $comments['updated_at'],
+                    'updatedAt'			=> isset($comments['updated_at']) ? $comments['updated_at'] : '',
                     'assignedTo'		=> $assigned_user,
                     
                 ];

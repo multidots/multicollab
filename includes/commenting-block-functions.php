@@ -111,5 +111,6 @@ function gc_reassigning_deleted_user( $id, $reassign ) {
 		}
 		update_post_meta( $result->post_id, $result->meta_key, $values );
 	}
+
 }
 add_action( 'delete_user', 'gc_reassigning_deleted_user', 10, 3 );
