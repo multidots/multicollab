@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.3.6
 Tested up to: 5.7.2
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,20 +190,25 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 
 == Changelog ==
 
+= 1.3.5 - 08.06.2021 =
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/24" target="_blank"> Github issue #24 </a> Block editor has encountered an unexpected error is fixed.
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/23" target="_blank"> Github issue #23 </a> Can't use the Enter Key to add a new paragraph is fixed.
+* [Enhancement] – Maintaince Release.
+
 = 1.3.4 - 03.06.2021 =
 * [Enhancement] – Made few enhancements for compatibility with Safari Browser.
 
 = 1.3.3 - 02.06.2021 =
 * [New Feature] — Generate a link to a particular comment and share it with other team members.
 * [New Feature] — Team members can see recently edited time on the comments and activity center. 
-* [New Feature] — Team member can not add multiple comments on the same selected text.
-* [Enhancement] — If there is no comment on Page/Post, then Gutenberg editor will be center aligned.
+* [New Feature] —  Restricted multiple comments on the same word.
+* [Enhancement] —If there is no comment on Page/Post, then Gutenberg editor will be center aligned.
 * [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  related to Gutenberg Comments Panel always visible is fixed.
-* [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed.
-* [Bug Fix] — Redirect to comment from activity center issue fixed in a tablet device.  
+* [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed. 
+* [Bug Fix] — Issue related to “Link to a comment box from activity center” on a tablet device is fixed. 
 * [Bug Fix] — Fixed issues related to comment formatting.
 * [Bug Fix] — Old Comments not showing up on some Pages issue fixed. 
-* [Bug Fix] — Deleted comment is visible in the activity center issue fixed.
+* [Bug Fix] — Issue related to Deleted comments visibility in the activity center is fixed. 
 * [Bug Fix] — Compatible with WordPress 5.7.x.
 * [Bug Fix] — Other minor fixes.
 

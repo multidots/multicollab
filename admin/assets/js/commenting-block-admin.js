@@ -400,7 +400,7 @@
             } );
             // Restrict Br in newline in firefox
             if( 'firefox' === browser ) {
-            $( document.body).on("keydown",function(e) {
+            $( document.body).on("keydown",'.cf-share-comment',function(e) {
                 if(e.keyCode == 13 && !e.shiftKey) {
                     document.execCommand('insertHTML', false, '<br><br>');
                     return false;
