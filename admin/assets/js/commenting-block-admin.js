@@ -24,40 +24,7 @@
          
         } );
     } )
-    $(document).on('click','.wp-block-table',function(){
-       var emptyDiv = document.querySelectorAll(".wp-block-table.is-selected tr ");
-    console.log(emptyDiv);
-    
-        emptyDiv.forEach(function (a) {
-            
-            a.innerHTML = a.innerHTML.replace( /(<div>)/ig,'' );
-            a.innerHTML = a.innerHTML.replace( /(<\/div>)/ig,'' );
-           var currentTextareaNode = document.getElementsByClassName('focus-visible');
-        
-           var children =  currentTextareaNode.lastElementChild;
-            //Add fix to remove last <br> tag after appending the Display Name.
-           
-         //.log(currentTextareaNode.childNodes);
-           // var selectChild          = a.childNodes.length;
-           // console.log(selectChild)
-           // var el                   = a.childNodes[ selectChild ];
-            var selection            = window.getSelection();
-            //var range = document.selection.createRange();
-             //remove condition to set cursore position in firefox
-       
-            var newRange = selection.getRangeAt( 0 );
-            console.log(newRange);
-            newRange.collapse( true );
-            selection.removeAllRanges();
-            selection.addRange( newRange );
-        
-            
-        
-          //  a.remove();
-          // a.parentNode.removeChildElement(a);
-        })
-     
-    })
+   
     // Resetting All Class From Activity Center
     $( document ).on( 'click', '.cls-board-outer', function() {
         var boardID = $( this ).attr( 'id' )

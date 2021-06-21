@@ -544,7 +544,7 @@ const mdComment = {
             return (
                 <Fragment>
                       {(! allowedBlocks.includes( block.name))  &&
-                    <div>
+                    <Fragment>
                         
                     <RichTextToolbarButton
                         title={__('Comment')}
@@ -568,7 +568,7 @@ const mdComment = {
 				           />
 			            </ToolbarGroup>
 		            </BlockControls>
-                    </div>
+                    </Fragment>
                 }
                     {
                         <Fragment>
