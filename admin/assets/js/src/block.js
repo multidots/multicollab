@@ -2,16 +2,23 @@ import Board from './component/board';
 import React from 'react'
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import nonTextBlock from "./nonTextblock";
+import allowedBlocks from './component/allowedBlocks';
 
 const {__} = wp.i18n;                                                   // eslint-disable-line
 const {Fragment, Component} = wp.element;                               // eslint-disable-line
 const {toggleFormat} = wp.richText;                                     // eslint-disable-line
-const {RichTextToolbarButton} = wp.blockEditor;                         // eslint-disable-line
+const {RichTextToolbarButton,BlockControls} = wp.blockEditor;           // eslint-disable-line
 const {registerFormatType, applyFormat, removeFormat} = wp.richText;    // eslint-disable-line
+const {ToolbarGroup, ToolbarButton } = wp.components;                   // eslint-disable-line
 const $ = jQuery;                                                       // eslint-disable-line
+
+
 
 // Window Load functions.
 $( window ).on('load', function () {
+
+
 
     let loadAttempts = 0;
     const loadComments = setInterval(function () {
@@ -23,18 +30,23 @@ $( window ).on('load', function () {
             // Fetching comments
             fetchComments();
         }
-
-        // Clearing interval if not found in 10 attemps.
+       
+        if($("#md-span-comments").is(':empty')){
+            $('body').removeClass("commentOn");
+        }
+        else{
+            $('body').addClass("commentOn");
+        }
+       // Clearing interval if not found in 10 attemps.
         if ( loadAttempts >= 10 ) {
             clearInterval( loadComments );
         }
     }, 1000);
 
-    $(document).on('click', '.components-notice__action', function () {
+  
+     $(document).on('click', '.components-notice__action', function () {
 
-        if ('View the autosave' === $(this).text()) {
-            bring_back_comments();
-        }
+      
         if ('Restore the backup' === $(this).text()) {
 
             setTimeout(function () {
@@ -45,8 +57,6 @@ $( window ).on('load', function () {
                         createBoard(selectedText, 'value', 'onChange');
                     }
                 });
-
-                bring_back_comments();
             }, 500);
 
         }
@@ -56,7 +66,9 @@ $( window ).on('load', function () {
 });
 
 
+
 function fetchComments() {
+ 
     var parentNode = document.createElement('div');
     parentNode.setAttribute("id", 'md-comments-suggestions-parent');
 
@@ -72,38 +84,85 @@ function fetchComments() {
 
         let selectedText;
         var allThreads = [];
+        var selectedNontextblock =[];
+        var selectedTextBlock = [];
+        var selectedTexts = [];
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const current_url = urlParams.get('current_url');
 
         // If no comment tag exist, remove the loader and temp style tag immediately.
         const span_count = $('.wp-block mdspan').length;
-
-        if (0 === span_count) {
-            $( '.block-editor-writing-flow' ).css( { width: '100% !important' } )
+        //Non text block datatext count
+       const nonText_count = $('.commentIcon').attr('datatext');
+        if (0 === span_count && 'undefined' === nonText_count ) {
+            $( '.commentOn .block-editor-writing-flow' ).css( { width: '100% !important' } )
+            $('body').removeClass("commentOn");
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
+            if(current_url){
+                alert('Your Comment is Deleted or Resolved! Please check with different URL');
+                urlParams.delete('current_url');
+                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+            }
         } else {
+           
+            $('body').addClass("commentOn");
+            //nonTextBlock datatext attribute
+            $('.commentIcon').each(function(){
+               let selectedNontext = $(this).attr('datatext');
+               selectedNontextblock.push(selectedNontext)
+              });
+              //textblock datatext attribute
             $('.wp-block mdspan').each(function () {
-                selectedText = $(this).attr('datatext');
-                if ($('#' + selectedText).length === 0) {
-
+                let selectedDataText = $(this).attr('datatext');
+                selectedTextBlock.push(selectedDataText);
+       
+            });
+       
+            selectedTexts = selectedNontextblock.concat(selectedTextBlock);
+            selectedTexts = selectedTexts.filter(function(e){return e}); 
+           
+              
+              selectedTexts.forEach(selectedText => {
+               
+                if ($('#' + selectedText).length === 0 || 'undefined' !== selectedText)  {
+                 
                     var newNode = document.createElement('div');
                     newNode.setAttribute("id", selectedText);
                     newNode.setAttribute("class", "cls-board-outer is_active");
-
+    
                     var referenceNode = document.getElementById('md-span-comments');
                     referenceNode.appendChild(newNode);
-
+                  
                     ReactDOM.render(
                         <Board datatext={selectedText} onLoadFetch={1}/>,
                         document.getElementById(selectedText)
                     )
                 }
                 allThreads.push(selectedText);
-            });
-
+              });
+  
+            const copyDatatext = allThreads.includes(current_url);
+            if(current_url && false === copyDatatext){
+                alert('Your Comment is Deleted or Resolved! Please check with different URL');
+                urlParams.delete('current_url');
+                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+            }else{
+                $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+                $( `#cf-${current_url}` ).addClass( 'active' );
+              }
+          
             let loadAttempts = 0;
             const loadComments = setInterval(function () {
+                var openBoards = $('.cls-board-outer:visible').length;
+                if(0 === openBoards){
+                    $('body').removeClass("commentOn");
+                    $('#md-span-comments').removeClass('comments-loader');
+                }
                 loadAttempts++;
-                if (1 <= $('#md-span-comments .commentContainer').length) {
+               if (1 <= $('#md-span-comments .commentContainer').length) {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
@@ -117,81 +176,47 @@ function fetchComments() {
             }, 1000);
         }
 
-        // Reset Draft Comments Data.
-        const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
-        var data = {
-            'action': 'cf_reset_drafts_meta',
-            'currentPostID': CurrentPostID,
-        };
-        $.post(ajaxurl, data, function () { // eslint-disable-line
-        });
+       
     }
 }
+// Float comment for  Non Text block Board
+$( document ).on( 'click', '.commentIcon', function() {
+    var block   = wp.data.select( 'core/block-editor' ).getSelectedBlock();
+    var selectedText ;
+    //var hasSelectedInnerBlock = wp.data.select('core/block-editor').hasSelectedInnerBlock(block.clientId);
+  
+ 
+    if(allowedBlocks.includes(block.name) ){
+        selectedText = $('#block-'+block.clientId).attr('datatext');
+     }
+    else{
+      return;
+    }
 
-function bring_back_comments() {
+      if('undefined' !== selectedText){
+        
+        $('.cls-board-outer').removeClass('focus');
+        $('.cls-board-outer').removeClass('is-open');
+        $('#' + selectedText + '.cls-board-outer').addClass('focus');
+        $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+        $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
+        $('#md-span-comments .cls-board-outer').css('top', 0);
+        var findMdSpan = '.cls-board-outer';
+        $( findMdSpan ).each( function() {
+             var boardDatatext = $( this ).attr( 'id' );
+           
+             if( boardDatatext.includes(selectedText) ) {
+                $('#' + selectedText).offset({top:$('[datatext="' + selectedText + '"]').offset().top});
+                //Adding class to prevent multiple click on same selected Text
+                $('#' + selectedText +'.cls-board-outer').addClass('is-open');
+                $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+                $( `#cf-${selectedText}` ).addClass( 'active' );
+               
+             }
+           });
+    }
 
-    // Reset Draft Comments Data.
-    const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
-    var data = {
-        'action': 'cf_merge_draft_stacks',
-        'currentPostID': CurrentPostID,
-    };
-    $.post(ajaxurl, data, function (response) { // eslint-disable-line
-
-        response = JSON.parse(response);
-
-        if (response.resolved) {
-            $.each(response.resolved, function (k, el) {
-                el = el.replace('_', '');
-                $('#' + el).addClass('reverted_back resolved');
-                // Hide popups if their tags don't exist.
-                if (0 === $('[datatext="' + el + '"]').length) {
-                    $('#' + el).hide();
-                }
-            });
-        }
-
-        if (response.comments) {
-            $.each(response.comments, function (el, timestamps) {
-                $.each(timestamps, function (el, t) {
-                    $('#' + t).removeClass('publish').addClass('reverted_back added');
-                    /*taking extra care to display new threads*/
-                    var appendStyle = `<style>[id="${t}"]{display: block !important}</style>`
-                    $('head').append(DOMPurify.sanitize( appendStyle )); // phpcs:ignore
-                });
-            });
-        }
-
-        if (response.deleted) {
-            $.each(response.deleted, function (el, timestamps) {
-                $.each(timestamps, function (el, t) {
-                    $('#' + t).remove();
-                });
-            });
-        }
-
-        if (response.edited) {
-            $.each(response.edited, function (el, timestamps) {
-
-                $.each(timestamps, function (el, t) {
-                    $('#' + t).removeClass('publish').addClass('reverted_back edited');
-
-                    // Update the component with new text.
-                    const someElement = document.getElementById(t);
-                    const myComp = FindReact(someElement);
-                    myComp.setState({showEditedDraft: true});
-
-                    $('#' + t + ' .commentText').append(' <i style="font-size:12px;color:#23282dba">(edited)</i>');
-                });
-            });
-        }
-
-        // Update unresolved comments count.
-        $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-    });
-
-    return false;
-}
+})
 
 function FindReact(dom, traverseUp = 0) {
     const key = Object.keys(dom).find(key => key.startsWith("__reactInternalInstance$"));
@@ -254,7 +279,7 @@ const mdComment = {
             this.onToggle = this.onToggle.bind(this);
             this.getSelectedText = this.getSelectedText.bind(this);
             this.floatComments = this.floatComments.bind(this);
-
+           
             // Typecheck.
             toggleComments.propTypes = {
                 value: PropTypes.object,
@@ -268,13 +293,27 @@ const mdComment = {
             const {value, onChange} = this.props;
             let {text, start, end} = value;
             const commentedOnText = text.substring(start, end);
-
+            
+            
             // If text is not selected, show notice.
             if (start === end) {
                 alert('Please select text to comment on.');
                 return;
             }
-
+            //If comment box already open, show notice. 
+           
+            var blockContent = wp.data.select( 'core/block-editor' ).getSelectedBlock().attributes.content;
+            var validId =  blockContent.search($('.is-open').attr('id'));
+           
+            if($('.cls-board-outer').hasClass('is-open') && 0 <= validId){
+               alert('You can not give multiple comment on same Text.');
+                return;
+            }
+           var html =this.getSelectionHtml();
+           if(null !== html.match(/mdspan/g)){
+            alert('You have already given comment on one of the word!');
+            return;
+        }
             var currentTime = Date.now();
             currentTime = 'el' + currentTime;
             var newNode = document.createElement('div');
@@ -285,7 +324,9 @@ const mdComment = {
 
             referenceNode.appendChild(newNode);
             $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-
+             //Activate Show All comment button in setting panel
+            $('.components-form-toggle').addClass('is-checked');
+            $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
             onChange(toggleFormat(value, {type: name}),
                 ReactDOM.render(
                     <Board datatext={currentTime} onChanged={onChange} lastVal={value} freshBoard={1} commentedOnText={commentedOnText}/>,
@@ -301,15 +342,43 @@ const mdComment = {
             }
 
         }
-
+        getSelectionHtml() {
+            var html = "";
+            if (typeof window.getSelection != "undefined") {
+                var sel = window.getSelection();
+                if (sel.rangeCount) {
+                    var container = document.createElement("div");
+                    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                        container.appendChild(sel.getRangeAt(i).cloneContents());
+                    }
+                    html = container.innerHTML;
+                    
+                }
+            } else if (typeof document.selection != "undefined") {
+                if (document.selection.type == "Text") {
+                    html = document.selection.createRange().htmlText;
+                }
+            }
+            return html;
+          
+         
+           
+        }
         getSelectedText() {
             const { onChange, value, activeAttributes } = this.props;
-
+            //if copy URL exist remove from existing URL
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const current_url = urlParams.get('current_url');
+            if(current_url){
+                urlParams.delete('current_url');
+                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+            }
             // Stripping out unwanted <mdspan> tags from the content.
             var findMdSpan = 'mdspan';
             $( findMdSpan ).each( function() {
                 var datatext = $( this ).attr( 'datatext' );
-                if( undefined === datatext ) {
+               if( undefined === datatext ) {
                     $( this ).replaceWith( $( this ).text());
                 }
             } );
@@ -323,11 +392,14 @@ const mdComment = {
             if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
                 return;
             }
-
+            
             // Reset Comments Float only if the selected text has no comments on it.
             if (undefined === activeAttributes.datatext) {
+                //check try to give comment on word ,who has a comment  
+             
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
+                $('#md-span-comments .cls-board-outer').removeClass('is-open');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
 
                 //ne_pending remove the attr true
@@ -346,7 +418,6 @@ const mdComment = {
 
             if (undefined !== this.props.value.start && null !== referenceNode) {
                 let selectedText;
-
                 $('.cls-board-outer').removeClass('has_text');
 
                 // Sync popups with highlighted texts.
@@ -371,34 +442,60 @@ const mdComment = {
                 });
 
                 selectedText = activeAttributes.datatext;
+               
 
                 // Delete the popup and its highlight if user
                 // leaves the new popup without adding comment.
+              
                 if (1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length) {
                     const latestBoard = $('.board.fresh-board').parents('.cls-board-outer').attr('id');
+                    const span_count = $('.wp-block mdspan').length;
+                  
                     if (selectedText !== latestBoard) {
+                      
                         removeTag(latestBoard); // eslint-disable-line
                         $('#' + latestBoard).remove();
                         $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
+                       if($("#md-span-comments").is(':empty'))
+                        {
+                            $('body').removeClass("commentOn");
+                           
+                        }else{
+                            $('body').addClass("commentOn");
+                        }
                     }
+                 
+                    
                 }
 
                 // Just hide these popups and only display on CTRLz
                 $('#md-span-comments .cls-board-outer:not(.has_text):not([data-sid])').each(function () {
-                    $(this).hide();
+                  //comment below code because its hide non text block on CTRLz
+                   //$(this).hide();
                     $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 });
+
+                
+                
 
                 // Adding lastVal and onChanged props to make it deletable,
                 // these props were not added on load.
                 // It also helps to 'correct' the lastVal of CTRL-Z'ed Text's popup.
                 if ($('#' + selectedText).length !== 0) {
+                    //if body hase hide comment class
+                    if( $( 'body' ).hasClass( 'hide-comments' ) ) {
+                      
+                        $('body').removeClass("commentOn");
+                    }else{
+                        $('body').addClass("commentOn");
+                        
+                    }
                     ReactDOM.render(
                         <Board datatext={selectedText} lastVal={value} onChanged={onChange}/>,
                         document.getElementById(selectedText)
                     )
                 }
-
+             
                 // Float comments column.
                 this.floatComments(selectedText);
             }
@@ -409,8 +506,10 @@ const mdComment = {
         }
 
         floatComments(selectedText) {
-            if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
-
+           
+          
+            if (document.querySelectorAll(`[data-rich-text-format-boundary='${true}']`).length!== 0) {
+             
 
                 // Removing dark highlights from other texts,
                 // only if current active text has an attribute,
@@ -420,25 +519,33 @@ const mdComment = {
 
                 // Adding focus on selected text's popup.
                 $('.cls-board-outer').removeClass('focus');
+                $('.cls-board-outer').removeClass('is-open');
                 $('#' + selectedText + '.cls-board-outer').addClass('focus');
-
-                $('mdspan:not([datatext="' + selectedText + '"])').removeAttr('data-rich-text-format-boundary');
-
-
-
                 $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
-
                 $('#md-span-comments .cls-board-outer').css('top', 0);
-                $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
+                var findMdSpan = '.mdspan-comment';
+                $( findMdSpan ).each( function() {
+                 var datatext = $( this ).attr( 'datatext' );
+                if( datatext === selectedText ) {
+                    $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
+                    //Adding class to prevent multiple click on same selected Text
+                    $('#' + selectedText +'.cls-board-outer').addClass('is-open');
+                }
+               });
             }
         }
 
         render() {
             const {isActive} = this.props;
-
+            var block   = wp.data.select( 'core/block-editor' ).getSelectedBlock();
+           // var parentBlock = wp.data. select('core/block-editor').getBlockParents(block.clientId);
+          
             return (
                 <Fragment>
+                      {(! allowedBlocks.includes( block.name))  &&
+                    <div>
+                        
                     <RichTextToolbarButton
                         title={__('Comment')}
                         isActive={isActive}
@@ -447,7 +554,22 @@ const mdComment = {
                         shortcutType="primary"
                         shortcutCharacter="m"
                         className={`toolbar-button-with-text toolbar-button__${name}`}
+                        
                     />
+                 
+                    <BlockControls>
+			            <ToolbarGroup>
+				            <ToolbarButton
+					         icon="admin-comments"
+                             isActive={isActive}
+					        label={__('Comment')}
+					        onClick={this.onToggle}
+                            className={`toolbar-button-with-text toolbar-button__${name}`}
+				           />
+			            </ToolbarGroup>
+		            </BlockControls>
+                    </div>
+                }
                     {
                         <Fragment>
                             {this.getSelectedText()}

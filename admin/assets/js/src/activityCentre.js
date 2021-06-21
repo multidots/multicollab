@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import renderHTML from 'react-render-html';
+
+
 const { __ } = wp.i18n;
 const { Fragment } = wp.element;
 const { registerPlugin } = wp.plugins;
@@ -18,6 +20,7 @@ class Comments extends React.Component {
             showComments: true,
             collapseLimit: 45,
         }
+      
 
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
@@ -29,7 +32,7 @@ class Comments extends React.Component {
         this.toggleCollapseLink = this.toggleCollapseLink.bind( this );
         this.resolveThread      = this.resolveThread.bind( this );
         this.handleShowComments = this.handleShowComments.bind( this );
-
+     
         // Grab the current user id.
         this.currentUserID = activityLocalizer.currentUserID
 
@@ -40,9 +43,10 @@ class Comments extends React.Component {
      */
     collapseBoardOnMobile() {
         var checkWidth = window.innerWidth;
-        if( 767 >= checkWidth ) {
+        if( 768 >= checkWidth ) {
             this.setState( { showComments: false } );
             $( 'body' ).addClass( 'hide-comments' );
+            $('body').removeClass('commentOn');
         }
     }
 
@@ -108,8 +112,17 @@ class Comments extends React.Component {
      * Setup active activity board.
      */
      setActiveBoard( elID ) {
-        $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
-        $( `#cf-${elID}` ).addClass( 'active' );
+        
+        var findMdSpan = '.mdspan-comment';
+        
+        $( findMdSpan ).each( function() {
+           var datatext = $( this ).attr( 'datatext' );
+            if( elID === datatext ) {
+               $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+               $( `#cf-${elID}` ).addClass( 'active' );
+           }
+       });
+     
     }
 
     /**
@@ -131,7 +144,7 @@ class Comments extends React.Component {
      */
     closingSidebarOnMobile() {
         var checkWidth = window.innerWidth;
-        if( 767 >= checkWidth ) {
+        if( 768 >= checkWidth ) {
             wp.data.dispatch('core/edit-post').closeGeneralSidebar()
         }
     }
@@ -174,14 +187,37 @@ class Comments extends React.Component {
             $.post( ajaxurl, data, function () { // eslint-disable-line
                 $( `#${elID}` ).remove();
                 $( '#history-toggle' ).attr( 'data-count', $( '.cls-board-outer:visible' ).length );
-
                 // Reset Comments Float.
                 $( '#md-span-comments .cls-board-outer' ).removeClass( 'focus' );
                 $( '#md-span-comments .cls-board-outer' ).removeAttr( 'style' );
                 $( '[data-rich-text-format-boundary]' ).removeAttr( 'data-rich-text-format-boundary' );
+                          //Remove Non Text block class and remove attribute
+                          $('[datatext="' + elID + '"]').removeClass('commentIcon ');
+                          let blockType = $('[datatext="' +elID + '"]').attr('data-type');
+                          let blockId = $('[datatext="' + elID + '"]').attr('data-block');
+                          if ( allowedBlocks.includes( blockType)) {
+                            wp.data.dispatch( 'core/block-editor' ).updateBlock( blockId, {
+                              attributes: {
+                                  datatext:'',
+                                }
+                            } );
+                          $('#'+ elID).remove();
+                      }
+                      else{
+                            // Remove Tag.
+                             removeTag( elID ); // eslint-disable-line
+                      }
+                //if there is no comment editor will be at center position
+                if($("#md-span-comments").is(':empty'))
+                {
+                    $('body').removeClass("commentOn");
+                           
+                }else{
+                    $('body').addClass("commentOn");
+                }
+                        
             });
-            // Remove Tag.
-            removeTag( elID ); // eslint-disable-line
+            
         } else {
             $( `#${elID} [type="checkbox"]` ).prop( 'checked', false );
         }
@@ -202,6 +238,7 @@ class Comments extends React.Component {
 
         // Resetting all reply comment textarea.
         $( '.js-cancel-comment' ).trigger( 'click' );
+      
 
         // Open comment if not opened.
         if( ! this.state.showComments ) {
@@ -214,7 +251,7 @@ class Comments extends React.Component {
         $( '.cls-board-outer' ).removeClass( 'focus' ).css( { opacity: 0.4, top: 0 } ); // Resetting before trigger.
         $( `#${elID}` ).trigger( 'click' );
         $( `mdspan[datatext=${elID}]` ).trigger( 'click' );
-
+        
         // Highlight selected text from editor.
         this.highlightSelectedText( elID );
 
@@ -246,6 +283,7 @@ class Comments extends React.Component {
         $( `#${elID}` ).trigger( 'click' );
         $( `#${elID} #${editID} .js-edit-comment` ).trigger( 'click' );
 
+         
         // Highlight selected text from editor.
         this.highlightSelectedText( elID );
 
@@ -275,6 +313,7 @@ class Comments extends React.Component {
         $( `#${deleteID} .js-cancel-comment` ).trigger( 'click' );
         $( `#${elID} #${deleteID} .js-trash-comment` ).trigger( 'click' );
 
+      
         // Highlight selected text from editor.
         this.highlightSelectedText( elID );
 
@@ -288,36 +327,63 @@ class Comments extends React.Component {
     /**
      * Track if post updated or published.
      */
-    isPostUpdated() {
+     isPostUpdated() {
+     
         const _this = this;
-        wp.data.subscribe( function () {
+        //set flag to restrict multiple call
+        var checked = true;
+         wp.data.subscribe( function () {
+           
             let select                    = wp.data.select('core/editor');
             var isSavingPost              = select.isSavingPost();
             var isAutosavingPost          = select.isAutosavingPost();
             var didPostSaveRequestSucceed = select.didPostSaveRequestSucceed();
             var status = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
-            if ( isSavingPost && !isAutosavingPost ) {
+            if ( isSavingPost ) {
+                checked = false;
+            } else {
+            
+            if (  ! checked  && !isAutosavingPost ) {
                 if( didPostSaveRequestSucceed ) {
+                
                     if( 'draft' === status || 'publish' === status ) {
+                       
                         _this.setState({
                             threads: [],
                         })
+                    
                         _this.getComments();
                         _this.addActiveClassOnPostStatusChange();
+                        
                     }
                 }
+                checked = true;
             }
+        }
+          
         })
     }
-
     /**
      * Handle Show Comments
      */
     handleShowComments() {
+       
+       var openBoards = $('.cls-board-outer:visible').length;
+    
         if ( true === this.state.showComments ) {
             $( 'body' ).addClass( 'hide-comments' );
+            $( 'body' ).removeClass( 'commentOn' );
         } else {
+           
             $( 'body' ).removeClass( 'hide-comments' );
+            if(0 === openBoards){
+                $( 'body' ).removeClass( 'commentOn' );
+            }else{
+                $( 'body' ).addClass( 'commentOn' );
+                $('.components-form-toggle').addClass('is-checked');
+                $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
+               
+            }
         }
         this.setState({
             showComments: ! this.state.showComments
@@ -328,13 +394,18 @@ class Comments extends React.Component {
      * Appned Counter on Activity Center.
      */
     appendCounter() {
+     
         wp.data.subscribe( function() {
             var isPluginSidebarOpen = wp.data.select( 'core/edit-post' ).isPluginSidebarOpened();
             var isEditorSidebarOpen = wp.data.select( 'core/edit-post' ).isEditorSidebarOpened();
             if( isPluginSidebarOpen && !isEditorSidebarOpen ) {
                 var openBoards = $('.cls-board-outer:visible').length;
+               
                 setTimeout( function() {
                     if( $( '#history-toggle' ).length <= 0 ) {
+                        if(0=== openBoards){
+                            $('body').removeClass("commentOn");
+                        }
                         const notificationCounter = `<span id="history-toggle" data-test="testing" data-count="${openBoards}"></span>`;
                         $( '.cf-sidebar-activity-centre' ).append( DOMPurify.sanitize( notificationCounter ) ); // phpcs:ignore
                     }
@@ -348,6 +419,14 @@ class Comments extends React.Component {
      */
     activeBoardOnSelectedText() {
         $( document.body ).on( 'click', '.mdspan-comment', function() {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const current_url = urlParams.get('current_url');
+            if(current_url){
+                urlParams.delete('current_url');
+                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+            }
+           
             var datatext = $( this ).attr( 'datatext' );
             $( `#cf-${datatext}` ).addClass( 'active' );
         } )
@@ -359,12 +438,11 @@ class Comments extends React.Component {
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
         this.appendCounter(); // Appending counter.
         this.activeBoardOnSelectedText(); // Add active class in activities thread on selected text click.
+      
     }
-
     render() {
         const { threads, showComments, isLoading, collapseLimit } = this.state;
-
-        return (
+            return (
             <Fragment>
                 <PluginSidebarMoreMenuItem target="cf-activity-center">
                     { __( "Multicollab", "cf-activity-center" ) }
@@ -404,10 +482,12 @@ class Comments extends React.Component {
                                             ) }
 
                                             { undefined !== threads && null !== threads && threads.map( ( th ) => {
+                                              
                                                 return (
                                                     <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ `cf-${`${th.elID}`}` } key={ `cf-${`${th.elID}`}` }>
                                                         {
                                                             th.activities.map( ( c, index ) => {
+                                                             
                                                                 if( 'permanent_draft' !== c.status && 'draft' !== c.status ) {
                                                                     return (
                                                                         <div className={ 0 < index ? 'user-data-box user-reply' : 'user-data-box' } key={ index }>
@@ -464,15 +544,20 @@ class Comments extends React.Component {
                                                                                                 </blockquote>
                                                                                             </React.Fragment>
                                                                                         ) }
+                                                                                       
                                                                                     </div>
                                                                                     <div class="user-comment">
                                                                                         { 0 < index && 'deleted' === c.status ? (
 
-                                                                                            <del dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize( c.thread ) }}></del> // phpcs:ignore
+                                                                                            <del>{renderHTML(c.thread) }</del> // phpcs:ignore
                                                                                         ) : (
-                                                                                            <span>{ renderHTML(  c.thread ) }</span> // phpcs:ignore
+                                                                                            <span > {renderHTML( c.thread )}</span> // phpcs:ignore
                                                                                         ) }
+                                                                                        
                                                                                     </div>
+                                                                                    {c.editedTime.length>0 &&  'deleted' !== c.status &&
+                                                                                      <time class="user-commented-date"> edited {c.editedTime}</time>
+                                                                                    }
                                                                                     { 'publish' === c.status && 0 >= index && undefined !== th.assignedTo.username && (
                                                                                         <div class="user-assigned-to">
                                                                                             <span class="icon"></span>

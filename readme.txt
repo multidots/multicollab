@@ -6,8 +6,8 @@ Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.3.6
-Tested up to: 5.7
-Stable tag: 1.3.2
+Tested up to: 5.7.2
+Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,7 @@ This plugin makes the <strong>publishing experience more collaborative, meaningf
 <li>Threaded comments in the activity center.</li>
 <li>Option to “Hide” comments to focus on publishing</li>
 <li>When you delete a WordPress user, you can assign the deleted user’s comments to other WordPress users.</li>
+<li>Generate a link to a particular comment and share it with other team members.</li>
 </ul>
 
 Plugin - <a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">LIVE DEMO</a>
@@ -188,6 +189,29 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 6.
 
 == Changelog ==
+
+= 1.3.5 - 08.06.2021 =
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/24" target="_blank"> Github issue #24 </a> Block editor has encountered an unexpected error is fixed.
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/23" target="_blank"> Github issue #23 </a> Can't use the Enter Key to add a new paragraph is fixed.
+* [Enhancement] – Maintaince Release.
+
+= 1.3.4 - 03.06.2021 =
+* [Enhancement] – Made few enhancements for compatibility with Safari Browser.
+
+= 1.3.3 - 02.06.2021 =
+* [New Feature] — Generate a link to a particular comment and share it with other team members.
+* [New Feature] — Team members can see recently edited time on the comments and activity center. 
+* [New Feature] —  Restricted multiple comments on the same word.
+* [Enhancement] —If there is no comment on Page/Post, then Gutenberg editor will be center aligned.
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  related to Gutenberg Comments Panel always visible is fixed.
+* [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed. 
+* [Bug Fix] — Issue related to “Link to a comment box from activity center” on a tablet device is fixed. 
+* [Bug Fix] — Fixed issues related to comment formatting.
+* [Bug Fix] — Old Comments not showing up on some Pages issue fixed. 
+* [Bug Fix] — Issue related to Deleted comments visibility in the activity center is fixed. 
+* [Bug Fix] — Compatible with WordPress 5.7.x.
+* [Bug Fix] — Other minor fixes.
+
 = 1.3.2 - 23.04.2021 =
 * [Bug Fix] — Compatible with WordPress 5.7.1
 * [Bug Fix] — Resolved jQuery issue and normal bugs
