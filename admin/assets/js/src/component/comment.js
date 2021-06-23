@@ -63,7 +63,8 @@ export default class Comment extends React.Component {
              // Adding anchor tag around the linkable text.
           
             newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
-                match = match.replace( /&nbsp;|(;)/igm, '' );
+                match = match.replace( /&nbsp|(;)/igm, '' );
+                
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
 
@@ -253,7 +254,7 @@ export default class Comment extends React.Component {
                             (
                                 <div className="buttons-wrapper">
                                     <span className="comment-copied-tooltip">
-                                        <i className="dashicons  dashicons-admin-page" id="url" title="Copy Link" onClick={this.copy.bind(this)}></i>
+                                        <i className="dashicons  dashicons-admin-page"  title="Copy Link" onClick={this.copy.bind(this)}></i>
                                         { '' !== this.state.copySuccess &&
                                         <p>{this.state.copySuccess}</p> }
                                     </span>

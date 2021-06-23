@@ -1,5 +1,10 @@
 <?php
 
+// If this file is called directly, abort.
+if (! defined('WPINC')) {
+    die;
+}
+
 /**
  * The file that defines the core plugin class
  *

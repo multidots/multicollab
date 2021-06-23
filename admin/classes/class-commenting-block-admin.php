@@ -1,4 +1,9 @@
 <?php
+
+// If this file is called directly, abort.
+if (! defined('WPINC')) {
+    die;
+}
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -76,6 +81,27 @@ class Commenting_block_Admin
 
         // Set query to sort.
         add_action('pre_get_posts', array( $this, 'cf_sort_custom_column_query' ));
+
+        // Remove the mdspan tage from the front content.
+        add_filter('the_content', array( $this, 'cf_removeMdspan' ));
+    }
+
+    /**
+     * Remove custom tag "mdspan" from the content.
+     *
+     * @param array $content content of post.
+     *
+     * @return mixed Updated content.
+     */
+    public function cf_removeMdspan($content)
+    {
+        if ((is_singular()) && (is_main_query())) {
+            $regex = '#<mdspan(.*?)>#';
+            $replacement = '';
+            $content = preg_replace($regex, $replacement, $content);
+        }
+      
+        return $content;
     }
 
     /**
@@ -129,8 +155,17 @@ class Commenting_block_Admin
      */
     public function cf_columns_head($defaults)
     {
-        $defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg" width=17/>' . __('Editorial Comments', 'content-collaboration-inline-commenting');
+        $all_post_type = get_post_types_by_support(array( 'editor'));
+        $post_type = filter_input(INPUT_GET, 'post_type', FILTER_SANITIZE_STRING);
+        $type = get_post_type();
 
+        
+        if ((in_array(trim($post_type), $all_post_type, true)) ||(in_array(trim($type), $all_post_type, true))) {
+            if ((isset($post_type) || isset($type)) && ($post_type !== 'product' || $type !== 'product')) {
+                $defaults['cb_comments_status'] = '<img id="cf-column-img" src="' .esc_url(COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg').'" width=17/>' . __('Editorial Comments', 'content-collaboration-inline-commenting');
+            }
+        }
+        
         return $defaults;
     }
 

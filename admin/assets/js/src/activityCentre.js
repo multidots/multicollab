@@ -81,17 +81,21 @@ class Comments extends React.Component {
     /**
      * Get All Comments Related to this Post.
      */
-    getComments() {
+    getComments () {
         // Set Loaidng to true;
+      
         this.setState( { isLoading: true } );
+      
         const url = `${activityLocalizer.apiUrl}/cf/v2/activities`;
         axios.get( url, {
             params: {
                 postID: this.postID,
+              
             }
         } )
         .then( ( res ) => {
-            if( res.data.threads.length > 0 ) {
+            
+           if( res.data.threads.length > 0 ) {
                 this.setState({
                     threads: res.data.threads,
                     isLoading: false,
@@ -103,9 +107,11 @@ class Comments extends React.Component {
                 })
             }
         } )
+       
         .catch( ( error ) => {
             console.log( error )
         } )
+   
     }
 
     /**
@@ -313,24 +319,39 @@ class Comments extends React.Component {
      * Track if post updated or published.
      */
     isPostUpdated() {
+     
         const _this = this;
-        wp.data.subscribe( function () {
+        //set flag to restrict multiple call
+        var checked = true;
+         wp.data.subscribe( function () {
+           
             let select                    = wp.data.select('core/editor');
             var isSavingPost              = select.isSavingPost();
             var isAutosavingPost          = select.isAutosavingPost();
             var didPostSaveRequestSucceed = select.didPostSaveRequestSucceed();
             var status = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
-            if ( isSavingPost && !isAutosavingPost ) {
+            if ( isSavingPost ) {
+                checked = false;
+            } else {
+            
+            if (  ! checked  && !isAutosavingPost ) {
                 if( didPostSaveRequestSucceed ) {
+                
                     if( 'draft' === status || 'publish' === status ) {
+                       
                         _this.setState({
                             threads: [],
                         })
+                    
                         _this.getComments();
                         _this.addActiveClassOnPostStatusChange();
+                        
                     }
                 }
+                checked = true;
             }
+        }
+          
         })
     }
 

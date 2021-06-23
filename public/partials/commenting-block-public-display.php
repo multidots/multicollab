@@ -10,6 +10,11 @@
  *
  * @package    content-collaboration-inline-commenting
  */
+
+ // If this file is called directly, abort.
+if (! defined('WPINC')) {
+    die;
+}
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
