@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.3.6
 Tested up to: 5.7.2
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -189,6 +189,9 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 6.
 
 == Changelog ==
+
+= 1.3.6 - 23.06.2021 =
+* [Bug Fix] – Maintenance Release and Made few enhancements.
 
 = 1.3.5 - 08.06.2021 =
 * [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/24" target="_blank"> Github issue #24 </a> Block editor has encountered an unexpected error is fixed.

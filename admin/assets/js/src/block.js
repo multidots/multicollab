@@ -86,7 +86,7 @@ function fetchComments() {
         // If no comment tag exist, remove the loader and temp style tag immediately.
         const span_count = $('.wp-block mdspan').length;
         if (0 === span_count) {
-            $( '.commentOn .block-editor-writing-flow' ).css( { width: '100% !important' } )
+            $( '.commentOn .block-editor-writing-flow' ).css( { width: '100%' } )
             $('body').removeClass("commentOn");
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();

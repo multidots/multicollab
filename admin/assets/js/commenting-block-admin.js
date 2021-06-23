@@ -400,13 +400,13 @@
             } );
             // Restrict Br in newline in firefox
             if( 'firefox' === browser ) {
-            $( document.body).on("keydown",'.cf-share-comment',function(e) {
-                if(e.keyCode == 13 && !e.shiftKey) {
-                    document.execCommand('insertHTML', false, '<br><br>');
-                    return false;
-                }
-            });
-            } 
+                $( document.body).on("keydown",'.cf-share-comment',function(e) {
+                    if(e.keyCode == 13 && !e.shiftKey) {
+                        document.execCommand('insertHTML', false, '<br><br>');
+                        return false;
+                    }
+                });
+                } 
 
             // Clearing out assignable dom on edit save or edit cancel.
             $( document.body ).on( 'click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function() {
