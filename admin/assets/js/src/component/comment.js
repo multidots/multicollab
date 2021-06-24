@@ -3,24 +3,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import renderHTML from 'react-render-html';
 import ContentEditable from 'react-contenteditable';
-
 const $ = jQuery; // eslint-disable-line
 export default class Comment extends React.Component {
-
+   
     constructor(props) {
 
         super(props);
+        
         this.contentEditable = React.createRef();
         this.edit = this.edit.bind(this);
         this.save = this.save.bind(this);
         this.remove = this.remove.bind(this);
         this.resolve = this.resolve.bind(this);
+        this.copy = this.copy.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
-        this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>'};
-
+        this.state = {editing: false, showEditedDraft: false, contentHtml: '<br/>' , editedTime:'',copySuccess:''};
+        this.val = props.value;
+    
     }
-
+   
     componentDidUpdate() {
+      
         if ($('mdspan[data-rich-text-format-boundary="true"]').length !== 0) {
             const editedCommentID = this.props.timestamp;
             const commenttedText = $('#' + editedCommentID + ' textarea').val();
@@ -29,32 +32,43 @@ export default class Comment extends React.Component {
     }
 
     edit() {
+       
         this.setState({editing: true});
 
         // Handling edited value.
         var editedValue        = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
-
         // Filtering anchor tag and return the url text only.
-        editedValue = editedValue.replace( /<a href=\"(https?:\/\/[^\s]+)\" target=\"_blank\">(https?:\/\/[^\s]+)<\/a>/igm, function( match ) {
+        editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)<\/a>/igm, function( match ) {
             return match.replace( /(<([^>]+)>)/ig, '');
         } )
+      
         this.state.contentHtml = editedValue;
+       
     }
 
     save(event) {
         var elID = event.currentTarget.parentElement.parentElement.parentElement.parentElement.id;
         if( $( `#${elID} .js-cf-edit-comment` ).text().trim().length !== 0 ) {
             var newText = this.state.contentHtml;
+         
             if ( '' === newText ) {
                 alert( "Please write a comment to share!" );
                 return false;
             }
-            // Adding anchor tag around the linkable text.
-            newText = newText.replace( /(https?:\/\/[^\s]+)/ig, function( match ) {
+           if(true === this.state.editing){
+             let editedTime = editedTimezone ? editedTimezone.editedTime : '';
+             this.state.editedTime = editedTime;
+            }
+
+             // Adding anchor tag around the linkable text.
+          
+            newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
+                match = match.replace( /&nbsp|(;)/igm, '' );
+                
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
 
-            this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID );
+            this.props.updateCommentFromBoard( newText, this.props.index, this.props.timestamp, this.props.dateTime, elID,this.state.editedTime );
     
             this.setState( { editing: false } );
         } else {
@@ -65,9 +79,45 @@ export default class Comment extends React.Component {
     remove(event) {
 
         if (confirm('Are you sure you want to delete this comment ?')) {
+           
             const elID = $(event.currentTarget).closest('.cls-board-outer');
             this.props.removeCommentFromBoard(this.props.index, this.props.timestamp, elID[0].id);
+           
         }
+    }
+    copy(event) {
+       
+        var elID         = $(event.currentTarget).closest('.cls-board-outer');
+        elID             = elID[0].id;
+        const elIDRemove = elID;
+        var current_url = window.location.href+'&current_url='+elIDRemove;
+
+        $('.copytext').text('');
+        $('#'+elIDRemove).find('.copytext').text(current_url);
+        
+        $('#text_element').text('');
+        $('#'+elIDRemove).find('#text_element').text(current_url);
+        
+   
+        //hack for safari = add style='position: absolute; top: -8888px; left: -8888px'
+        var $temp = $("<input style='position: absolute; top: -8888px; left: -8888px'>");
+        var $url = current_url;
+          $("body").append($temp);
+          $temp.val($url).select();
+          document.execCommand("copy");
+          event.target.focus();
+          $temp.remove();
+          this.setState({ copySuccess: 'Link Copied!' });
+          clearInterval(this.resetState());
+
+        // Create an auxiliary hidden input
+        var aux = document.createElement("input");
+        // Get the text from the element passed into the input
+        aux.setAttribute("value", document.getElementById('text_element').innerHTML);
+        aux.select();
+    }
+    resetState(){
+        setTimeout(() =>  this.setState({ copySuccess: '' }), 3000);
     }
 
     resolve(event) {
@@ -78,7 +128,6 @@ export default class Comment extends React.Component {
         var elID         = $(event.currentTarget).closest('.cls-board-outer');
         elID             = elID[0].id;
         const elIDRemove = elID;
-
         if (confirm(alertMessage)) {
             const CurrentPostID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
             elID = '_' + elID;
@@ -90,14 +139,19 @@ export default class Comment extends React.Component {
             };
             $.post(ajaxurl, data, function () { // eslint-disable-line
                 $('#' + elIDRemove).remove();
+               
                 $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
                 // Reset Comments Float.
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
-                $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
+                if($("#md-span-comments").is(':empty')){
+                    $('body').removeClass("commentOn");
+                } else{
+                    $('body').addClass("commentOn");
+                }
             });
-
+           
             // Remove Tag.
             removeTag(elIDRemove); // eslint-disable-line
         } else {
@@ -108,14 +162,59 @@ export default class Comment extends React.Component {
     cancelEdit() {
         this.setState({editing: false})
     }
-
     renderNormalMode() {
+
+        //code for copy URL
+		const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const current_url = urlParams.get('current_url');
+		  if(current_url){
+            const boardID = current_url;
+            const selectedText = boardID;
+            const _this = $(this);
+            $('#md-span-comments .cls-board-outer#'+current_url).addClass('focus');
+            let topOfText = $('[datatext="' + selectedText + '"]').offset().top;
+            $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+            if($('.cls-board-outer').hasClass('focus')){
+                $('#md-span-comments .cls-board-outer#'+current_url).css('opacity', '1');
+                $('#md-span-comments .cls-board-outer#'+current_url).offset({top: topOfText});
+            }
+            
+            var scrollTopClass = '';
+            if( 0 !== $('.interface-interface-skeleton__content').length ) {
+                // Latest WP Version
+                scrollTopClass = '.interface-interface-skeleton__content';
+
+            } else if( 0 !== $('.block-editor-editor-skeleton__content').length ) {
+                // Latest WP Version
+                scrollTopClass = '.block-editor-editor-skeleton__content';
+
+            } else if( 0 !== $('.edit-post-layout__content').length ) {
+                // Old WP Versions
+                scrollTopClass = '.edit-post-layout__content';
+
+            } else {
+                // Default
+                scrollTopClass = 'body';
+            }
+
+            topOfText = topOfText + $(scrollTopClass).scrollTop();
+
+            $(scrollTopClass).animate({
+                scrollTop: topOfText - 150
+            }, 1000);
+
+            $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
+            $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
+    }
+  
 
         // Display the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').show();
 
         const {index} = this.props;
-        const commentStatus = this.props.status ? this.props.status : 'draft';
+        const commentStatus = this.props.status ? this.props.status : 'publish';
+      
 
         var owner = '';
         try {
@@ -131,17 +230,18 @@ export default class Comment extends React.Component {
             readmoreStr = str;
             str = str.substring(0, maxLength) + '...';
         }
-
-        // Removing contenteditable attr from the link.
-        str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
+       // Removing contenteditable attr from the link.
+       str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
+        
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
         if( 8 < userRolePartial.length ) {
             userRolePartial = userRolePartial.slice( 0, 8 ) + '...';
         }
-
+       
         return (
-            <div className={"commentContainer " + commentStatus} id={this.props.timestamp}>
+            
+            <div className={"commentContainer "  } id={this.props.timestamp}>
                 <div className="comment-header">
                     <div className="comment-actions">
                         {index === 0 &&
@@ -153,8 +253,18 @@ export default class Comment extends React.Component {
                         {this.props.userID === owner && index === 0 &&
                             (
                                 <div className="buttons-wrapper">
+                                    <span className="comment-copied-tooltip">
+                                        <i className="dashicons  dashicons-admin-page"  title="Copy Link" onClick={this.copy.bind(this)}></i>
+                                        { '' !== this.state.copySuccess &&
+                                        <p>{this.state.copySuccess}</p> }
+                                    </span>
+                                  
                                     <i className="dashicons dashicons-edit js-edit-comment" title="Edit" onClick={this.edit}></i>
                                     <i className="dashicons dashicons-trash js-resolve-comment" title="Resolve" onClick={this.resolve.bind(this)}></i>
+                                    
+                                    <span className="copytext"></span>
+                                    <input name="exampleClipboard" className="copyinput" defaultValue="" type="text"  style={{display:'none'}} />
+                                    <p id="text_element"></p>   
                                 </div>
                             )
                         }
@@ -177,14 +287,21 @@ export default class Comment extends React.Component {
                             <div className="commenter-name" title={ `${this.props.userName} ( ${this.props.userRole} )` }>
                                 {this.props.userName} <small>({ userRolePartial })</small>
                             </div>
-                            <div className="comment-time">{this.props.dateTime}</div>
+                            
+                            <div className="comment-time">{this.props.dateTime}
+                           </div>
                         </div>
                     </div>
                 </div>
                 <div className="commentText">
-                    <span className='readlessTxt readMoreSpan active'>{renderHTML(str)} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
+               
+                    <span className='readlessTxt readMoreSpan active' >{renderHTML(str)} {'' !== readmoreStr && <span className='readmoreComment'>show more</span>}</span>
                     <span className='readmoreTxt readMoreSpan'>{renderHTML(readmoreStr)} {'' !== readmoreStr && <span className='readlessComment'>show less</span>}</span>
                 </div>
+               
+                { ''!== this.props.editedTime && undefined !== this.props.editedTime &&
+                <time className="updated-time">(edited at {this.props.editedTime})</time>
+             }
             </div>
         );
     }
@@ -193,7 +310,7 @@ export default class Comment extends React.Component {
 
         // Hide the textarea for new comments.
         $('.cls-board-outer.focus .shareCommentContainer').hide();
-
+     
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
         if( 8 < userRolePartial.length ) {
@@ -214,14 +331,18 @@ export default class Comment extends React.Component {
                     </div>
                 </div>
                 <div className="commentText">
-                    <ContentEditable
-                        innerRef={ this.contentEditable }
-                        html={ this.state.contentHtml }
-                        disabled={ false }
-                        onChange={ ( e ) => this.setState( { contentHtml: e.target.value } ) }
-                        id={ `edit-${this.props.timestamp}` }
-                        className="cf-share-comment js-cf-edit-comment"
-                    />
+                    <div className="cf-share-comment-wrapper js-cf-share-comment-wrapper">
+                        <ContentEditable
+                            innerRef={ this.contentEditable }
+                            html= {this.state.contentHtml}
+                            disabled={ false }
+                            onChange={  ( e ) =>  this.setState( { contentHtml: e.target.value } ) }
+                            id={ `edit-${this.props.timestamp}` }
+                            className="cf-share-comment js-cf-edit-comment"
+                            placeholder="Edit your comments..."
+                            
+                        />
+                    </div>
                 </div>
                 <button onClick={this.save.bind(this)} className="btn-comment save-btn">
                     {'Save'}
@@ -229,12 +350,12 @@ export default class Comment extends React.Component {
                 <button onClick={this.cancelEdit.bind(this)} className="btn-comment js-cancel-comment">
                     {'Cancel'}
                 </button>
+                
             </div>
         );
     }
 
     render() {
-
         if (this.state.editing) {
             return this.renderEditingMode();
         } else {
@@ -261,4 +382,5 @@ Comment.propTypes = {
     timestamp: PropTypes.number,
     editedDraft: PropTypes.string,
     children: PropTypes.string,
+    editedTime: PropTypes.string,
 };

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-09 08:32+0000\n"
+"PO-Revision-Date: 2021-03-16 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Bengali (Bangladesh)\n"
 "Language: bn_BD\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.5.1; wp-5.6.2\n"
 "X-Domain: content-collaboration-inline-commenting"
 
-#: admin/classes/class-commenting-block-admin.php:796
+#: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
 msgstr " চালু"
 
@@ -32,21 +32,21 @@ msgstr "%s — %s"
 msgid "About Plugin"
 msgstr "প্লাগইন সম্পর্কে"
 
-#: admin/classes/class-commenting-block-email-templates.php:226
+#: admin/classes/class-commenting-block-email-templates.php:225
 msgid "Assigned to"
 msgstr "নির্ধারিত"
 
-#: admin/classes/class-commenting-block-email-templates.php:252
-#: admin/classes/class-commenting-block-email-templates.php:273
+#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr "এই মন্তব্যটি দেখতে এখানে ক্লিক করুন"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr "মন্তব্য করেছেন"
 
-#: admin/classes/class-commenting-block-email-templates.php:246
-#: admin/classes/class-commenting-block-email-templates.php:267
+#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:266
 msgid "Comments"
 msgstr "মন্তব্য"
 
@@ -62,9 +62,13 @@ msgstr "যোগাযোগ করুন"
 msgid "Dashboard"
 msgstr "ড্যাশবোর্ড"
 
-#: admin/classes/class-commenting-block-admin.php:798
+#: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "মুছে ফেলা মন্তব্য"
+
+#: admin/classes/class-commenting-block-admin.php:136
+msgid "Editorial Comments"
+msgstr "সম্পাদকীয় মন্তব্য"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
@@ -75,7 +79,8 @@ msgid ""
 "For premium support and help with customizing this plugin for your business "
 "needs."
 msgstr ""
-"আপনার ব্যবসায়ের জন্য এই প্লাগইনটি কাস্টমাইজ করতে প্রিমিয়াম সহায়তা এবং সহায়তার জন্য চাহিদা."
+"আপনার ব্যবসায়ের জন্য এই প্লাগইনটি কাস্টমাইজ করতে প্রিমিয়াম সহায়তা এবং "
+"সহায়তার জন্য চাহিদা."
 
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
@@ -109,7 +114,7 @@ msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 msgid "multidots"
 msgstr "multidots"
 
-#: admin/classes/class-commenting-block-admin.php:878
+#: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr "কোন মন্তব্য পাওয়া যায় নি।"
 
@@ -125,9 +130,17 @@ msgstr "সাইট প্রশাসককে অবহিত করুন"
 msgid "Plugin Developer"
 msgstr "প্লাগিন বিকাশকারী"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
 msgstr "জবাব দিল"
+
+#: admin/classes/class-commenting-block-admin.php:790
+msgid "resolved thread"
+msgstr "সমাধান থ্রেড"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "Save Changes"
+msgstr "পরিবর্তনগুলোর সংরক্ষন"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"
@@ -146,8 +159,8 @@ msgid ""
 "This plugin serves the commenting feature like Google Docs within the "
 "Gutenberg Editor!"
 msgstr ""
-"এই প্লাগইনটি এর মধ্যে গুগল ডক্সের মতো মন্তব্য বৈশিষ্ট্য সরবরাহ করে"
-"গুটেনবার্গের সম্পাদক!"
+"এই প্লাগইনটি এর মধ্যে গুগল ডক্সের মতো মন্তব্য বৈশিষ্ট্য সরবরাহ "
+"করেগুটেনবার্গের সম্পাদক!"
 
 #: admin/partials/commenting-block-settings-page.php:79
 msgid "Visit Site"
@@ -155,4 +168,5 @@ msgstr "সাইট দেখুন"
 
 #: admin/partials/commenting-block-settings-page.php:78
 msgid "WordPress Development Experts & WordPress VIP Partner Agency"
-msgstr "ওয়ার্ডপ্রেস ডেভলপমেন্ট এক্সপার্টস এবং ওয়ার্ডপ্রেস ভিআইপি পার্টনার এজেন্সি"
+msgstr ""
+"ওয়ার্ডপ্রেস ডেভলপমেন্ট এক্সপার্টস এবং ওয়ার্ডপ্রেস ভিআইপি পার্টনার এজেন্সি"

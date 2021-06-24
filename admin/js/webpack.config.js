@@ -2,7 +2,7 @@ module.exports = {
     entry: './blockJS/block.js',
     output: {
         path: __dirname,
-        filename: 'blockJS/block.build.js',
+        filename: 'blockJS/block.build.min.js',
     },
     module: {
         loaders: [
@@ -16,6 +16,9 @@ module.exports = {
                 use: ['style-loader', 'css-loader'],
             },
         ],
-
+    },
+    externals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
     },
 };

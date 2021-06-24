@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-09 09:37+0000\n"
+"PO-Revision-Date: 2021-03-17 05:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: Chinese (China)\n"
 "Language: zh_CN\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.5.1; wp-5.6.2\n"
 "X-Domain: content-collaboration-inline-commenting"
 
-#: admin/classes/class-commenting-block-admin.php:796
+#: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
 msgstr " 在"
 
@@ -32,21 +32,21 @@ msgstr "%s — %s"
 msgid "About Plugin"
 msgstr "关于插件"
 
-#: admin/classes/class-commenting-block-email-templates.php:226
+#: admin/classes/class-commenting-block-email-templates.php:225
 msgid "Assigned to"
 msgstr "分配给"
 
-#: admin/classes/class-commenting-block-email-templates.php:252
-#: admin/classes/class-commenting-block-email-templates.php:273
+#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr "点击这里查看此评论"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr "已评论"
 
-#: admin/classes/class-commenting-block-email-templates.php:246
-#: admin/classes/class-commenting-block-email-templates.php:267
+#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:266
 msgid "Comments"
 msgstr "评论"
 
@@ -62,9 +62,13 @@ msgstr "联系我们"
 msgid "Dashboard"
 msgstr "仪表板"
 
-#: admin/classes/class-commenting-block-admin.php:798
+#: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "已删除的评论"
+
+#: admin/classes/class-commenting-block-admin.php:136
+msgid "Editorial Comments"
+msgstr "编辑评论"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
@@ -74,9 +78,7 @@ msgstr "对于所有新评论，即使未提及。"
 msgid ""
 "For premium support and help with customizing this plugin for your business "
 "needs."
-msgstr ""
-“获得高级支持，并为您的企业自定义此插件提供帮助 ”
-“需要。”
+msgstr "提供高级支持并帮助您针对您的业务需求自定义此插件。"
 
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
@@ -110,7 +112,7 @@ msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 msgid "multidots"
 msgstr "multidots"
 
-#: admin/classes/class-commenting-block-admin.php:878
+#: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr "找不到评论。"
 
@@ -126,9 +128,17 @@ msgstr "通知网站管理员"
 msgid "Plugin Developer"
 msgstr "插件开发人员"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
 msgstr "回覆"
+
+#: admin/classes/class-commenting-block-admin.php:790
+msgid "resolved thread"
+msgstr "解决的线程"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "Save Changes"
+msgstr "保存更改"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"
@@ -146,9 +156,7 @@ msgstr "感谢您安装Google Doc-Style编辑评论插件。"
 msgid ""
 "This plugin serves the commenting feature like Google Docs within the "
 "Gutenberg Editor!"
-msgstr ""
-“此插件在 “
-“古腾堡编辑！”
+msgstr "此插件具有Gutenberg编辑器中的注释功能，例如Google Docs！"
 
 #: admin/partials/commenting-block-settings-page.php:79
 msgid "Visit Site"

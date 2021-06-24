@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-09 09:35+0000\n"
+"PO-Revision-Date: 2021-03-16 12:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.5.1; wp-5.6.2\n"
 "X-Domain: content-collaboration-inline-commenting"
 
-#: admin/classes/class-commenting-block-admin.php:796
+#: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
 msgstr " auf"
 
@@ -32,21 +32,21 @@ msgstr "%s — %s"
 msgid "About Plugin"
 msgstr "Über das Plugin"
 
-#: admin/classes/class-commenting-block-email-templates.php:226
+#: admin/classes/class-commenting-block-email-templates.php:225
 msgid "Assigned to"
 msgstr "Zugewiesen an"
 
-#: admin/classes/class-commenting-block-email-templates.php:252
-#: admin/classes/class-commenting-block-email-templates.php:273
+#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr "Klicken Sie hier, um diesen Kommentar anzuzeigen"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr "kommentiert"
 
-#: admin/classes/class-commenting-block-email-templates.php:246
-#: admin/classes/class-commenting-block-email-templates.php:267
+#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:266
 msgid "Comments"
 msgstr "Bemerkungen"
 
@@ -62,9 +62,13 @@ msgstr "Kontaktiere uns"
 msgid "Dashboard"
 msgstr "Instrumententafel"
 
-#: admin/classes/class-commenting-block-admin.php:798
+#: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "gelöschter Kommentar von"
+
+#: admin/classes/class-commenting-block-admin.php:136
+msgid "Editorial Comments"
+msgstr "Redaktionelle Kommentare"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
@@ -75,8 +79,8 @@ msgid ""
 "For premium support and help with customizing this plugin for your business "
 "needs."
 msgstr ""
-"Für Premium-Support und Hilfe beim Anpassen dieses Plugins für Ihr Unternehmen "
-"braucht."
+"Für Premium-Support und Hilfe beim Anpassen dieses Plugins für Ihr "
+"Unternehmen braucht."
 
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
@@ -110,7 +114,7 @@ msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 msgid "multidots"
 msgstr "multidots"
 
-#: admin/classes/class-commenting-block-admin.php:878
+#: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr "Keine Kommentare gefunden."
 
@@ -126,9 +130,17 @@ msgstr "Benachrichtigen Sie den Site-Administrator"
 msgid "Plugin Developer"
 msgstr "Plugin Entwickler"
 
-#: admin/classes/class-commenting-block-admin.php:795
+#: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
 msgstr "antwortete"
+
+#: admin/classes/class-commenting-block-admin.php:790
+msgid "resolved thread"
+msgstr "Thread aufgelöst"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "Save Changes"
+msgstr "Änderungen speichern"
 
 #: admin/partials/commenting-block-settings-page.php:21
 msgid "Settings"
@@ -140,15 +152,17 @@ msgstr "Einstellungen gespeichert!"
 
 #: admin/partials/commenting-block-settings-page.php:27
 msgid "Thanks for installing Google Doc-Style Editorial Commenting Plugin."
-msgstr "Vielen Dank, dass Sie das Google Doc-Style Editorial Commenting Plugin installiert haben."
+msgstr ""
+"Vielen Dank, dass Sie das Google Doc-Style Editorial Commenting Plugin "
+"installiert haben."
 
 #. Description of the plugin
 msgid ""
 "This plugin serves the commenting feature like Google Docs within the "
 "Gutenberg Editor!"
 msgstr ""
-"Dieses Plugin dient der Kommentarfunktion wie Google Text & Tabellen innerhalb der "
-"Gutenberg Editor!"
+"Dieses Plugin dient der Kommentarfunktion wie Google Text & Tabellen "
+"innerhalb der Gutenberg Editor!"
 
 #: admin/partials/commenting-block-settings-page.php:79
 msgid "Visit Site"
