@@ -616,7 +616,7 @@ class Commenting_block_Admin
 
         $screen = get_current_screen();
         if ($screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base) {
-            wp_enqueue_script($this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify' ), wp_rand(), false);
+            wp_enqueue_script($this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false);
             wp_enqueue_script('cf-mark', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false);
             wp_enqueue_script('cf-dom-purify', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false);
             wp_enqueue_script('content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . 'admin/assets/js/dist/block.build.min.js', array(
