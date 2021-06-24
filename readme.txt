@@ -3,18 +3,18 @@ Plugin Name: Multicollab - Google Doc-Style Editorial Commenting for WordPress
 Plugin URI: https://plugins.svn.wordpress.org/commenting-feature
 Author: multidots
 Author URI: https://www.multidots.com/
-Contributors: dots
+Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.3.6
-Tested up to: 5.6
-Stable tag: 1.1.0
+Tested up to: 5.7.2
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
 
 == Description ==
-<a href="https://www.multidots.com/google-doc-style-editorial-commenting-for-wordpress/" target="_blank">Google Doc-Style Editorial Commenting Plugin</a> makes it simpler and quicker to share editorial feedback. 
+<a href="https://www.multidots.com/multicollab/" target="_blank">Multicollab - Google Doc-Style Editorial Commenting Plugin</a> makes it simpler and quicker to share editorial feedback. 
 
 <strong>Add, Edits, reply and assign comments can be placed from within the WordPress Gutenberg editor</strong>, giving you the same functionality available on Google Docs. 
 
@@ -29,10 +29,14 @@ This plugin makes the <strong>publishing experience more collaborative, meaningf
 <li>Resolve comments (mark as done)</li>
 <li>Email notifications for comment activities</li>
 <li>Activity Center to manage all comment activities</li>
+<li>Ability to Reply, Resolve, Edit, and Delete comment or thread from the activity center.</li>
+<li>Threaded comments in the activity center.</li>
 <li>Option to “Hide” comments to focus on publishing</li>
+<li>When you delete a WordPress user, you can assign the deleted user’s comments to other WordPress users.</li>
+<li>Generate a link to a particular comment and share it with other team members.</li>
 </ul>
 
-Plugin - <a href="https://www.multidots.com/gutenberg-commenting-demo/" target="_blank">LIVE DEMO</a>
+Plugin - <a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">LIVE DEMO</a>
 
 == 📽 How Can Users Add Comments Inside The WordPress Gutenberg Editor? ==
 
@@ -64,7 +68,7 @@ Get email notification for new comments, reply and resolve activities.
 👉 <strong>Hide all comments</strong>
 Temporarily hide all the comments from a click of a button for clean content editing interface.
 
-== ➡️<a href ="https://www.multidots.com/gutenberg-commenting-demo/" target="_blank">Live Demo</a> ⬅️ ==
+== ➡️<a href ="https://www.multidots.com/multicollab/?demo=start" target="_blank">Live Demo</a> ⬅️ ==
 
 == 💁 HOW TO ADD COMMENT IN GUTENBERG BLOCK ( FOLLOW STEPS BELOW ) ==
 
@@ -97,7 +101,7 @@ This plugin <strong>eliminates time-consuming steps</strong> and the need to mov
 == 💁 REQUIRE ENVIRONMENT ==
 
 <ul>
-<li>WordPress version 5.3 to 5.6</li>
+<li>WordPress version 5.3 to 5.7</li>
 <li>Required PHP version 7.0 to 7.4</li>
 </ul>
 
@@ -122,6 +126,15 @@ This plugin is compatible with a range of Gutenberg blocks allowing comments to 
 <li>Media & Text</li>
 </ul>
 
+== 💁 Plugin compatibility with web browser ==
+
+<ul>
+<li>Chrome</li>
+<li>EDGE</li>
+<li>Firefox</li>
+<li>Safari</li>
+</ul>
+
 == 💁 How to Contribute to the Gutenberg Block Commenting Plugin ==
 
 All types of contributions are most welcome.
@@ -140,7 +153,7 @@ All types of contributions are most welcome.
 
 == 💁 Support ==
 
-This repository is not for support. Please use it for contributions only. To get help/support, please email us at <a href="mailto:help@multidots.com">help@multidots.com</a>
+This repository is not for support. Please use it for contributions only. To get help/support, please email us at <a href="mailto:help@multidots.com">help@multidots.com</a> or <a href ="https://www.multidots.com/multicollab/" target="_blank">contact us</a>.
 
 == Installation ==
 
@@ -168,57 +181,100 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 
 == Screenshots ==
 
-1. Inline comment
-2. Reply & Resolve
-3. Team Collaboration
-4. Activity Center
-5. Email Notifications
+1.
+2.
+3.
+4.
+5.
+6.
 
 == Changelog ==
-= 1.2.0 - 12.03.2021 =
-* New - Copy/Paste content gets formatted when we add in the editor. If a url is pasted then that converts into a clickable url.
-* New - Deleted users content reassigned to the new assigned user.
-* Fixed - In activity center edit/delete operation is fixed.
-* Fixed - Multiple deletion operations of comments get fixed.
-* Fixed - Do not allow whitespace on edit reply.
-* Fixed - @mention Editor issue fixed.
-* Fixed - On reply edit pasted url was not saving. Issue fixed.
-* Fixed - register_rest_route warning error on WP dashboard fixed.
-* Fixed - If all the comment is hidden and user click any of the comment from activity centre then we have to show that comment.
-* Fixed - In small screen resolution like 1024*768 we are not able to give comment.
-* Fixed - Safari browser compatibility.
-* Fixed - Meta tags are removed from the admin panel.
+
+= 1.3.6 - 23.06.2021 =
+* [Bug Fix] – Maintenance Release and Made few enhancements.
+
+= 1.3.5 - 08.06.2021 =
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/24" target="_blank"> Github issue #24 </a> Block editor has encountered an unexpected error is fixed.
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/23" target="_blank"> Github issue #23 </a> Can't use the Enter Key to add a new paragraph is fixed.
+* [Enhancement] – Maintaince Release.
+
+= 1.3.4 - 03.06.2021 =
+* [Enhancement] – Made few enhancements for compatibility with Safari Browser.
+
+= 1.3.3 - 02.06.2021 =
+* [New Feature] — Generate a link to a particular comment and share it with other team members.
+* [New Feature] — Team members can see recently edited time on the comments and activity center. 
+* [New Feature] —  Restricted multiple comments on the same word.
+* [Enhancement] —If there is no comment on Page/Post, then Gutenberg editor will be center aligned.
+* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  related to Gutenberg Comments Panel always visible is fixed.
+* [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed. 
+* [Bug Fix] — Issue related to “Link to a comment box from activity center” on a tablet device is fixed. 
+* [Bug Fix] — Fixed issues related to comment formatting.
+* [Bug Fix] — Old Comments not showing up on some Pages issue fixed. 
+* [Bug Fix] — Issue related to Deleted comments visibility in the activity center is fixed. 
+* [Bug Fix] — Compatible with WordPress 5.7.x.
+* [Bug Fix] — Other minor fixes.
+
+= 1.3.2 - 23.04.2021 =
+* [Bug Fix] — Compatible with WordPress 5.7.1
+* [Bug Fix] — Resolved jQuery issue and normal bugs
+
+= 1.3.1 - 22.04.2021 =
+* [Bug Fix] — SEO Plugins and excerpts section, content copy and paste issue are resolved
+
+= 1.3.0 - 19.04.2021 =
+* [Enhancement] — New Design and Placement of Activity Center. 
+* [New Feature] — Threaded comments in the activity center.
+* [New Feature] — Ability to Reply, Resolve, Edit, and Delete comment or thread from the activity center.
+* [Enhancement] —  New Settings tab in the sidebar for post-specific comment settings. 
+* [Bug Fix] —  Copy/paste content in the comment box is fixed. 
+* [Bug Fix] — Firefox @mention multiple user issues are resolved.
+* [Bug Fix] —  Responsive device usability updated. 
+* [Enhancement] — Several performances, stability, and design improvements. 
+
+= 1.2.0 - 19.03.2021 =
+* [New Feature] – When you delete a WordPress user, you can assign the deleted user’s comments to other WordPress users. 
+* [Bug Fix] –  Edit and Delete operation from the activity center were not working for a few users. 
+* [Bug Fix] – Do not allow whitespace on edit reply.
+* [Bug Fix] – Few issues related to @mention Editor in the comment. 
+* [Bug Fix] – When you copy and paste a web page URL in reply, the comment was not working as expected. 
+* [Bug Fix] – <a href ="https://github.com/multidots/gutenberg_commenting/issues/7" target="_blank">This Github issue</a> related to the “register_rest_route” warning error on the WordPress dashboard fixed.
+* [Bug Fix] – When the “Hide All Comments” option is selected, and you click on any comment from the activity center, it didn’t bring the related comment. 
+* [Bug Fix] – Fixed compatibility issues related to small screen resolution like 1024x768. 
+* [Bug Fix] –  <a href ="https://github.com/multidots/gutenberg_commenting/issues/8" target="_blank">This Github issue</a> related to ‘custom meta fields’ is fixed. 
+* [Enhancement] –  Made few enhancements for compatibility with Safari Browser. 
+* [Bug Fix] — Compatible with WordPress 5.7.x
 
 = 1.1.0 - 24.02.2021 =
-* New – Mention Team Members in Comment and invite them to collaborate by @mentioned user name
-* New – Assign comments thread to team members
-* New – See all Page & Post comments activities in the activity center
-* New – Send email to @mentioned users in the comment.New – Send email to all users involved in the current thread.
-* New – Send an email to the assigned user.
-* New – Check open comments on each page and posts in your posts list.
-* New –  Admin settings panel.
-* New –  Send email notification to admin if notification enabled.
-* New –  All major browser supports (Chrome, EDGE, Firefox)  Note: Safari browser is not compatible with this plugin)
-* Fixed – Compatible with WordPress version 5.3.6 to 5.6.2
-* Fixed – Few other fixes and improvements.
-* Fixed – Improve performance of the plugin 
-* Fixed – Checked WordPress Accessibility
-* Fixed – Checked Standard WordPress security
+* [New Feature] – Mention Team Members in Comment and invite them to collaborate by @mentioned user name
+* [New Feature] – Assign comments thread to team members
+* [New Feature] – See all Page & Post comments activities in the activity center
+* [New Feature] – Send email to @mentioned users in the comment.New – Send email to all users involved in the current thread.
+* [New Feature] – Send an email to the assigned user.
+* [New Feature] – Check open comments on each page and posts in your posts list.
+* [New Feature] –  Admin settings panel.
+* [New Feature] –  Send email notification to admin if notification enabled.
+* [New Feature] –  All major browser supports (Chrome, EDGE, Firefox)  Note: Safari browser is not compatible with this plugin)
+* [Bug Fix] – Compatible with WordPress version 5.3.6 to 5.6.2
+* [Bug Fix] – Few other fixes and improvements.
+* [Bug Fix] – Improve performance of the plugin 
+* [Bug Fix] – Checked WordPress Accessibility
+* [Bug Fix] – Checked Standard WordPress security
 
 = 1.0.4 - 18.12.2020 =
-* Compatible with WordPress 5.6.
-* Update - Characters limited for the "Comment Resolved Email" Subject.
-* Fixed - HTML tags filter issue for Authors and Contributors in Multisite.
-* Fixed - Few other fixes and improvements.
+* [Bug Fix] Compatible with WordPress 5.6.
+* [Enhancement] - Characters limited for the "Comment Resolved Email" Subject.
+* [Bug Fix] - HTML tags filter issue for Authors and Contributors in Multisite.
+* [Bug Fix] - Few other fixes and improvements.
 
 = 1.0.3 - 14.12.2020 =
-* Update - New Activity centre icon
-* Update - Removed Hide icon from the top bar and put it inside the Activity centre with " Show Comment / Hide Comment"
-* Update - Compatible with WordPress 5.6.x
+* [Enhancement] - New Activity centre icon
+* [Enhancement] - Removed Hide icon from the top bar and put it inside the Activity centre with " Show Comment / Hide Comment"
+* [Bug Fix] - Compatible with WordPress 5.6.x
 
 = 1.0.2 - 09.12.2020 =
-* Fixed - Avatars are removed from comments if disabled from WordPress settings.
-* Fixed - Removed link from Comment Activity area.
+* [Bug Fix] - Avatars are removed from comments if disabled from WordPress settings.
+* [Bug Fix] - Removed link from Comment Activity area.
 
 = 1.0.1 - 05.11.2020 =
 * No comments popup removed

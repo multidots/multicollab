@@ -1,5 +1,10 @@
 <?php
 
+// If this file is called directly, abort.
+if (! defined('WPINC')) {
+    die;
+}
+
 /**
  * Fired during plugin activation
  *
@@ -20,17 +25,17 @@
  *
  * @author     multidots
  */
-class Commenting_block_Activator {
+class Commenting_block_Activator
+{
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function activate() {
-
-	}
-
+    /**
+     * Short Description. (use period)
+     *
+     * Long Description.
+     *
+     * @since    1.0.0
+     */
+    public static function activate()
+    {
+    }
 }

@@ -30,8 +30,8 @@ export default class Board extends React.Component {
         }, 3000);
 
         this.commentedOnText = this.props.commentedOnText;
-
         if (1 !== this.props.freshBoard) {
+          
             wp.apiFetch({path: 'cf/cf-get-comments-api/?currentPostID=' + currentPostID + '&elID=' + metaselectedText}).then(fps => { // eslint-disable-line
 
                 const {userDetails, resolved, commentedOnText, assignedTo} = fps;
@@ -58,12 +58,12 @@ export default class Board extends React.Component {
                 } else {
                     this.hasComments = 0;
                 }
-
+                
                 this.state = {comments: [postSelections]};
                 this.setState({comments: postSelections});
             });
         } else {
-            try {
+           try {
                 this.currentUserName = wp.data.select("core").getCurrentUser().name; // eslint-disable-line
                 const currentUserProfile = wp.data.select("core").getCurrentUser().avatar_urls; // eslint-disable-line
                 this.currentUserProfile = currentUserProfile[Object.keys(currentUserProfile)[1]];
@@ -95,12 +95,13 @@ export default class Board extends React.Component {
             wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
         });
         this.setState({comments: arr});
+
     }
 
-    updateComment(newText, idx, cTimestamp, dateTime, metaID) {
+    updateComment(newText, idx, cTimestamp, dateTime, metaID,editedTime) {
 
         var arr = this.state.comments;
-
+        
         var userID = '';
         var userName = '';
         var userRole = '';
@@ -126,35 +127,45 @@ export default class Board extends React.Component {
         newArr['thread']     = newText;
         newArr['userData']   = userID;
         newArr['index']      = idx;
-        newArr['status']     = 'draft reverted_back';
+        newArr['status']     = 'publish';
         newArr['timestamp']  = cTimestamp;
+        newArr['editedTime']  = editedTime;
+       
         arr[idx]             = newArr;
+       
         const CurrentPostID  = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
         metaID               = '_' + metaID;
         var data = {
             'action': 'cf_update_comment',
             'currentPostID': CurrentPostID,
             'editedComment': JSON.stringify(newArr),
-            'metaId': metaID
+            'metaId': metaID,
+           
         };
+    
         // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
         $.post(ajaxurl, data, function () { // eslint-disable-line
             // Activate 'Save Draft' or 'Publish' button
+         
             wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
+           
         });
+        
         this.setState({comments: arr})
     }
-
+   
     addNewComment(event) {
         event.preventDefault();
         const {datatext}  = this.props;
         var currentTextID = 'txt' + datatext;
         var newText       = $('#' + currentTextID).html();
         newText           = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' );
-        newText           = newText.replace( /(https?:\/\/[^\s]+)/ig, function( match ) {
+        newText           = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
+            match = match.replace( /&nbsp|(;)/igm, '' );
             return `<a href="${match}" target="_blank">${match}</a>`;
         } );
 
+  
         if ($(`#${currentTextID}`).text().trim().length !== 0) {
 
             var userID = '';
@@ -186,7 +197,7 @@ export default class Board extends React.Component {
             newArr['userName'] = userName;
             newArr['userRole'] = userRole;
             newArr['profileURL'] = userProfile;
-            newArr['status'] = 'draft reverted_back';
+            newArr['status'] = 'publish';
 
             arr.push(newArr);
 
@@ -208,16 +219,24 @@ export default class Board extends React.Component {
 
             $('#' + el + ' .shareCommentContainer').addClass('loading');
             let _this = this;
+            if($("#md-span-comments").is(':empty')){
+                $('body').removeClass("commentOn");
+            } else{
+                $('body').addClass("commentOn");
+            }
             $.post(ajaxurl, data, function (data) { // eslint-disable-line
 
                 $('#' + el + ' .shareCommentContainer').removeClass('loading');
                 $('.fresh-board').removeClass('fresh-board');
+                
+                
 
                 data = $.parseJSON(data);
                 if (undefined !== data.error) {
                     alert(data.error);
                     return false;
                 }
+                
                 arr[arr.length - 1]['dtTime'] = data.dtTime;
                 arr[arr.length - 1]['timestamp'] = data.timestamp;
 
@@ -267,7 +286,8 @@ export default class Board extends React.Component {
 
         const {lastVal, onChanged, selectedText} = this.props;
 
-        let username, userRole, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft;
+        let username, userRole, postedTime, postedComment, profileURL, userID, status, cTimestamp, editedDraft,updatedTime;
+      
         Object.keys(text).map(i => {
             if ('userName' === i) {
                 username = text[i];
@@ -287,6 +307,11 @@ export default class Board extends React.Component {
                 cTimestamp = text[i];
             } else if ('editedDraft' === i) {
                 editedDraft = text[i];
+            }
+            else if ('updatedTime' === i) {
+               
+                updatedTime = text[i].toString();
+               
             }
         });
 
@@ -308,6 +333,7 @@ export default class Board extends React.Component {
                 selectedText={selectedText}
                 timestamp={cTimestamp}
                 editedDraft={editedDraft}
+                editedTime ={updatedTime}
                 showAvatars={localStorage.getItem("showAvatars")}
             >{
                 postedComment = postedComment ? postedComment : text
@@ -324,13 +350,16 @@ export default class Board extends React.Component {
         $('#md-span-comments .cls-board-outer').removeClass('focus');
         $('#md-span-comments .cls-board-outer').removeAttr('style');
         $('[data-rich-text-format-boundary]').removeAttr('data-rich-text-format-boundary');
-
+                     
         const {datatext, onChanged, lastVal} = this.props;
         const name = 'multidots/comment';
-
         if ( 0 === $('#'+ datatext + ' .boardTop .commentContainer').length ) {
             onChanged(removeFormat(lastVal, name));
         }
+       
+        
+        // Removing the active class form activity center on cancel.
+        $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
     }
 
     componentDidMount() {
@@ -381,7 +410,9 @@ export default class Board extends React.Component {
                     </div>
                 }
                 <div className="shareCommentContainer">
-                    <div tabIndex="0" contentEditable="true" placeholder="Comment or add others with @" className="cf-share-comment js-cf-share-comment" id={"txt" + datatext}></div>
+                    <div className="cf-share-comment-wrapper js-cf-share-comment-wrapper">
+                        <div tabIndex="0" contentEditable="true" placeholder="Comment or add others with @" className="cf-share-comment js-cf-share-comment" id={"txt" + datatext}></div>
+                    </div>
                     <button onClick={this.addNewComment} className="btn btn-success">{buttonText}</button>
                     <button onClick={this.cancelComment} className="btn btn-cancel">Cancel</button>
                 </div>
