@@ -11,6 +11,12 @@ Google Doc-Style Editorial Commenting plugin for WordPress makes it simpler and 
 
 [![Watch the video](https://yt-embed.herokuapp.com/embed?v=rDdgh_u8oVQ)](https://www.youtube.com/watch?v=rDdgh_u8oVQ)
 
+<!-- blank line -->
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/embed/rDdgh_u8oVQ" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
+<!-- blank line -->
+
 
 
 ## How to Contribute 
