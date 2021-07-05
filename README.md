@@ -2,7 +2,7 @@
 
 <p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://ps.w.org/commenting-feature/assets/banner-772x250.png" alt="Commenting Demo"></a></p>
 
-<a href="https://www.multidots.com/multicollab/" target="_blank">About Multicollab</a>
+<a href="https://www.multidots.com/multicollab/" target="_blank">About Multicollab</a> | 
 <a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">Live Demo</a>
 
 ## Content Collaboration made easy for WordPress
