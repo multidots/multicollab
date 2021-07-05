@@ -28,7 +28,7 @@ All type of contributions from are most welcome.
 
 
 ## Support 
-This repository is not for support. Please use it for contributions only. To get help/support, please email us at [multicollab@multidots.com](mailto:multicollab@multidots.com) or [Contact us](https://www.multidots.com/multicollab/){:target="_blank"}
+This repository is not for support. Please use it for contributions only. To get help/support, please email us at [multicollab@multidots.com](mailto:multicollab@multidots.com) or [Contact us](https://www.multidots.com/multicollab/)
 
 ## License 
 
