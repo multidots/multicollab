@@ -10,7 +10,7 @@
 Google Doc-Style Editorial Commenting plugin for WordPress makes it simpler and quicker to share editorial feedback. Edits and comments can be placed from within the WordPress Gutenberg editor, giving you the same functionality available on Google Docs. This plugin makes the publishing experience more collaborative, meaningful and results-oriented.
 
 
-<p align="center"><a href=" https://www.multidots.com/multicollab/" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92399082-53419380-f147-11ea-806f-701ad073b9d9.png" alt="Commenting Video"></a></p>
+<p align="center"><a href="https://www.multidots.com/multicollab/" target="_blank"><img src="https://user-images.githubusercontent.com/25176325/92399082-53419380-f147-11ea-806f-701ad073b9d9.png" alt="Commenting Video"></a></p>
 
 
 
