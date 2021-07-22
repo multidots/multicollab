@@ -465,6 +465,11 @@
     .cf-plugin-settings .cf-right .cf-card:first-child {margin-right: 0;}
   }
  
- 
+  .user-data-row.unknownThread{
+    pointer-events: none;
+   cursor: default;
+   text-decoration: none;
+   background-color: #ccc;
+}
   
   

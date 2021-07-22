@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import renderHTML from 'react-render-html';
+import Mdstore from './mdStore';
 
 
 const { __ } = wp.i18n;
@@ -16,11 +17,12 @@ class Comments extends React.Component {
         super( props )
         this.state = {
             threads: [],
+            allThreads: [],
             isLoading: true,
-            showComments: true,
+            showComments: wp.data.select('mdstore').getShowComments(),
             collapseLimit: 45,
         }
-      
+     
 
         // Get the Page ID.
         this.postID = wp.data.select('core/editor').getCurrentPostId(); // eslint-disable-line
@@ -35,7 +37,7 @@ class Comments extends React.Component {
      
         // Grab the current user id.
         this.currentUserID = activityLocalizer.currentUserID
-
+       
     }
 
     /**
@@ -44,7 +46,7 @@ class Comments extends React.Component {
     collapseBoardOnMobile() {
         var checkWidth = window.innerWidth;
         if( 768 >= checkWidth ) {
-            this.setState( { showComments: false } );
+            this.setState( { showComments: wp.data.dispatch('mdstore').setShowComments(false) } );
             $( 'body' ).addClass( 'hide-comments' );
             $('body').removeClass('commentOn');
         }
@@ -83,7 +85,7 @@ class Comments extends React.Component {
      */
     getComments () {
         // Set Loaidng to true;
-      
+     
         this.setState( { isLoading: true } );
       
         const url = `${activityLocalizer.apiUrl}/cf/v2/activities`;
@@ -94,7 +96,6 @@ class Comments extends React.Component {
             }
         } )
         .then( ( res ) => {
-            
            if( res.data.threads.length > 0 ) {
                 this.setState({
                     threads: res.data.threads,
@@ -107,10 +108,10 @@ class Comments extends React.Component {
                 })
             }
         } )
-       
         .catch( ( error ) => {
             console.log( error )
         } )
+       
    
     }
 
@@ -120,7 +121,7 @@ class Comments extends React.Component {
      setActiveBoard( elID ) {
         
         var findMdSpan = '.mdspan-comment';
-        
+           
         $( findMdSpan ).each( function() {
            var datatext = $( this ).attr( 'datatext' );
             if( elID === datatext ) {
@@ -176,10 +177,14 @@ class Comments extends React.Component {
      * Resolving Thread.
      */
     resolveThread( e ) {
+
         // Open comment if not opened.
-        if( ! this.state.showComments ) {
+        if(false === wp.data.select('mdstore').getShowComments()){
             this.handleShowComments();
         }
+        /*if( ! this.state.showComments ) {
+            this.handleShowComments();
+        }*/
         var elID = e.target.dataset.elid;
         elID     = elID.replace( 'cf-', '' );
         var alertMessage = __( 'Are you sure you want to resolve this thread ?', 'content-collaboration-inline-commenting' );
@@ -192,6 +197,7 @@ class Comments extends React.Component {
             };
             $.post( ajaxurl, data, function () { // eslint-disable-line
                 $( `#${elID}` ).remove();
+                wp.data.dispatch('core/editor').editPost({meta: {reflect_comments_changes: 1 } }); // eslint-disable-line
                 $( '#history-toggle' ).attr( 'data-count', $( '.cls-board-outer:visible' ).length );
                 // Reset Comments Float.
                 $( '#md-span-comments .cls-board-outer' ).removeClass( 'focus' );
@@ -232,7 +238,10 @@ class Comments extends React.Component {
       
 
         // Open comment if not opened.
-        if( ! this.state.showComments ) {
+        /*if( ! this.state.showComments ) {
+            this.handleShowComments();
+        }*/
+        if(false === wp.data.select('mdstore').getShowComments()){
             this.handleShowComments();
         }
 
@@ -259,7 +268,10 @@ class Comments extends React.Component {
     edit( e ) {
         e.preventDefault();
         // Open comment if not opened.
-        if( ! this.state.showComments ) {
+       /* if( ! this.state.showComments ) {
+            this.handleShowComments();
+        }*/
+        if(false === wp.data.select('mdstore').getShowComments()){
             this.handleShowComments();
         }
 
@@ -291,7 +303,10 @@ class Comments extends React.Component {
     delete( e ) {
         e.preventDefault();
         // Open comment if not opened.
-        if( ! this.state.showComments ) {
+      /*  if( ! this.state.showComments ) {
+            this.handleShowComments();
+        }*/
+        if(false === wp.data.select('mdstore').getShowComments()){
             this.handleShowComments();
         }
 
@@ -318,7 +333,7 @@ class Comments extends React.Component {
     /**
      * Track if post updated or published.
      */
-    isPostUpdated() {
+     isPostUpdated() {
      
         const _this = this;
         //set flag to restrict multiple call
@@ -354,17 +369,25 @@ class Comments extends React.Component {
           
         })
     }
-
     /**
      * Handle Show Comments
      */
     handleShowComments() {
+     
        
        var openBoards = $('.cls-board-outer:visible').length;
-    
-        if ( true === this.state.showComments ) {
+        if ( true === wp.data.select('mdstore').getShowComments() ) {
             $( 'body' ).addClass( 'hide-comments' );
             $( 'body' ).removeClass( 'commentOn' );
+            $('#md-span-comments .cls-board-outer').removeClass('focus');
+            $('#md-span-comments .cls-board-outer').removeClass('is-open');
+            $('#md-span-comments .cls-board-outer').removeAttr('style');
+            $('mdspan').removeAttr('data-rich-text-format-boundary');
+            wp.data.dispatch('mdstore').setDataText('');
+           
+            this.setState({
+                showComments:  wp.data.dispatch('mdstore').setShowComments(false)
+            })
         } else {
            
             $( 'body' ).removeClass( 'hide-comments' );
@@ -376,10 +399,17 @@ class Comments extends React.Component {
                 $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
                
             }
+            this.setState({
+                showComments:  wp.data.dispatch('mdstore').setShowComments(true)
+            })
         }
-        this.setState({
+     
+      /*  this.setState({
             showComments: ! this.state.showComments
-        })
+        })*/
+       
+       
+       // console.log(this.state.showComments);
     }
 
     /**
@@ -421,19 +451,33 @@ class Comments extends React.Component {
            
             var datatext = $( this ).attr( 'datatext' );
             $( `#cf-${datatext}` ).addClass( 'active' );
+            wp.data.dispatch('mdstore').setDataText(datatext);
+           
         } )
     }
 
     componentDidMount() {
+        
         this.collapseBoardOnMobile();
         this.getComments(); // Calling getComments() to get the comments related to this post.
         this.isPostUpdated(); // Calling isPostUpdated() when the post saving status chagned.
         this.appendCounter(); // Appending counter.
         this.activeBoardOnSelectedText(); // Add active class in activities thread on selected text click.
-      
+   
     }
+
+ 
     render() {
-        const { threads, showComments, isLoading, collapseLimit } = this.state;
+        const { threads,showComments,isLoading, collapseLimit } = this.state;
+        
+        let newThreads = [];
+        $('.wp-block mdspan').each(function () {
+            let selectedText = $(this).attr('datatext');
+            let obj = { elID: selectedText };
+            newThreads.push(obj);
+            
+        })
+          
             return (
             <Fragment>
                 <PluginSidebarMoreMenuItem target="cf-activity-center">
@@ -472,11 +516,14 @@ class Comments extends React.Component {
                                                     <strong>{ __( 'Loading...', 'content-collaboration-inline-commenting' ) }</strong>
                                                 </div>
                                             ) }
+                                             
+                                            { undefined !== threads && null !== threads && threads.map( ( th  ) => {
+                                                //check thread id is available in editor?
+                                                var removedItem = newThreads.filter(x => x.elID === th.elID).length > 0 ? true : false;
+                                                var  boardId = wp.data.select('mdstore').getDataText();
 
-                                            { undefined !== threads && null !== threads && threads.map( ( th ) => {
-                                              
                                                 return (
-                                                    <div className={ 'true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row' } id={ `cf-${`${th.elID}`}` } key={ `cf-${`${th.elID}`}` }>
+                                                    <div className={('true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row') + (th.elID === boardId ? ' active' : '') + (removedItem ? '' : ' unknownThread')} id={ `cf-${`${th.elID}`}` } key={ `cf-${`${th.elID}`}` }>
                                                         {
                                                             th.activities.map( ( c, index ) => {
                                                              
@@ -636,12 +683,13 @@ class Comments extends React.Component {
                                     )
                                 }
                                 if( 'cf-settings' === tab.name ) {
+                                   
                                     return(
                                         <PanelBody>
                                             <ToggleControl
                                                 label="Show All Comments"
-                                                help={ showComments ? 'All comments will show on the content area.' : 'All comments will be hidden.' }
-                                                checked={ showComments }
+                                                help={  wp.data.select('mdstore').getShowComments() ? 'All comments will show on the content area.' : 'All comments will be hidden.' }
+                                                checked={  wp.data.select('mdstore').getShowComments() }
                                                 onChange={ this.handleShowComments.bind( this ) }
                                             />
                                         </PanelBody>

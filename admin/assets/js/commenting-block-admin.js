@@ -1,7 +1,7 @@
 /**
  * Main function to be called for required JS actions.
  */
-(function ($) {
+ (function ($) {
     'use strict';
     /**
      * All of the code for the admin-facing JavaScript source
@@ -27,10 +27,11 @@
 
     // Resetting All Class From Activity Center
     $( document ).on( 'click', '.cls-board-outer', function() {
-        var boardID = $( this ).attr( 'id' )
+        var boardID = $( this ).attr( 'id' );
+      
         $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
         $( `#cf-${boardID}` ).addClass( 'active' );
-
+        wp.data.dispatch('mdstore').setDataText(boardID);
         //check if URL has a datatext param
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -48,6 +49,12 @@
         }
         
         
+    })
+    $(document).on('click','.cf-sidebar-activity-centre',function(){
+        var boardId = wp.data.select('mdstore').getDataText();
+        $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+        $(`#cf-${boardId}` ).addClass( 'active' );
+         
     })
 
     // Add temporary style tag to hide resolved tag color on load.
@@ -360,7 +367,7 @@
             var currentPostID         = $( '#post_ID' ).val();
             var parentBoardClass      = '.cls-board-outer';
             var mood                  = 'create';
-            var cachedUsersList       = adminLocalizer.cached_users_list;
+            //var cachedUsersList       = adminLocalizer.cached_users_list;
 
 
             // Grab the current board ID.
@@ -402,7 +409,8 @@
             if( 'firefox' === browser ) {
                 $( document.body).on("keydown",'.cf-share-comment',function(e) {
                     if(e.keyCode == 13 && !e.shiftKey) {
-                        document.execCommand('insertHTML', false, '<br><br>');
+                        //document.execCommand('insertHTML', false, '<br><br>');
+                        document.execCommand('insertLineBreak',false, null);
                         return false;
                     }
                 });
@@ -446,39 +454,60 @@
                     emailSet             = new Set( emailSet );
                     var emailAddresses   = Array.from( emailSet );
                    
-                    // Get the assigner email of the current board.
-                    var currentBoardAssingerEmail = $( `${currentBoardID} .cf-board-assigned-to` ).data( 'user-email' );
-                    if( undefined !== emailAddresses && emailAddresses.length > 0 ) {
-                        if( assignCheckBoxId.length > 0 ) {
-                            var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
-                            let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
-                            let isThere                 = typedText.match( checkEmailPattern );
-                            if( ! isThere ) {
-                                var appendInCheckbox = [];
-                                if( undefined !== cachedUsersList || null !== cachedUsersList ) {
-                                    cachedUsersList.forEach( function( item ) {
-                                        if( currentBoardAssingerEmail === emailAddresses[0] ) {
-                                            if( item.user_email === emailAddresses[1] ) {
-                                                appendInCheckbox.push( item );
-                                            }
-                                        } else {
-                                            if( item.user_email === emailAddresses[0] ) {
-                                                appendInCheckbox.push( item );
-                                            }
-                                        }
-                                    } )
+     // Get the assigner email of the current board.
+     var currentBoardAssingerEmail = $( `${currentBoardID} .cf-board-assigned-to` ).data( 'user-email' );
+                  
+     if( undefined !== emailAddresses && emailAddresses.length > 0 ) {
+         if( assignCheckBoxId.length > 0 ) {
+             var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
+             
+             let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
+             let isThere                 = typedText.match( checkEmailPattern );
+             if( ! isThere ) {
+                 var appendInCheckbox = [];
+                 $.ajax({
+                     url: ajaxurl, // eslint-disable-line
+                     type: 'post',
+                     data: {
+                         action: 'cf_get_user_email_list',
+                         postID: currentPostID,
+                         nonce: adminLocalizer.nonce, // eslint-disable-line
+                     },
+                     beforeSend: function() {},
+                     success: function( res ) {
+                         $( appendIn ).remove(); // Remove previous DOM.
+                         $( assignablePopup ).remove(); // Remove previous DOM.
+                         var data = JSON.parse( res );
+                       
+                         data.forEach( function( item ) {
+                            if( currentBoardAssingerEmail === emailAddresses[0] ) {
+                                if( item.user_email === emailAddresses[1] ) {
+                                         appendInCheckbox.push( item );
+                                        
                                 }
-                                if( appendInCheckbox.length > 0 ) {
-                                    $( assignCheckBoxId ).prop( 'checked', false );
-                                    $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
-                                    $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
-                                    $( assignCheckBoxId ).next('i').text( `Assign to ${appendInCheckbox[0].display_name}`  );
+                            } else {
+                                if( item.user_email === emailAddresses[0] ) {
+                                    appendInCheckbox.push( item );
+                                        
                                 }
                             }
+                                
+                        } )
+                        if( appendInCheckbox.length>0 ) {
+                            $( assignCheckBoxId ).prop( 'checked', false );
+                            $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
+                            $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
+                            $( assignCheckBoxId ).next('i').text( `Assign to ${appendInCheckbox[0].display_name}`  );
                         }
-                    } else {
-                        $( `${currentBoardID} .cf-assign-to` ).remove();
+                       
                     }
+                 })
+             
+             }
+         }
+     } else {
+         $( `${currentBoardID} .cf-assign-to` ).remove();
+     }
 
                     // Remove assigner dom if there is not email in the editor.
                     var findEmails = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i );
@@ -536,17 +565,10 @@
                      showSuggestionFunc = showSuggestion( prevCharOfEmailSymbol );
                   }
                   if( showSuggestionFunc ) {
+                    
                         // Fetch all email list.
                         isEmail = true;
-                        if ( '' !== cachedUsersList || 'undefined' !== cachedUsersList ) {
-                            $( appendIn ).remove(); // Remove previous DOM.
-                            $( assignablePopup ).remove(); // Remove previous DOM.
-                            $( assignablePopup ).remove();
-                            setTimeout( function() {
-                                emailList( createTextarea, cachedUsersList );
-                            }, 100 );
-                        } else {
-                            $.ajax({
+                        $.ajax({
                                 url: ajaxurl, // eslint-disable-line
                                 type: 'post',
                                 data: {
@@ -562,7 +584,6 @@
                                     emailList( createTextarea, data );
                                 }
                             })
-                        }
                     } else {
                         $( appendIn ).remove();
                         $( assignablePopup ).remove();
@@ -613,12 +634,7 @@
                     
                     // If trackedStr is left to @
                     if( '@' === trackedStr && $( createTextarea ).is(':focus') === true ) {
-                      
-                        if ( null !== cachedUsersList || '' !== cachedUsersList ) {
-                            $( appendIn ).remove(); // Remove user list popup DOM.
-                            $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
-                            emailList( createTextarea, cachedUsersList );
-                        } else {
+                       //if(!keysToAvoid.includes(e.key) && 'Backspace' != e.key){
                             $.ajax({
                                 url: ajaxurl, // eslint-disable-line
                                 type: 'post',
@@ -627,17 +643,16 @@
                                     postID: currentPostID,
                                     nonce: adminLocalizer.nonce, // eslint-disable-line
                                 },
-                                beforeSend: function() {},
-                                success: function( res ) {
-                                    $( appendIn ).remove(); // Remove previous DOM.
-                                    $( assignablePopup ).remove(); // Remove previous DOM.
-                                    var data = JSON.parse( res );
-                                    emailList( createTextarea, data );
-                                }
+                                    beforeSend: function() {},
+                                    success: function( res ) {
+                                        $( appendIn ).remove(); // Remove previous DOM.
+                                        $( assignablePopup ).remove(); // Remove previous DOM.
+                                        var data = JSON.parse( res );
+                                        emailList( createTextarea, data );
+                                    }
                             })
-
-                        }
-                    }
+                        //}    
+                   }
 
                     // If trackedStr contains other chars with @ as well.
                     if( '@' !== trackedStr && $( createTextarea ).is(':focus') === true ) {
@@ -646,22 +661,6 @@
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr( 1 );
                             if( '' !== niddle ) {
-                                if( undefined !== cachedUsersList || null !== cachedUsersList ) {
-                                    cachedUsersList.forEach( function( item ) {
-                                        let displayName = item.display_name;
-                                        let pattern = new RegExp( niddle, 'ig' );
-                                        let isMatched = displayName.match( pattern );
-                                        if ( isMatched ) {
-                                            refinedCachedusersList.push( item );
-                                        }
-                                    } );
-                                }
-                                if ( '' !== refinedCachedusersList || 'undefined' !== refinedCachedusersList ) {
-                                    $( appendIn ).remove(); // Remove user list popup DOM.
-                                    $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
-                                    emailList( createTextarea, refinedCachedusersList );
-                                    makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' );
-                                } else {
                                     // Sending Ajax Call to get the matched email list(s).
                                     $.ajax({
                                         url: ajaxurl, // eslint-disable-line
@@ -680,7 +679,7 @@
                                             makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' );
                                         }
                                     })
-                                }
+                                
                             }
                         } else {
                             $( appendIn ).remove(); // Remove user list popup DOM.
@@ -696,7 +695,7 @@
                     }
                 }
                 // Clearing popup when user types any space or use enterkey.
-                if( 32 === e.which || 13 === e.which ||  e.which in keysToAvoid ) {
+                if( 32 === e.which) {
                     $( appendIn ).remove();
                     $( assignablePopup ).remove();
                 }
@@ -717,7 +716,8 @@
                     
                     var typedContent = $( createTextarea ).html();
                    // Remove @ before display name anchor tag and insterted in to anchor tag
-                    typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
+                   // commented this below line because of bug fixing of <br> removing after user tag
+                    //typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
                     typedContent = typedContent.replace(/@<a/g, '<a');
                              
                     if( 'firefox' !== browser ) {
@@ -739,9 +739,10 @@
                 var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
                var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
                var children =  currentTextareaNode.lastElementChild;
+               
                 //Add fix to remove last <br> tag after appending the Display Name.
                     if (children.tagName && children.tagName === "BR") {
-                   
+                        
                         currentTextareaNode.removeChild(children)
                     }
              
@@ -763,7 +764,8 @@
         var chromeEdgeClearFix = function( typedContent ) {
             typedContent = typedContent.replace( /(<div>)/ig,'<br>' );
             typedContent = typedContent.replace( /(<\/div>)/ig,'' );
-            typedContent = typedContent.replace( /(<br><br><br>)/ig,'<br><br>' );
+            // commented this below line because of bug fixing of <br> removing after user tag
+            //typedContent = typedContent.replace( /(<br><br><br>)/ig,'<br><br>' );
             return typedContent;
         }
 
@@ -867,7 +869,7 @@
             var textarea         = '';
             var appendTo         = '';
             var parentBoardClass = '.cls-board-outer';
-            var cachedUsersList       = adminLocalizer.cached_users_list;
+            //var cachedUsersList       = adminLocalizer.cached_users_list;
             $( document.body ).on( 'click', triggerLink, function(e) {
                 e.preventDefault();
                 var el      = $( this ).parents( parentBoardClass ).attr( 'id' );
@@ -880,26 +882,12 @@
                 // Get the assigner id of the current board.
                 let currentBoardAssingerID = $( `#${el} .cf-board-assigned-to` ).data( 'user-id' );
 
-                // Checked cached user list first.
-                if( undefined !== cachedUsersList || null !== cachedUsersList ) {
+              // Checked cached user list first.
+                //if( undefined !== cachedUsersList || null !== cachedUsersList ) {
                     var emailSet       = content.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
                     emailSet           = new Set( emailSet );
                     var emailAddresses = Array.from( emailSet );
-                    var data           = [];
-                    emailAddresses.forEach( function( email ) {
-                        var pattern = new RegExp( email )
-                        cachedUsersList.forEach( function( item ) {
-                            var userEmail = item.user_email;
-                            var isMatched = userEmail.match( pattern );
-                            if( isMatched ) {
-                                if( item.ID !== currentBoardAssingerID ) {
-                                    data.push( item );
-                                }
-                            }
-                        } )
-                    } );
-                    assignalbeList( appendTo, data );
-                } else {
+                    var dataItems          = [];
                     // Send Ajax Request.
                     $.ajax({
                         url: ajaxurl, // eslint-disable-line
@@ -912,12 +900,24 @@
                         beforeSend: function() {},
                         success: function( res ) {
                             var data = JSON.parse( res );
-                            assignalbeList( appendTo, data );
+                            emailAddresses.forEach( function( email ) {
+                                var pattern = new RegExp( email )
+                                data.forEach( function( item ) {
+                                    var userEmail = item.user_email;
+                                    var isMatched = userEmail.match( pattern );
+                                    if( isMatched ) {
+                                        if( item.ID !== currentBoardAssingerID ) {
+                                         
+                                            dataItems.push( item );
+                                           
+                                        }
+                                    }
+                                } )
+                            } );
+                           assignalbeList( appendTo, dataItems );
                         }
                     })
-                }
-
-            } )
+              } )
         }
         showAssingableEmailList();
 
@@ -1045,10 +1045,9 @@ var createNewAttributeWithFinalContent = function(attributeName, finalContent) {
 var removeTag = function( elIDRemove ) { // eslint-disable-line
   
     const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block'); // eslint-disable-line
-
     const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId); // eslint-disable-line
     if (null !== blockAttributes) {
-
+       
         const findAttributes = window.adminLocalizer.allowed_attribute_tags;
 
         jQuery(findAttributes).each(function (i, attrb) { // eslint-disable-line
@@ -1064,14 +1063,15 @@ var removeTag = function( elIDRemove ) { // eslint-disable-line
                     for (let i = 0; i < childElements.length; i++) {
                         if (elIDRemove === childElements[i].attributes.datatext.value) {
                             //Change logic to keep other HTML Tag in content..only remove mdspan tag
-                           
+                          
                                  var parent = childElements[i].parentNode;
+                                
                                  while( childElements[i].firstChild ) {
                                     parent.insertBefore(  childElements[i].firstChild, childElements[i] );
                                  }
                                 parent.removeChild(childElements[i] );
 
-                            const finalContent = tempDiv.innerHTML;
+                                const finalContent = tempDiv.innerHTML;
                            
                             if ( findAttributes.indexOf(attrb) !== -1 ) {
                                 wp.data.dispatch('core/editor').updateBlock(clientId, createNewAttributeWithFinalContent(attrb, finalContent));

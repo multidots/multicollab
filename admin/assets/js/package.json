@@ -39,7 +39,7 @@
     "classnames": "^2.2.6",
     "diff-match-patch": "^1.0.5",
     "file-loader": "^5.0.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.19",
     "lodash.assign": "^4.2.0",
     "lodash.range": "^3.2.0",
     "react": "^16.12.0",

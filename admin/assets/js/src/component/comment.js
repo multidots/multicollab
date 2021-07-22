@@ -38,7 +38,7 @@ export default class Comment extends React.Component {
         // Handling edited value.
         var editedValue        = this.state.showEditedDraft ? this.props.editedDraft: this.props.children;
         // Filtering anchor tag and return the url text only.
-        editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)<\/a>/igm, function( match ) {
+        editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)([^&nbsp;|^<br>])\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)([^&nbsp;|^<br>])<\/a>/igm, function( match ) {
             return match.replace( /(<([^>]+)>)/ig, '');
         } )
       
@@ -61,9 +61,9 @@ export default class Comment extends React.Component {
             }
 
              // Adding anchor tag around the linkable text.
-          
-            newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
-                match = match.replace( /&nbsp|(;)/igm, '' );
+             //newText = newText.replace( /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/ig, function( match ) {
+             newText = newText.replace(  /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function( match ) {   
+             match = match.replace( /&nbsp|(;)/igm, '' );
                 
                 return `<a href="${match}" target="_blank">${match}</a>`;
             } );
@@ -230,9 +230,9 @@ export default class Comment extends React.Component {
             readmoreStr = str;
             str = str.substring(0, maxLength) + '...';
         }
+        
        // Removing contenteditable attr from the link.
        str = str.replace( /contenteditable=\"false\"/ig, 'data-edit="false"' ); // eslint-disable-line
-        
         // Limiting User Role Character.
         var userRolePartial = this.props.userRole;
         if( 8 < userRolePartial.length ) {
