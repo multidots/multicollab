@@ -146,14 +146,14 @@ class Commenting_Block_Email_Templates
     {
         $pattern = '/data-email=\"([a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?)\"/i';
         preg_match_all($pattern, $str, $matches);
-        $cache_key      = 'gc_users_list';
-        $get_users_list = get_transient($cache_key);
+        // $cache_key      = 'gc_users_list';
+        //$get_users_list = get_transient($cache_key);
         $refined_user_email = [];
         if (! empty($matches[1])) {
             foreach ($matches[1] as $user_email) {
-                if (in_array($user_email, array_column($get_users_list, 'user_email'), true)) {
-                    $refined_user_email[] = $user_email;
-                }
+                //if (in_array($user_email, array_column($get_users_list, 'user_email'), true)) {
+                $refined_user_email[] = $user_email;
+                //}
             }
         }
         return array_unique($refined_user_email);

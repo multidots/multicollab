@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 
+
 const {__} = wp.i18n;                                                   // eslint-disable-line
 const {Fragment, Component} = wp.element;                               // eslint-disable-line
 const {toggleFormat} = wp.richText;                                     // eslint-disable-line
@@ -13,9 +14,7 @@ const $ = jQuery;                                                       // eslin
 
 // Window Load functions.
 $( window ).on('load', function () {
-
-
-
+  
     let loadAttempts = 0;
     const loadComments = setInterval(function () {
         loadAttempts++;
@@ -243,9 +242,9 @@ const mdComment = {
             }
            var html =this.getSelectionHtml();
            if(null !== html.match(/mdspan/g)){
-            alert('You have already given comment on one of the word!');
-            return;
-        }
+                alert('You have already given comment on one of the word!');
+                return;
+            }
             var currentTime = Date.now();
             currentTime = 'el' + currentTime;
             var newNode = document.createElement('div');
@@ -257,8 +256,12 @@ const mdComment = {
             referenceNode.appendChild(newNode);
             $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
              //Activate Show All comment button in setting panel
-            $('.components-form-toggle').addClass('is-checked');
-            $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
+             if(false === wp.data.select('mdstore').getShowComments()){
+                wp.data.dispatch('mdstore').setShowComments(true);
+                $('.components-form-toggle').addClass('is-checked');
+                 $('.components-base-control__help').html('All comments will show on the content area.');
+                
+             }
             onChange(toggleFormat(value, {type: name}),
                 ReactDOM.render(
                     <Board datatext={currentTime} onChanged={onChange} lastVal={value} freshBoard={1} commentedOnText={commentedOnText}/>,
@@ -416,6 +419,8 @@ const mdComment = {
                     if( $( 'body' ).hasClass( 'hide-comments' ) ) {
                       
                         $('body').removeClass("commentOn");
+                        
+                       
                     }else{
                         $('body').addClass("commentOn");
                         
@@ -466,8 +471,8 @@ const mdComment = {
         }
 
         render() {
+           
             const {isActive} = this.props;
-
             return (
                 <Fragment>
                     <RichTextToolbarButton

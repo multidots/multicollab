@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Multicollab
  * Description:       This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
- * Version:           1.3.6
+ * Version:           1.3.7
  * Author:            multidots
  * Author URI:        https://www.multidots.com/
  * License:           GPL-2.0+
@@ -29,7 +29,7 @@ if (! defined('WPINC')) {
 }
 
 // Plugin version.
-define('COMMENTING_BLOCK_VERSION', '1.3.6');
+define('COMMENTING_BLOCK_VERSION', '1.3.7');
 
 // Define constants.
 define('COMMENTING_BLOCK_URL', plugin_dir_url(__FILE__));
