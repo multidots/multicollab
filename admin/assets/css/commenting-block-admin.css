@@ -464,7 +464,13 @@
     .cf-plugin-settings .cf-right{display: block;}
     .cf-plugin-settings .cf-right .cf-card:first-child {margin-right: 0;}
   }
- 
+  @media not all and (min-resolution:.001dpcm){
+    @supports (-webkit-appearance:none){
+      .cf-share-comment .js-mentioned{
+        line-height:18px;
+      }
+    }
+  }
   .user-data-row.unknownThread{
     pointer-events: none;
    cursor: default;
