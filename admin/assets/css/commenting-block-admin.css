@@ -330,7 +330,7 @@
   .cf-tabs-main .cf-tabs-content .cf-video-links .cf-link-wrap{margin:10px 30px 10px 0}
   /*=====================Comment activity css-05-04-2021===============*/
   .user-data-row{border-top:2px solid #E0E0E0;width: 100%;padding: 25px 30px 20px 10px;background-color: #fff;-webkit-transition: all 500ms;transition: all 500ms;}
-  .user-data-row.cf-thread-resolved {background-color: #F3F5F6;}
+  .user-data-row.cf-thread-resolved, .user-data-row.unknownThread.cf-thread-resolved{background-color: #F3F5F6;}
   .user-data-row.active{background-color: rgb(0 124 186 / 10%);}
   .user-data-row .user-data-box {margin-left: 14px;border: 1px solid #E2E4E7;padding: 10px 15px 10px 10px;margin-bottom: 15px;background-color: #fff;border-radius: 6px;}
   .user-data-row .user-data-box:first-child{margin-left: 0px;border: 0px;padding: 0px;margin-bottom: 25px;background-color: transparent;}
@@ -412,7 +412,6 @@
     .cf-tabs-main .cf-tabs .cf-tab-item{padding:15px 0}
     .cf-tabs-main .cf-tabs li{margin:0 15px}
     #md-comments-suggestions-parent{width:320px}
-    .commentOn .block-editor-writing-flow{width:calc(100% - 320px)}
     .cls-board-outer{width:260px}
     .cf-plugin-settings .cf-left{width:calc(100% - 290px)}
     .cf-plugin-settings .cf-right{width:290px}
@@ -422,7 +421,6 @@
   }
   @media (max-width:1200px){
     #md-comments-suggestions-parent{width:300px}
-    .commentOn .block-editor-writing-flow{width:calc(100% - 300px)}
     .cls-board-outer{width:240px}
     .cf-plugin-settings .cf-left{width:70%}
     .cf-plugin-settings .cf-right{width:30%}
@@ -447,6 +445,9 @@
     .cf-plugin-settings .cf-left{width:100%;padding:0;margin:0 0 20px}
     .cf-plugin-settings .cf-right{width:100%;padding:0;display: -webkit-box;display: -ms-flexbox;display: flex;}
     .cf-plugin-settings .cf-right .cf-card:first-child {margin-right: 20px;}
+  }
+  @media (max-width:992px){
+    .commentOn .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block {float: none;margin: 0;}
   }
   @media (max-width:780px){
     .cf-tabs-main .cf-tabs li{margin:0 10px}
