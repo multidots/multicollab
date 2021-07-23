@@ -230,7 +230,7 @@
 
   /* Email Mentioning Popup */
   .cf-share-comment-wrapper{width: 100%;height: auto;border:1px solid #007cba;border-radius:5px;padding: 8px 5px;cursor:text;}
-  .cf-share-comment{display:inline-block;width:100%;background-color:#fff;color:#222;border-radius:5px;word-break: break-word;-moz-user-select: text !important;white-space: pre-wrap;}
+  .cf-share-comment{display:inline-block;width:auto;background-color:#fff;color:#222;border-radius:5px;word-break: break-word;-moz-user-select: text !important;white-space: pre-wrap;}
   [contenteditable=true]:empty::before{content:attr(placeholder);display:block}
   .cls-board-outer .js-mentioned{font-weight:600;text-decoration:none;}
   .cf-system-user-email-list{max-height:300px;overflow-y: scroll;}
