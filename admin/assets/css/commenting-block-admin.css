@@ -136,8 +136,8 @@
   @-webkit-keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
   @-moz-keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
   @keyframes rotate-forever{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}}
-  .commentOn .editor-styles-wrapper .block-editor-writing-flow{float:left;padding-left:0;width:80%;width:calc(100% - 345px);max-width:100%;margin:0 auto;transition: all 0.5s ease-out;}
-  .commentOn .editor-styles-wrapper .block-editor-writing-flow::after{content:'';clear:both;display:block}
+  .commentOn .editor-styles-wrapper .block-editor-writing-flow, .commentOn .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block, .commentOn .editor-styles-wrapper.block-editor-writing-flow .block-editor-block-list__layout{float:left;padding-left:0;width:80%;width:calc(100% - 345px);max-width:100%;margin:0 auto;transition: all 0.5s ease-out;}
+  .commentOn .editor-styles-wrapper .block-editor-writing-flow::after,.commentOn  .editor-styles-wrapper.block-editor-writing-flow::after{content:'';clear:both;display:block}
   .commentOn .editor-styles-wrapper .wp-block{width:100%;max-width:100%;transition: all 0.5s ease-out;}
   .hide-me{height:0;padding:0!important;margin:0!important;display:block;overflow:hidden;outline:none!important;box-shadow:none!important}
   .comment-header .comment-actions{width:100%;display:flex;margin-bottom:15px}
@@ -230,7 +230,7 @@
 
   /* Email Mentioning Popup */
   .cf-share-comment-wrapper{width: 100%;height: auto;border:1px solid #007cba;border-radius:5px;padding: 8px 5px;cursor:text;}
-  .cf-share-comment{display:inline-block;width:100%;background-color:#fff;color:#222;border-radius:5px;word-break: break-word;-moz-user-select: text !important;}
+  .cf-share-comment{display:inline-block;width:100%;background-color:#fff;color:#222;border-radius:5px;word-break: break-word;-moz-user-select: text !important;white-space: pre-wrap;}
   [contenteditable=true]:empty::before{content:attr(placeholder);display:block}
   .cls-board-outer .js-mentioned{font-weight:600;text-decoration:none;}
   .cf-system-user-email-list{max-height:300px;overflow-y: scroll;}
@@ -469,7 +469,7 @@
     pointer-events: none;
    cursor: default;
    text-decoration: none;
-   background-color: #ccc;
+   background-color: #e0e0e0;
 }
   
   
