@@ -337,59 +337,33 @@ class Commenting_block_Admin
         $current_timestamp = current_time('timestamp');
         // Initiate Email Class Object.
         $this->cf_initiate_email_class();
-       
-        // Checking if user deleted the recently added comment.
-        if (isset($current_drafts['deleted']) && 0 !== $current_drafts['deleted']) {
-            if (isset($current_drafts['comments']) && 0 !== $current_drafts['comments']) {
-                foreach ($current_drafts['deleted'] as $el => $timestamps) {
-                    if (array_key_exists($el, $current_drafts['comments'])) {
-                        $prev_state = $metas[$el][0];
-                        $prev_state = maybe_unserialize($prev_state);
-
-                        foreach ($timestamps as $t) {
-                            $t = intval($t);
-                            $get_key = array_search($t, $current_drafts['comments'][$el], true);
-
-                            if ($get_key !== false) {
-                                unset($current_drafts['comments'][$el][$get_key]);
-                            }
-
-                            unset($prev_state['comments'][$t]);
-                        }
-                        $metas[$el][0] = maybe_serialize($prev_state);
-                    }
-                }
-            }
-        }
         // Publish Deleted Comments. (i.e. finally delete them.)
-      
         if (isset($current_drafts['deleted']) && 0 !== count($current_drafts['deleted'])) {
             $deleted_drafts = $current_drafts['deleted'];
             foreach ($deleted_drafts as $el => $timestamps) {
                 $prev_state = $metas[ $el ][0];
                 $prev_state = maybe_unserialize($prev_state);
+
                 foreach ($timestamps as $key=>$t) {
                     $local_time = current_datetime();
                     $deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
                     // Update the timestamp of deleted comment.
                     $previous_comment = $prev_state['comments'][ $t ];
-                  
                     if (! empty($previous_comment)) {
                         $prev_state['comments'][ $deleted_timestamp ]           = $previous_comment;
                         $prev_state['comments'][ $deleted_timestamp ]['status'] = 'deleted';
                     }
                 }
-                
                 $prev_state['updated_at'] = $current_timestamp;
                 update_post_meta($post_ID, $el, $prev_state);
                 $metas[ $el ][0] = maybe_serialize($prev_state);
             }
         }
-
+       
         // Publish New Comments.
         if (isset($current_drafts['comments']) && 0 !== count($current_drafts['comments'])) {
             $new_drafts = $current_drafts['comments'];
-
+           
             foreach ($new_drafts as $el => $drafts) {
                 /*
                  * Make publish only if its tag available in the content.
@@ -399,6 +373,7 @@ class Commenting_block_Admin
                  * So skipping those mdspan tags which has no 'datatext' attribute.
                  * This is also skipping the recent resolved drafts.
                  */
+               
                 $elid = str_replace('_', '', $el);
                 if (strpos($p_content, $elid) !== false) {
                     $prev_state   = $metas[ $el ][0];
@@ -515,8 +490,7 @@ class Commenting_block_Admin
         // Update open comments count.
         $comment_counts = $this->cf_get_comment_counts($post_ID, $p_content, $metas);
         update_post_meta($post_ID, 'open_cf_count', $comment_counts['open_counts']);
-        
-        
+
         // Deleteing comments if users delete comments at the same moment.
         if (! empty($current_drafts['deleted'])) {
             foreach ($current_drafts['deleted'] as $key=>$value) {
@@ -527,8 +501,6 @@ class Commenting_block_Admin
                 update_post_meta($post_ID, $key, $comment);
             }
         }
-
-       
         // Sending Emails to newly mentioned users.
         if (isset($current_drafts['comments']) && 0 !== count($current_drafts['comments']) && 0 === count($current_drafts['resolved'])) {
             $new_drafts = $current_drafts['comments'];
@@ -621,7 +593,7 @@ class Commenting_block_Admin
 
         $screen = get_current_screen();
         if ($screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base) {
-            wp_enqueue_script($this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify' ), wp_rand(), false);
+            wp_enqueue_script($this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify','react', 'react-dom' ), wp_rand(), false);
             wp_enqueue_script('cf-mark', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false);
             wp_enqueue_script('cf-dom-purify', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false);
             wp_enqueue_script('content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . 'admin/assets/js/dist/block.build.min.js', array(
@@ -1017,8 +989,34 @@ class Commenting_block_Admin
         $current_drafts                         = maybe_unserialize($current_drafts);
         $current_drafts                         = empty($current_drafts) ? array() : $current_drafts;
         $current_drafts['deleted'][ $metaId ][] = $timestamp;
+         // Checking if user deleted the recently added comment.
+         if (isset($current_drafts['deleted']) && 0 !== $current_drafts['deleted']) {
+            if (isset($current_drafts['comments']) && 0 !== $current_drafts['comments']) {
+                foreach ($current_drafts['deleted'] as $el => $timestamps) {
+                    if (array_key_exists($el, $current_drafts['comments'])) {
+                        $prev_state = $metas[$el][0];
+                        $prev_state = maybe_unserialize($prev_state);
+                       
+                        // Deleteing comments if users delete comments at the same moment.
+                        foreach ($timestamps as $t) {
+                            $t = intval($t);
+                            $get_key = array_search($t, $current_drafts['comments'][$el], true);
+                            
+                            if ($get_key !== false) {
+                                unset($current_drafts['comments'][$el][$get_key]);
+                                unset($current_drafts['deleted'][$el][$get_key]);
+                            }
+                           
+                            unset($prev_state['comments'][$t]);
+                        }
+                        $metas[$el][0] = maybe_serialize($prev_state);
+                        update_post_meta($current_post_id, $el, $prev_state);
+                    }
+                }
+            }
+        }
         update_post_meta($current_post_id, '_current_drafts', $current_drafts);
-
+       
         wp_die();
     }
 
