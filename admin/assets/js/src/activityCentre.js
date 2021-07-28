@@ -469,7 +469,7 @@ class Comments extends React.Component {
  
     render() {
         const { threads,showComments,isLoading, collapseLimit } = this.state;
-        
+         //check thread id is available in editor?
         let newThreads = [];
         $('.wp-block mdspan').each(function () {
             let selectedText = $(this).attr('datatext');
@@ -521,7 +521,6 @@ class Comments extends React.Component {
                                                 //check thread id is available in editor?
                                                 var removedItem = newThreads.filter(x => x.elID === th.elID).length > 0 ? true : false;
                                                 var  boardId = wp.data.select('mdstore').getDataText();
-
                                                 return (
                                                     <div className={('true' === th.resolved ? 'user-data-row cf-thread-resolved' : 'user-data-row') + (th.elID === boardId ? ' active' : '') + (removedItem ? '' : ' unknownThread')} id={ `cf-${`${th.elID}`}` } key={ `cf-${`${th.elID}`}` }>
                                                         {
