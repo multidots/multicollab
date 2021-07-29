@@ -201,8 +201,8 @@ class Commenting_block_Admin
         $metas       = 0 === count($metas) ? get_post_meta($post_ID) : $metas;
         $content     = empty($content) ? get_the_content($post_ID) : $content;
         $total_count = $open_counts = 0;
+
         foreach ($metas as $key => $val) {
-           
             if (substr($key, 0, 3) === '_el') {
                 $key = str_replace('_el', '', $key);
                 if (strpos($val[0], 'resolved') === false && strpos($content, $key) !== false) {
@@ -214,7 +214,6 @@ class Commenting_block_Admin
                 }
             }
         }
-        
         // Confirm open counts with the meta value, if not
         // matched, update it. Just for double confirmation.
         $open_cf_count = isset($metas['open_cf_count']) ? $metas['open_cf_count'][0] : 0;
@@ -225,7 +224,7 @@ class Commenting_block_Admin
         $comment_counts                 = array();
         $comment_counts['open_counts']  = $open_counts;
         $comment_counts['total_counts'] = $total_count;
-        
+
         return $comment_counts;
     }
 
@@ -593,7 +592,7 @@ class Commenting_block_Admin
 
         $screen = get_current_screen();
         if ($screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base) {
-            wp_enqueue_script($this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify','react', 'react-dom' ), wp_rand(), false);
+            wp_enqueue_script($this->plugin_name, COMMENTING_BLOCK_URL . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false);
             wp_enqueue_script('cf-mark', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false);
             wp_enqueue_script('cf-dom-purify', COMMENTING_BLOCK_URL . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false);
             wp_enqueue_script('content-collaboration-inline-commenting', COMMENTING_BLOCK_URL . 'admin/assets/js/dist/block.build.min.js', array(
@@ -614,7 +613,6 @@ class Commenting_block_Admin
             ), wp_rand(), true);
 
             $comment_id     = filter_input(INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING);
-            //$get_users_list = get_transient('gc_users_list');
             wp_localize_script($this->plugin_name, 'adminLocalizer', [
                 'nonce'      => wp_create_nonce(COMMENTING_NONCE),
                 'comment_id' => isset($comment_id) ? $comment_id : null,
@@ -687,6 +685,7 @@ class Commenting_block_Admin
 
         $commentList = end($commentList);
         $metaId      = filter_input(INPUT_POST, "metaId", FILTER_SANITIZE_STRING);
+        $blockType   = filter_input(INPUT_POST, "blockType", FILTER_SANITIZE_STRING);
 
         // If 'commented on' text is blank, stop process.
         if (empty($commentList['commentedOnText'])) {
@@ -732,6 +731,7 @@ class Commenting_block_Admin
             $superCareerData['comments'][ $timestamp ] = $arr;
             $superCareerData['commentedOnText']        = $commentList['commentedOnText'];
             $superCareerData['updated_at']             = $timestamp;
+            $superCareerData['blockType']              = $blockType;
             if ($assign_to > 0) {
                 $superCareerData['assigned_to']         = $assign_to;
                 $superCareerData['sent_assigned_email'] = false;
@@ -739,6 +739,7 @@ class Commenting_block_Admin
 
             update_post_meta($current_post_id, 'th' . $metaId, get_current_user_id());
         }
+       
         update_post_meta($current_post_id, $metaId, $superCareerData);
 
         $last_index                                   = count($list_of_comments) - 1;
@@ -983,14 +984,18 @@ class Commenting_block_Admin
         $current_post_id = filter_input(INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT);
         $metaId          = filter_input(INPUT_POST, "metaId", FILTER_SANITIZE_STRING);
         $timestamp       = filter_input(INPUT_POST, "timestamp", FILTER_SANITIZE_NUMBER_INT);
+        $metas      = get_post_meta($current_post_id);
 
         // Update Current Drafts.
         $current_drafts                         = get_post_meta($current_post_id, '_current_drafts', true);
         $current_drafts                         = maybe_unserialize($current_drafts);
         $current_drafts                         = empty($current_drafts) ? array() : $current_drafts;
         $current_drafts['deleted'][ $metaId ][] = $timestamp;
-         // Checking if user deleted the recently added comment.
-         if (isset($current_drafts['deleted']) && 0 !== $current_drafts['deleted']) {
+       
+       
+       
+        // Checking if user deleted the recently added comment.
+        if (isset($current_drafts['deleted']) && 0 !== $current_drafts['deleted']) {
             if (isset($current_drafts['comments']) && 0 !== $current_drafts['comments']) {
                 foreach ($current_drafts['deleted'] as $el => $timestamps) {
                     if (array_key_exists($el, $current_drafts['comments'])) {
@@ -1181,9 +1186,9 @@ class Commenting_block_Admin
             return;
         }
 
-        // $cache_key = 'gc_users_list';
+        //$cache_key = 'gc_users_list';
         //$get_users_list = get_transient($cache_key);
-        // if (false === $get_users_list) {
+        //if (false === $get_users_list) {
         // WP User Query.
         $users = new WP_User_Query([
                 'number'       => 9999,
@@ -1211,13 +1216,13 @@ class Commenting_block_Admin
             }
         }
         // Set transient
-        //set_transient($cache_key, $email_list, 24 * HOUR_IN_SECONDS);
+        // set_transient($cache_key, $email_list, 24 * HOUR_IN_SECONDS);
         // Sending Response.
         $response = $email_list;
-        /*} else {
-            // Sending Response.
-            $response = $get_users_list;
-        }*/
+        /* } else {
+             // Sending Response.
+             $response = $get_users_list;
+         }*/
 
         echo wp_json_encode($response);
         wp_die();
@@ -1294,6 +1299,7 @@ class Commenting_block_Admin
         preg_match_all($pattern, $content, $matches);
 
         $user_emails = array_unique($matches[0]); // Remove duplicate entries if any.
+
         $results = [];
         if (count($user_emails) > 0) {
             foreach ($user_emails as $user_email) {
