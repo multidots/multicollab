@@ -614,7 +614,6 @@ class Commenting_block_Admin
             ), wp_rand(), true);
 
             $comment_id     = filter_input(INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING);
-            /*$get_users_list = get_transient('gc_users_list');*/
             wp_localize_script($this->plugin_name, 'adminLocalizer', [
                 'nonce'      => wp_create_nonce(COMMENTING_NONCE),
                 'comment_id' => isset($comment_id) ? $comment_id : null,
