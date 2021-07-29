@@ -36,10 +36,6 @@ function gc_after_edit_load()
     $post_id = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_STRING);
 
     if (! empty($post_id)) {
-        // delete_transient('gc_users_list'); // Delete transient.
-        // $cache_key      = 'gc_users_list';
-        //$get_users_list = get_transient($cache_key);
-        //  if (false === $get_users_list) {
         // WP User Query.
         $users = new WP_User_Query([
                 'number'   => 9999,
@@ -65,9 +61,6 @@ function gc_after_edit_load()
                     ];
             }
         }
-        // Set transient
-            //set_transient($cache_key, $email_list, 24 * HOUR_IN_SECONDS);
-       // }
     }
 }
 add_action('admin_init', 'gc_after_edit_load');
