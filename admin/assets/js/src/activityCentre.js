@@ -403,13 +403,6 @@ class Comments extends React.Component {
                 showComments:  wp.data.dispatch('mdstore').setShowComments(true)
             })
         }
-     
-      /*  this.setState({
-            showComments: ! this.state.showComments
-        })*/
-       
-       
-       // console.log(this.state.showComments);
     }
 
     /**
