@@ -6,8 +6,8 @@ Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.3.6
-Tested up to: 5.7.2
-Stable tag: 1.3.6
+Tested up to: 5.8
+Stable tag: 1.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -189,6 +189,13 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 6.
 
 == Changelog ==
+
+= 1.3.7 - 2.08.2021 =
+* [Enhancement] – Maintenance Release.
+* [Enhancement] – Fixed minor issues related to activity and settings panel.
+* [Enhancement] – Made few enhancements for compatibility with Safari and Firefox browsers.
+* [Bug Fix] — Compatible with WordPress 5.8.x.
+
 
 = 1.3.6 - 23.06.2021 =
 * [Bug Fix] – Maintenance Release and Made few enhancements.
