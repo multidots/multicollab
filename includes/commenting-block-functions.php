@@ -40,7 +40,7 @@ function gc_after_edit_load()
         $users = new WP_User_Query([
                 'number'   => 9999,
                 'role__in' => [ 'Administrator', 'Editor', 'Contributor', 'Author' ],
-                'exclude'  => array( get_current_user_id() ),
+                'exclude'  => array( get_current_user_id() ), // phpcs:ignore
             ]);
 
         // Fetch out all user's email.

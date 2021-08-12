@@ -1011,8 +1011,6 @@ class Commenting_block_Admin
                                 unset($current_drafts['deleted'][$el][$get_key]);
                                 unset($prev_state['comments'][$t]);
                             }
-                           
-                            //unset($prev_state['comments'][$t]);
                         }
                         $metas[$el][0] = maybe_serialize($prev_state);
                         update_post_meta($current_post_id, $el, $prev_state);
@@ -1189,7 +1187,7 @@ class Commenting_block_Admin
         $users = new WP_User_Query([
                 'number'       => 9999,
                 'role__in' => [ 'Administrator', 'Editor', 'Contributor', 'Author' ],
-                'exclude'      => array( get_current_user_id() ),
+                'exclude'      => array( get_current_user_id() ), // phpcs:ignore
             ]);
 
         // Fetch out all user's email.
@@ -1238,7 +1236,7 @@ class Commenting_block_Admin
                 'search'         => $niddle . '*',
                 'search_columns' => [ 'display_name' ],
                 'role__not_in'   => 'Subscriber',
-                'exclude'        => array( get_current_user_id() ),
+                'exclude'        => array( get_current_user_id() ), // phpcs:ignore
             ]);
 
             // Fetch out matched user's email.
