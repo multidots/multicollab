@@ -349,6 +349,7 @@ class Commenting_block_Admin
                     $deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
                     // Update the timestamp of deleted comment.
                     $previous_comment = $prev_state['comments'][ $t ];
+                    
                     if (! empty($previous_comment)) {
                         $prev_state['comments'][ $deleted_timestamp ]           = $previous_comment;
                         $prev_state['comments'][ $deleted_timestamp ]['status'] = 'deleted';
@@ -987,32 +988,31 @@ class Commenting_block_Admin
         $current_post_id = filter_input(INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT);
         $metaId          = filter_input(INPUT_POST, "metaId", FILTER_SANITIZE_STRING);
         $timestamp       = filter_input(INPUT_POST, "timestamp", FILTER_SANITIZE_NUMBER_INT);
-        $metas      = get_post_meta($current_post_id);
+        $metas           = get_post_meta($current_post_id);
 
         // Update Current Drafts.
         $current_drafts                         = get_post_meta($current_post_id, '_current_drafts', true);
         $current_drafts                         = maybe_unserialize($current_drafts);
         $current_drafts                         = empty($current_drafts) ? array() : $current_drafts;
         $current_drafts['deleted'][ $metaId ][] = $timestamp;
-         // Checking if user deleted the recently added comment.
+         // Checking if user deleted the recently added comment
          if (isset($current_drafts['deleted']) && 0 !== $current_drafts['deleted']) {
             if (isset($current_drafts['comments']) && 0 !== $current_drafts['comments']) {
                 foreach ($current_drafts['deleted'] as $el => $timestamps) {
                     if (array_key_exists($el, $current_drafts['comments'])) {
                         $prev_state = $metas[$el][0];
                         $prev_state = maybe_unserialize($prev_state);
-                       
                         // Deleteing comments if users delete comments at the same moment.
                         foreach ($timestamps as $t) {
                             $t = intval($t);
                             $get_key = array_search($t, $current_drafts['comments'][$el], true);
-                            
                             if ($get_key !== false) {
                                 unset($current_drafts['comments'][$el][$get_key]);
                                 unset($current_drafts['deleted'][$el][$get_key]);
+                                unset($prev_state['comments'][$t]);
                             }
                            
-                            unset($prev_state['comments'][$t]);
+                            //unset($prev_state['comments'][$t]);
                         }
                         $metas[$el][0] = maybe_serialize($prev_state);
                         update_post_meta($current_post_id, $el, $prev_state);

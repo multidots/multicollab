@@ -5,42 +5,42 @@ import PropTypes from 'prop-types';
 
 
 
-const {__} = wp.i18n;                                                   // eslint-disable-line
-const {Fragment, Component} = wp.element;                               // eslint-disable-line
-const {toggleFormat} = wp.richText;                                     // eslint-disable-line
-const {RichTextToolbarButton} = wp.blockEditor;                         // eslint-disable-line
-const {registerFormatType, applyFormat, removeFormat} = wp.richText;    // eslint-disable-line
+const { __ } = wp.i18n;                                                   // eslint-disable-line
+const { Fragment, Component } = wp.element;                               // eslint-disable-line
+const { toggleFormat } = wp.richText;                                     // eslint-disable-line
+const { RichTextToolbarButton } = wp.blockEditor;                         // eslint-disable-line
+const { registerFormatType, applyFormat, removeFormat } = wp.richText;    // eslint-disable-line
 const $ = jQuery;                                                       // eslint-disable-line
 
 // Window Load functions.
-$( window ).on('load', function () {
-  
+$(window).on('load', function () {
+
     let loadAttempts = 0;
     const loadComments = setInterval(function () {
         loadAttempts++;
-        if ( 1 <= $('.block-editor-writing-flow').length ) {
+        if (1 <= $('.block-editor-writing-flow').length) {
             // Clearing interval if found.
-            clearInterval( loadComments );
+            clearInterval(loadComments);
 
             // Fetching comments
             fetchComments();
         }
 
-        if($("#md-span-comments").is(':empty')){
+        if ($("#md-span-comments").is(':empty')) {
             $('body').removeClass("commentOn");
         }
-        else{
+        else {
             $('body').addClass("commentOn");
         }
-       // Clearing interval if not found in 10 attemps.
-        if ( loadAttempts >= 10 ) {
-            clearInterval( loadComments );
+        // Clearing interval if not found in 10 attemps.
+        if (loadAttempts >= 10) {
+            clearInterval(loadComments);
         }
     }, 1000);
-  
-     $(document).on('click', '.components-notice__action', function () {
 
-      
+    $(document).on('click', '.components-notice__action', function () {
+
+
         if ('Restore the backup' === $(this).text()) {
 
             setTimeout(function () {
@@ -85,11 +85,11 @@ function fetchComments() {
         // If no comment tag exist, remove the loader and temp style tag immediately.
         const span_count = $('.wp-block mdspan').length;
         if (0 === span_count) {
-            $( '.commentOn .block-editor-writing-flow' ).css( { width: '100%' } )
+            $('.commentOn .block-editor-writing-flow').css({ width: '100%' })
             $('body').removeClass("commentOn");
             $('#md-span-comments').removeClass('comments-loader');
             $('#loader_style').remove();
-            if(current_url){
+            if (current_url) {
                 alert('Your Comment is Deleted or Resolved! Please check with different URL');
                 urlParams.delete('current_url');
                 window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
@@ -98,9 +98,9 @@ function fetchComments() {
             $('body').addClass("commentOn");
             $('.wp-block mdspan').each(function () {
                 selectedText = $(this).attr('datatext');
-                      
+
                 if ($('#' + selectedText).length === 0) {
-                 
+
                     var newNode = document.createElement('div');
                     newNode.setAttribute("id", selectedText);
                     newNode.setAttribute("class", "cls-board-outer is_active");
@@ -109,33 +109,33 @@ function fetchComments() {
                     referenceNode.appendChild(newNode);
 
                     ReactDOM.render(
-                        <Board datatext={selectedText} onLoadFetch={1}/>,
+                        <Board datatext={selectedText} onLoadFetch={1} />,
                         document.getElementById(selectedText)
                     )
                 }
-             
+
                 allThreads.push(selectedText);
             });
-         
+
             const copyDatatext = allThreads.includes(current_url);
-            if(current_url && false === copyDatatext){
+            if (current_url && false === copyDatatext) {
                 alert('Your Comment is Deleted or Resolved! Please check with different URL');
                 urlParams.delete('current_url');
                 window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
-            }else{
-                $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
-                $( `#cf-${current_url}` ).addClass( 'active' );
-              }
-          
+            } else {
+                $('.js-activity-centre .user-data-row').removeClass('active');
+                $(`#cf-${current_url}`).addClass('active');
+            }
+
             let loadAttempts = 0;
             const loadComments = setInterval(function () {
                 var openBoards = $('.cls-board-outer:visible').length;
-                if(0 === openBoards){
+                if (0 === openBoards) {
                     $('body').removeClass("commentOn");
                     $('#md-span-comments').removeClass('comments-loader');
                 }
                 loadAttempts++;
-               if (1 <= $('#md-span-comments .commentContainer').length) {
+                if (1 <= $('#md-span-comments .commentContainer').length) {
                     clearInterval(loadComments);
                     $('#loader_style').remove();
                     $('#md-span-comments').removeClass('comments-loader');
@@ -149,7 +149,7 @@ function fetchComments() {
             }, 1000);
         }
 
-       
+
     }
 }
 
@@ -191,7 +191,7 @@ function createBoard(selectedText, value, onChange) {
 
     referenceNode.appendChild(newNode);
     ReactDOM.render(
-        <Board datatext={selectedText} lastVal={value} onChanged={onChange}/>,
+        <Board datatext={selectedText} lastVal={value} onChanged={onChange} />,
         document.getElementById(selectedText)
     )
 }
@@ -225,23 +225,23 @@ const mdComment = {
         }
 
         onToggle() {
-            const {value, onChange} = this.props;
-            let {text, start, end} = value;
+            const { value, onChange } = this.props;
+            let { text, start, end } = value;
             const commentedOnText = text.substring(start, end);
-            
-            
+
+
             // If text is not selected, show notice.
             if (start === end) {
                 alert('Please select text to comment on.');
                 return;
             }
             //If comment box already open, show notice. 
-            if($('.cls-board-outer').hasClass('is-open')){
+            if ($('.cls-board-outer').hasClass('is-open')) {
                 alert('You can not give multiple comment on same Text.');
                 return;
             }
-           var html =this.getSelectionHtml();
-           if(null !== html.match(/mdspan/g)){
+            var html = this.getSelectionHtml();
+            if (null !== html.match(/mdspan/g)) {
                 alert('You have already given comment on one of the word!');
                 return;
             }
@@ -255,25 +255,25 @@ const mdComment = {
 
             referenceNode.appendChild(newNode);
             $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-             //Activate Show All comment button in setting panel
-             if(false === wp.data.select('mdstore').getShowComments()){
+            //Activate Show All comment button in setting panel
+            if (false === wp.data.select('mdstore').getShowComments()) {
                 wp.data.dispatch('mdstore').setShowComments(true);
                 $('.components-form-toggle').addClass('is-checked');
-                 $('.components-base-control__help').html('All comments will show on the content area.');
-                
-             }
-            onChange(toggleFormat(value, {type: name}),
+                $('.components-base-control__help').html('All comments will show on the content area.');
+
+            }
+            onChange(toggleFormat(value, { type: name }),
                 ReactDOM.render(
-                    <Board datatext={currentTime} onChanged={onChange} lastVal={value} freshBoard={1} commentedOnText={commentedOnText}/>,
+                    <Board datatext={currentTime} onChanged={onChange} lastVal={value} freshBoard={1} commentedOnText={commentedOnText} />,
                     document.getElementById(currentTime)
                 )
             );
 
-            onChange(applyFormat(value, {type: name, attributes: {datatext: currentTime}}));
+            onChange(applyFormat(value, { type: name, attributes: { datatext: currentTime } }));
 
             // Toogle hide-comments class if the comments is hidden when try to add new one.
-            if( $( 'body' ).hasClass( 'hide-comments' ) ) {
-                $( 'body' ).removeClass( 'hide-comments' )
+            if ($('body').hasClass('hide-comments')) {
+                $('body').removeClass('hide-comments')
             }
 
         }
@@ -287,7 +287,7 @@ const mdComment = {
                         container.appendChild(sel.getRangeAt(i).cloneContents());
                     }
                     html = container.innerHTML;
-                    
+
                 }
             } else if (typeof document.selection != "undefined") {
                 if (document.selection.type == "Text") {
@@ -295,9 +295,9 @@ const mdComment = {
                 }
             }
             return html;
-          
-         
-           
+
+
+
         }
         getSelectedText() {
             const { onChange, value, activeAttributes } = this.props;
@@ -305,21 +305,21 @@ const mdComment = {
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             const current_url = urlParams.get('current_url');
-            if(current_url){
+            if (current_url) {
                 urlParams.delete('current_url');
                 window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
             }
             // Stripping out unwanted <mdspan> tags from the content.
             var findMdSpan = 'mdspan';
-            $( findMdSpan ).each( function() {
-                var datatext = $( this ).attr( 'datatext' );
-               if( undefined === datatext ) {
-                    $( this ).replaceWith( $( this ).text());
+            $(findMdSpan).each(function () {
+                var datatext = $(this).attr('datatext');
+                if (undefined === datatext) {
+                    $(this).replaceWith($(this).text());
                 }
-            } );
+            });
 
             // Prevent on locked mode + fix for unnecessary calls on hover.
-            if ($('.cls-board-outer').hasClass('locked') ) {
+            if ($('.cls-board-outer').hasClass('locked')) {
                 return;
             }
 
@@ -327,11 +327,11 @@ const mdComment = {
             if ($('#' + activeAttributes.datatext + '.cls-board-outer').hasClass('focus')) {
                 return;
             }
-            
+
             // Reset Comments Float only if the selected text has no comments on it.
-            if (undefined === activeAttributes.datatext) {
+            if (undefined === activeAttributes.datatext && !$('.js-cf-share-comment').hasClass('comment-focus')) {
                 //check try to give comment on word ,who has a comment  
-             
+
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeClass('is-open');
@@ -380,26 +380,23 @@ const mdComment = {
 
                 // Delete the popup and its highlight if user
                 // leaves the new popup without adding comment.
-              
+
                 if (1 === $('.board.fresh-board').length && 0 === $('.board.fresh-board .loading').length) {
                     const latestBoard = $('.board.fresh-board').parents('.cls-board-outer').attr('id');
                     const span_count = $('.wp-block mdspan').length;
-                  
+
                     if (selectedText !== latestBoard) {
-                      
+
                         removeTag(latestBoard); // eslint-disable-line
                         $('#' + latestBoard).remove();
                         $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
-                       if($("#md-span-comments").is(':empty'))
-                        {
+                        if ($("#md-span-comments").is(':empty')) {
                             $('body').removeClass("commentOn");
-                           
-                        }else{
+
+                        } else {
                             $('body').addClass("commentOn");
                         }
                     }
-                 
-                    
                 }
 
                 // Just hide these popups and only display on CTRLz
@@ -408,41 +405,41 @@ const mdComment = {
                     $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
                 });
 
-                
-                
+
+
 
                 // Adding lastVal and onChanged props to make it deletable,
                 // these props were not added on load.
                 // It also helps to 'correct' the lastVal of CTRL-Z'ed Text's popup.
                 if ($('#' + selectedText).length !== 0) {
                     //if body hase hide comment class
-                    if( $( 'body' ).hasClass( 'hide-comments' ) ) {
-                      
+                    if ($('body').hasClass('hide-comments')) {
+
                         $('body').removeClass("commentOn");
-                        
-                       
-                    }else{
+
+
+                    } else {
                         $('body').addClass("commentOn");
-                        
+
                     }
                     ReactDOM.render(
-                        <Board datatext={selectedText} lastVal={value} onChanged={onChange}/>,
+                        <Board datatext={selectedText} lastVal={value} onChanged={onChange} />,
                         document.getElementById(selectedText)
                     )
                 }
-             
+
                 // Float comments column.
                 this.floatComments(selectedText);
             }
             // $( '.js-cancel-comment' ).trigger( 'click' ); // Closing all opened edit comment box.
-            $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
+            $('.js-activity-centre .user-data-row').removeClass('active');
 
 
         }
 
         floatComments(selectedText) {
-          
-            if (document.querySelectorAll(`[data-rich-text-format-boundary='${true}']`).length!== 0) {
+
+            if (document.querySelectorAll(`[data-rich-text-format-boundary='${true}']`).length !== 0 &&  !$('.js-cf-share-comment').hasClass('comment-focus')) {
 
 
                 // Removing dark highlights from other texts,
@@ -459,20 +456,20 @@ const mdComment = {
                 $('#md-span-comments .cls-board-outer.focus').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').css('top', 0);
                 var findMdSpan = '.mdspan-comment';
-                $( findMdSpan ).each( function() {
-                 var datatext = $( this ).attr( 'datatext' );
-                if( datatext === selectedText ) {
-                    $('#' + selectedText).offset({top: $('[datatext="' + selectedText + '"]').offset().top});
-                    //Adding class to prevent multiple click on same selected Text
-                    $('#' + selectedText +'.cls-board-outer').addClass('is-open');
-                }
-               });
+                $(findMdSpan).each(function () {
+                    var datatext = $(this).attr('datatext');
+                    if (datatext === selectedText) {
+                        $('#' + selectedText).offset({ top: $('[datatext="' + selectedText + '"]').offset().top });
+                        //Adding class to prevent multiple click on same selected Text
+                        $('#' + selectedText + '.cls-board-outer').addClass('is-open');
+                    }
+                });
             }
         }
 
         render() {
-           
-            const {isActive} = this.props;
+
+            const { isActive } = this.props;
             return (
                 <Fragment>
                     <RichTextToolbarButton
@@ -483,7 +480,7 @@ const mdComment = {
                         shortcutType="primary"
                         shortcutCharacter="m"
                         className={`toolbar-button-with-text toolbar-button__${name}`}
-                        
+
                     />
                     {
                         <Fragment>

@@ -1,7 +1,7 @@
 /**
  * Main function to be called for required JS actions.
  */
- (function ($) {
+(function ($) {
     'use strict';
     /**
      * All of the code for the admin-facing JavaScript source
@@ -14,68 +14,70 @@
      */
 
     // Stripping out unwanted <mdspan> tags from the content.
-    $( window ).on( 'load', function() {
+    $(window).on('load', function () {
         var findMdSpan = 'mdspan';
-        $( findMdSpan ).each( function() {
-            var datatext = $( this ).attr( 'datatext' );
-            if( undefined === datatext ) {
-                $( this ).replaceWith( DOMPurify.sanitize( $( this ).text() ) ); // phpcs:ignore
+        $(findMdSpan).each(function () {
+            var datatext = $(this).attr('datatext');
+            if (undefined === datatext) {
+                $(this).replaceWith(DOMPurify.sanitize($(this).text())); // phpcs:ignore
             }
-         
-        } );
-    } )
+
+        });
+    })
 
     // Resetting All Class From Activity Center
-    $( document ).on( 'click', '.cls-board-outer', function() {
-        var boardID = $( this ).attr( 'id' );
-      
-        $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
-        $( `#cf-${boardID}` ).addClass( 'active' );
+    $(document).on('click', '.cls-board-outer', function () {
+        var boardID = $(this).attr('id');
+
+        $('.js-activity-centre .user-data-row').removeClass('active');
+        $(`#cf-${boardID}`).addClass('active');
         wp.data.dispatch('mdstore').setDataText(boardID);
         //check if URL has a datatext param
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const current_url = urlParams.get('current_url');
-        if(current_url){
+        if (current_url) {
             urlParams.delete('current_url');
             window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
         }
-    } )
-    $(document).on('click','.cf-sidebar-settings',function(){
-        if( $('body').hasClass('commentOn')){
+    })
+    $(document).on('focus', '.js-cf-share-comment', function () {
+        $('.js-cf-share-comment').addClass('comment-focus');
+    })
+    $(document).on('focusout', '.js-cf-share-comment', function () {
+        $('.js-cf-share-comment').removeClass('comment-focus');
+    })
+    $(document).on('click', '.cf-sidebar-settings', function () {
+        if ($('body').hasClass('commentOn')) {
             $('.components-form-toggle').addClass('is-checked');
             $('#inspector-toggle-control-0__help').html('All comments will show on the content area.');
-        
+
         }
-        
-        
     })
-    $(document).on('click','.cf-sidebar-activity-centre',function(){
+    $(document).on('click', '.cf-sidebar-activity-centre', function () {
         var boardId = wp.data.select('mdstore').getDataText();
-        $( '.js-activity-centre .user-data-row' ).removeClass( 'active' );
-        $(`#cf-${boardId}` ).addClass( 'active' );
-         
+        $('.js-activity-centre .user-data-row').removeClass('active');
+        $(`#cf-${boardId}`).addClass('active');
     })
 
     // Add temporary style tag to hide resolved tag color on load.
     $('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
     // On Document Ready Event.
-    $( document ).ready(function () {
+    $(document).ready(function () {
 
         // If thread focused via an activity center,
         // it is in lock mode, so clicking any para
         // would unlock it.
         $(document).on('click', '.block-editor-block-list__layout .wp-block', function (e) {
 
-            if($('.cls-board-outer').hasClass('locked')) {
-
+            if ($('.cls-board-outer').hasClass('locked')) {
                 // Reset Comments Float. This will reset the positions of all comments.
                 $('#md-span-comments .cls-board-outer').css('opacity', '1');
                 $('#md-span-comments .cls-board-outer').removeClass('focus');
                 $('#md-span-comments .cls-board-outer').removeClass('is-open');
                 $('#md-span-comments .cls-board-outer').removeAttr('style');
 
-                if( e.target.localName === 'mdspan' ) {
+                if (e.target.localName === 'mdspan') {
                     const dataid = $(e.target).attr('datatext');
                     // Trigger card click to focus.
                     $('#' + dataid).trigger('click');
@@ -85,14 +87,14 @@
         });
 
         // Show/Hide comment toggler if the counter value is zero.
-        $( document.body ).on( 'click', '#history-toggle', function() {
-            var dataCount = $( this ).attr( 'data-count' );
-            if ( 0 >= dataCount ) {
-                $( '#comments-toggle' ).hide();
+        $(document.body).on('click', '#history-toggle', function () {
+            var dataCount = $(this).attr('data-count');
+            if (0 >= dataCount) {
+                $('#comments-toggle').hide();
             } else {
-                $( '#comments-toggle' ).show();
+                $('#comments-toggle').show();
             }
-        } )
+        })
 
         // Settings page tabs toggle.
         $(document).on('click', '.cf-tabs span', function () {
@@ -100,9 +102,9 @@
             $('.cf-tab-inner').hide();
             $('#' + tabID).show();
         });
-        
+
         // Save Settings.
-        $('#cf-settings-form').on('submit', function (e){
+        $('#cf-settings-form').on('submit', function (e) {
             e.preventDefault();
             $(this).find('[type="submit"]').addClass('loading');
             const settingsData = {
@@ -134,7 +136,7 @@
 
             // Exclude focus on specific elements.
             var target = $(e.target);
-            if( 'dashicons dashicons-trash' === target[0].className
+            if ('dashicons dashicons-trash' === target[0].className
                 || 'resolve-label' === target[0].className
                 || 'resolve-cb' === target[0].className
             ) {
@@ -153,21 +155,21 @@
 
             const selectedText = _this.attr('id');
             let topOfText = $('[datatext="' + selectedText + '"]').offset().top;
-          
+
             $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
             _this.css('opacity', '1');
-            _this.offset({top: topOfText});
+            _this.offset({ top: topOfText });
 
             var scrollTopClass = '';
-            if( 0 !== $('.interface-interface-skeleton__content').length ) {
+            if (0 !== $('.interface-interface-skeleton__content').length) {
                 // Latest WP Version
                 scrollTopClass = '.interface-interface-skeleton__content';
 
-            } else if( 0 !== $('.block-editor-editor-skeleton__content').length ) {
+            } else if (0 !== $('.block-editor-editor-skeleton__content').length) {
                 // Latest WP Version
                 scrollTopClass = '.block-editor-editor-skeleton__content';
 
-            } else if( 0 !== $('.edit-post-layout__content').length ) {
+            } else if (0 !== $('.edit-post-layout__content').length) {
                 // Old WP Versions
                 scrollTopClass = '.edit-post-layout__content';
 
@@ -177,7 +179,7 @@
             }
 
             topOfText = topOfText + $(scrollTopClass).scrollTop();
-          
+
             $(scrollTopClass).animate({
                 scrollTop: topOfText - 150
             }, 1000);
@@ -192,10 +194,10 @@
             e.preventDefault();
 
             // Triggering comments-toggle if it is closed when clicking on a particular commented link from activity center.
-            if( $( '#comments-toggle' ).hasClass( 'active' ) ) {
-                $( '#comments-toggle' ).trigger( 'click' );
+            if ($('#comments-toggle').hasClass('active')) {
+                $('#comments-toggle').trigger('click');
             }
-          
+
             const dataid = $(this).attr('data-id');
 
             // Trigger card click to focus.
@@ -217,10 +219,10 @@
         });
 
         // Email List Template Function.
-        var emailList = function( appendTo, data ) {
+        var emailList = function (appendTo, data) {
             var listItem = '';
-            if( data.length > 0 ) {
-                data.forEach( function( user ) {
+            if (data.length > 0) {
+                data.forEach(function (user) {
                     listItem += `
                         <li tabindex="0" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
                             <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
@@ -228,7 +230,7 @@
                                 <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">(${user.role})</small></p>
                             </div>
                         </li>`;
-                } )
+                })
 
                 var emailList = `
                     <div class="cf-mentioned-user-popup">
@@ -237,21 +239,21 @@
                         </ul>
                     </div>
                 `;
-                emailList = DOMPurify.sanitize( emailList );
-                $( emailList ).insertAfter( appendTo ); // phpcs:ignore
+                emailList = DOMPurify.sanitize(emailList);
+                $(emailList).insertAfter(appendTo); // phpcs:ignore
             }
         }
 
 
         // Make matched text highlighted.
-        var makeMatchedTextHighlighted = function( term, markEmail, markName ) {
-            term       = term.substring( 1 );
-            var $markEmail = $( markEmail );
-            var $markName  = $( markName );
+        var makeMatchedTextHighlighted = function (term, markEmail, markName) {
+            term = term.substring(1);
+            var $markEmail = $(markEmail);
+            var $markName = $(markName);
 
-            if ( term ) {
-                $markEmail.mark( term );
-                $markName.mark( term );
+            if (term) {
+                $markEmail.mark(term);
+                $markName.mark(term);
             }
         }
 
@@ -270,29 +272,29 @@
         })(window.navigator.userAgent.toLowerCase());
 
         // Get Caret Position
-        var ie = ( typeof document.selection != "undefined" && document.selection.type != "Control" ) && true;
-        var w3 = ( typeof window.getSelection != "undefined" ) && true;
-        var cursorPos =0 ;
-        var range     = '';
+        var ie = (typeof document.selection != "undefined" && document.selection.type != "Control") && true;
+        var w3 = (typeof window.getSelection != "undefined") && true;
+        var cursorPos = 0;
+        var range = '';
 
-    
-        var getCaretPosition = function( editableDiv ) {
+
+        var getCaretPosition = function (editableDiv) {
             var caretPos = 0, sel;
             if (window.getSelection) {
                 sel = window.getSelection();
-                            
+
                 if (sel.rangeCount) {
-                 
+
                     range = sel.getRangeAt(0);
-                    if ( range.commonAncestorContainer.parentNode === editableDiv) {
-                        
+                    if (range.commonAncestorContainer.parentNode === editableDiv) {
+
                         caretPos = range.endOffset;
-                       
+
                     }
                 }
             } else if (document.selection && document.selection.createRange) {
                 range = document.selection.createRange();
-                if ( range.parentElement() === editableDiv) {
+                if (range.parentElement() === editableDiv) {
                     var tempEl = document.createElement("span");
                     editableDiv.insertBefore(tempEl, editableDiv.firstChild); // phpcs:ignore
                     var tempRange = range.duplicate();
@@ -305,323 +307,323 @@
         }
 
         // Insert Display Name.
-        var insertDisplayName = function( setRange, email, fullName, displayName ) {
-          
-            var gapElContent = document.createTextNode( "\u00A0" ); // Adding whitespace after the name.
-            var anchor       = document.createElement( 'a' );
-         
-            var splitDisplayName = displayName.split( ' ' );
-            anchor.setAttribute( 'contenteditable', false );
-            anchor.setAttribute( 'href', `mailto:${email}` );
-            anchor.setAttribute( 'title', fullName );
-            anchor.setAttribute( 'data-email', email );
-            anchor.setAttribute( 'class', 'js-mentioned' );
-            var anchorContent = document.createTextNode( splitDisplayName[0] );
-            anchor.appendChild( anchorContent );
-            setRange.insertNode( anchor );
-            anchor.after( gapElContent ); // phpcs:ignore
-          
+        var insertDisplayName = function (setRange, email, fullName, displayName) {
+
+            var gapElContent = document.createTextNode("\u00A0"); // Adding whitespace after the name.
+            var anchor = document.createElement('a');
+
+            var splitDisplayName = displayName.split(' ');
+            anchor.setAttribute('contenteditable', false);
+            anchor.setAttribute('href', `mailto:${email}`);
+            anchor.setAttribute('title', fullName);
+            anchor.setAttribute('data-email', email);
+            anchor.setAttribute('class', 'js-mentioned');
+            var anchorContent = document.createTextNode(splitDisplayName[0]);
+            anchor.appendChild(anchorContent);
+            setRange.insertNode(anchor);
+            anchor.after(gapElContent); // phpcs:ignore
+
         }
 
         // Cases when we should show the suggestion list.
-        var showSuggestion = function( tracker ) {
-            var allowedStrings = [ '', '@', ' @', ';', '>' ];
-            if( allowedStrings.includes( tracker ) ) {
+        var showSuggestion = function (tracker) {
+            var allowedStrings = ['', '@', ' @', ';', '>'];
+            if (allowedStrings.includes(tracker)) {
                 return true;
             }
             return false;
 
         }
         // Format Pasted Content.
-        var formatPastedContent = function() {
-            $( document.body ).on( 'paste', '.js-cf-share-comment, .js-cf-edit-comment', function(e) {
+        var formatPastedContent = function () {
+            $(document.body).on('paste', '.js-cf-share-comment, .js-cf-edit-comment', function (e) {
                 e.preventDefault();
                 let paste = (e.originalEvent || e).clipboardData.getData('text/plain');
                 const selection = window.getSelection();
-                const pastedRange = selection.getRangeAt( 0 );
+                const pastedRange = selection.getRangeAt(0);
                 if (!selection.rangeCount) return false;
                 selection.deleteFromDocument();
-                pastedRange.insertNode( document.createTextNode( paste ) );
-                pastedRange.collapse( false );
+                pastedRange.insertNode(document.createTextNode(paste));
+                pastedRange.collapse(false);
                 selection.removeAllRanges();
-                selection.addRange( pastedRange );
+                selection.addRange(pastedRange);
                 e.preventDefault();
-            } )
+            })
 
         }
         formatPastedContent();
 
         // Create @mentioning email features.
-        var createAutoEmailMention = function() {
-            var el                    = '';
-            var currentBoardID        = '';
+        var createAutoEmailMention = function () {
+            var el = '';
+            var currentBoardID = '';
             var currentCommentBoardID = '';
-            var typedText             = '';
-            var trackedStr            = '';
-            var isEmail               = false;
-            var createTextarea        = '';
-            var appendIn              = '';
-            var assignablePopup       = '';
-            var editLink              = '';
-            var keysToAvoid           = [ 'Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown' ];
-            var currentPostID         = $( '#post_ID' ).val();
-            var parentBoardClass      = '.cls-board-outer';
-            var mood                  = 'create';
+            var typedText = '';
+            var trackedStr = '';
+            var isEmail = false;
+            var createTextarea = '';
+            var appendIn = '';
+            var assignablePopup = '';
+            var editLink = '';
+            var keysToAvoid = ['Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+            var currentPostID = $('#post_ID').val();
+            var parentBoardClass = '.cls-board-outer';
+            var mood = 'create';
             //var cachedUsersList       = adminLocalizer.cached_users_list;
 
 
             // Grab the current board ID.
-            $( document.body ).on( 'click', parentBoardClass, function() {
-                el              = $( this ).attr( 'id' );
-                currentBoardID  = `#${el}`;
-                appendIn        = `${currentBoardID} .cf-mentioned-user-popup`;
+            $(document.body).on('click', parentBoardClass, function () {
+                el = $(this).attr('id');
+                currentBoardID = `#${el}`;
+                appendIn = `${currentBoardID} .cf-mentioned-user-popup`;
                 assignablePopup = `${currentBoardID} .cf-assignable-list-popup`;
-                editLink        = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
-                mood            = 'create';
-                if( 'create' === mood ) {
-                    createTextarea  = `${currentBoardID} .js-cf-share-comment`;
+                editLink = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
+                mood = 'create';
+                if ('create' === mood) {
+                    createTextarea = `${currentBoardID} .js-cf-share-comment`;
                 }
-            } );
-            if( '' === el ) {
-                $( document.body ).on( 'focus', '.shareCommentContainer', function() {
-                    el              = $( this ).parents(parentBoardClass).attr( 'id' );
-                    currentBoardID  = `#${el}`;
-                    appendIn        = `${currentBoardID} .cf-mentioned-user-popup`;
+            });
+            if ('' === el) {
+                $(document.body).on('focus', '.shareCommentContainer', function () {
+                    el = $(this).parents(parentBoardClass).attr('id');
+                    currentBoardID = `#${el}`;
+                    appendIn = `${currentBoardID} .cf-mentioned-user-popup`;
                     assignablePopup = `${currentBoardID} .cf-assignable-list-popup`;
-                    editLink        = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
-                    mood            = 'create';
-                    if( 'create' === mood ) {
-                        createTextarea  = `${currentBoardID} .js-cf-share-comment`;
+                    editLink = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
+                    mood = 'create';
+                    if ('create' === mood) {
+                        createTextarea = `${currentBoardID} .js-cf-share-comment`;
                     }
-                } )
+                })
             }
-            $( document.body ).on( 'focus keyup paste', '.js-cf-edit-comment', function() {
-               
+            $(document.body).on('focus keyup paste', '.js-cf-edit-comment', function () {
+
                 mood = 'edit';
-                el   = $( this ).parents( parentBoardClass ).attr( 'id' );
-                currentCommentBoardID = $( this ).parents( '.commentContainer' ).attr( 'id' );
-                if( 'edit' === mood ) {
-                    createTextarea  = `#${currentCommentBoardID} .js-cf-edit-comment`;
+                el = $(this).parents(parentBoardClass).attr('id');
+                currentCommentBoardID = $(this).parents('.commentContainer').attr('id');
+                if ('edit' === mood) {
+                    createTextarea = `#${currentCommentBoardID} .js-cf-edit-comment`;
                 }
-               
-            } );
+
+            });
             // Restrict Br in newline in firefox
-            if( 'firefox' === browser ) {
-                $( document.body).on("keydown",'.cf-share-comment',function(e) {
-                    if(e.keyCode == 13 && !e.shiftKey) {
+            if ('firefox' === browser) {
+                $(document.body).on("keydown", '.cf-share-comment', function (e) {
+                    if (e.keyCode == 13 && !e.shiftKey) {
                         //document.execCommand('insertHTML', false, '<br><br>');
-                        document.execCommand('insertLineBreak',false, null);
+                        document.execCommand('insertLineBreak', false, null);
                         return false;
                     }
                 });
-                } 
+            }
 
             // Clearing out assignable dom on edit save or edit cancel.
-            $( document.body ).on( 'click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function() {
-                $( `${currentBoardID} .cf-assign-to` ).remove();
-            } )
+            $(document.body).on('click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function () {
+                $(`${currentBoardID} .cf-assign-to`).remove();
+            })
 
             // Remove emails list on edit link click.
-            $( document.body ).on( 'click', editLink, function() {
-                $( appendIn ).remove();
-                $( assignablePopup ).remove();
-            } );
+            $(document.body).on('click', editLink, function () {
+                $(appendIn).remove();
+                $(assignablePopup).remove();
+            });
 
             /**
              * ========================================
              * Triggering textarea keyup event.
              * ========================================
              */
-            $( document.body ).on( 'keyup', createTextarea, function(e) {
-                
-                var _self = $( createTextarea );
+            $(document.body).on('keyup', createTextarea, function (e) {
+
+                var _self = $(createTextarea);
                 typedText = _self.html();
-              
+
                 // Clearing out any junk left when clearing the textarea.
-                if( '<br>' === _self.html() || '&nbsp;' === _self.html() ) {
-                   
+                if ('<br>' === _self.html() || '&nbsp;' === _self.html()) {
+
                     typedText = '';
-                    $( createTextarea ).html( '' );
+                    $(createTextarea).html('');
                 }
-               
-               
-             
+
+
+
                 // Removing assignable checkbox if that user's email is not in the content or removed.
-               
-                if( undefined !== typedText && typedText.length > 0 ) {
+
+                if (undefined !== typedText && typedText.length > 0) {
                     var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
-                    var emailSet         = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
-                    emailSet             = new Set( emailSet );
-                    var emailAddresses   = Array.from( emailSet );
-                   
-     // Get the assigner email of the current board.
-     var currentBoardAssingerEmail = $( `${currentBoardID} .cf-board-assigned-to` ).data( 'user-email' );
-                  
-     if( undefined !== emailAddresses && emailAddresses.length > 0 ) {
-         if( assignCheckBoxId.length > 0 ) {
-             var assignCheckBoxUserEmail = $( assignCheckBoxId ).attr( 'data-user-email' );
-             
-             let checkEmailPattern       = new RegExp( assignCheckBoxUserEmail, 'igm' );
-             let isThere                 = typedText.match( checkEmailPattern );
-             if( ! isThere ) {
-                 var appendInCheckbox = [];
-                 $.ajax({
-                     url: ajaxurl, // eslint-disable-line
-                     type: 'post',
-                     data: {
-                         action: 'cf_get_user_email_list',
-                         postID: currentPostID,
-                         nonce: adminLocalizer.nonce, // eslint-disable-line
-                     },
-                     beforeSend: function() {},
-                     success: function( res ) {
-                         $( appendIn ).remove(); // Remove previous DOM.
-                         $( assignablePopup ).remove(); // Remove previous DOM.
-                         var data = JSON.parse( res );
-                       
-                         data.forEach( function( item ) {
-                            if( currentBoardAssingerEmail === emailAddresses[0] ) {
-                                if( item.user_email === emailAddresses[1] ) {
-                                         appendInCheckbox.push( item );
-                                        
-                                }
-                            } else {
-                                if( item.user_email === emailAddresses[0] ) {
-                                    appendInCheckbox.push( item );
-                                        
-                                }
+                    var emailSet = typedText.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm);
+                    emailSet = new Set(emailSet);
+                    var emailAddresses = Array.from(emailSet);
+
+                    // Get the assigner email of the current board.
+                    var currentBoardAssingerEmail = $(`${currentBoardID} .cf-board-assigned-to`).data('user-email');
+
+                    if (undefined !== emailAddresses && emailAddresses.length > 0) {
+                        if (assignCheckBoxId.length > 0) {
+                            var assignCheckBoxUserEmail = $(assignCheckBoxId).attr('data-user-email');
+
+                            let checkEmailPattern = new RegExp(assignCheckBoxUserEmail, 'igm');
+                            let isThere = typedText.match(checkEmailPattern);
+                            if (!isThere) {
+                                var appendInCheckbox = [];
+                                $.ajax({
+                                    url: ajaxurl, // eslint-disable-line
+                                    type: 'post',
+                                    data: {
+                                        action: 'cf_get_user_email_list',
+                                        postID: currentPostID,
+                                        nonce: adminLocalizer.nonce, // eslint-disable-line
+                                    },
+                                    beforeSend: function () { },
+                                    success: function (res) {
+                                        $(appendIn).remove(); // Remove previous DOM.
+                                        $(assignablePopup).remove(); // Remove previous DOM.
+                                        var data = JSON.parse(res);
+
+                                        data.forEach(function (item) {
+                                            if (currentBoardAssingerEmail === emailAddresses[0]) {
+                                                if (item.user_email === emailAddresses[1]) {
+                                                    appendInCheckbox.push(item);
+
+                                                }
+                                            } else {
+                                                if (item.user_email === emailAddresses[0]) {
+                                                    appendInCheckbox.push(item);
+
+                                                }
+                                            }
+
+                                        })
+                                        if (appendInCheckbox.length > 0) {
+                                            $(assignCheckBoxId).prop('checked', false);
+                                            $(assignCheckBoxId).data('user-email', appendInCheckbox[0].user_email)
+                                            $(assignCheckBoxId).val(appendInCheckbox[0].ID);
+                                            $(assignCheckBoxId).next('i').text(`Assign to ${appendInCheckbox[0].display_name}`);
+                                        }
+
+                                    }
+                                })
+
                             }
-                                
-                        } )
-                        if( appendInCheckbox.length>0 ) {
-                            $( assignCheckBoxId ).prop( 'checked', false );
-                            $( assignCheckBoxId ).data( 'user-email', appendInCheckbox[0].user_email )
-                            $( assignCheckBoxId ).val( appendInCheckbox[0].ID );
-                            $( assignCheckBoxId ).next('i').text( `Assign to ${appendInCheckbox[0].display_name}`  );
                         }
-                       
+                    } else {
+                        $(`${currentBoardID} .cf-assign-to`).remove();
                     }
-                 })
-             
-             }
-         }
-     } else {
-         $( `${currentBoardID} .cf-assign-to` ).remove();
-     }
 
                     // Remove assigner dom if there is not email in the editor.
-                    var findEmails = typedText.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i );
-                   
-                    if( ! findEmails || undefined === findEmails ) {
-                        $( `${currentBoardID} .cf-assign-to` ).remove();
+                    var findEmails = typedText.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i);
+
+                    if (!findEmails || undefined === findEmails) {
+                        $(`${currentBoardID} .cf-assign-to`).remove();
                     }
 
                     // Removing assinger chcekbox if it is matched with current board assignees email.
-                    if( emailAddresses.length === 1 && emailAddresses[0] === currentBoardAssingerEmail ) {
-                        $( `${currentBoardID} .cf-assign-to` ).remove();
+                    if (emailAddresses.length === 1 && emailAddresses[0] === currentBoardAssingerEmail) {
+                        $(`${currentBoardID} .cf-assign-to`).remove();
                     }
 
                 }
 
                 // If textarea is blank then remove email list.
-                if( undefined !== typedText && typedText.length <=0 ) {
-                    $( appendIn ).remove();
-                    $( assignablePopup ).remove();
-                    $( '.cf-assign-to' ).remove();
+                if (undefined !== typedText && typedText.length <= 0) {
+                    $(appendIn).remove();
+                    $(assignablePopup).remove();
+                    $('.cf-assign-to').remove();
                 }
 
-                if( typedText && typedText.length > 0 ) {
-                    var refinedText = typedText.replace( /<br>/igm, '' );
-                    typedText       = refinedText;
+                if (typedText && typedText.length > 0) {
+                    var refinedText = typedText.replace(/<br>/igm, '');
+                    typedText = refinedText;
                 }
 
                 // Handeling space. As if someone type space has no intension to write email.
                 // So we make isEmail false and trackedStr to blank.
-                if( 32 === e.which ) {
+                if (32 === e.which) {
                     isEmail = false;
                     trackedStr = '';
                 }
 
                 // Get current cursor position.
-                var el    = $( createTextarea ).get(0);
+                var el = $(createTextarea).get(0);
                 cursorPos = getCaretPosition(el);
-                  
-               // If @ is pressed and shiftkey is true.
-                if( '@' === e.key && true === e.shiftKey &&  typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
-                    var prevCharOfEmailSymbol = typedText.substr( -1, 1 );
+
+                // If @ is pressed and shiftkey is true.
+                if ('@' === e.key && true === e.shiftKey && typedText.length > 0 && $(createTextarea).is(':focus') === true) {
+                    var prevCharOfEmailSymbol = typedText.substr(-1, 1);
                     var showSuggestionFunc;
                     var index = typedText.indexOf("@");
                     var preText = typedText.charAt(index);
-                
-                    if (preText.indexOf(" ") > 0 || preText.length>0) {
-                         var words = preText.split(" ");
-                        var  prevWords = (words[words.length - 1]) ; 
-                    } 
-                                
-                  if('@' === prevWords){
-                     showSuggestionFunc = showSuggestion( prevWords );
-                  }
-                  if('@' === prevCharOfEmailSymbol){
-                     showSuggestionFunc = showSuggestion( prevCharOfEmailSymbol );
-                  }
-                  if( showSuggestionFunc ) {
-                    
+
+                    if (preText.indexOf(" ") > 0 || preText.length > 0) {
+                        var words = preText.split(" ");
+                        var prevWords = (words[words.length - 1]);
+                    }
+
+                    if ('@' === prevWords) {
+                        showSuggestionFunc = showSuggestion(prevWords);
+                    }
+                    if ('@' === prevCharOfEmailSymbol) {
+                        showSuggestionFunc = showSuggestion(prevCharOfEmailSymbol);
+                    }
+                    if (showSuggestionFunc) {
+
                         // Fetch all email list.
                         isEmail = true;
                         $.ajax({
-                                url: ajaxurl, // eslint-disable-line
-                                type: 'post',
-                                data: {
-                                    action: 'cf_get_user_email_list',
-                                    postID: currentPostID,
-                                    nonce: adminLocalizer.nonce, // eslint-disable-line
-                                },
-                                beforeSend: function() {},
-                                success: function( res ) {
-                                    $( appendIn ).remove(); // Remove previous DOM.
-                                    $( assignablePopup ).remove(); // Remove previous DOM.
-                                    var data = JSON.parse( res );
-                                    emailList( createTextarea, data );
-                                }
-                            })
+                            url: ajaxurl, // eslint-disable-line
+                            type: 'post',
+                            data: {
+                                action: 'cf_get_user_email_list',
+                                postID: currentPostID,
+                                nonce: adminLocalizer.nonce, // eslint-disable-line
+                            },
+                            beforeSend: function () { },
+                            success: function (res) {
+                                $(appendIn).remove(); // Remove previous DOM.
+                                $(assignablePopup).remove(); // Remove previous DOM.
+                                var data = JSON.parse(res);
+                                emailList(createTextarea, data);
+                            }
+                        })
                     } else {
-                        $( appendIn ).remove();
-                        $( assignablePopup ).remove();
+                        $(appendIn).remove();
+                        $(assignablePopup).remove();
                     }
                 }
 
-                if( true === isEmail && typedText.length > 0 && $( createTextarea ).is(':focus') === true ) {
-                    var checkKeys = function( key ) {
-                        if( key === e.key ) {
+                if (true === isEmail && typedText.length > 0 && $(createTextarea).is(':focus') === true) {
+                    var checkKeys = function (key) {
+                        if (key === e.key) {
                             return true;
                         }
                         return false;
                     }
-                   
-                    if( ! keysToAvoid.find( checkKeys ) ) {
+
+                    if (!keysToAvoid.find(checkKeys)) {
 
                         // Check for backspace.
-                        if( 'Backspace' === e.key ) {
-                         
-                            let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                            if ( '@' === prevCharOfEmailSymbol ) {
-                                if( '' !== typedText ) {
+                        if ('Backspace' === e.key) {
+
+                            let prevCharOfEmailSymbol = typedText.substr(-1, 1);
+                            if ('@' === prevCharOfEmailSymbol) {
+                                if ('' !== typedText) {
                                     trackedStr = '@';
                                 } else {
                                     trackedStr = '';
                                 }
                             } else {
-                                    trackedStr = trackedStr.slice( 0, -1 );
-                                }
-                        } else {
-                                trackedStr += e.key;
+                                trackedStr = trackedStr.slice(0, -1);
                             }
+                        } else {
+                            trackedStr += e.key;
+                        }
 
                         // Check for ctrl+backspace.
-                        if( 'Backspace' === e.key && true === e.ctrlKey ) {
-                            let prevCharOfEmailSymbol = typedText.substr( -1, 1 );
-                           if ( '@' === prevCharOfEmailSymbol ) {
-                                if( '' !== typedText ) {
+                        if ('Backspace' === e.key && true === e.ctrlKey) {
+                            let prevCharOfEmailSymbol = typedText.substr(-1, 1);
+                            if ('@' === prevCharOfEmailSymbol) {
+                                if ('' !== typedText) {
                                     trackedStr = '@';
                                 } else {
                                     trackedStr = '';
@@ -631,163 +633,163 @@
                             }
                         }
                     }
-                    
+
                     // If trackedStr is left to @
-                    if( '@' === trackedStr && $( createTextarea ).is(':focus') === true ) {
-                       //if(!keysToAvoid.includes(e.key) && 'Backspace' != e.key){
-                            $.ajax({
-                                url: ajaxurl, // eslint-disable-line
-                                type: 'post',
-                                data: {
-                                    action: 'cf_get_user_email_list',
-                                    postID: currentPostID,
-                                    nonce: adminLocalizer.nonce, // eslint-disable-line
-                                },
-                                    beforeSend: function() {},
-                                    success: function( res ) {
-                                        $( appendIn ).remove(); // Remove previous DOM.
-                                        $( assignablePopup ).remove(); // Remove previous DOM.
-                                        var data = JSON.parse( res );
-                                        emailList( createTextarea, data );
-                                    }
-                            })
+                    if ('@' === trackedStr && $(createTextarea).is(':focus') === true) {
+                        //if(!keysToAvoid.includes(e.key) && 'Backspace' != e.key){
+                        $.ajax({
+                            url: ajaxurl, // eslint-disable-line
+                            type: 'post',
+                            data: {
+                                action: 'cf_get_user_email_list',
+                                postID: currentPostID,
+                                nonce: adminLocalizer.nonce, // eslint-disable-line
+                            },
+                            beforeSend: function () { },
+                            success: function (res) {
+                                $(appendIn).remove(); // Remove previous DOM.
+                                $(assignablePopup).remove(); // Remove previous DOM.
+                                var data = JSON.parse(res);
+                                emailList(createTextarea, data);
+                            }
+                        })
                         //}    
-                   }
+                    }
 
                     // If trackedStr contains other chars with @ as well.
-                    if( '@' !== trackedStr && $( createTextarea ).is(':focus') === true ) {
-                       let checkEmailSymbol = trackedStr.match( /^@\w+$/ig );
-                        if( checkEmailSymbol ) {
+                    if ('@' !== trackedStr && $(createTextarea).is(':focus') === true) {
+                        let checkEmailSymbol = trackedStr.match(/^@\w+$/ig);
+                        if (checkEmailSymbol) {
                             var refinedCachedusersList = [];
-                            let niddle = trackedStr.substr( 1 );
-                            if( '' !== niddle ) {
-                                    // Sending Ajax Call to get the matched email list(s).
-                                    $.ajax({
-                                        url: ajaxurl, // eslint-disable-line
-                                        type: 'post',
-                                        data: {
-                                            action: 'cf_get_matched_user_email_list',
-                                            niddle: trackedStr,
-                                            postID: currentPostID,
-                                            nonce: adminLocalizer.nonce, // eslint-disable-line
-                                        },
-                                        success: function( res ) {
-                                            $( appendIn ).remove(); // Remove user list popup DOM.
-                                            $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
-                                            var data = JSON.parse( res );
-                                            emailList( createTextarea, data );
-                                            makeMatchedTextHighlighted( trackedStr, '.cf-user-email', '.cf-user-display-name' );
-                                        }
-                                    })
-                                
+                            let niddle = trackedStr.substr(1);
+                            if ('' !== niddle) {
+                                // Sending Ajax Call to get the matched email list(s).
+                                $.ajax({
+                                    url: ajaxurl, // eslint-disable-line
+                                    type: 'post',
+                                    data: {
+                                        action: 'cf_get_matched_user_email_list',
+                                        niddle: trackedStr,
+                                        postID: currentPostID,
+                                        nonce: adminLocalizer.nonce, // eslint-disable-line
+                                    },
+                                    success: function (res) {
+                                        $(appendIn).remove(); // Remove user list popup DOM.
+                                        $(assignablePopup).remove(); // Remove assignable user list popup DOM.
+                                        var data = JSON.parse(res);
+                                        emailList(createTextarea, data);
+                                        makeMatchedTextHighlighted(trackedStr, '.cf-user-email', '.cf-user-display-name');
+                                    }
+                                })
+
                             }
                         } else {
-                            $( appendIn ).remove(); // Remove user list popup DOM.
-                            $( assignablePopup ).remove(); // Remove assignable user list popup DOM.
-                          
+                            $(appendIn).remove(); // Remove user list popup DOM.
+                            $(assignablePopup).remove(); // Remove assignable user list popup DOM.
+
                         }
                     }
 
                     // Clearing the popups when trackedStr is empty.
-                if( ! trackedStr || '' === trackedStr ) {
-                        $( appendIn ).remove();
-                        $( assignablePopup ).remove();
+                    if (!trackedStr || '' === trackedStr) {
+                        $(appendIn).remove();
+                        $(assignablePopup).remove();
                     }
                 }
                 // Clearing popup when user types any space or use enterkey.
-                if( 32 === e.which) {
-                    $( appendIn ).remove();
-                    $( assignablePopup ).remove();
+                if (32 === e.which) {
+                    $(appendIn).remove();
+                    $(assignablePopup).remove();
                 }
-            } );
+            });
 
             // Append email in textarea.
-            $( document.body ).on( 'click keypress', '.cf-system-user-email-list li', function(e) {
-                 e.stopPropagation();
-              
-                 
-                if( e.which === 1 ) {
-                    var fullName    = $( this ).data( 'full-name' );
-                    var displayName = '@'+$( this ).data( 'display-name' );
-                    var email       = $( this ).data( 'email' );
-                   
+            $(document.body).on('click keypress', '.cf-system-user-email-list li', function (e) {
+                e.stopPropagation();
+
+
+                if (e.which === 1) {
+                    var fullName = $(this).data('full-name');
+                    var displayName = '@' + $(this).data('display-name');
+                    var email = $(this).data('email');
+
                     // Insert Display Name.
-                    insertDisplayName( range, email, fullName, displayName, createTextarea );
-                    
-                    var typedContent = $( createTextarea ).html();
-                   // Remove @ before display name anchor tag and insterted in to anchor tag
-                   // commented this below line because of bug fixing of <br> removing after user tag
+                    insertDisplayName(range, email, fullName, displayName, createTextarea);
+
+                    var typedContent = $(createTextarea).html();
+                    // Remove @ before display name anchor tag and insterted in to anchor tag
+                    // commented this below line because of bug fixing of <br> removing after user tag
                     //typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
                     typedContent = typedContent.replace(/@<a/g, '<a');
-                             
-                    if( 'firefox' !== browser ) {
-                        typedContent = chromeEdgeClearFix( typedContent );
+
+                    if ('firefox' !== browser) {
+                        typedContent = chromeEdgeClearFix(typedContent);
                     }
-                    
-                    var refinedContent            = typedContent.replace( /(^@|\s@)([a-z0-9]\w*)/gim, ' ' );
-                    refinedContent                = typedContent.replace( /@\w+<a/gim, ' <a' );
-                    var fragments                 = document.createRange().createContextualFragment( refinedContent );
-                    var getCurrentTextAreaID      = $( createTextarea ).attr( 'id' );
-                    var currentTextAreaNode       = document.getElementById( getCurrentTextAreaID );
+
+                    var refinedContent = typedContent.replace(/(^@|\s@)([a-z0-9]\w*)/gim, ' ');
+                    refinedContent = typedContent.replace(/@\w+<a/gim, ' <a');
+                    var fragments = document.createRange().createContextualFragment(refinedContent);
+                    var getCurrentTextAreaID = $(createTextarea).attr('id');
+                    var currentTextAreaNode = document.getElementById(getCurrentTextAreaID);
                     currentTextAreaNode.innerHTML = '';
-                    currentTextAreaNode.appendChild( fragments );
-                    $( appendIn ).remove();
-                    $( assignablePopup ).remove();
+                    currentTextAreaNode.appendChild(fragments);
+                    $(appendIn).remove();
+                    $(assignablePopup).remove();
                     trackedStr = '';
                 }
-               // Setup the caret position after appending the Display Name.
-                var getCurrentTextAreaID = $( createTextarea ).attr( 'id' );
-               var currentTextareaNode  = document.getElementById( getCurrentTextAreaID );
-               var children =  currentTextareaNode.lastElementChild;
-               
+                // Setup the caret position after appending the Display Name.
+                var getCurrentTextAreaID = $(createTextarea).attr('id');
+                var currentTextareaNode = document.getElementById(getCurrentTextAreaID);
+                var children = currentTextareaNode.lastElementChild;
+
                 //Add fix to remove last <br> tag after appending the Display Name.
-                    if (children.tagName && children.tagName === "BR") {
-                        
-                        currentTextareaNode.removeChild(children)
-                    }
-             
-                var selectChild          = currentTextareaNode.childNodes.length-1;
-                var el                   = currentTextareaNode.childNodes[ selectChild ];
-                var cursorSel            = window.getSelection();
-                range                    = cursorSel.getRangeAt(0);
-                 //remove condition to set cursore position in firefox
-                range.setStart( el, range.startOffset );
-                range.collapse( true );
+                if (children.tagName && children.tagName === "BR") {
+
+                    currentTextareaNode.removeChild(children)
+                }
+
+                var selectChild = currentTextareaNode.childNodes.length - 1;
+                var el = currentTextareaNode.childNodes[selectChild];
+                var cursorSel = window.getSelection();
+                range = cursorSel.getRangeAt(0);
+                //remove condition to set cursore position in firefox
+                range.setStart(el, range.startOffset);
+                range.collapse(true);
                 cursorSel.removeAllRanges();
-                cursorSel.addRange( range );
-                
-            } );
+                cursorSel.addRange(range);
+
+            });
         }
         createAutoEmailMention();
 
         // Chrome, Edge Clearfix.
-        var chromeEdgeClearFix = function( typedContent ) {
-            typedContent = typedContent.replace( /(<div>)/ig,'<br>' );
-            typedContent = typedContent.replace( /(<\/div>)/ig,'' );
+        var chromeEdgeClearFix = function (typedContent) {
+            typedContent = typedContent.replace(/(<div>)/ig, '<br>');
+            typedContent = typedContent.replace(/(<\/div>)/ig, '');
             // commented this below line because of bug fixing of <br> removing after user tag
             //typedContent = typedContent.replace( /(<br><br><br>)/ig,'<br><br>' );
             return typedContent;
         }
 
         // User Assign Function.
-        var assignThisToUser = function() {
-            let el                = '';
-            var parentBoardClass  = '.cls-board-outer';
-            let appendTo          = '.js-cf-share-comment-wrapper';
-            var mentionedEmail    = '.cf-system-user-email-list li';
+        var assignThisToUser = function () {
+            let el = '';
+            var parentBoardClass = '.cls-board-outer';
+            let appendTo = '.js-cf-share-comment-wrapper';
+            var mentionedEmail = '.cf-system-user-email-list li';
             let checkBoxContainer = '.cf-assign-to';
 
             // Grab the current board ID.
-            $( document.body ).on( 'focus', appendTo, function() {
-                el = $( this ).parents( parentBoardClass ).attr( 'id' );
-            } )
+            $(document.body).on('focus', appendTo, function () {
+                el = $(this).parents(parentBoardClass).attr('id');
+            })
 
             // On Suggested Email Click.
-            $( document.body ).on( 'click', mentionedEmail, function() {
-                let thisUserId      = $( this ).data( 'user-id' );
-                let thisDisplayName = $( this ).data( 'display-name' );
-                let thisUserEmail   = $( this ).data( 'email' );
-                let checkbox        = `
+            $(document.body).on('click', mentionedEmail, function () {
+                let thisUserId = $(this).data('user-id');
+                let thisDisplayName = $(this).data('display-name');
+                let thisUserEmail = $(this).data('email');
+                let checkbox = `
                 <div class="cf-assign-to">
                     <label for="${el}-cf-assign-to-user">
                         <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>Assign to ${thisDisplayName}</i>
@@ -796,27 +798,27 @@
                 </div>`;
 
                 // Get the assigner id of the current board.
-                let currentBoardAssingerID = $( `#${el} .cf-board-assigned-to` ).data( 'user-id' );
-                if( thisUserId !== currentBoardAssingerID ) {
-                    if( '' !== el ) {
-                        if( $( `#${el} ${checkBoxContainer}` ).children().length <= 1 ) {
-                            $( `#${el} ${checkBoxContainer}` ).empty();
-                            checkbox = DOMPurify.sanitize( checkbox );
-                            $( checkbox ).insertAfter( `#${el} ${appendTo}` ); // phpcs:ignore
+                let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
+                if (thisUserId !== currentBoardAssingerID) {
+                    if ('' !== el) {
+                        if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
+                            $(`#${el} ${checkBoxContainer}`).empty();
+                            checkbox = DOMPurify.sanitize(checkbox);
+                            $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
                         }
                     }
                 }
-            } )
+            })
 
             // On Assignable Email Click.
-            $( document.body ).on( 'click', '.cf-assignable-list li', function(e) {
+            $(document.body).on('click', '.cf-assignable-list li', function (e) {
                 e.preventDefault();
-                el = $( this ).parents( parentBoardClass ).attr( 'id' );
-                let appendTo        = `#${el} .cf-assign-to`;
+                el = $(this).parents(parentBoardClass).attr('id');
+                let appendTo = `#${el} .cf-assign-to`;
                 let assignablePopup = `#${el} .cf-assignable-list-popup`;
-                let thisUserId      = $( this ).data( 'user-id' );
-                let thisUserEmail   = $( this ).data( 'email' );
-                let thisDisplayName = $( this ).data( 'display-name' );
+                let thisUserId = $(this).data('user-id');
+                let thisUserEmail = $(this).data('email');
+                let thisDisplayName = $(this).data('display-name');
                 let checkbox = `
                     <label for="${el}-cf-assign-to-user">
                         <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>Assign to ${thisDisplayName}</i>
@@ -824,21 +826,21 @@
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                 `;
 
-                let checkboxFragments      = document.createRange().createContextualFragment( checkbox );
-                let appendToSelector       = document.querySelector( appendTo );
+                let checkboxFragments = document.createRange().createContextualFragment(checkbox);
+                let appendToSelector = document.querySelector(appendTo);
                 appendToSelector.innerHTML = '';
-                appendToSelector.appendChild( checkboxFragments );
-                $( assignablePopup ).remove();
-            } )
+                appendToSelector.appendChild(checkboxFragments);
+                $(assignablePopup).remove();
+            })
         }
         assignThisToUser();
 
         // Asignable Email List Template.
-        var assignalbeList = function( _self, data ) {
+        var assignalbeList = function (_self, data) {
             var listItem = '';
-            if( data.length > 0 ) {
+            if (data.length > 0) {
                 listItem += `<ul class="cf-assignable-list">`;
-                data.forEach( function( user ) {
+                data.forEach(function (user) {
                     listItem += `
                     <li data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}">
                         <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
@@ -847,7 +849,7 @@
                         </div>
                     </li>
                     `;
-                } );
+                });
                 listItem += `</ul>`
             } else {
                 listItem += `<strong class="cf-no-assignee">Sorry! No user found!</strong>`;
@@ -857,108 +859,108 @@
                     ${listItem}
                 </div>
             `;
-            assignListTemplate = DOMPurify.sanitize( assignListTemplate );
-            setTimeout( function() {
-                $( assignListTemplate ).insertAfter( _self ); // phpcs:ignore
-            }, 200 )
+            assignListTemplate = DOMPurify.sanitize(assignListTemplate);
+            setTimeout(function () {
+                $(assignListTemplate).insertAfter(_self); // phpcs:ignore
+            }, 200)
         }
 
         // Show Assiganable Email List
-        var showAssingableEmailList = function() {
-            var triggerLink      = '.js-cf-show-assign-list';
-            var textarea         = '';
-            var appendTo         = '';
+        var showAssingableEmailList = function () {
+            var triggerLink = '.js-cf-show-assign-list';
+            var textarea = '';
+            var appendTo = '';
             var parentBoardClass = '.cls-board-outer';
             //var cachedUsersList       = adminLocalizer.cached_users_list;
-            $( document.body ).on( 'click', triggerLink, function(e) {
+            $(document.body).on('click', triggerLink, function (e) {
                 e.preventDefault();
-                var el      = $( this ).parents( parentBoardClass ).attr( 'id' );
-                textarea    = `#${el} .js-cf-share-comment`;
-                appendTo    = `#${el} .shareCommentContainer .cf-assign-to`;
-                var content = $( textarea ).html();
+                var el = $(this).parents(parentBoardClass).attr('id');
+                textarea = `#${el} .js-cf-share-comment`;
+                appendTo = `#${el} .shareCommentContainer .cf-assign-to`;
+                var content = $(textarea).html();
 
-                $( this ).removeClass( 'js-cf-show-assign-list' ).addClass( 'js-cf-hide-assign-list' );
+                $(this).removeClass('js-cf-show-assign-list').addClass('js-cf-hide-assign-list');
 
                 // Get the assigner id of the current board.
-                let currentBoardAssingerID = $( `#${el} .cf-board-assigned-to` ).data( 'user-id' );
+                let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
 
-              // Checked cached user list first.
+                // Checked cached user list first.
                 //if( undefined !== cachedUsersList || null !== cachedUsersList ) {
-                    var emailSet       = content.match( /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm );
-                    emailSet           = new Set( emailSet );
-                    var emailAddresses = Array.from( emailSet );
-                    var dataItems          = [];
-                    // Send Ajax Request.
-                    $.ajax({
-                        url: ajaxurl, // eslint-disable-line
-                        type: 'post',
-                        data: {
-                            action: 'cf_get_assignable_user_list',
-                            content: content,
-                            nonce: adminLocalizer.nonce // eslint-disable-line
-                        },
-                        beforeSend: function() {},
-                        success: function( res ) {
-                            var data = JSON.parse( res );
-                            emailAddresses.forEach( function( email ) {
-                                var pattern = new RegExp( email )
-                                data.forEach( function( item ) {
-                                    var userEmail = item.user_email;
-                                    var isMatched = userEmail.match( pattern );
-                                    if( isMatched ) {
-                                        if( item.ID !== currentBoardAssingerID ) {
-                                         
-                                            dataItems.push( item );
-                                           
-                                        }
+                var emailSet = content.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm);
+                emailSet = new Set(emailSet);
+                var emailAddresses = Array.from(emailSet);
+                var dataItems = [];
+                // Send Ajax Request.
+                $.ajax({
+                    url: ajaxurl, // eslint-disable-line
+                    type: 'post',
+                    data: {
+                        action: 'cf_get_assignable_user_list',
+                        content: content,
+                        nonce: adminLocalizer.nonce // eslint-disable-line
+                    },
+                    beforeSend: function () { },
+                    success: function (res) {
+                        var data = JSON.parse(res);
+                        emailAddresses.forEach(function (email) {
+                            var pattern = new RegExp(email)
+                            data.forEach(function (item) {
+                                var userEmail = item.user_email;
+                                var isMatched = userEmail.match(pattern);
+                                if (isMatched) {
+                                    if (item.ID !== currentBoardAssingerID) {
+
+                                        dataItems.push(item);
+
                                     }
-                                } )
-                            } );
-                           assignalbeList( appendTo, dataItems );
-                        }
-                    })
-              } )
+                                }
+                            })
+                        });
+                        assignalbeList(appendTo, dataItems);
+                    }
+                })
+            })
         }
         showAssingableEmailList();
 
         // Hide Assignable Email list.
-        var hideAssignableEmailList = function() {
-            var el                  = '';
-            var triggerLink         = '.js-cf-hide-assign-list';
-            var parentBoardClass    = '.cls-board-outer';
+        var hideAssignableEmailList = function () {
+            var el = '';
+            var triggerLink = '.js-cf-hide-assign-list';
+            var parentBoardClass = '.cls-board-outer';
             var assignableListPopup = '';
-            $( document.body ).on( 'click', triggerLink, function(e) {
+            $(document.body).on('click', triggerLink, function (e) {
                 e.preventDefault();
-                el                  = $( this ).parents( parentBoardClass ).attr( 'id' );
+                el = $(this).parents(parentBoardClass).attr('id');
                 assignableListPopup = `#${el} .cf-assignable-list-popup`;
-                $( assignableListPopup ).remove();
-                $( this ).removeClass( 'js-cf-hide-assign-list' ).addClass( 'js-cf-show-assign-list' );
-            } )
+                $(assignableListPopup).remove();
+                $(this).removeClass('js-cf-hide-assign-list').addClass('js-cf-show-assign-list');
+            })
         }
         hideAssignableEmailList();
 
         // Open comment box when user redirect from email.
-        var openComment = function() {
+        var openComment = function () {
             var commentedId = adminLocalizer.comment_id; // eslint-disable-line
-            $( window ).load( function() {
-                setTimeout( function() {
-                    $( `#${commentedId} .js-edit-comment` ).trigger( 'click' );
-                    $( `#${commentedId}` ).addClass( 'comment-flash' );
-                }, 2000 );
-                setTimeout( function() {
-                    $( `#${commentedId}` ).removeClass( 'comment-flash' );
-                }, 4000 );
-            } )
+            $(window).load(function () {
+                setTimeout(function () {
+                    $(`#${commentedId} .js-edit-comment`).trigger('click');
+                    $(`#${commentedId}`).addClass('comment-flash');
+                }, 2000);
+                setTimeout(function () {
+                    $(`#${commentedId}`).removeClass('comment-flash');
+                }, 4000);
+            })
         }
         openComment();
 
         // Dealing with content-editable console issue.
-        var manageContentEditableConsoleIssue = function() {
-            console.error = (function() {
+        var manageContentEditableConsoleIssue = function () {
+            console.error = (function () {
                 var error = console.error;
-                return function( exception ) {
-                    if ( ( exception + '' ).indexOf( 'Warning: A component is `contentEditable`' ) != 0 ) {
-                        error.apply( console, arguments );
+                return function (exception) {
+                    if ((exception + '').indexOf('Warning: A component is `contentEditable`') != 0) {
+                        error.apply(console, arguments);
                     }
                 }
             })();
@@ -973,18 +975,18 @@
     });
 
     // On Window Load Event.
-    $( window ).on( 'load', function () {
+    $(window).on('load', function () {
         $('.cid_popup_hover').parents('.wp-block.editor-block-list__block.block-editor-block-list__block').addClass('parent_cid_popup_hover');
 
         // Storing necessary user info in local storage.
-        $.post( ajaxurl, { // eslint-disable-line
+        $.post(ajaxurl, { // eslint-disable-line
             'action': 'cf_get_user'
-        }, function ( user ) {
-            user = JSON.parse( user );
-            localStorage.setItem( "userID", user.id );
-            localStorage.setItem( "userName", user.name );
-            localStorage.setItem( "userRole", user.role );
-            localStorage.setItem( "userURL", user.url );
+        }, function (user) {
+            user = JSON.parse(user);
+            localStorage.setItem("userID", user.id);
+            localStorage.setItem("userName", user.name);
+            localStorage.setItem("userRole", user.role);
+            localStorage.setItem("userURL", user.url);
         });
     });
 
@@ -1016,7 +1018,7 @@
     $(document).on('click', '.cf-tabs-main .cf-tabs .cf-tab-item', function () {
         let getTabID = $(this).attr('data-id');
         $(this).parent().addClass('cf-tab-active').siblings().removeClass('cf-tab-active');
-        $('#'+getTabID).addClass('cf-tab-active').show().siblings().removeClass('cf-tab-active').hide();
+        $('#' + getTabID).addClass('cf-tab-active').show().siblings().removeClass('cf-tab-active').hide();
     });
 
 })(jQuery); // eslint-disable-line
@@ -1028,7 +1030,7 @@
  * @param string finalContent The final content generated by cleaning out the string from mdspan
  * @return {object}
  */
-var createNewAttributeWithFinalContent = function(attributeName, finalContent) {
+var createNewAttributeWithFinalContent = function (attributeName, finalContent) {
     const conf = {
         attributes: {
         }
@@ -1042,38 +1044,38 @@ var createNewAttributeWithFinalContent = function(attributeName, finalContent) {
  *
  * @param sting elIDRemove The ID of the comment thread.
  */
-var removeTag = function( elIDRemove ) { // eslint-disable-line
-  
+var removeTag = function (elIDRemove) { // eslint-disable-line
+
     const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block'); // eslint-disable-line
     const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId); // eslint-disable-line
     if (null !== blockAttributes) {
-       
+
         const findAttributes = window.adminLocalizer.allowed_attribute_tags;
 
         jQuery(findAttributes).each(function (i, attrb) { // eslint-disable-line
             var content = blockAttributes[attrb];
-          
+
             if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
 
                 if ('' !== content) {
                     let tempDiv = document.createElement('div');
                     tempDiv.innerHTML = content; // phpcs:ignore
                     let childElements = tempDiv.getElementsByTagName('mdspan');
-                  
+
                     for (let i = 0; i < childElements.length; i++) {
                         if (elIDRemove === childElements[i].attributes.datatext.value) {
                             //Change logic to keep other HTML Tag in content..only remove mdspan tag
-                          
-                                 var parent = childElements[i].parentNode;
-                                
-                                 while( childElements[i].firstChild ) {
-                                    parent.insertBefore(  childElements[i].firstChild, childElements[i] );
-                                 }
-                                parent.removeChild(childElements[i] );
 
-                                const finalContent = tempDiv.innerHTML;
-                           
-                            if ( findAttributes.indexOf(attrb) !== -1 ) {
+                            var parent = childElements[i].parentNode;
+
+                            while (childElements[i].firstChild) {
+                                parent.insertBefore(childElements[i].firstChild, childElements[i]);
+                            }
+                            parent.removeChild(childElements[i]);
+
+                            const finalContent = tempDiv.innerHTML;
+
+                            if (findAttributes.indexOf(attrb) !== -1) {
                                 wp.data.dispatch('core/editor').updateBlock(clientId, createNewAttributeWithFinalContent(attrb, finalContent));
                             }
                             break;
