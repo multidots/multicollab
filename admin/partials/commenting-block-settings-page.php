@@ -1,9 +1,4 @@
 <?php
-
-// If this file is called directly, abort.
-if (! defined('WPINC')) {
-    die;
-}
 /**
  * Gutenberg Commenting Feature Settings Page.
  */
@@ -57,7 +52,7 @@ $cf_admin_notif = get_option('cf_admin_notif');
                                     </div>
                                     <div class="cf-notification-settings">
                                         <div class="cf-check-wrap">
-                                            <input type="checkbox" name="cf_admin_notif" class="cf-checkbox" id="cf_admin_notif" <?php echo '1' === $cf_admin_notif ? 'checked' : '' ?> value=esc_attr("1") class="regular-text"/>
+                                            <input type="checkbox" name="cf_admin_notif" class="cf-checkbox" id="cf_admin_notif" <?php echo '1' === $cf_admin_notif ? 'checked' : '' ?> value="1" class="regular-text"/>
                                             <span class="cf-check"></span>
                                         </div>
                                         <label for="cf_admin_notif"><?php esc_html_e('Notify site admin', 'content-collaboration-inline-commenting'); ?> (<?php echo esc_html(get_option('admin_email')) ?>) <?php esc_html_e('for all new comments even if not mentioned.', 'content-collaboration-inline-commenting'); ?></label>

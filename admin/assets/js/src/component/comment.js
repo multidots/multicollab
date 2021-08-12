@@ -139,7 +139,6 @@ export default class Comment extends React.Component {
             };
             $.post(ajaxurl, data, function () { // eslint-disable-line
                 $('#' + elIDRemove).remove();
-               
                 $('#history-toggle').attr('data-count', $('.cls-board-outer:visible').length);
 
                 // Reset Comments Float.
