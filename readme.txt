@@ -1,20 +1,20 @@
 === Multicollab - Google Doc-Style Editorial Commenting for WordPress ===
 Plugin Name: Multicollab - Google Doc-Style Editorial Commenting for WordPress
 Plugin URI: https://plugins.svn.wordpress.org/commenting-feature
-Author: multidots
+Author: Multidots
 Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
-Requires at least: 5.3.6
+Requires at least: 5.6
 Tested up to: 5.8
-Stable tag: 1.3.8
+Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
 
 == Description ==
-<a href="https://www.multidots.com/multicollab/" target="_blank">Multicollab - Google Doc-Style Editorial Commenting Plugin</a> makes it simpler and quicker to share editorial feedback. 
+<a href="https://www.multidots.com/multicollab/" target="_blank">Multicollab – Google Doc-Style Editorial Commenting Plugin</a> makes it simpler and quicker to share editorial feedback. 
 
 <strong>Add, Edits, reply and assign comments can be placed from within the WordPress Gutenberg editor</strong>, giving you the same functionality available on Google Docs. 
 
@@ -27,13 +27,12 @@ This plugin makes the <strong>publishing experience more collaborative, meaningf
 <li>Assign comments to a specific team member</li>
 <li>Reply to others’ comments</li>
 <li>Resolve comments (mark as done)</li>
-<li>Email notifications for comment activities</li>
 <li>Activity Center to manage all comment activities</li>
 <li>Ability to Reply, Resolve, Edit, and Delete comment or thread from the activity center.</li>
 <li>Threaded comments in the activity center.</li>
 <li>Option to “Hide” comments to focus on publishing</li>
 <li>When you delete a WordPress user, you can assign the deleted user’s comments to other WordPress users.</li>
-<li>Generate a link to a particular comment and share it with other team members.</li>
+<li>Copy and share link — Generate a link to a particular comment and share it with other team members</li>
 </ul>
 
 Plugin - <a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">LIVE DEMO</a>
@@ -62,9 +61,6 @@ Reply to a comment or close the comment thread by marking as resolved.
 👉 <strong>Activity centre</strong>
 Keep a tab on all the comment activities by all the users collaborating in the post/page.
 
-👉 <strong>Email notifications</strong>
-Get email notification for new comments, reply and resolve activities.
-
 👉 <strong>Hide all comments</strong>
 Temporarily hide all the comments from a click of a button for clean content editing interface.
 
@@ -92,17 +88,76 @@ Step by step guide to commenting on a post/page in WordPress Platform.
 
 The ability to <strong>leave comments and suggestions in a more meaningful and results-oriented manner during the content review process</strong> is currently unavailable in the WordPress Gutenberg editor.
 
-This limits collaborative editing and publishing. Things are prone to get difficult when multiple team members need to review content, and publishers often use Google Docs to place edits and comments collaboratively. 
+This limits collaborative editing and publishing. Things are prone to get difficult when multiple team members need to review content, and publishers often use Google Docs to place edits and comments collaboratively.
 
 Multidots has created a plugin that allows <strong>Google-Doc Style editorial commenting from within the WordPress Gutenberg editor.</strong>
 
 This plugin <strong>eliminates time-consuming steps</strong> and the need to move content out of the editor for collaborative feedback and editing.
 
+== 👉 DIFFERENCE BETWEEN LITE AND PREMIUM VERSION ==
+
+Check the detailed difference between the Premium and Lite version – <a href ="https://www.multicollabs.com/pricing/" target="_blank">Click here</a>
+
+== 📣  MULTICOLLAB PREMIUM PLUGIN FEATURES – <a href ="https://www.multicollabs.com/pricing" target="_blank">UPGRADE NOW </a>==
+
+Need even more features? upgrade the premium plugin version to get all the advanced features.
+
+<strong>Comment on Media</strong>
+
+Ability to comment on any media while editing new posts or pages.
+
+<ul>
+
+<li>The free version of Multicollab offers comments on text-based content, but we know your editorial workflow includes design and media.</li>
+
+<li>The Premium version unlocks the ability to comment on images, videos, audios, galleries, and more!</li>
+
+</ul>
+
+<strong>Email Notifications</strong>
+
+Enable email notifications for new comments and mentions.
+
+<ul>
+
+<li>Empower your team to seamlessly collaborate with email notifications.</li>
+
+<li>Your team can review notifications and easily click to respond directly in WordPress.</li>
+
+</ul>
+
+<strong>Advanced Reports  </strong>
+
+Simply review your editorial workflow with advanced reporting features and transparent data points.
+
+<ul>
+
+<li><strong>The Activity Timeline</strong> monitors collaboration and tracks progress across all pages and posts with easy filtering to view by user, content categories, and time stamps.</li>
+
+<li>Discover what your team needs with <strong>Activity Snapshot</strong> for the latest comment activities on each page and post. </li>
+
+</ul>
+
+<strong>Premium Support</strong>
+
+The Multicollab support team is driven by providing an excellent experience within your editorial workflow. Email support is available and feedback is always welcome.
+
+<ul>
+
+<li>With premium support, your request will be handled within 24 hours.</li>
+
+<li>We created this editorial workflow tool with you in mind. We are here to answer questions and help in any way.</li>
+
+</ul>
+
+== ➡️<a href ="https://www.multicollabs.com/pricing" target="_blank">UPGRADE NOW</a> ⬅️ ==
+
 == 💁 REQUIRE ENVIRONMENT ==
 
 <ul>
-<li>WordPress version 5.3 to 5.7</li>
+<li>WordPress version 5.6 to 5.8</li>
 <li>Required PHP version 7.0 to 7.4</li>
+<li>Gutenberg version 8.6 to 10.7</li>   
 </ul>
 
 == 💁 GUTENBERG BLOCKS COMPATIBILITY ==
@@ -115,15 +170,16 @@ This plugin is compatible with a range of Gutenberg blocks allowing comments to 
 <li>Table Block</li>
 <li>Headings Block</li>
 <li>Quote Block</li>
-<li>Image Block (caption)</li>
-<li>Gallery Block (Captions)</li>
-<li>Cover Block</li>
-<li>Audio Block (Caption)</li>
-<li>File Block (Filename)</li>
+<li>Image Block (Premium only )</li>
+<li>Gallery Block (Premium only )</li>
+<li>Cover Block (Premium only )</li>
+<li>Audio Block (Premium only )</li>
+<li>File Block (Premium only )</li>
+<li>video block (Premium only )</li>
+<li>Media & Text (Premium only )</li>
 <li>Pullquote Block</li>
 <li>Verse Block</li>
 <li>Button Block</li>
-<li>Media & Text</li>
 </ul>
 
 == 💁 Plugin compatibility with web browser ==
@@ -153,7 +209,7 @@ All types of contributions are most welcome.
 
 == 💁 Support ==
 
-This repository is not for support. Please use it for contributions only. To get help/support, please email us at <a href="mailto:help@multidots.com">help@multidots.com</a> or <a href ="https://www.multidots.com/multicollab/" target="_blank">contact us</a>.
+This repository is not for support. Please use it for contributions only. To get help/support, please email us at <a href="mailto:contact@multicollabs.com">contact@multicollabs.com</a> or <a href ="https://www.multidots.com/multicollab/" target="_blank">contact us</a>.
 
 == Installation ==
 
@@ -187,8 +243,15 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 4.
 5.
 6.
+7.
 
 == Changelog ==
+
+= 2.0 - 26.10.2021 =
+* [Enhancement] – Show comment icon in the main toolbar.
+* [Enhancement] – User-friendly Board design.
+* [New Feature] – View Summary of comments in Activity Centre.
+* [New Feature] – Mention  and Assign self in Comment.
 
 = 1.3.8 - 12.08.2021 =
 * [Enhancement] – Maintenance Release.
@@ -200,8 +263,7 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 * [Enhancement] – Made few enhancements for compatibility with Safari and Firefox browsers.
 * [Bug Fix] — Compatible with WordPress 5.8.x.
 
-
-= 1.3.6 - 23.06.2021 =
+= 1.3.6 - 24.06.2021 =
 * [Bug Fix] – Maintenance Release and Made few enhancements.
 
 = 1.3.5 - 08.06.2021 =

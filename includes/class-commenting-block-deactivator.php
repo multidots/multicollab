@@ -27,7 +27,7 @@ if (! defined('WPINC')) {
  */
 class Commenting_block_Deactivator
 {
-
+    
     /**
      * Short Description. (use period)
      *
@@ -36,6 +36,6 @@ class Commenting_block_Deactivator
      * @since    1.0.0
      */
     public static function deactivate()
-    {
+    { 
     }
 }
