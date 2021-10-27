@@ -19,17 +19,17 @@ if (! defined('WPINC')) {
             $profile_url    = get_avatar_url($user_info->user_email); ?>
             <tr>
                 <td style="padding-bottom:20px">
-                    <table class="comment-box-wrap" style="width:100%;font-family:Arial,serif;font-size:14px;color:#4C5056;">
+                    <table class="comment-box-wrap" style="width:100%;font-family:Roboto,serif;font-size:14px;color:#4C5056;">
                         <tr valign="top">
-                            <td class="avatar" style="width:40px;padding-right:10px;">
+                            <td class="avatar" style="width:32px;padding-right:5px;">
                                 <img src="<?php echo esc_url_raw($profile_url) ?>" alt="avatar" style="max-width:100%;border-radius:50%;" />
                             </td>
                             <td class="comment-details">
-                                <table class="commenter-name-role" valign="middle" style="width:100%;">
+                                <table class="commenter-name-role" valign="middle" style="width:100%;font-family:Roboto,sans-serif;">
                                     <tr>
                                         <th align="left">
-                                            <span class="commenter-name" style="font-size:18px;font-family:Roboto,Arial,sans-serif;padding-right:5px;color:#141414;font-weight:600;"><?php echo esc_html($username) ?></span>
-                                            <span class="commenter-role" style="font-weight:400;"><?php echo esc_html(ucwords($user_role)); ?></span>
+                                            <span class="commenter-name" style="font-size:16px;font-family:Roboto,sans-serif;padding-right:5px;color:#1D2327;font-weight:500;text-transform:capitalize;"><?php echo esc_html($username) ?></span>
+                                            <span class="commenter-role" style="font-weight:400;color:#50575E;font-size:14px;    font-family: Roboto,sans-serif;">(<?php echo esc_html(ucwords($user_role)); ?>)</span>
                                         </th>
                                     </tr>
                                     <tr>

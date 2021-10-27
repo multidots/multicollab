@@ -86,29 +86,30 @@ function gc_reassigning_deleted_user($id, $reassign)
 		LIKE %s",
         $like
     ));
-    $current_user_id = get_current_user_id();
+    $user_to_reassign = $reassign ? $reassign : get_current_user_id();
+
     foreach ($results as $result) {
         $values = maybe_unserialize($result->meta_value);
 
-        if (null !== $reassign) {
-            foreach ($values['comments'] as $key=>$value) {
-                if ($id === $value['userData']) {
-                    $values['comments'][$key]['userData'] = $reassign;
-                }
-            }
-            if ($id === intval($values['assigned_to'])) {
-                $values['assigned_to'] = $reassign;
-            }
-        } else {
-            foreach ($values['comments'] as $key=>$value) {
-                if ($id === $value['userData']) {
-                    $values['comments'][$key]['userData'] = $current_user_id;
-                }
-            }
-            if ($id === intval($values['assigned_to'])) {
-                $values['assigned_to'] = $current_user_id;
+        if (empty($values['comments'])) {
+            continue;
+        }
+
+        foreach ($values['comments'] as $key=>$value) {
+            if (isset($value['userData']) && $id === $value['userData']) {
+                $values['comments'][$key]['userData'] = $user_to_reassign;
             }
         }
+
+        if (isset($values['assigned_to']) && $id === intval($values['assigned_to'])) {
+            $values['assigned_to'] = $user_to_reassign;
+        }
+
+        if (isset($values['resolved_by']) && $id === intval($values['resolved_by'])) {
+            $values['resolved_by'] = $user_to_reassign;
+        }
+     
+
         update_post_meta($result->post_id, $result->meta_key, $values);
     }
 }
