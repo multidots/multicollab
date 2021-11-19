@@ -247,6 +247,9 @@ class Commenting_block
      */
     public static function cf_redirect_on_activate( $plugin = false )
     {
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	    return;
+	}
         
         if ( COMMENTING_BLOCK_BASE === $plugin ) {
             wp_redirect( add_query_arg( array(
