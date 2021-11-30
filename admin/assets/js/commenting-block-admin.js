@@ -1923,3 +1923,4 @@ jQuery(document).ready(function () {
             freemiusCheckout('15024',licenses);
         } );
     });
+    
