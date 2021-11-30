@@ -14,7 +14,7 @@ $cf_admin_notif = get_option('cf_admin_notif');
             <h1><?php esc_html_e( 'Multicollab', 'content-collaboration-inline-commenting' ); ?></h1>
         </div>
         <div class="cf-plugin-version">
-            <span>Version 2.0</span>
+            <span>Version 2.0.1</span>
         </div>
     </div>
     <form id="cf-settings-form" method="post">

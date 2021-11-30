@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.6
 Tested up to: 5.8
-Stable tag: 2.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,7 +35,7 @@ This plugin makes the <strong>publishing experience more collaborative, meaningf
 <li>Copy and share link — Generate a link to a particular comment and share it with other team members</li>
 </ul>
 
-Plugin - <a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">LIVE DEMO</a>
+Plugin - <a href="https://www.multicollabs.com/?demo=start" target="_blank">LIVE DEMO</a>
 
 == 📽 How Can Users Add Comments Inside The WordPress Gutenberg Editor? ==
 
@@ -64,7 +64,7 @@ Keep a tab on all the comment activities by all the users collaborating in the p
 👉 <strong>Hide all comments</strong>
 Temporarily hide all the comments from a click of a button for clean content editing interface.
 
-== ➡️<a href ="https://www.multidots.com/multicollab/?demo=start" target="_blank">Live Demo</a> ⬅️ ==
+== ➡️<a href ="https://www.multicollabs.com/?demo=start" target="_blank">Live Demo</a> ⬅️ ==
 
 == 💁 HOW TO ADD COMMENT IN GUTENBERG BLOCK ( FOLLOW STEPS BELOW ) ==
 
@@ -246,6 +246,9 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 7.
 
 == Changelog ==
+
+= 2.0.1 - 26.10.2021 =
+* [Enhancement] – Several performances improvements.
 
 = 2.0 - 26.10.2021 =
 * [Enhancement] – Show comment icon in the main toolbar.
