@@ -14,7 +14,7 @@ $cf_admin_notif = get_option('cf_admin_notif');
             <h1><?php esc_html_e( 'Multicollab', 'content-collaboration-inline-commenting' ); ?></h1>
         </div>
         <div class="cf-plugin-version">
-            <span>Version 2.0.1</span>
+            <span>Version 2.0.2</span>
         </div>
     </div>
     <form id="cf-settings-form" method="post">
@@ -43,7 +43,9 @@ $cf_admin_notif = get_option('cf_admin_notif');
                                                     <div class="pricing-block-buttons is-content-justification-center">
                                                         <div class="pricing-block-button has-custom-font-size pro-btn" style="font-size:24px">
                                                             <a class="pricing-block-button__link" href="#">Upgrade</a></div>
+                                                            
                                                     </div>
+                                                    <span><a href="https://checkout.freemius.com/mode/dialog/plugin/8961/plan/15024/?trial=paid">or start 14-day free trial</a></span>
                                                     <ul>
                                                         <li><?php esc_html_e( 'Suggestion Mode (Track Changes)', 'content-collaboration-inline-commenting' ); ?></li>
                                                         <li><?php esc_html_e( 'Advanced Dashboard', 'content-collaboration-inline-commenting' ); ?></li>
@@ -60,7 +62,9 @@ $cf_admin_notif = get_option('cf_admin_notif');
                                                         <div class="pricing-block-button plus-btn">
                                                             <a class="pricing-block-button__link" href="#">Upgrade</a>
                                                         </div>
+                                                        
                                                     </div>
+                                                    <span><a href="https://checkout.freemius.com/mode/dialog/plugin/8961/plan/15023/?trial=paid">or start 14-day free trial</a></span>
                                                     <ul>
                                                         <li><?php  esc_html_e( 'Comment on any text and media', 'content-collaboration-inline-commenting' ); ?></li>
                                                         <li><?php  esc_html_e( 'Email Notification', 'content-collaboration-inline-commenting' ); ?></li>
