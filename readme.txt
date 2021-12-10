@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.6
 Tested up to: 5.8
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -247,7 +247,10 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 
 == Changelog ==
 
-= 2.0.1 - 26.10.2021 =
+= 2.0.2 - 10.12.2021 =
+* [Enhancement] – Maintenance Release.
+
+= 2.0.1 - 30.10.2021 =
 * [Enhancement] – Several performances improvements.
 
 = 2.0 - 26.10.2021 =

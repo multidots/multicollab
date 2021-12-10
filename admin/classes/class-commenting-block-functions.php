@@ -77,6 +77,7 @@ class Commenting_block_Functions {
 		$comment_counts   = array('open_counts'=>0,'accepted_counts'=>0,'rejected_counts'=>0,'total_counts'=>0);
 
 		if ( is_array( $suggestions_meta ) ) {
+			//$total_suggestions    = count( $suggestions_meta );
 			$accepted_suggestions = 0;
 			$rejected_suggestions = 0;
 			$open_suggestions     = 0; 

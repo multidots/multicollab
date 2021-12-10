@@ -36,6 +36,11 @@ class Commenting_Block_Rest_Routes
             'callback'            => [ $this, 'get_activities' ],
             'permission_callback' => [ $this, 'check_activity_permits' ],
         ] );
+        register_rest_route( $this->namespace, '/getuserdata', [
+            'methods'             => 'GET',
+            'callback'            => [ $this, 'getuserdata' ],
+            'permission_callback' => [ $this, 'check_activity_permits' ],
+        ] );
     }
     
     /**
@@ -150,6 +155,34 @@ class Commenting_Block_Rest_Routes
             'threads' => $threads,
         ];
         return rest_ensure_response( $response );
+    }
+    
+    /**
+     * Callback to get the user data response.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function getuserdata( $data )
+    {
+        $userid = intval( $data->get_param( 'userid' ) );
+        //phpcs:ignore
+        if ( !$userid || $userid === '' ) {
+            return null;
+        }
+        $user_info = get_userdata( $userid );
+        
+        if ( !empty($user_info) ) {
+            $userdata = array(
+                'id'        => ( isset( $user_info->ID ) ? intval( $user_info->ID ) : 0 ),
+                'username'  => ( isset( $user_info->display_name ) ? $user_info->display_name : '' ),
+                'avatarUrl' => get_avatar_url( ( isset( $user_info->user_email ) ? $user_info->user_email : '' ) ),
+                'userRole'  => ( isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '' ),
+            );
+            return rest_ensure_response( $userdata );
+        }
+        
+        return null;
     }
 
 }

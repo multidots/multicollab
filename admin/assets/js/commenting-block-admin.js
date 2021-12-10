@@ -16,7 +16,7 @@
 
     /*  Trigger to close sidebar on post editor focus */
     window.addEventListener('click', function(e){   
-        if (document.getElementsByClassName('edit-post-visual-editor')[0].contains(e.target)){
+        if (document.getElementsByClassName('edit-post-visual-editor').length > 0 && document.getElementsByClassName('edit-post-visual-editor')[0].contains(e.target)){
           // Clicked in editor
           closeMulticollabSidebar();
         }  
