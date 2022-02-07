@@ -10,7 +10,6 @@ if (! defined('WPINC')) {
 <table class="comment-list" style="width:100%;">
     <?php
     foreach ($this->list_of_comments as $cf_comment) { // phpcs:ignore
-
         if (isset($cf_comment['status']) && 'publish' === $cf_comment['status']) {
             $user_info      = get_userdata($cf_comment['userData']);
             $user_role      = implode(', ', $user_info->roles);

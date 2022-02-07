@@ -352,6 +352,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                     if ( !empty($previous_comment) ) {
                         $prev_state['comments'][$deleted_timestamp] = $previous_comment;
                         $prev_state['comments'][$deleted_timestamp]['status'] = 'deleted';
+                        $prev_state['comments'][$deleted_timestamp]['created_at'] = $t;
                     }
                 
                 }
@@ -442,7 +443,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 $prev_state['resolved_timestamp'] = $current_timestamp;
                 $prev_state['resolved_by'] = $user_id;
                 
-                if ( array_key_exists( $el, $current_drafts['comments'] ) ) {
+                if ( isset( $current_drafts['comments'] ) && array_key_exists( $el, $current_drafts['comments'] ) ) {
                     // If any published comment is there.
                     $can_delete = false;
                     
@@ -755,14 +756,18 @@ class Commenting_block_Admin extends Commenting_block_Functions
         $dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
         $commentListOld = get_post_meta( $current_post_id, $metaId, true );
         $superCareerData = maybe_unserialize( $commentListOld );
-        $assignedExist = array_column( $superCareerData['comments'], 'assigned' );
-        $has_empty_values = !array_filter( $assignedExist );
+        $assign_label = 'Assigned to';
         $assigned_user_info = get_userdata( $commentList['assigned'] );
-        $assign_label = ( $has_empty_values == 1 ? 'Assigned to ' : 'Reassigned to ' );
-        // phpcs:ignore
+        
+        if ( !empty($superCareerData) ) {
+            $assignedExist = array_column( $superCareerData['comments'], 'assigned' );
+            $has_empty_values = !array_filter( $assignedExist );
+            $assign_label = ( $has_empty_values == 1 ? 'Assigned to ' : 'Reassigned to ' );
+            // phpcs:ignore
+        }
+        
         $assigned_text = ( isset( $assigned_user_info->display_name ) ? ( $login_user->data->ID == $assigned_user_info->ID ? $assign_label . ' You' : $assign_label . $assigned_user_info->display_name ) : '' );
         // phpcs:ignore
-        $arr['status'] = 'publish';
         $arr['userData'] = get_current_user_id();
         // Secure content.
         $arr['thread'] = $this->cf_secure_content( $commentList['thread'] );
@@ -899,8 +904,18 @@ class Commenting_block_Admin extends Commenting_block_Functions
         $current_drafts = maybe_unserialize( $current_drafts );
         $current_drafts = ( empty($current_drafts) ? array() : $current_drafts );
         $current_drafts['edited'][$metaId][] = $old_timestamp;
+        ////////////////// New code by pooja ///////////
+        
+        if ( metadata_exists( 'post', $current_post_id, 'th' . $metaId ) ) {
+            // update meta if meta key exists
+            update_post_meta( $current_post_id, 'th' . $metaId, $edited_comment['editedTimestamp'] );
+        } else {
+            // create new meta if meta key doesn't exists
+            add_post_meta( $current_post_id, 'th' . $metaId, $edited_comment['editedTimestamp'] );
+        }
+        
+        ////////////////////////////////////////////////
         update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
-        update_post_meta( $current_post_id, 'th' . $metaId, $edited_timestamp );
         update_post_meta( $current_post_id, 'mc_updated', $edited_timestamp );
         wp_die();
     }
