@@ -55,34 +55,28 @@ class Commenting_Block_Activities extends Commenting_block_Functions
         if ( $cat_filter ) {
             $query .= " LEFT JOIN {$wpdb->term_relationships} as tr ON pm.post_id = tr.object_id";
         }
-        $query .= " WHERE pm.meta_key = 'mc_updated'";
+        $query .= $wpdb->prepare( " WHERE pm.meta_key = %s", 'mc_updated' );
         if ( $cat_filter ) {
-            $query .= " AND tr.term_taxonomy_id = {$cat_filter}";
+            $query .= $wpdb->prepare( " AND tr.term_taxonomy_id = %s", $cat_filter );
         }
         if ( $cpt_filter ) {
-            $query .= " AND p.post_type = '{$cpt_filter}'";
+            $query .= $wpdb->prepare( " AND p.post_type = '%s'", $cpt_filter );
         }
         if ( $m_filter ) {
-            $query .= " AND MONTH(p.post_modified) = " . $month . " AND YEAR(p.post_modified) = " . $year;
+            $query .= $wpdb->prepare( " AND MONTH(p.post_modified) = %d AND YEAR(p.post_modified) = %d", $month, $year );
         }
         $offset = $items_per_page * ($paged - 1);
         $limit_query = "LIMIT {$items_per_page} OFFSET {$offset}";
         // Get total counts.
         $query_all = $query . " ORDER BY meta_value DESC";
         $query_all = str_replace( $query_replace, 'SELECT count(p.ID)', $query_all );
-        $found_posts = $wpdb->get_var(
-            //phpcs:ignore
-            $wpdb->prepare( $query_all )
-        );
+        $found_posts = $wpdb->get_var( $query_all );
         //phpcs:ignore
         wp_reset_query();
         $order = filter_input( INPUT_GET, "order", FILTER_SANITIZE_STRING );
         $order = $order ?? 'DESC';
         $query .= " ORDER BY pm.meta_value {$order} {$limit_query}";
-        $result = $wpdb->get_results(
-            //phpcs:ignore
-            $wpdb->prepare( $query )
-        );
+        $result = $wpdb->get_results( $query );
         //phpcs:ignore
         wp_reset_query();
         // The Loop
@@ -95,7 +89,6 @@ class Commenting_Block_Activities extends Commenting_block_Functions
                 // Title.
                 $link = get_edit_post_link( $current_post_id );
                 $title = get_the_title( $current_post_id );
-                $post_content = get_post( $current_post_id )->post_content;
                 $prepare_data['title'] = '<a href="' . $link . '">' . $title . '</a>';
                 // Get comments counts.
                 $comments_count_data = $this->cf_get_comment_counts( $current_post_id );
@@ -117,9 +110,6 @@ class Commenting_Block_Activities extends Commenting_block_Functions
                 $activity_count = 0;
                 foreach ( $prepareDataTable as $comments ) {
                     foreach ( $comments as $item ) {
-                        if ( isset( $item['dataid'] ) && strpos( $post_content, strval( $item['dataid'] ) ) === false ) {
-                            continue;
-                        }
                         $activity_count++;
                         if ( $activity_limit < $activity_count ) {
                             break;
@@ -138,6 +128,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions
                                 break;
                             case 'resolved thread':
                                 $status = 'Marked as Resolved';
+                                break;
                             case 'accept':
                             case 'reject':
                                 $status = 'Resolved';
@@ -152,16 +143,29 @@ class Commenting_Block_Activities extends Commenting_block_Functions
                         if ( isset( $item['title'] ) ) {
                             $item['commented_on_text'] = ( strlen( $item['title'] ) < $max_str_length ? $item['title'] : substr( $item['title'], 0, $max_str_length ) . '...' );
                         }
+                        $dtTime = ( isset( $item['dtTime'] ) ? "<time class='user-commented-date'>" . $item['dtTime'] . "</time>" : '' );
                         // Last updated.
-                        $thread = ( strlen( wp_strip_all_tags( $item['thread'] ) ) < $max_str_length ? $item['thread'] : substr( $item['thread'], 0, $max_str_length ) . '...' );
+                        
+                        if ( isset( $item['thread'] ) ) {
+                            $thread = ( strlen( wp_strip_all_tags( $item['thread'] ) ) < $max_str_length ? $item['thread'] : substr( $item['thread'], 0, $max_str_length ) . '...' );
+                        } else {
+                            $thread = '';
+                        }
+                        
                         $collaborators[] = "<span class='tbl-user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' />" . esc_html( $item['username'] ) . "</span>";
-                        $single_collaborator = "<div class='user-data-header'> <div class='user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' /></div><div class='user-display-name'><span class='user-name'>" . esc_html( $item['username'] ) . "<span class='tooltip'>" . esc_html( $item['userrole'] ) . "</span> </span><time class='user-commented-date'>" . $item['dtTime'] . "</time></div></div>";
+                        $single_collaborator = "<div class='user-data-header'> <div class='user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' /></div><div class='user-display-name'><span class='user-name'>" . esc_html( $item['username'] ) . "<span class='tooltip'>" . esc_html( $item['userrole'] ) . "</span> </span>" . $dtTime . "</div></div>";
                         $activity_text .= "<div class='single-activity'><span class='single-activity-status'>" . $status . " By</span>" . $single_collaborator;
                         $commented_text_class = ( empty($item['commented_on_text']) ? 'empty' : '' );
                         $commented_text_class .= ( isset( $item['mode'] ) ? ' ' . $item['mode'] : '' );
                         $commented_text_class .= ( isset( $item['blockType'] ) ? $item['blockType'] : '' );
                         $activity_text .= "<div class='tbl-user-activity-left'><blockquote class='tbl-user-commented-icon{$commented_text_class}'>" . wp_kses( $item['commented_on_text'], wp_kses_allowed_html( 'post' ) ) . "</blockquote>";
-                        $activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . "</span></div></div>";
+                        
+                        if ( 'deleted comment of' === $item['status'] ) {
+                            $activity_text .= "<span class='tbl-user-comment'> <del>" . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . "</del></span></div></div>";
+                        } else {
+                            $activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . "</span></div></div>";
+                        }
+                    
                     }
                 }
                 $prepare_data['activities'] = $activity_text;
@@ -215,19 +219,19 @@ class Commenting_Block_Activities extends Commenting_block_Functions
         if ( $cat ) {
             $query .= " LEFT JOIN {$wpdb->term_relationships} as tr ON pm.post_id = tr.object_id";
         }
-        $query .= " WHERE pm.meta_key LIKE 'th_el%' AND LENGTH(pm.meta_value) = 10 AND  pm.meta_key NOT IN ({$autodrat_id_str}))";
+        $query .= $wpdb->remove_placeholder_escape( $wpdb->prepare( " WHERE pm.meta_key LIKE '%s' AND LENGTH(pm.meta_value) = 10 AND  pm.meta_key NOT IN (%s)", 'th_el%', $autodrat_id_str ) );
         if ( $cat ) {
-            $query .= " AND tr.\t = {$cat}";
+            $query .= $wpdb->prepare( " AND tr.term_taxonomy_id\t = %d", $cat );
         }
         if ( $cpt ) {
-            $query .= " AND p.post_type = '{$cpt}'";
+            $query .= $wpdb->prepare( " AND p.post_type = '%s'", $cpt );
         }
         if ( $m ) {
-            $query .= " AND MONTH(p.post_modified) = {$month} AND YEAR(p.post_modified) = {$year}";
+            $query .= $wpdb->prepare( " AND MONTH(p.post_modified) = %d AND YEAR(p.post_modified) = %d", $month, $year );
         }
         $query .= " ORDER BY pm.meta_value DESC LIMIT {$limit} OFFSET {$offset}";
-        $all_metas = $wpdb->get_results( $wpdb->prepare( $query ) );
-        //db call ok; no-cache ok
+        $all_metas = $wpdb->get_results( $query );
+        //phpcs:ignore
         wp_reset_query();
         // If no data found.
         if ( 0 === count( $all_metas ) ) {
@@ -270,10 +274,8 @@ class Commenting_Block_Activities extends Commenting_block_Functions
     {
         global  $wpdb ;
         $autodraft_ids = array();
-        $select = "SELECT pm.meta_value as ids  FROM {$wpdb->postmeta} as pm";
-        $select .= " LEFT JOIN {$wpdb->posts} as p ON pm.post_id = p.ID";
-        $select .= " WHERE pm.meta_key = '_autodraft_ids'";
-        $autodrafts_id = $wpdb->get_results( $wpdb->prepare( $select ) );
+        $meta_key = '_autodraft_ids';
+        $autodrafts_id = $wpdb->get_results( $wpdb->prepare( "SELECT pm.meta_value as ids  FROM {$wpdb->postmeta} as pm\n\t\t\tLEFT JOIN {$wpdb->posts} as p ON pm.post_id = p.ID\n\t\t\tWHERE pm.meta_key =  %s", $meta_key ) );
         //db call ok; no-cache ok
         foreach ( $autodrafts_id as $id ) {
             $ids = maybe_unserialize( $id->ids );

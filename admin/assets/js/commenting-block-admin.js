@@ -16,12 +16,24 @@
 
     /*  Trigger to close sidebar on post editor focus */
     window.addEventListener('click', function(e){   
+    
         if (document.getElementsByClassName('edit-post-visual-editor').length > 0 && document.getElementsByClassName('edit-post-visual-editor')[0].contains(e.target)){
           // Clicked in editor
           closeMulticollabSidebar();
         }  
       });
      
+    /** last suggestion reply button tooltip */
+    $(document).on('mouseover', '.shareCommentContainer .btn', function () {
+        var boxHeight = jQuery(this).parents(".cls-board-outer").outerHeight() + 30;
+        var parentHeight = jQuery("#md-comments-suggestions-parent").outerHeight() - boxHeight - 50;
+        var boxPosition = jQuery(this).parents(".cls-board-outer").css('top');
+        if( parentHeight < parseInt(boxPosition) - boxHeight + 30 ) {            
+            var currentTop = jQuery(this).parents(".cls-board-outer").css('top');
+            currentTop = parseInt( currentTop.replace('px', '') ) - 50;
+            jQuery(this).parents(".cls-board-outer").css('top', currentTop + 'px'); 
+        }
+    });  
     /* Trigger to add/remove class from block
        when block level sugggestions are created  */
     
@@ -75,7 +87,7 @@
 
                 if (commentCount > getCommentsLimit() && !$(this).hasClass('focus')) {
                     $(this).find('.show-all-comments').html(`Show all ${commentCount - 1} replies`);
-                    $(this).find('.show-all-comments').show();
+                    $(this).find('.show-all-comments').show(); //phpcs:ignore
                     $(this).find('.boardTop .commentContainer').hide();
                     $(this).find('.boardTop .commentContainer').slice(0, getCommentsLimit()).show();
                 } else {
@@ -143,7 +155,7 @@
         $('.commentIcon').removeClass('is-selected');
         wp.data.dispatch('mdstore').setDataText(boardID);
         //check if URL has a datatext param
-        const queryString = window.location.search;
+        const queryString = window.location.search; //phpcs:ignore
         const urlParams = new URLSearchParams(queryString);
         const current_url = urlParams.get('current_url');
         if (current_url) {
@@ -156,6 +168,7 @@
     });
     $(document).on('focus', '.js-cf-share-comment', function () {
         $('.js-cf-share-comment').addClass('comment-focus');
+        $('.btn-wrapper').css('display','block');
     })
     $(document).on('focusout', '.js-cf-share-comment', function () {
         $('.js-cf-share-comment').removeClass('comment-focus');
@@ -265,7 +278,7 @@
             $('#md-span-comments .comment-delete-overlay').removeClass('show');
             $('#md-span-comments .comment-resolve .resolve-cb').prop("checked", false);
             $('#md-span-comments .cls-board-outer .buttons-wrapper').removeClass('active');
-
+            $('.btn-wrapper').css('display','none');
             _this.addClass('focus');
             _this.addClass('is-open');
 
@@ -1391,7 +1404,21 @@
         }
     });
     if (multicollab_fs.can_use_premium_code) {
-        if (multicollab_fs.is_plan_pro) {
+        if (multicollab_fs.is_plan_pro || multicollab_fs.is_plan_plus) {
+            $( document ).ready(function() {
+                var postType = $('.filter-allpagepost').val();
+                if( postType === 'page' ){
+                    $('.filter-allcategory').hide();
+                } 
+            });  
+            $(document).on('change', '.filter-allpagepost', function () {
+                if( this.value === 'page' ){
+                    $('.filter-allcategory').hide();
+                }else{
+                    $('.filter-allcategory').show();
+                }
+            });         
+
             $(document).on('click', '.show_activity_details', function () {
                 let postID = $(this).attr('data-id');
                 $.ajax({
@@ -1573,7 +1600,13 @@ var removeTag = function (elIDRemove) { // eslint-disable-line
     var blockType = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-type'); // eslint-disable-line
     const findAttributes = window.adminLocalizer.allowed_attribute_tags;
     const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId); // eslint-disable-line
-   
+    
+    if('core/gallery' === blockType){
+        removeGalleryTag(blockAttributes,clientId,elIDRemove)
+    }
+    if('core/table' === blockType){
+        removeTableTag(blockAttributes,clientId,elIDRemove)
+    }
     if (null !== blockAttributes) {
 
         jQuery(findAttributes).each(function (i, attrb) { // eslint-disable-line
@@ -1610,13 +1643,88 @@ var removeTag = function (elIDRemove) { // eslint-disable-line
         });
     }
 }
+var removeGalleryTag = function(blockAttributes,clientId,elIDRemove){        
+    jQuery('.blocks-gallery-item').each(function(index, el){
+        if( jQuery(el).find('figure figcaption').length ){
+       blockAttributes.images?.forEach( ( image ) => {
+           const caption = image.caption;
+           let tempDiv = document.createElement('div');
+           tempDiv.innerHTML = caption; // phpcs:ignore
+           let childElements = tempDiv.getElementsByTagName('mdspan');
+           for (let i = 0; i < childElements.length; i++) {
+                if (elIDRemove === childElements[i].attributes.datatext.value) {
+                    //Change logic to keep other HTML Tag in content..only remove mdspan tag
 
+                    var parent = childElements[i].parentNode;
+
+                    while (childElements[i].firstChild) {
+                        parent.insertBefore(childElements[i].firstChild, childElements[i]);
+                    }
+                    parent.removeChild(childElements[i]);
+                     image.caption = tempDiv.innerHTML;
+                    wp.data.dispatch('core/editor').updateBlockAttributes( clientId,{
+                        attributes:{
+                            images :{
+                                id: image.id,
+                                caption: image.caption,
+                            },
+                        },
+                    } );
+                    
+                    break;
+                }
+            }
+        })
+       }
+    });
+}
+var removeTableTag = function(blockAttributes,clientId,elIDRemove){
+    let table_attrb = ['head','body','foot'];
+    jQuery(table_attrb).each(function (i, attrb) {
+       
+        blockAttributes[attrb]?.forEach( ( tableCells ) => {
+        var cells = tableCells.cells;
+        cells.forEach(function(data){
+            var content = data.content;
+          
+            if ('' !== content) {
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = content; // phpcs:ignore
+                let childElements = tempDiv.getElementsByTagName('mdspan');
+                for (let i = 0; i < childElements.length; i++) {
+                    if (elIDRemove === childElements[i].attributes.datatext.value) {
+                        //Change logic to keep other HTML Tag in content..only remove mdspan tag
+
+                        var parent = childElements[i].parentNode;
+
+                        while (childElements[i].firstChild) {
+                            parent.insertBefore(childElements[i].firstChild, childElements[i]);
+                        }
+
+                        parent.removeChild(childElements[i]);
+                        data.content = tempDiv.innerHTML;
+                        wp.data.dispatch('core/editor').updateBlockAttributes( clientId,{
+                            attributes:{
+                                attrb :{
+                                    content:data.content
+                                },
+                            },
+                        } );
+                    }
+                }
+            }
+
+        })
+    })
+})
+}
 var getCommentsLimit = function () {
     return 5;
 }
 
 /* function for calculating diff of time. */
 var timeAgo = function (time) {
+   
     try {
         /* for time formats of time in seconds and minutes */
         var templates = {
@@ -1633,6 +1741,7 @@ var timeAgo = function (time) {
         var template = function (t, n) {
             return templates[t] && templates[t].replace(/%d/i, Math.abs(Math.round(n)));
         };
+       
         if (!time) return;
         /* function for converting timestamp into required format */
         var convertedDatetime = function (date) {
@@ -1667,6 +1776,7 @@ var timeAgo = function (time) {
                 var seconds = ((now.getTime() - time) * .001) >> 0;
                 var minutes = seconds / 60;
                 var hrsFormat = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true });
+               // console.log((seconds < 60 && template('seconds', seconds) || minutes < 60 && template('minutes', minutes) || minutes > 60 && forhrsToday(hrsFormat)) + (minutes < 60 ? templates.suffix : ""));
                 return templates.prefix + (
                     seconds < 60 && template('seconds', seconds) || minutes < 60 && template('minutes', minutes) || minutes > 60 && forhrsToday(hrsFormat)) + (minutes < 60 ? templates.suffix : "");
             }
@@ -1733,7 +1843,6 @@ function scrollBoardToPosition(topOfText) {
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 function filterTextBeforeSave(newText){
-
     newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' ); 
     newText = newText.replace( /<br>/igm, ' <br> ' );
     var link;
@@ -1748,9 +1857,10 @@ function filterTextBeforeSave(newText){
 
     newText = newText.replace( /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function( match ) {   
         link = match;
-        if(link.includes("www.") && !link.includes("http://") && !link.includes("https://"))  {
+        if((link.includes("www.") || link.includes("WWW.") )&& !link.includes("http://") && !link.includes("https://"))  {
+          link = link.replace('WWW.','http://')
           link = link.replace('www.','http://')
-        }           
+        }      
         return `<a href="${link}" target="_blank">${match}</a>`;
     }); 
 
@@ -1761,7 +1871,6 @@ function filterTextBeforeSave(newText){
     }
     newText = newText.replace( /&nbsp;|&nbsp/igm, ' ' );
     newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, ''); 
-       
     newText.trim();
     return newText;
 }
@@ -1790,9 +1899,9 @@ function filterTextForEdit(newText){
     newText = newText.replace(/  +/g, ' ');
     newText = newText.replace( /&nbsp;|&nbsp/igm, ' ' ); 
     newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, ''); 
+    newText = newText.replace(/\s/g, '');
     newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' );      
     newText = newText.trim();
-
     return newText;
 }
 
@@ -1838,23 +1947,20 @@ function appendInfoBoardDiv(){
     }
 }
 function showInfoBoardonNewComments(){
-    //console.log('showInfoBoardonNewComments');
+   
     appendInfoBoardDiv();
 
-    wp.data.subscribe( function () {
-        //console.log('subscribe');
+    wp.data.subscribe( function () { 
+            
         let pinboard = document.getElementById("md-span-status");  
-
         if (null === pinboard) {
             appendInfoBoardDiv();
             pinboard = document.getElementById("md-span-status");
         }
 
         setTimeout( function() { 
-            let count = document.querySelectorAll('.draftComment').length;
-            //console.log('count',count);
+            let count = document.querySelectorAll('.draftComment').length;          
             if( pinboard && !getPostSaveStatus() && count > 0  ){  
-                //console.log('pinboard');
                 pinboard.getElementsByTagName("SPAN")[0].innerHTML = count; 
                 pinboard.setAttribute('style','');   
             }
@@ -1863,7 +1969,6 @@ function showInfoBoardonNewComments(){
             }
          }, 300 );
 
-
         var isSavingPost              = wp.data.select( 'core/editor' ).isSavingPost();
         var isAutosavingPost          = wp.data.select( 'core/editor' ).isAutosavingPost();
         var didPostSaveRequestSucceed = wp.data.select( 'core/editor' ).didPostSaveRequestSucceed(); 
@@ -1871,14 +1976,36 @@ function showInfoBoardonNewComments(){
         if( isSavingPost || isAutosavingPost ){
            //console.log('saving post');
            if( didPostSaveRequestSucceed ) {
-                //console.log('post saved');
+               if(null !== pinboard){
                 pinboard.setAttribute('style','display:none');
                 Array.from(document.querySelectorAll('.draftComment')).forEach((el) => el.classList.remove('draftComment'));
+               }
            }
         }
 
     } ); 
 }
+
+function getSelectionHtml() {
+    var html = "";
+    if (typeof window.getSelection != "undefined") {
+        var sel = window.getSelection();
+        if (sel.rangeCount) {
+            var container = document.createElement("div");
+            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                container.appendChild(sel.getRangeAt(i).cloneContents());
+            }
+            html = container.innerHTML;
+
+        }
+    } else if (typeof document.selection != "undefined") {
+        if (document.selection.type == "Text") {
+            html = document.selection.createRange().htmlText;
+        }
+    }
+    return html;
+}
+
 jQuery(document).ready(function () {
     showInfoBoardonNewComments();
 });
@@ -1923,4 +2050,24 @@ jQuery(document).ready(function () {
             freemiusCheckout('15024',licenses);
         } );
     });
-    
+
+
+function displaySuggestionBoards(){
+    wp.data.dispatch('core/editor').editPost({
+        meta: { _sb_show_suggestion_boards: false },
+    });
+
+    jQuery( 'body' ).removeClass( 'hide-sg' ); 
+}
+function createCommentNode(){
+    var parentNode = document.createElement('div');
+    parentNode.setAttribute("id", 'md-comments-suggestions-parent');
+    var referenceNode = document.querySelector('.block-editor-writing-flow');
+    if(null !== referenceNode){
+        referenceNode.appendChild(parentNode);
+        var commentNode = document.createElement('div');
+        commentNode.setAttribute("id", 'md-span-comments');
+        var parentNodeRef = document.getElementById('md-comments-suggestions-parent');
+        parentNodeRef.appendChild(commentNode);
+    }
+}

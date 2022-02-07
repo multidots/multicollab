@@ -147,6 +147,7 @@ foreach ( $this->cf_activities as $meta_single ) { //phpcs:ignore
 			
 		if ( isset($meta['assigned_to'])) {
 			$user_data   = get_user_by('ID', $meta['assigned_to']);
+			$login_user = wp_get_current_user();
 			$displayName = ($login_user->data->ID == $user_data->ID) ? 'You' : $user_data->display_name; // phpcs:ignore
 		
 			$assigned_to = [
@@ -207,8 +208,8 @@ foreach ( $this->cf_activities as $meta_single ) { //phpcs:ignore
 								
 							}
 							 
-							if ( 'comments' === $board_type ) {
-								$thread = 'deleted' === $comment['status'] ? '<del>' . $comment['thread'] . '</del>' : $comment['thread'];
+							if ( isset($comment['thread']) && 'comments' === $board_type ) {
+								$thread = (isset ($comment['status']) && 'deleted' === $comment['status'] )? '<del>' . $comment['thread'] . '</del>' : $comment['thread'];
 							} else if ( isset($comment['action']) && 'reply' === $comment['action'] ) { 
 								$thread = 'deleted' === $comment['status'] ? '<del>' . $comment['text'] . '</del>' : $comment['text'];
 							}else{

@@ -93,6 +93,7 @@ class Commenting_Block_Rest_Routes
                     $cmnts[] = [
                         'id'              => $timestamp,
                         'status'          => $comment['status'],
+                        'created_at'      => ( isset( $comment['created_at'] ) ? $comment['created_at'] : '' ),
                         'timestamp'       => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
                         'editedTime'      => ( isset( $comment['editedTime'] ) ? $comment['editedTime'] : '' ),
                         'editedTimestamp' => ( isset( $comment['editedTimestamp'] ) ? $comment['editedTimestamp'] : '' ),
@@ -157,12 +158,7 @@ class Commenting_Block_Rest_Routes
         return rest_ensure_response( $response );
     }
     
-    /**
-     * Callback to get the user data response.
-     *
-     * @param array $data
-     * @return array
-     */
+    // custom rest end point to get userdata by user id
     public function getuserdata( $data )
     {
         $userid = intval( $data->get_param( 'userid' ) );

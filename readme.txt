@@ -6,8 +6,8 @@ Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.6
-Tested up to: 5.8
-Stable tag: 2.0.2
+Tested up to: 5.9
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,7 +35,7 @@ This plugin makes the <strong>publishing experience more collaborative, meaningf
 <li>Copy and share link — Generate a link to a particular comment and share it with other team members</li>
 </ul>
 
-Plugin - <a href="https://www.multicollabs.com/?demo=start" target="_blank">LIVE DEMO</a>
+Plugin - <a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">LIVE DEMO</a>
 
 == 📽 How Can Users Add Comments Inside The WordPress Gutenberg Editor? ==
 
@@ -64,7 +64,7 @@ Keep a tab on all the comment activities by all the users collaborating in the p
 👉 <strong>Hide all comments</strong>
 Temporarily hide all the comments from a click of a button for clean content editing interface.
 
-== ➡️<a href ="https://www.multicollabs.com/?demo=start" target="_blank">Live Demo</a> ⬅️ ==
+== ➡️<a href ="https://www.multidots.com/multicollab/?demo=start" target="_blank">Live Demo</a> ⬅️ ==
 
 == 💁 HOW TO ADD COMMENT IN GUTENBERG BLOCK ( FOLLOW STEPS BELOW ) ==
 
@@ -155,8 +155,8 @@ The Multicollab support team is driven by providing an excellent experience with
 == 💁 REQUIRE ENVIRONMENT ==
 
 <ul>
-<li>WordPress version 5.6 to 5.8</li>
-<li>Required PHP version 7.0 to 7.4</li>
+<li>WordPress version 5.6 to 5.9</li>
+<li>Required PHP version 7.0 to 8.0</li>
 <li>Gutenberg version 8.6 to 10.7</li>   
 </ul>
 
@@ -247,11 +247,17 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 
 == Changelog ==
 
+= 2.0.3 - 07.02.2022 =
+* [Enhancement] – Performances improvements.
+* [Enhancement] – Compatible with Table Block.
+* [Enhancement] – UI improvement on comment board.
+* [Bug Fix] – <a href ="https://github.com/multidots/multicollab/issues/45" target="_blank"> Github issue #45</a> Multicolab breaks when used with plugin HTML Editor Syntax Highlighter is fixed.
+* [Bug Fix] – <a href ="https://github.com/multidots/multicollab/issues/40" target="_blank"> Github issue #40</a> WP-CLI plugin activation breaks due to redirect are fixed.
+* [Bug Fix] – Compatible with WordPress 5.9.x.
+* [Bug Fix] – Compatible with PHP 8.0
+
 = 2.0.2 - 10.12.2021 =
 * [Enhancement] – Maintenance Release.
-
-= 2.0.1 - 30.10.2021 =
-* [Enhancement] – Several performances improvements.
 
 = 2.0 - 26.10.2021 =
 * [Enhancement] – Show comment icon in the main toolbar.

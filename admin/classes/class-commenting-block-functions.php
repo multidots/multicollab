@@ -77,7 +77,6 @@ class Commenting_block_Functions {
 		$comment_counts   = array('open_counts'=>0,'accepted_counts'=>0,'rejected_counts'=>0,'total_counts'=>0);
 
 		if ( is_array( $suggestions_meta ) ) {
-			//$total_suggestions    = count( $suggestions_meta );
 			$accepted_suggestions = 0;
 			$rejected_suggestions = 0;
 			$open_suggestions     = 0; 
@@ -138,7 +137,7 @@ class Commenting_block_Functions {
 					$text = isset($suggestion[0]['oldvalue']) ? $suggestion[0]['oldvalue'] : '';
 			 
 					$title = wp_kses( '<strong>'.$suggestion[0]['action'].'</strong> : ' . $suggestion[0]['text'], wp_kses_allowed_html( 'post' ) );
-                    $mode =  strtolower($suggestion[0]['action']) === 'delete' ? 'delete' : 'add' ;                              
+                     $mode =  strtolower($suggestion[0]['action']) === 'delete' ? 'delete' : 'add' ;                              
 					// If resolved.
 					if ( isset( $suggestion[0]['status'] ) && isset( $suggestion[0]['status']['timestamp'] ) ) {
 						$timestamp      = $suggestion[0]['status']['timestamp'];
@@ -171,7 +170,6 @@ class Commenting_block_Functions {
 					}
 
 					foreach ( $suggestion as $sg ) {
-
 						// If edited, add as a new item.
 						if ( isset( $sg['editedTime'] ) && 'deleted' !== $sg['status'] ) {
 
@@ -222,8 +220,12 @@ class Commenting_block_Functions {
 						if ( ! empty( $timestamp ) ) {
 							$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
 						}
-
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['status'] = $sg['action'];
+						if(isset($sg['status']) && 'deleted' === $sg['status']){
+							$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['status'] = 'deleted comment of';
+						}else{
+							$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['status'] = $sg['action'];
+						}
+						
 
 						$user_id = $sg['uid'];
 						if ( ! array_key_exists( $user_id, $userData ) ) {
@@ -267,18 +269,18 @@ class Commenting_block_Functions {
 
 						$userData[ $udata ]['username']   = $username = $user_info->display_name;
 						$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-						$userData[ $user_id ]['userrole'] = $userrole = isset($user_info->roles) ? implode(', ', $user_info->roles) : '';
+						$userData[ $udata ]['userrole'] = $userrole = isset($user_info->roles) ? implode(', ', $user_info->roles) : '';
 					} else {
 						$username    = $userData[ $udata ]['username'];
 						$profile_url = $userData[ $udata ]['profileURL'];
-						$userrole    = $userData[ $user_id ]['userrole'];
+						$userrole    = $userData[ $udata ]['userrole'];
 					}
 
 					$timestamp = isset( $v['resolved_timestamp'] ) ? (int) $v['resolved_timestamp'] : '';
 					if ( ! empty( $timestamp ) ) {
-						$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
+						 $dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
 					}
-
+					
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dataid']            = $dataid;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['commented_on_text'] = $commented_on_text;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['username']          = $username;
@@ -296,7 +298,9 @@ class Commenting_block_Functions {
 					$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
 					$comment_status = isset( $c['status'] ) ? $c['status'] : '';
 					$cstatus        = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
-
+					if('publish' === $comment_status && ! empty($c['editedTime'])){
+						$cstatus    =  __( 'edited', 'content-collaboration-inline-commenting' ) ;	
+					}
 					// Stop displaying history of comments in draft mode.
 					if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
 						continue;
@@ -309,18 +313,24 @@ class Commenting_block_Functions {
 
 						$userData[ $udata ]['username']   = $username = $user_info->display_name;
 						$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-						$userData[ $user_id ]['userrole'] = $userrole = isset($user_info->roles) ? implode(', ', $user_info->roles) : '';
+						$userData[ $udata]['userrole'] = $userrole = isset($user_info->roles) ? implode(', ', $user_info->roles) : '';
 					} else {
 						$username    = $userData[ $udata ]['username'];
 						$profile_url = $userData[ $udata ]['profileURL'];
-						$userrole    = $userData[ $user_id ]['userrole'];
+						$userrole    = $userData[ $udata ]['userrole'];
 					}
 
 					$thread = $c['thread'];
-					if ( ! empty( $timestamp ) ) {
-						$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
-					}
-
+					
+					$edited_timestamp = isset($c['editedTimestamp']) ? (int) $c['editedTimestamp'] : '';
+					
+						if(! empty( $edited_timestamp )) {
+							$dtTime = gmdate( $time_format . ' ' . $date_format, $edited_timestamp );
+						}
+						else {
+							$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
+						}
+					
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
@@ -347,7 +357,6 @@ class Commenting_block_Functions {
 
 				foreach ( $prepareDataTable as $timestamp => $comments ) {
 					foreach ( $comments as $c ) {
-
 						// Limit the number of characters of 'Commented On' Text.
 						$limit             = 50;
 						$commented_on_text = $c['commented_on_text'];
