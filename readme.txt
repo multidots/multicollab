@@ -14,7 +14,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
 
 == Description ==
-<a href="https://www.multidots.com/multicollab/" target="_blank">Multicollab – Google Doc-Style Editorial Commenting Plugin</a> makes it simpler and quicker to share editorial feedback. 
+<a href="https://www.multicollab.com/" target="_blank">Multicollab – Google Doc-Style Editorial Commenting Plugin</a> makes it simpler and quicker to share editorial feedback. 
 
 <strong>Add, Edits, reply and assign comments can be placed from within the WordPress Gutenberg editor</strong>, giving you the same functionality available on Google Docs. 
 
@@ -35,7 +35,7 @@ This plugin makes the <strong>publishing experience more collaborative, meaningf
 <li>Copy and share link — Generate a link to a particular comment and share it with other team members</li>
 </ul>
 
-Plugin - <a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">LIVE DEMO</a>
+Plugin - <a href="https://www.multicollab.com/?demo=start" target="_blank">LIVE DEMO</a>
 
 == 📽 How Can Users Add Comments Inside The WordPress Gutenberg Editor? ==
 
@@ -96,9 +96,9 @@ This plugin <strong>eliminates time-consuming steps</strong> and the need to mov
 
 == 👉 DIFFERENCE BETWEEN LITE AND PREMIUM VERSION ==
 
-Check the detailed difference between the Premium and Lite version – <a href ="https://www.multicollabs.com/pricing/" target="_blank">Click here</a>
+Check the detailed difference between the Premium and Lite version – <a href ="https://www.multicollab.com/pricing/" target="_blank">Click here</a>
 
-== 📣  MULTICOLLAB PREMIUM PLUGIN FEATURES – <a href ="https://www.multicollabs.com/pricing" target="_blank">UPGRADE NOW </a>==
+== 📣  MULTICOLLAB PREMIUM PLUGIN FEATURES – <a href ="https://www.multicollab.com/pricing" target="_blank">UPGRADE NOW </a>==
 
 Need even more features? upgrade the premium plugin version to get all the advanced features.
 
@@ -150,7 +150,7 @@ The Multicollab support team is driven by providing an excellent experience with
 
 </ul>
 
-== ➡️<a href ="https://www.multicollabs.com/pricing" target="_blank">UPGRADE NOW</a> ⬅️ ==
+== ➡️<a href ="https://www.multicollab.com/pricing" target="_blank">UPGRADE NOW</a> ⬅️ ==
 
 == 💁 REQUIRE ENVIRONMENT ==
 

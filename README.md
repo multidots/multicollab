@@ -2,8 +2,8 @@
 
 <p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://ps.w.org/commenting-feature/assets/banner-772x250.jpg?rev=2620769" alt="Commenting Demo"></a></p>
 
-<a href="https://www.multidots.com/multicollab/" target="_blank">About Multicollab</a> | 
-<a href="https://www.multidots.com/multicollab/?demo=start" target="_blank">Live Demo</a>
+<a href="https://www.multicollab.com/" target="_blank">About Multicollab</a> | 
+<a href="https://www.multicollab.com//?demo=start" target="_blank">Live Demo</a>
 
 ## Content Collaboration made easy for WordPress
 
@@ -28,7 +28,7 @@ All type of contributions from are most welcome.
 
 
 ## Support 
-This repository is not for support. Please use it for contributions only. To get help/support, please email us at [multicollab@multidots.com](mailto:multicollab@multidots.com) or [Contact us](https://www.multidots.com/multicollab/)
+This repository is not for support. Please use it for contributions only. To get help/support, please email us at [multicollab@multidots.com](mailto:multicollab@multidots.com) or [Contact us](https://www.multicollab.com/)
 
 ## License 
 
