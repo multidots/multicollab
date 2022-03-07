@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.6
 Tested up to: 5.9
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,7 +64,7 @@ Keep a tab on all the comment activities by all the users collaborating in the p
 👉 <strong>Hide all comments</strong>
 Temporarily hide all the comments from a click of a button for clean content editing interface.
 
-== ➡️<a href ="https://www.multidots.com/multicollab/?demo=start" target="_blank">Live Demo</a> ⬅️ ==
+== ➡️<a href ="https://www.multicollab.com/?demo=start" target="_blank">Live Demo</a> ⬅️ ==
 
 == 💁 HOW TO ADD COMMENT IN GUTENBERG BLOCK ( FOLLOW STEPS BELOW ) ==
 
@@ -246,6 +246,9 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 7.
 
 == Changelog ==
+
+= 2.0.4 - 07.03.2022 =
+[Enhancement] –Security Release.
 
 = 2.0.3 - 07.02.2022 =
 * [Enhancement] – Performances improvements.
