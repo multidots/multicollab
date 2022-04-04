@@ -16,11 +16,16 @@
 
     /*  Trigger to close sidebar on post editor focus */
     window.addEventListener('click', function(e){   
-    
+        
+    if(jQuery('.edit-post-layout').hasClass('is-sidebar-opened')){
+        jQuery('.interface-interface-skeleton__sidebar').removeClass('cf-sidebar-closed'); 
+    }
         if (document.getElementsByClassName('edit-post-visual-editor').length > 0 && document.getElementsByClassName('edit-post-visual-editor')[0].contains(e.target)){
           // Clicked in editor
+          jQuery('.interface-interface-skeleton__sidebar').addClass('cf-sidebar-closed');
           closeMulticollabSidebar();
-        }  
+        } 
+       // $('.interface-interface-skeleton__sidebar').removeClass('cf-sidebar-closed'); 
       });
      
     /** last suggestion reply button tooltip */
@@ -186,7 +191,7 @@
     //$('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
     // On Document Ready Event.
     $(document).ready(function () {
-
+        let doingAjax = false;
         // If thread focused via an activity center,
         // it is in lock mode, so clicking any para
         // would unlock it.
@@ -229,7 +234,7 @@
         });
 
         // Save Settings.
-        $('.cf-cnt-box-body').on('submit', function (e) {
+        $('#cf_settings').on('submit', function (e) {
             e.preventDefault();
             $(this).find('[type="submit"]').addClass('loading');
             const settingsData = {
@@ -238,9 +243,9 @@
             };
             $.post(ajaxurl, settingsData, function () { // eslint-disable-line
                 $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                $('#cf-notice .cf-success').slideDown(300);
+                $('#cf_settings .cf-success').slideDown(300);
                 setTimeout(function () {
-                    $('#cf-notice .cf-success').slideUp(300);
+                    $('#cf_settings .cf-success').slideUp(300);
                 }, 3000);
             });
         });
@@ -249,6 +254,23 @@
             $(this).parent().find('select').prop('selectedIndex', 0);
             $(this).parent().submit();
         });
+        // Save permissions.
+             $('#cf_permissions').on('submit', function (e) {
+                e.preventDefault();
+                $(this).find('[type="submit"]').addClass('loading');
+                const settingsData = {
+                    'action': 'cf_save_permissions',
+                    'formData': $(this).serialize()
+                };
+                $.post(ajaxurl, settingsData, function () { // eslint-disable-line
+                    $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                    $('#cf-permissions-notice .cf-success').slideDown(300);
+                    setTimeout(function () {
+                        $('#cf-permissions-notice .cf-success').slideUp(300);
+                    }, 3000);
+                });
+            });
+    
 
         // Save show_avatar option in a localstorage.
         const data = {
@@ -599,7 +621,7 @@
 
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
-
+               
                 if (undefined !== typedText && typedText.length > 0) {
                     var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
                     var emailSet = typedText.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm);
@@ -615,7 +637,9 @@
 
                             let checkEmailPattern = new RegExp(assignCheckBoxUserEmail, 'igm');
                             let isThere = typedText.match(checkEmailPattern);
-                            if (!isThere) {
+                            if (!isThere && !doingAjax) {
+
+                                doingAjax=true;
                                 var appendInCheckbox = [];
                                 $.ajax({
                                     url: ajaxurl, // eslint-disable-line
@@ -654,7 +678,7 @@
 
                                     }
                                 })
-
+                               
                             }
                         }
                     } else {
@@ -719,8 +743,8 @@
                     if ('@' === prevCharOfEmailSymbol) {
                         showSuggestionFunc = showSuggestion(prevCharOfEmailSymbol);
                     }
-                    if (showSuggestionFunc && mentioncounter <= 1) {
-
+                    if (showSuggestionFunc && mentioncounter <= 1 && !doingAjax) {
+                        doingAjax = true;
                         // Fetch all email list.
                         isEmail = true;
                         $.ajax({
@@ -793,8 +817,10 @@
                         $(appendIn).remove();
                         $(assignablePopup).remove();
                     }
-                    // If trackedStr is left to @
-                    if ('@' === trackedStr && $(createTextarea).is(':focus') === true && cursorPos != 0) {
+               
+                    // If trackedStr is left to @ commented by pooja
+                   /* if ('@' === trackedStr && $(createTextarea).is(':focus') === true && cursorPos != 0 && !doingAjax) {
+                            doingAjax = true;
                         //if(!keysToAvoid.includes(e.key) && 'Backspace' != e.key){
                         $.ajax({
                             url: ajaxurl, // eslint-disable-line
@@ -810,18 +836,22 @@
                                 $(assignablePopup).remove(); // Remove previous DOM.
                                 var data = JSON.parse(res);
                                 emailList(createTextarea, data);
+                               
                             }
+                            
                         })
-                        //}    
-                    }
-
+                       
+                        //}   
+                       
+                    }*/
+                    doingAjax = false;
                     // If trackedStr contains other chars with @ as well.
                     if ('@' !== trackedStr && $(createTextarea).is(':focus') === true) {
                         let checkEmailSymbol = trackedStr.match(/^@\w+$/ig);
                         if (checkEmailSymbol && cursorPos != 0) {
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr(1);
-                            if ('' !== niddle) {
+                            if ('' !== niddle && niddle.length >3) {
                                 // Sending Ajax Call to get the matched email list(s).
                                 $.ajax({
                                     url: ajaxurl, // eslint-disable-line
@@ -1940,14 +1970,14 @@ function appendInfoBoardDiv(){
     var pinboardNode = document.createElement('div');
     pinboardNode.setAttribute("id", 'md-span-status'); 
     pinboardNode.setAttribute('style','display:none');
-    pinboardNode.innerHTML = wp.i18n.__( "You have <span>x</span> draft comments/suggestions. <strong>Save Draft</strong> to apply comments/suggestions. " );
+    pinboardNode.innerHTML = wp.i18n.__( "You have <span>x</span> <strong>Save Draft</strong> to apply changes." );
     var parentNodeRef = document.getElementById('md-comments-suggestions-parent');
     if (null !== parentNodeRef) {
         parentNodeRef.appendChild(pinboardNode);
     }
 }
 function showInfoBoardonNewComments(){
-   
+ 
     appendInfoBoardDiv();
 
     wp.data.subscribe( function () { 
@@ -1983,7 +2013,7 @@ function showInfoBoardonNewComments(){
            }
         }
 
-    } ); 
+    } );   
 }
 
 function getSelectionHtml() {
@@ -2007,7 +2037,8 @@ function getSelectionHtml() {
 }
 
 jQuery(document).ready(function () {
-    showInfoBoardonNewComments();
+    if('1' === showinfoboard.showinfoboard){showInfoBoardonNewComments();}
+   
 });
 jQuery(document).ready(function () {
         function freemiusCheckout(planId,licenses){

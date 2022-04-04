@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
 Requires at least: 5.6
 Tested up to: 5.9
-Stable tag: 2.0.4
+Stable tag: 2.0.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -247,8 +247,14 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 
 == Changelog ==
 
+= 2.0.4.1 - 04.04.2022 =
+* [Enhancement] — Admin can set permission for info board from the settings panel.
+* [Enhancement] – Optimize AJAX request.
+* [Bug Fix] – Minor fixes related to the comment board and formatting.
+
+
 = 2.0.4 - 07.03.2022 =
-[Enhancement] –Security Release.
+* [Enhancement] – Security Release.
 
 = 2.0.3 - 07.02.2022 =
 * [Enhancement] – Performances improvements.
