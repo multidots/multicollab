@@ -49,6 +49,12 @@ class Commenting_block_Admin extends Commenting_block_Functions
         'text',
         'downloadButtonText'
     ) ;
+    private static  $cf_permission_options = array(
+        'cf_permission_add_comment',
+        'cf_permission_resolved_comment',
+        'cf_permission_add_suggestion',
+        'cf_permission_resolved_suggestion'
+    ) ;
     /**
      * Initiate basename .
      */
@@ -65,7 +71,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
     {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
-        $this->basename = plugin_basename( __FILE__ );
+        //$basename = plugin_basename(__FILE__);
         // Publish Comments on status change.
         add_action(
             'post_updated',
@@ -651,6 +657,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 'nonce'                  => wp_create_nonce( COMMENTING_NONCE ),
                 'comment_id'             => ( isset( $comment_id ) ? $comment_id : null ),
                 'allowed_attribute_tags' => apply_filters( 'commenting_block_allowed_attr_tags', static::$allowed_attribute_tags ),
+                'cf_permission_options'  => apply_filters( 'commenting_block_permission_options', static::$cf_permission_options ),
             ] );
             //set edit time timezone
             $date_format = get_option( 'date_format' );
@@ -675,6 +682,21 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 'role'     => $current_user->roles[0],
                 'avtarUrl' => get_avatar_url( $current_user->ID ),
             ) );
+            $cf_options = get_option( 'cf_permissions' );
+            $cf_add_comment_permission = isset( $cf_options[$current_user->roles[0]]["add_comment"] ) ?? '';
+            $cf_resolved_comment_permission = isset( $cf_options[$current_user->roles[0]]["resolved_comment"] ) ?? '';
+            $cf_hide_comment_permission = isset( $cf_options[$current_user->roles[0]]["hide_comment"] ) ?? '';
+            $cf_add_suggestion_permission = isset( $cf_options[$current_user->roles[0]]["add_suggestion"] ) ?? '';
+            $cf_resolved_suggestion_permission = isset( $cf_options[$current_user->roles[0]]["resolved_suggestion"] ) ?? '';
+            $cf_hide_suggestion_permission = isset( $cf_options[$current_user->roles[0]]["hide_suggestion"] ) ?? '';
+            wp_localize_script( $this->plugin_name, 'cf_permissions', array(
+                'add_comment'         => $cf_add_comment_permission,
+                'resolved_comment'    => $cf_resolved_comment_permission,
+                'hide_comment'        => $cf_hide_comment_permission,
+                'add_suggestion'      => $cf_add_suggestion_permission,
+                'resolved_suggestion' => $cf_resolved_suggestion_permission,
+                'hide_suggestion'     => $cf_hide_suggestion_permission,
+            ) );
             $cf_fs_data = array(
                 'current_plan'         => cf_fs()->get_plan_name(),
                 'can_use_premium_code' => cf_fs()->can_use_premium_code(),
@@ -682,6 +704,9 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 'is_plan_pro'          => cf_fs()->is_plan( 'pro', true ),
             );
             wp_localize_script( $this->plugin_name, 'multicollab_fs', $cf_fs_data );
+            wp_localize_script( $this->plugin_name, 'showinfoboard', array(
+                'showinfoboard' => get_option( 'cf_show_infoboard' ),
+            ) );
             wp_enqueue_script( 'jquery-ui-draggable' );
             wp_enqueue_script( 'jquery-ui-droppable' );
             wp_enqueue_script(
@@ -973,7 +998,50 @@ class Commenting_block_Admin extends Commenting_block_Functions
     {
         $form_data = array();
         parse_str( filter_input( INPUT_POST, "formData", FILTER_SANITIZE_STRING ), $form_data );
-        update_option( 'cf_admin_notif', $form_data['cf_admin_notif'] );
+        
+        if ( isset( $form_data['cf_admin_notif'] ) ) {
+            update_option( 'cf_admin_notif', $form_data['cf_admin_notif'] );
+        } else {
+            delete_option( 'cf_admin_noif' );
+        }
+        
+        
+        if ( isset( $form_data['cf_show_infoboard'] ) ) {
+            update_option( 'cf_show_infoboard', $form_data['cf_show_infoboard'] );
+        } else {
+            delete_option( 'cf_show_infoboard' );
+        }
+        
+        echo  'saved' ;
+        wp_die();
+    }
+    
+    /**
+     * Save permissions of the plugin.
+     */
+    public function cf_save_permissions()
+    {
+        global  $wpdb ;
+        $form_data = array();
+        parse_str( filter_input( INPUT_POST, "formData", FILTER_SANITIZE_STRING ), $form_data );
+        foreach ( $form_data as $key => $val ) {
+            
+            if ( '1' === $form_data[$key]['hide_comment'] ) {
+                unset( $form_data[$key]['add_comment'] );
+                unset( $form_data[$key]['resolved_comment'] );
+            }
+            
+            
+            if ( '1' === $form_data[$key]['hide_suggestion'] ) {
+                unset( $form_data[$key]['add_suggestion'] );
+                unset( $form_data[$key]['resolved_suggestion'] );
+            }
+        
+        }
+        $prev_data = $wpdb->get_results( $wpdb->prepare( "SELECT option_name,option_value FROM {$wpdb->options} WHERE option_name = '%s' ORDER BY option_id DESC" ), 'cf_permissions' );
+        //db call ok; no-cache ok
+        delete_option( 'cf_permissions', $prev_data );
+        update_option( 'cf_permissions', $form_data );
         echo  'saved' ;
         wp_die();
     }
@@ -1150,8 +1218,9 @@ class Commenting_block_Admin extends Commenting_block_Functions
         // Fetch out all user's email.
         $email_list = [];
         $system_users = $users->get_results();
+        $options = get_option( 'cf_permissions' );
         foreach ( $system_users as $user ) {
-            if ( $user->has_cap( 'edit_post', $post_id ) ) {
+            if ( isset( $options[$user->roles[0]]['add_comment'] ) && '1' === $options[$user->roles[0]]['add_comment'] || isset( $options[$user->roles[0]]['add_suggestion'] ) && '1' === $options[$user->roles[0]]['add_suggestion'] ) {
                 $email_list[] = [
                     'ID'                => $user->ID,
                     'role'              => implode( ', ', $user->roles ),
@@ -1200,8 +1269,9 @@ class Commenting_block_Admin extends Commenting_block_Functions
             // Fetch out matched user's email.
             $email_list = [];
             $system_users = $users->get_results();
+            $options = get_option( 'cf_permissions' );
             foreach ( $system_users as $user ) {
-                if ( $user->has_cap( 'edit_post', $post_id ) ) {
+                if ( isset( $options[$user->roles[0]]['add_comment'] ) && '1' === $options[$user->roles[0]]['add_comment'] || isset( $options[$user->roles[0]]['add_suggestion'] ) && '1' === $options[$user->roles[0]]['add_suggestion'] ) {
                     $email_list[] = [
                         'ID'                => $user->ID,
                         'role'              => implode( ', ', $user->roles ),

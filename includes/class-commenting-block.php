@@ -171,11 +171,13 @@ class Commenting_block
         $this->loader->add_action( 'wp_ajax_cf_resolve_thread', $plugin_admin, 'cf_resolve_thread' );
         $this->loader->add_action( 'wp_ajax_cf_store_in_localstorage', $plugin_admin, 'cf_store_in_localstorage' );
         $this->loader->add_action( 'wp_ajax_cf_save_settings', $plugin_admin, 'cf_save_settings' );
+        $this->loader->add_action( 'wp_ajax_cf_save_permissions', $plugin_admin, 'cf_save_permissions' );
         $this->loader->add_action( 'wp_ajax_cf_get_user_email_list', $plugin_admin, 'cf_get_user_email_list' );
         $this->loader->add_action( 'wp_ajax_cf_get_matched_user_email_list', $plugin_admin, 'cf_get_matched_user_email_list' );
         $this->loader->add_action( 'wp_ajax_cf_get_activities', $plugin_admin, 'cf_get_activities__premium_only' );
         $this->loader->add_action( 'wp_ajax_cf_get_activity_details', $plugin_admin, 'cf_get_activity_details__premium_only' );
         $this->loader->add_action( 'wp_ajax_cf_migrate_to_pro', $plugin_admin, 'cf_migrate_to_pro__premium_only' );
+        $this->loader->add_action( 'wp_ajax_cf_get_pp_roles', $plugin_admin, 'cf_get_pp_roles__premium_only' );
         $this->loader->add_action( 'wp_ajax_cf_get_assignable_user_list', $plugin_admin, 'cf_get_assignable_user_list' );
         $this->loader->add_action( 'rest_api_init', $plugin_admin, 'cf_rest_api' );
         $this->loader->add_action( 'wp_ajax_cf_update_meta', $plugin_admin, 'cf_update_meta' );

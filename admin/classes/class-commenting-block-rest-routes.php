@@ -7,10 +7,10 @@ if ( !defined( 'WPINC' ) ) {
 /**
  * REST API endpoints functionality of the plugin.
  *
- * @link       #
- * @since      1.3.0
+ * @link  #
+ * @since 1.3.0
  *
- * @package    content-collaboration-inline-commenting
+ * @package content-collaboration-inline-commenting
  */
 class Commenting_Block_Rest_Routes
 {
@@ -56,7 +56,7 @@ class Commenting_Block_Rest_Routes
     /**
      * Callback to send the rest response.
      *
-     * @param array $data
+     * @param  array $data
      * @return array
      */
     public function get_activities( $data )
@@ -66,12 +66,16 @@ class Commenting_Block_Rest_Routes
         $date_format = get_option( 'date_format' );
         $time_format = get_option( 'time_format' );
         $timestamp = current_time( 'timestamp' );
+        $cf_options = get_option( 'cf_permissions' );
         // Modify Query
         global  $wpdb ;
         global  $current_user ;
         //phpcs:ignore
         $user_id = apply_filters( 'determine_current_user', false );
         wp_set_current_user( $user_id );
+        $current_users = get_userdata( $user_id );
+        $hide_suggestion = $cf_options[$current_users->roles[0]]['hide_suggestion'];
+        $hide_comment = $cf_options[$current_users->roles[0]]['hide_comment'];
         $like = $wpdb->esc_like( '_el' ) . '%';
         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id=%d AND meta_key LIKE %s", $current_post_id, $like ), ARRAY_A );
         // phpcs:ignore
@@ -129,6 +133,7 @@ class Commenting_Block_Rest_Routes
                 ];
             }
             
+            
             if ( !empty($cmnts) ) {
                 $threads[] = [
                     'elID'              => $elID,
@@ -145,7 +150,9 @@ class Commenting_Block_Rest_Routes
                     'lastUsersUrl'      => $lasteditedUsersUrl,
                     'type'              => 'el',
                 ];
+                $threads = $threads;
             }
+        
         }
         if ( !metadata_exists( 'post', $current_post_id, '_autodraft_ids' ) ) {
             // create new meta if meta key doesn't exists

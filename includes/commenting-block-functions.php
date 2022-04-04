@@ -57,7 +57,7 @@ function gc_after_edit_load()
                         'user_email'        => $user->user_email,
                         'avatar'            => get_avatar_url($user->ID, [ 'size' => '24' ]),
                         'profile'           => admin_url("/user-edit.php?user_id={$user->ID}"),
-                        'edit_others_posts' => $user->allcaps['edit_others_posts'],
+                        'edit_others_posts' => isset($user->allcaps['edit_others_posts'])??'',
                     ];
             }
         }
