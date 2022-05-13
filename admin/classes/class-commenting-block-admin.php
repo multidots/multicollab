@@ -1002,7 +1002,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
         if ( isset( $form_data['cf_admin_notif'] ) ) {
             update_option( 'cf_admin_notif', $form_data['cf_admin_notif'] );
         } else {
-            delete_option( 'cf_admin_noif' );
+            delete_option( 'cf_admin_notif' );
         }
         
         
@@ -1207,19 +1207,14 @@ class Commenting_block_Admin extends Commenting_block_Functions
         }
         // WP User Query.
         $users = new WP_User_Query( [
-            'number'   => 9999,
-            'role__in' => [
-            'Administrator',
-            'Editor',
-            'Contributor',
-            'Author'
-        ],
+            'number' => 9999,
         ] );
         // Fetch out all user's email.
         $email_list = [];
         $system_users = $users->get_results();
         $options = get_option( 'cf_permissions' );
         foreach ( $system_users as $user ) {
+            
             if ( isset( $options[$user->roles[0]]['add_comment'] ) && '1' === $options[$user->roles[0]]['add_comment'] || isset( $options[$user->roles[0]]['add_suggestion'] ) && '1' === $options[$user->roles[0]]['add_suggestion'] ) {
                 $email_list[] = [
                     'ID'                => $user->ID,
@@ -1234,7 +1229,24 @@ class Commenting_block_Admin extends Commenting_block_Functions
                     'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
                     'edit_others_posts' => $user->allcaps['edit_others_posts'],
                 ];
+            } else {
+                if ( $user->has_cap( 'edit_posts' ) || $user->has_cap( 'edit_pages' ) ) {
+                    $email_list[] = [
+                        'ID'                => $user->ID,
+                        'role'              => implode( ', ', $user->roles ),
+                        'display_name'      => $user->display_name,
+                        'full_name'         => $user->display_name,
+                        'first_name'        => $user->first_name,
+                        'user_email'        => $user->user_email,
+                        'avatar'            => get_avatar_url( $user->ID, [
+                        'size' => '24',
+                    ] ),
+                        'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
+                        'edit_others_posts' => $user->allcaps['edit_others_posts'],
+                    ];
+                }
             }
+        
         }
         // Set transient
         // set_transient($cache_key, $email_list, 24 * HOUR_IN_SECONDS);
@@ -1264,13 +1276,13 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 'number'         => 9999,
                 'search'         => $niddle . '*',
                 'search_columns' => [ 'display_name' ],
-                'role__not_in'   => 'Subscriber',
             ] );
             // Fetch out matched user's email.
             $email_list = [];
             $system_users = $users->get_results();
             $options = get_option( 'cf_permissions' );
             foreach ( $system_users as $user ) {
+                
                 if ( isset( $options[$user->roles[0]]['add_comment'] ) && '1' === $options[$user->roles[0]]['add_comment'] || isset( $options[$user->roles[0]]['add_suggestion'] ) && '1' === $options[$user->roles[0]]['add_suggestion'] ) {
                     $email_list[] = [
                         'ID'                => $user->ID,
@@ -1284,7 +1296,21 @@ class Commenting_block_Admin extends Commenting_block_Functions
                     ] ),
                         'edit_others_posts' => $user->allcaps['edit_others_posts'],
                     ];
+                } else {
+                    $email_list[] = [
+                        'ID'                => $user->ID,
+                        'role'              => implode( ', ', $user->roles ),
+                        'display_name'      => $user->display_name,
+                        'full_name'         => $user->display_name,
+                        'first_name'        => $user->first_name,
+                        'user_email'        => $user->user_email,
+                        'avatar'            => get_avatar_url( $user->ID, [
+                        'size' => '24',
+                    ] ),
+                        'edit_others_posts' => $user->allcaps['edit_others_posts'],
+                    ];
                 }
+            
             }
             $response = $email_list;
         } elseif ( '@' === $niddle ) {

@@ -48,7 +48,7 @@ class Commenting_Block_Permissions extends Commenting_block_Functions {
         $initial_count = $wpdb->get_var("SELECT COUNT(option_id) FROM $wpdb->options WHERE option_name = 'cf_permissions'");//db call ok; no-cache ok
         if(0 == $initial_count){ //phpcs:ignore
             foreach($editable_roles as $key =>$role){
-                if(1 == $role['capabilities']['edit_posts'] || 1 == $role['capabilities']['edit_pages'] ){ //phpcs:ignore
+                if(1 == isset($role['capabilities']['edit_posts']) || 1 == isset($role['capabilities']['edit_pages']) ){ //phpcs:ignore
                     $default_data[$key]['add_comment'] =1;
                     $default_data[$key]['resolved_comment'] =1;
                     $default_data[$key]['add_suggestion'] =1;

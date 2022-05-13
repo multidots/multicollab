@@ -18,7 +18,7 @@ if(!empty($cf_permissions)){
             <h1><?php esc_html_e( 'Multicollab', 'content-collaboration-inline-commenting' ); ?></h1>
         </div>
         <div class="cf-plugin-version">
-            <span>Version 2.0.4.1</span>
+            <span>Version 2.0.4.2</span>
         </div>
     </div>
     <form id="cf-settings-form" method="post">
@@ -53,7 +53,7 @@ if(!empty($cf_permissions)){
                                                     <ul>
                                                         <li><?php esc_html_e( 'Suggestion Mode (Track Changes)', 'content-collaboration-inline-commenting' ); ?></li>
                                                         <li><?php esc_html_e( 'Advanced Dashboard', 'content-collaboration-inline-commenting' ); ?></li>
-                                                        <li><img class="wp-image-1631" style="width: NaNpx;" src="https://www.multicollabs.com/wp-content/uploads/sites/5/2021/09/star.svg" alt=""><?php echo esc_html_e( 'Pro Support', 'content-collaboration-inline-commenting' ); ?></li>
+                                                        <li><img class="wp-image-1631" style="width: NaNpx;" src="https://www.multicollab.com/wp-content/uploads/sites/5/2021/09/star.svg" alt=""><?php echo esc_html_e( 'Pro Support', 'content-collaboration-inline-commenting' ); ?></li>
                                                         <li><?php  esc_html_e( 'All features of Plus Plan', 'content-collaboration-inline-commenting' ); ?></li>
                                                     </ul>
                                                 </div>
@@ -72,7 +72,7 @@ if(!empty($cf_permissions)){
                                                     <ul>
                                                         <li><?php  esc_html_e( 'Comment on any text and media', 'content-collaboration-inline-commenting' ); ?></li>
                                                         <li><?php  esc_html_e( 'Email Notification', 'content-collaboration-inline-commenting' ); ?></li>
-                                                        <li><img class="wp-image-1631" style="width: NaNpx;" src="https://www.multicollabs.com/wp-content/uploads/sites/5/2021/09/star.svg" alt="">Plus Support</li>
+                                                        <li><img class="wp-image-1631" style="width: NaNpx;" src="https://www.multicollab.com/wp-content/uploads/sites/5/2021/09/star.svg" alt="">Plus Support</li>
                                                         <li><?php  esc_html_e( 'All features of Basic Plan', 'content-collaboration-inline-commenting' ); ?></li>
                                                     </ul>
                                                 </div>
@@ -86,7 +86,7 @@ if(!empty($cf_permissions)){
                                         </div>
                                         <div class="cf-card-body">
                                             <p><?php esc_html_e('Having trouble? Check out our help documentation', 'content-collaboration-inline-commenting') ?></p>
-                                            <a href="<?php echo esc_url('https://docs.multicollabs.com/'); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e('Help Documentation', 'content-collaboration-inline-commenting'); ?></a>
+                                            <a href="<?php echo esc_url('https://docs.multicollab.com/'); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e('Help Documentation', 'content-collaboration-inline-commenting'); ?></a>
                                         </div>
                                     </div>
                                     

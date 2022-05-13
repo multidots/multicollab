@@ -281,7 +281,6 @@
             localStorage.setItem("showAvatars", response.showAvatars);
             localStorage.setItem("commentingPluginUrl", response.commentingPluginUrl);
         });
-
         // Focus comment popup on click.
 
         $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function (e) {
@@ -316,8 +315,8 @@
             $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
             _this.css('opacity', '1');
             _this.offset({ top: topOfText });
-
-            var scrollTopClass = '';
+            scrollBoardToPosition(topOfText);
+            /*var scrollTopClass = '';
             if (0 !== $('.interface-interface-skeleton__content').length) {
                 // Latest WP Version
                 scrollTopClass = '.interface-interface-skeleton__content';
@@ -339,7 +338,7 @@
 
             $(scrollTopClass).animate({
                 scrollTop: topOfText - 150
-            }, 1000);
+            }, 1000);*/
 
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
@@ -721,11 +720,8 @@
                 // Get current cursor position.
                 var el = $(createTextarea).get(0);
                 cursorPos = getCaretPosition(el);
-
-
-
-                // If @ is pressed and shiftkey is true.
-                if ('@' === e.key && true === e.shiftKey && typedText.length > 0 && $(createTextarea).is(':focus') === true) {
+               // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
+               if (('@' === e.key || 'KeyG' === e.code ) && typedText.length > 0 && $(createTextarea).is(':focus') === true) {
                     var prevCharOfEmailSymbol = typedText.substr(-1, 1);
                     var showSuggestionFunc;
                     var index = typedText.indexOf("@");
