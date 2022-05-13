@@ -1,239 +1,105 @@
-=== Multicollab - Google Doc-Style Editorial Commenting for WordPress ===
+=== Multicollab - power up your editorial workflow and collaboration with direct commenting and tagging! ===
 Plugin Name: Multicollab - Google Doc-Style Editorial Commenting for WordPress
 Plugin URI: https://plugins.svn.wordpress.org/commenting-feature
 Author: Multidots
 Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
-Tags: Editorial, Editorial comment, collaboration, Comment, Gutenberg,Inline-comment
+Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 5.6
 Tested up to: 5.9
-Stable tag: 2.0.4.1
+Stable tag: 2.0.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin serves the commenting feature like Google Docs within the Gutenberg Editor!
 
 == Description ==
-<a href="https://www.multicollab.com/" target="_blank">Multicollab – Google Doc-Style Editorial Commenting Plugin</a> makes it simpler and quicker to share editorial feedback. 
 
-<strong>Add, Edits, reply and assign comments can be placed from within the WordPress Gutenberg editor</strong>, giving you the same functionality available on Google Docs. 
+<strong>Power up your editorial workflow</strong>
 
-This plugin makes the <strong>publishing experience more collaborative, meaningful, and results-oriented.</strong>
+Collaborating with people online can be tricky without the right tools. Something as simple as giving feedback on content should be really easy to do! Unfortunately, WordPress isn’t well set up by default for this: there’s no real way to leave comments on a piece of content directly and empower collaboration. We understand how frustrating that is for teams of all sizes seeking to improve their collaborative output! 
 
-== Key Features ==
-<ul>
-<li>Inline commenting in posts & Page</li>
-<li>Mention Team Members in Comment</li>
-<li>Assign comments to a specific team member</li>
-<li>Reply to others’ comments</li>
-<li>Resolve comments (mark as done)</li>
-<li>Activity Center to manage all comment activities</li>
-<li>Ability to Reply, Resolve, Edit, and Delete comment or thread from the activity center.</li>
-<li>Threaded comments in the activity center.</li>
-<li>Option to “Hide” comments to focus on publishing</li>
-<li>When you delete a WordPress user, you can assign the deleted user’s comments to other WordPress users.</li>
-<li>Copy and share link — Generate a link to a particular comment and share it with other team members</li>
-</ul>
+That’s why we created <a href="https://bit.ly/3vR2maF" target="_blank">Multicollab</a>: <strong>a plugin which enables you to share editorial feedback directly within WordPress itself, including commenting, tagging, replying and much more!</strong>
 
-Plugin - <a href="https://www.multicollab.com/?demo=start" target="_blank">LIVE DEMO</a>
+Multicollab works out of the box to insert collaborative tools which will transform your editorial workflow: install and you’ll instantly unlock collaboration functionality you’re familiar with from applications such as Google Docs in just a few simple clicks!
 
-== 📽 How Can Users Add Comments Inside The WordPress Gutenberg Editor? ==
+This plugin works by adding inline commenting functionality to Gutenberg directly, making commenting a single click of a button away:
 
-[youtube https://www.youtube.com/watch?v=rDdgh_u8oVQ]
+[youtube https://youtu.be/rDdgh_u8oVQ]
 
-== Content Collaboration Made Easy for WordPress ==
+><em>This an easy-to-use plugin—the best one I’m aware of—for those who have an editorial process. My wife is a blogger and I’m her editor. We’ve only begun taking advantage of it but I wanted to offer a positive shout out.
+<strong>-       Mario T. Lanza - Sr. Web Developer<strong></em>
 
-The ability to <strong>leave comments and suggestions in a more meaningful and results-oriented manner during the content review process</strong> is currently unavailable in the WordPress Gutenberg editor. 
+<strong>Content collaboration in Gutenberg made simple</strong>
 
-This limits collaborative editing and publishing. Things are prone to get difficult when multiple team members need to review content, and publishers often use Google Docs to place edits and comments collaboratively. 
+Whether your editorial workflow consists of just two people or fifty, gathering feedback and recommending changes to WordPress content has so far always meant you needing to take that content elsewhere, such as Google Docs or any other editing suite. This complicates your way of work unnecessarily, makes collaboration difficult, and can even lead to pretty serious errors going live because of things falling through the cracks between applications. It’s also greatly inefficient and wastes a lot of your editorial time!
 
-Multidots has created a plugin that allows <strong>Google-Doc Style editorial commenting from within the WordPress Gutenberg editor.</strong>
-
-This plugin <strong>eliminates time-consuming steps</strong> and the need to move content out of the editor for collaborative feedback and editing.
-
-
-👉 <strong>Inline comment</strong>
-Add inline-comment to any text in your blog post for review by other users.
-
-👉 <strong>Reply & resolve</strong>
-Reply to a comment or close the comment thread by marking as resolved.
-
-👉 <strong>Activity centre</strong>
-Keep a tab on all the comment activities by all the users collaborating in the post/page.
-
-👉 <strong>Hide all comments</strong>
-Temporarily hide all the comments from a click of a button for clean content editing interface.
-
-== ➡️<a href ="https://www.multicollab.com/?demo=start" target="_blank">Live Demo</a> ⬅️ ==
-
-== 💁 HOW TO ADD COMMENT IN GUTENBERG BLOCK ( FOLLOW STEPS BELOW ) ==
-
-Step by step guide to commenting on a post/page in WordPress Platform.
-
-<strong>Step 1</strong> Install the latest WordPress version (should be 5.3.x or newer)
-
-<strong>Step 2</strong>  Download, install & activate the plugin.
-
-<strong>Step 3</strong>  Create a new or, edit an existing page/post.
-
-<strong>Step 4</strong>  Select text to comment on. ( <a href ="https://ibb.co/rdhJCYr" target="_blank">Click here for screenshot</a>)
-
-<strong>Step 5</strong> Open the dropdown menu and select the ‘Comment’ option to start to add comments.
-
-<strong>Step 6</strong> @mestion you assign comments to team members and invite them to collaborate.
-
-<strong>Step 7</strong> Get an email notification for new comments.
-
-== 💁 CONTENT COLLABORATION MADE EASY FOR WORDPRESS ==
-
-The ability to <strong>leave comments and suggestions in a more meaningful and results-oriented manner during the content review process</strong> is currently unavailable in the WordPress Gutenberg editor.
-
-This limits collaborative editing and publishing. Things are prone to get difficult when multiple team members need to review content, and publishers often use Google Docs to place edits and comments collaboratively.
-
-Multidots has created a plugin that allows <strong>Google-Doc Style editorial commenting from within the WordPress Gutenberg editor.</strong>
-
-This plugin <strong>eliminates time-consuming steps</strong> and the need to move content out of the editor for collaborative feedback and editing.
-
-== 👉 DIFFERENCE BETWEEN LITE AND PREMIUM VERSION ==
-
-Check the detailed difference between the Premium and Lite version – <a href ="https://www.multicollab.com/pricing/" target="_blank">Click here</a>
-
-== 📣  MULTICOLLAB PREMIUM PLUGIN FEATURES – <a href ="https://www.multicollab.com/pricing" target="_blank">UPGRADE NOW </a>==
-
-Need even more features? upgrade the premium plugin version to get all the advanced features.
-
-<strong>Comment on Media</strong>
-
-Ability to comment on any media while editing new posts or pages.
+Multicollab solves it all with a simple plugin designed specifically to solve this problem once and for all. Installing the plugin enables the following key editorial features instantly:
 
 <ul>
-
-<li>The free version of Multicollab offers comments on text-based content, but we know your editorial workflow includes design and media.</li>
-
-<li>The Premium version unlocks the ability to comment on images, videos, audios, galleries, and more!</li>
-
+<li><strong>Inline Commenting - </strong>add a comment directly to all content in posts and pages with a single click</li>
+<li><strong>Tag and mention multiple colleagues - </strong>just pick the persons you need to highlight your feedback to directly within your comment</li>
+<li><strong>Assign comments directly - </strong>tag a colleague who needs to take action and let them know clearly what the task request is</li>
+<li><strong>Reply and Resolve - </strong>get back to your colleagues on previous comments, and close off comment threads which have been fully resolved with one click</li>
 </ul>
 
-<strong>Email Notifications</strong>
+><em>Awesome plugin! This is exactly what I was looking for. This plugin works flawlessly. Great job.
+<strong>-       Ivan Ružević - WordPress Team Lead<strong></em>
 
-Enable email notifications for new comments and mentions.
+<strong>Built specifically for Gutenberg</strong>
 
-<ul>
+Multicollab was designed to work with Gutenberg natively, so there’s no need to change your workflow! By adding commentary functionality directly to the Gutenberg interface, this plugin makes collaboration easy right within the same editing interface you’re already familiar with. Fully compatible with Gutenberg versions 8.6 to 10.7, it works right out of the box!
 
-<li>Empower your team to seamlessly collaborate with email notifications.</li>
+<strong>Need support? You’ve got it!</strong>
 
-<li>Your team can review notifications and easily click to respond directly in WordPress.</li>
+Multicollab is built to work effortlessly the minute you install it, with zero setup time: just add it, and start commenting on your pages or posts within Gutenberg within seconds. If you do have specific questions about the plugin, our extensive <a href="https://bit.ly/3FqfRRD" target="_blank">support centre documentation is available here</a> and should help you in most cases. 
 
-</ul>
+If you do need more help or have a specific question, we’re always happy to support! <a href="https://bit.ly/3KPzx2I" target="_blank">Simply open a ticket directly on the WordPress.org forum here</a>, and we’ll get back to you within as short a time as possible.
 
-<strong>Advanced Reports  </strong>
+><em>The plug-in is awesome! It works fantastically.
+<strong>-       Charudatta Mondale Co-Founder at QuickDraft LLP<strong></em>
 
-Simply review your editorial workflow with advanced reporting features and transparent data points.
+📣 <strong>Collaborate even more effectively with Premium</strong>
 
-<ul>
+The free version of Multicollab is easy to use and gives you all the commenting functionality to power up your editorial collaboration out of the box. But if you’re looking to take your team’s collaboration even further, we offer a Premium version which <a href="https://bit.ly/37n6XrN" target="_blank">takes things to the next level</a>. Here’s what you can unlock by <a href="https://www.multicollab.com/pricing/" target="_blank">upgrading today</a>:
 
-<li><strong>The Activity Timeline</strong> monitors collaboration and tracks progress across all pages and posts with easy filtering to view by user, content categories, and time stamps.</li>
+👉🏻 <strong>Comment on media directly</strong>
 
-<li>Discover what your team needs with <strong>Activity Snapshot</strong> for the latest comment activities on each page and post. </li>
+Want to tell someone on the team to choose a better image? Perhaps you had a comment on the video they embedded, or even a suggestion to add a photo to a gallery. Multicollab Premium enables you to leave comments exactly where they’re needed: be it audio, video, image, or gallery, you can use the full collaborative editing functionality of the tool and tag, assign and comment as necessary to take your editorial workflow a step further.
 
-</ul>
+👉🏻 <strong>Enable email notifications</strong>
 
-<strong>Premium Support</strong>
+Make sure that everyone gets the editorial edits and tasks at the right time. By enabling email notifications with <a href="https://bit.ly/3skcdDP" target="_blank">Multicollab Premium</a>, your workflows become more efficient and collaboration even more effective: tag or assign a comment to a user, and they’ll get an instant email to alert them about the feedback. A single click will take them back to WordPress, where they can take instant action and resolve the comment immediately. It really is as simple as that!
 
-The Multicollab support team is driven by providing an excellent experience within your editorial workflow. Email support is available and feedback is always welcome.
+👉🏻 <strong>Track changes with Suggestion mode</strong>
 
-<ul>
+Sometimes, a comment isn’t quite enough, and it’s best to suggest the rewording of a sentence or phrase directly. Similar to Google Docs, with <a href="https://bit.ly/37lSzQm" target="_blank">Suggestion mode</a> enabled on Multicollab Premium, you can add edits directly as suggestions to the content to enable the author or other user to accept, reject or collaborate in more detail. Paired with mentions, tagging and notifications, this makes collaborative editing within WordPress itself a breeze!
 
-<li>With premium support, your request will be handled within 24 hours.</li>
+👉🏻 <strong>Share a link to your comment directly</strong>
 
-<li>We created this editorial workflow tool with you in mind. We are here to answer questions and help in any way.</li>
+Need something actioned urgently, or a particular comment highlighted in a conversation you’re having on another medium? Generate a link to the comment directly and share that with your team so everyone can easily know what you’re referring to, fast!
 
-</ul>
+👉🏻 <strong>Advanced Dashboard and Activity Centre with reporting</strong>
 
-== ➡️<a href ="https://www.multicollab.com/pricing" target="_blank">UPGRADE NOW</a> ⬅️ ==
+Track progress and get clear visibility on what’s going on with your content, and what activity is happening across the team. With our <a href="https://bit.ly/3FlZ2r4" target="_blank">Advanced Dashboard</a>, you’ll get a report of all the actions being taken across your content, enabling you to clearly identify opportunities for improving your editorial workflow. Powered up by timestamps and advanced filtering by user and content categories, you’ll easily be able to find information which can help you take your editorial process to the next level and make your team collaboration even more efficient. Or, create a Quick Snapshot Report in just one click to get a simple view of where things are in a few seconds!
 
-== 💁 REQUIRE ENVIRONMENT ==
+👉🏻 <strong>Manage Users and Permissions</strong>
 
-<ul>
-<li>WordPress version 5.6 to 5.9</li>
-<li>Required PHP version 7.0 to 8.0</li>
-<li>Gutenberg version 8.6 to 10.7</li>   
-</ul>
+The larger your organisation or the team you collaborate with, the more specific your access needs and rights need to be. <a href="https://bit.ly/3skcdDP" target="_blank">Multicollab Premium</a> makes permission management as simple as selecting clear options from a list in one click: decide which users can comment, which users can access and resolve, and which ones can disable commentary in a few seconds for the ultimate editorial workflow management across teams of all sizes!
 
-== 💁 GUTENBERG BLOCKS COMPATIBILITY ==
+Additionally, if a member of your team leaves, that doesn’t mean their comments and activity needs to disappear. When you delete a WordPress user, Multicollab gives you the option to assign their comments and tags to another one instead, enabling your team to seamlessly hand over and continue where it left off.
 
-This plugin is compatible with a range of Gutenberg blocks allowing comments to be placed across a large-section of your content.
+👉🏻 <strong>Powerful features, unbeatable support</strong>
 
-<ul>
-<li>Paragraph Block</li>
-<li>List Block</li>
-<li>Table Block</li>
-<li>Headings Block</li>
-<li>Quote Block</li>
-<li>Image Block (Premium only )</li>
-<li>Gallery Block (Premium only )</li>
-<li>Cover Block (Premium only )</li>
-<li>Audio Block (Premium only )</li>
-<li>File Block (Premium only )</li>
-<li>video block (Premium only )</li>
-<li>Media & Text (Premium only )</li>
-<li>Pullquote Block</li>
-<li>Verse Block</li>
-<li>Button Block</li>
-</ul>
+Your team’s setup may have specific requirements and need attention to solve a workflow problem, fast. That’s why <a href="https://bit.ly/3skcdDP" target="_blank">Multicollab premium users</a> get email support within 24 hours, to ensure everything keeps moving smoothly and there’s nothing which can delay your content editorial calendar and team collaboration.
 
-== 💁 Plugin compatibility with web browser ==
+The team behind Multicollab is <a href="https://bit.ly/38Xwp7w" target="_blank">Multidots</a> - a full-service WordPress development agency and WordPress VIP Gold Agency Partner, so you can rest assured that our support is truly second to none!
 
-<ul>
-<li>Chrome</li>
-<li>EDGE</li>
-<li>Firefox</li>
-<li>Safari</li>
-</ul>
+><em>Great Solution. Fantastic Support! We were using the free version and it was already very helpful. We were very interested in the new features but concerned about price and the complexity of our specific needs. After upgrading we worked with support to customize the plugin so we can successfully support 50 contributors that use WordPress as our core editorial management system. I fully expect it to transform our editorial process. We’re very happy with the product and the company’s support.
+<strong>-       Charles Araujo - Co-Founder – The MAPS Institute<strong></em>
 
-== 💁 How to Contribute to the Gutenberg Block Commenting Plugin ==
-
-All types of contributions are most welcome.
-
-<ul>
-<li><strong>Fork the repository</strong> to your account (you will get this option at the top right of this page).</li>
-<li><strong>Create a branch</strong> into your fork repository like development if it exists else from the master.</li>
-<li>Clone your fork repository to your local system.</li>
-<li>Write your clean code and test with PHPCS with the WordPress VIPMinimum coding standards	.</li>
-<li><strong>Commit your code</strong> from your local system.</li>
-<li>Finally, <strong>click Pull Request</strong> from your fork repository.</li>
-<li>This <a href="https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork" target="_blank">GitHub article</a> will be helpful for how to submit a pull request from the fork.</li>
-</ul>
-
-== ➡️<a href ="https://github.com/multidots/gutenberg_commenting/" target="_blank">Click here for Contribute</a> ⬅️ ==
-
-== 💁 Support ==
-
-This repository is not for support. Please use it for contributions only. To get help/support, please email us at <a href="mailto:contact@multicollabs.com">contact@multicollabs.com</a> or <a href ="https://www.multidots.com/multicollab/" target="_blank">contact us</a>.
-
-== Installation ==
-
-This section describes how to install and activate the plugin.
-
-e.g.
-
-1. Upload `content-collaboration-inline-commenting` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-
-== Frequently Asked Questions ==
-
-= Q. Does this plugin support “WordPress Classic Editor”?  =
-Ans: No, it only works with the Gutenberg editor in WordPress.
-
-= Q. Can I add comments in custom post types?  =
-Ans: Yes, you can use this plugin with custom post types as well.
-
-= Q. Can I remove all comments from all posts/pages at once?  =
-Ans: No, comments can only be removed by resolving the comment thread or by deleting a single comment of a single post/page in one go. Also, deleting all the text on which comments are added, will remove all comments of that particular post/page.
-
-= Q. How does the user role and permissions work in this plugin?  =
-Ans: Super Admin, Administrator and Editor can view, edit, delete, reply and resolve comments on any posts and page. 
-Author & Contributor -- can only add, edit, delete, reply and resolve the comments on their own posts.
+<p align="center">🔥 <a href="https://bit.ly/3wcQjDB" target="_blank">Try out the full features of Multicollab Premium in our demo here!</a> 🔥
+For a full list of differences between versions, <a href="https://bit.ly/3skcdDP" target="_blank">please visit this link</a>.</p>
 
 == Screenshots ==
 
@@ -245,7 +111,76 @@ Author & Contributor -- can only add, edit, delete, reply and resolve the commen
 6.
 7.
 
+
+== FAQs ==
+
+<strong> Who is Multicollab for? </strong>
+
+Multicollab is great for content teams of all sizes: whether it’s just two people or a team of hundreds, Multicollab ensures editorial workflows are made easier by enabling collaborative editing directly on the WordPress Gutenberg interface. If your content requires a second opinion and collaboration, Multicollab will be perfect for your needs!
+
+<strong> Does this work with Gutenberg? </strong>
+
+Yes! Multicollab is built to work perfectly with Gutenberg versions 8.6 to 10.7 and is consistently being updated to work with the latest versions of Gutenberg as they roll out.
+
+<strong> Does this work with the Classic Editor? </strong>
+
+Unfortunately, the WordPress Classic Editor isn’t as versatile as Gutenberg and isn’t as good at handling collaboration and editing. That means that Multicollab doesn’t work on the classic editor - we recommend switching to Gutenberg instead.
+
+<strong> What is Multicollab compatible with? </strong>
+
+We’re constantly working to improve Multicollab and make it more widely available. The plugin is currently fully compatible with Gutenberg versions 8.6 to 10.7, WordPress versions 5.6 and above, and PHP versions 7.0 or 8.0.
+
+<strong> Which browsers does Multicollab work with? </strong>
+
+Multicollab works seamlessly with Google Chrome, Firefox, Edge, and Safari. We’re constantly working to add more features, so if your browser isn’t compatible, let us know!
+
+<strong> Can I add comments in custom post types? </strong>
+
+Yes you can! Multicollab works perfectly in posts and pages of all types, enabling you to implement an editorial workflow and collaborative editing to all types of updates you need to give your website over time.
+
+<strong> How about user roles and permissions? How do they work? </strong>
+
+By default, all Super Admin, Administrator, and Editor roles can view, edit, delete, reply, and resolve comments on any posts and page. Authors and Contributors can only add, edit, delete, reply, and resolve their own posts’ comments. For full control over users’ permissions, consider upgrading to <a href="https://bit.ly/3skcdDP" target="_blank">Multicollab Premium</a>. 
+
+<strong> Which Gutenberg Blocks does Multicollab work with? </strong>
+
+Multicollab is built to work out of the box with the following Gutenberg blocks:
+<ul>
+<li>Paragraph Block</li>
+<li>List Block</li>
+<li>Table Block</li>
+<li>Headings Block</li>
+<li>Quote Block</li>
+<li>Pullquote Block</li>
+<li>Verse Block</li>
+<li>Button Block</li>
+</ul>
+
+The following blocks are also enabled for collaboration with <a href="https://bit.ly/3kOxCRm" target="_blank">Multicollab Premium</a>:
+<ul>
+<li>Image Block</li>
+<li>Gallery Block</li>
+<li>Cover Block</li>
+<li>Audio Block</li>
+<li>File Block</li>
+<li>Video Block</li>
+<li>Media & Text</li>
+</ul>
+
+<strong> Can I remove all comments across all articles at one go? </strong>
+
+Multicollab is built to work exactly like you expect it to as part of your editorial workflow. This means that no, comments cannot be removed at one go, as we understand that attention needs to be given to each and every one individually during collaborative editing. Comments can only be removed by resolving the thread directly, or by deleting the individual comment, directly on the single page or post. 
+
+Similar to Google Docs, deleting all the text highlighted on which comments are added will remove all comments of that particular section of text.
+
+<strong> I have another question. How can I get support? </strong>
+
+Have you had a look at our documentation? <a href="https://bit.ly/3FqfRRD" target="_blank">We’ve covered a lot of common questions in our repository available freely here</a>. If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as fast as we can!
+
 == Changelog ==
+
+= 2.0.4.2 - 13.05.2022 =
+* [Enhancement] – Maintenance Release.
 
 = 2.0.4.1 - 04.04.2022 =
 * [Enhancement] — Admin can set permission for info board from the settings panel.
