@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Multicollab
  * Description:       A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress.
- * Version:           2.0.4.2
+ * Version:           2.0.4.3
  * Author:            Multidots
  * Author URI:        https://www.multidots.com/
  * License:           GPL-2.0+
@@ -82,7 +82,7 @@ if ( function_exists( 'cf_fs' ) ) {
 }
 
 // Plugin version.
-define( 'COMMENTING_BLOCK_VERSION', '2.0.4.2' );
+define( 'COMMENTING_BLOCK_VERSION', '2.0.4.3' );
 // Define constants.
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
 define( 'COMMENTING_BLOCK_DIR', plugin_dir_path( __FILE__ ) );

@@ -537,13 +537,16 @@ class Commenting_block_Admin extends Commenting_block_Functions
          * between the defined hooks and the functions defined in this
          * class.
          */
-        wp_enqueue_style(
-            $this->plugin_name,
-            trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/css/commenting-block-admin.css',
-            array(),
-            wp_rand(),
-            'all'
-        );
+        $screen = get_current_screen();
+        if ( 'site-editor' !== $screen->base ) {
+            wp_enqueue_style(
+                $this->plugin_name,
+                trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/css/commenting-block-admin.css',
+                array(),
+                wp_rand(),
+                'all'
+            );
+        }
     }
     
     /**
@@ -566,7 +569,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
          */
         $screen = get_current_screen();
         
-        if ( $screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base ) {
+        if ( $screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base || 'site-editor' !== $screen->base ) {
             wp_enqueue_script(
                 $this->plugin_name,
                 trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin.js',
@@ -652,6 +655,13 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 wp_rand(),
                 true
             );
+            
+            if ( 'wp_template' === isset( $_REQUEST['postType'] ) ) {
+                //phpcs:ignore
+                wp_deregister_script( 'content-collaboration-inline-commenting' );
+                wp_deregister_script( $this->plugin_name );
+            }
+            
             $comment_id = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
             wp_localize_script( $this->plugin_name, 'adminLocalizer', [
                 'nonce'                  => wp_create_nonce( COMMENTING_NONCE ),
@@ -791,7 +801,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
             // phpcs:ignore
         }
         
-        $assigned_text = ( isset( $assigned_user_info->display_name ) ? ( $login_user->data->ID == $assigned_user_info->ID ? $assign_label . ' You' : $assign_label . $assigned_user_info->display_name ) : '' );
+        $assigned_text = ( isset( $assigned_user_info->display_name ) ? ( $login_user->data->ID == $assigned_user_info->ID ? $assign_label . ' You' : $assign_label . ' ' . $assigned_user_info->display_name ) : '' );
         // phpcs:ignore
         $arr['userData'] = get_current_user_id();
         // Secure content.
@@ -1214,8 +1224,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
         $system_users = $users->get_results();
         $options = get_option( 'cf_permissions' );
         foreach ( $system_users as $user ) {
-            
-            if ( isset( $options[$user->roles[0]]['add_comment'] ) && '1' === $options[$user->roles[0]]['add_comment'] || isset( $options[$user->roles[0]]['add_suggestion'] ) && '1' === $options[$user->roles[0]]['add_suggestion'] ) {
+            if ( $user->has_cap( 'edit_posts' ) || $user->has_cap( 'edit_pages' ) ) {
                 $email_list[] = [
                     'ID'                => $user->ID,
                     'role'              => implode( ', ', $user->roles ),
@@ -1229,24 +1238,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                     'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
                     'edit_others_posts' => $user->allcaps['edit_others_posts'],
                 ];
-            } else {
-                if ( $user->has_cap( 'edit_posts' ) || $user->has_cap( 'edit_pages' ) ) {
-                    $email_list[] = [
-                        'ID'                => $user->ID,
-                        'role'              => implode( ', ', $user->roles ),
-                        'display_name'      => $user->display_name,
-                        'full_name'         => $user->display_name,
-                        'first_name'        => $user->first_name,
-                        'user_email'        => $user->user_email,
-                        'avatar'            => get_avatar_url( $user->ID, [
-                        'size' => '24',
-                    ] ),
-                        'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
-                        'edit_others_posts' => $user->allcaps['edit_others_posts'],
-                    ];
-                }
             }
-        
         }
         // Set transient
         // set_transient($cache_key, $email_list, 24 * HOUR_IN_SECONDS);
@@ -1283,7 +1275,8 @@ class Commenting_block_Admin extends Commenting_block_Functions
             $options = get_option( 'cf_permissions' );
             foreach ( $system_users as $user ) {
                 
-                if ( isset( $options[$user->roles[0]]['add_comment'] ) && '1' === $options[$user->roles[0]]['add_comment'] || isset( $options[$user->roles[0]]['add_suggestion'] ) && '1' === $options[$user->roles[0]]['add_suggestion'] ) {
+                if ( isset( $options[$user->roles[0]]['add_comment'] ) && '1' == $options[$user->roles[0]]['add_comment'] || isset( $options[$user->roles[0]]['add_suggestion'] ) && '1' == $options[$user->roles[0]]['add_suggestion'] ) {
+                    //phpcs:ignore
                     $email_list[] = [
                         'ID'                => $user->ID,
                         'role'              => implode( ', ', $user->roles ),

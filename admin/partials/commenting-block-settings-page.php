@@ -5,7 +5,7 @@
 
 // Get settings.
 $activated      = filter_input(INPUT_GET, "activated", FILTER_SANITIZE_STRING);
-$cf_admin_notif = get_option('cf_admin_notif');
+$cf_show_infoboard    = get_option('cf_show_infoboard');
 $cf_permissions= get_option('cf_permissions');
 if(!empty($cf_permissions)){
     delete_option( 'cf_permissions' );
@@ -18,15 +18,18 @@ if(!empty($cf_permissions)){
             <h1><?php esc_html_e( 'Multicollab', 'content-collaboration-inline-commenting' ); ?></h1>
         </div>
         <div class="cf-plugin-version">
-            <span>Version 2.0.4.2</span>
+            <span>Version 2.0.4.3</span>
         </div>
     </div>
-    <form id="cf-settings-form" method="post">
+    
         <div class="cf-outer">
             <div class="cf-left cf-pricing-dashboard">
                 <div class="cf-tabs-main">
                     <ul class="cf-tabs">
                         <li class="cf-tab-active"><a href="javascript:void(0)" class="cf-tab-item" data-id="cf-dashboard"><?php esc_html_e('Dashboard', 'content-collaboration-inline-commenting') ?></a></li>
+                        <?php if (current_user_can('administrator')):?>
+                        <li><a href="javascript:void(0)" class="cf-tab-item" data-id="cf-settings"><?php esc_html_e( 'Settings', 'content-collaboration-inline-commenting' ); ?></a></li>
+                        <?php endif; ?>
                         
                     </ul>
                     <div class="cf-tabs-content">
@@ -53,7 +56,7 @@ if(!empty($cf_permissions)){
                                                     <ul>
                                                         <li><?php esc_html_e( 'Suggestion Mode (Track Changes)', 'content-collaboration-inline-commenting' ); ?></li>
                                                         <li><?php esc_html_e( 'Advanced Dashboard', 'content-collaboration-inline-commenting' ); ?></li>
-                                                        <li><img class="wp-image-1631" style="width: NaNpx;" src="https://www.multicollab.com/wp-content/uploads/sites/5/2021/09/star.svg" alt=""><?php echo esc_html_e( 'Pro Support', 'content-collaboration-inline-commenting' ); ?></li>
+                                                        <li><img class="wp-image-1631" style="width: NaNpx;" src="https://www.multicollabs.com/wp-content/uploads/sites/5/2021/09/star.svg" alt=""><?php echo esc_html_e( 'Pro Support', 'content-collaboration-inline-commenting' ); ?></li>
                                                         <li><?php  esc_html_e( 'All features of Plus Plan', 'content-collaboration-inline-commenting' ); ?></li>
                                                     </ul>
                                                 </div>
@@ -72,7 +75,7 @@ if(!empty($cf_permissions)){
                                                     <ul>
                                                         <li><?php  esc_html_e( 'Comment on any text and media', 'content-collaboration-inline-commenting' ); ?></li>
                                                         <li><?php  esc_html_e( 'Email Notification', 'content-collaboration-inline-commenting' ); ?></li>
-                                                        <li><img class="wp-image-1631" style="width: NaNpx;" src="https://www.multicollab.com/wp-content/uploads/sites/5/2021/09/star.svg" alt="">Plus Support</li>
+                                                        <li><img class="wp-image-1631" style="width: NaNpx;" src="https://www.multicollabs.com/wp-content/uploads/sites/5/2021/09/star.svg" alt="">Plus Support</li>
                                                         <li><?php  esc_html_e( 'All features of Basic Plan', 'content-collaboration-inline-commenting' ); ?></li>
                                                     </ul>
                                                 </div>
@@ -86,7 +89,7 @@ if(!empty($cf_permissions)){
                                         </div>
                                         <div class="cf-card-body">
                                             <p><?php esc_html_e('Having trouble? Check out our help documentation', 'content-collaboration-inline-commenting') ?></p>
-                                            <a href="<?php echo esc_url('https://docs.multicollab.com/'); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e('Help Documentation', 'content-collaboration-inline-commenting'); ?></a>
+                                            <a href="<?php echo esc_url('https://docs.multicollabs.com/'); ?>" target="_blank" class="cf-button button button-primary"><?php esc_html_e('Help Documentation', 'content-collaboration-inline-commenting'); ?></a>
                                         </div>
                                     </div>
                                     
@@ -176,29 +179,39 @@ if(!empty($cf_permissions)){
                                 <!-- Pricing-testimonial -->
                             </div>
                         </div>
-                        <div id="cf-settings" class="cf-tab-inner">
+                        <?php if (current_user_can('administrator')):?>
+                            <div id="cf-settings" class="cf-tab-inner">
                             <div class="cf-content-box">
                                 <div class="cf-cnt-box-header">
-                                    <h3><?php esc_html_e('Notification Setting', 'content-collaboration-inline-commenting'); ?></h3>
+                                    <h3><?php esc_html_e( 'Notification Setting', 'content-collaboration-inline-commenting' ); ?></h3>
                                 </div>
-                                <div class="cf-cnt-box-body">
+                                <form class="cf-cnt-box-body" id ="cf_settings"  method="post">
                                     <div id="cf-notice">
-                                        <div class="cf-success notice notice-success" style="display: none">
-                                            <p><?php esc_html_e('Settings saved!', 'content-collaboration-inline-commenting'); ?></p>
+                                        <div class="cf-success notices notice-success" style="display: none">
+                                            <p><?php esc_html_e( 'Settings saved!', 'content-collaboration-inline-commenting' ); ?></p>
                                         </div>
                                     </div>
-                                    
-                                    <div class="cf-notification-settings">
+                                   
                                         <div class="cf-check-wrap">
-                                            <input type="checkbox" name="cf_admin_notif" class="cf-checkbox" id="cf_admin_notif" <?php echo '1' === $cf_admin_notif ? 'checked' : '' ?> value="1" class="regular-text"/>
-                                            <span class="cf-check"></span>
+                                                <input type="checkbox" name="cf_show_infoboard" class="cf-checkbox" id="cf_show_infoboard" <?php echo '1' === $cf_show_infoboard ? 'checked' : '' ?> value="1" class="regular-text"/>
+                                                <span class="cf-check"></span>
                                         </div>
-                                        <label for="cf_admin_notif"><?php esc_html_e('Notify site admin', 'content-collaboration-inline-commenting'); ?> (<?php echo esc_html(get_option('admin_email')) ?>) <?php esc_html_e('for all new comments even if not mentioned.', 'content-collaboration-inline-commenting'); ?></label>
-                                    </div>
-                                    <?php submit_button(__('Save Changes', 'content-collaboration-inline-commenting')); ?>
+                                        <label for="cf_show_infoboard"><?php esc_html_e( 'Show draft Info board', 'content-collaboration-inline-commenting' ); ?> </label>
+                                    
+									<?php submit_button( __( 'Save Changes', 'content-collaboration-inline-commenting' ) ); ?>
+                                </form>
+          
+                                <div class="cf-cnt-box-header cf-cnt-pro-migration-header">
+                                    <h3><?php esc_html_e( 'Migration Setting', 'content-collaboration-inline-commenting' ); ?></h3>
                                 </div>
-                            </div>
-                        </div>
+                                <div class="cf-cnt-box-body cf-cnt-pro-migration">
+                                    <div id="migration-progress-bar" style="display: none"><span>% completed</span></div>
+                                    <div id="migration-progress-info"></div>
+                                    <p class="submit"><a href="javascrpit:void(0)" id="pro-migration-button" class="button button-primary">Migrate</a></p>
+                                </div>
+                            </div> 
+                        </div> 
+                        <?php endif;?>
                     </div>
                 </div>
             </div>
@@ -206,5 +219,5 @@ if(!empty($cf_permissions)){
             <div class="cf-right">
             </div>
         </div>
-    </form>
+  
 </div>

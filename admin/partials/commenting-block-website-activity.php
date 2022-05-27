@@ -45,7 +45,7 @@ $board_position     = $board_position ?? 'board-pos-right';  //phpcs:ignore
 $side_time_format   = 'g:i a F j, Y';
 $count_iterations = 0;
 $previousPostId = '';
- 
+$options = get_option('cf_permissions');
 foreach ( $this->cf_activities as $meta_single ) { //phpcs:ignore  
 
 	$main_timestamp          = $meta_single->meta_value;
@@ -62,6 +62,8 @@ foreach ( $this->cf_activities as $meta_single ) { //phpcs:ignore
 	}
 
 	$board_type = '';
+	//pooja
+	$show_reply = 0;
 	if ( strpos( $meta_key, 'el' ) !== false ) {
 		// If its for comments.
 		$board_type       = 'comments';
@@ -92,7 +94,7 @@ foreach ( $this->cf_activities as $meta_single ) { //phpcs:ignore
 	$now               = time();
 	$beginning_of_week = strtotime( 'last Monday', $now ); // Gives you the time at the BEGINNING of the week
 	$yesterday         = strtotime( '-1 day', $now );
-
+	
 	// Display only the day, if its from current week.
 	if ( $main_timestamp > $beginning_of_week ) {
 		if ( gmdate( 'Y-m-d', $main_timestamp ) === gmdate( 'Y-m-d', $now ) ) {
@@ -196,11 +198,11 @@ foreach ( $this->cf_activities as $meta_single ) { //phpcs:ignore
 						 
 							if ( ! array_key_exists( $user_id, $userData ) ) {
 								$user_info = get_userdata( $user_id );
-
+								
 								$userData[ $user_id ]['username']   = $username = $user_info->display_name;
 								$userData[ $user_id ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
 								$userData[ $user_id ]['userrole'] = $userrole = isset($user_info->roles) ? implode(', ', $user_info->roles) : '';
-								
+							
 							} else {
 								$username    = $userData[ $user_id ]['username'];
 								$profile_url = $userData[ $user_id ]['profileURL'];
@@ -328,12 +330,24 @@ foreach ( $this->cf_activities as $meta_single ) { //phpcs:ignore
 						
 
 						$side_time = gmdate( $time_format, $side_time_stamp );
+					
+						//pooja
+						if( isset($options[$userData[ $user_id ]['userrole']]['add_suggestion']) && 1 == $options[$userData[ $user_id ]['userrole']]['add_suggestion'] && 'suggestions' == $board_type){ //phpcs:ignore
 						
-						if ( ! isset($meta['resolved_by']) ) { ?>
+							$show_reply = 1;
+						}
+						if( isset($options[$userData[ $user_id ]['userrole']]['add_comment']) && 1 == $options[$userData[ $user_id ]['userrole']]['add_comment'] && 'comments' == $board_type){ //phpcs:ignore
+						
+							$show_reply = 1;
+						}
+
+						
+						if ( ! isset($meta['resolved_by']) && 1 == $show_reply ) { //phpcs:ignore
+						?>
                             <div class="user-action">
                                 <a href="<?php echo esc_url( $thread_edit_link ) ?>" class="user-cmnt-reply">Reply <span class="tooltip">Reply to this comment</span></a>
                             </div>
-						<?php } ?>
+						<?php }  ?>
                         <span class="side-time"><?php esc_html_e( $side_time ); ?></span>
                     </div>
                 </div>
