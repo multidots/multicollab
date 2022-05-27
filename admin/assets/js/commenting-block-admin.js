@@ -16,7 +16,6 @@
 
     /*  Trigger to close sidebar on post editor focus */
     window.addEventListener('click', function(e){   
-        
     if(jQuery('.edit-post-layout').hasClass('is-sidebar-opened')){
         jQuery('.interface-interface-skeleton__sidebar').removeClass('cf-sidebar-closed'); 
     }
@@ -118,7 +117,7 @@
         $(this).parents(".user-data-row").find(".user-data-box").show();
         $(this).parents(".user-data-row").find(".show-all-comments").hide();
     });
-
+    
     /* editor layout update action trigger for commentOn class  */
     $(document).on("editorLayoutUpdate", function () {
 
@@ -171,12 +170,13 @@
         jQuery.event.trigger({ type: "showHideComments" });
 
     });
-    $(document).on('focus', '.js-cf-share-comment', function () {
-        $('.js-cf-share-comment').addClass('comment-focus');
+    $(document).on('focus', '.cf-share-comment', function () {
+        $('.cf-share-comment').addClass('comment-focus');
+        $('.js-cf-edit-comment a.js-mentioned').css('white-space', 'pre-wrap');
         $('.btn-wrapper').css('display','block');
     })
-    $(document).on('focusout', '.js-cf-share-comment', function () {
-        $('.js-cf-share-comment').removeClass('comment-focus');
+    $(document).on('focusout', '.cf-share-comment', function () {
+        $('.cf-share-comment').removeClass('comment-focus');
     })
 
     $(document).on('click', '.cf-sidebar-settings', function () {
@@ -270,7 +270,10 @@
                     }, 3000);
                 });
             });
-    
+            $(document).on('click', '.reset-filter', function () {
+                $(this).parent().find('select').prop('selectedIndex', 0);
+                $(this).parent().submit();
+            });
 
         // Save show_avatar option in a localstorage.
         const data = {
@@ -672,7 +675,7 @@
                                             $(assignCheckBoxId).prop('checked', false);
                                             $(assignCheckBoxId).data('user-email', appendInCheckbox[0].user_email)
                                             $(assignCheckBoxId).val(appendInCheckbox[0].ID);
-                                            $(assignCheckBoxId).next('i').text(`Assign to ${appendInCheckbox[0].display_name}`);
+                                            $(assignCheckBoxId).next('i').text(`Assign to  ${appendInCheckbox[0].display_name}`);
                                         }
 
                                     }
@@ -720,8 +723,12 @@
                 // Get current cursor position.
                 var el = $(createTextarea).get(0);
                 cursorPos = getCaretPosition(el);
+
+
+
                // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
-               if (('@' === e.key || 'KeyG' === e.code ) && typedText.length > 0 && $(createTextarea).is(':focus') === true) {
+               if (('@' === e.key || 'KeyG' === e.code) && typedText.length > 0 && $(createTextarea).is(':focus') === true) {
+                    doingAjax = false;
                     var prevCharOfEmailSymbol = typedText.substr(-1, 1);
                     var showSuggestionFunc;
                     var index = typedText.indexOf("@");
@@ -1045,7 +1052,7 @@
                 let thisDisplayName = $(this).find(".cf-user-list-item.active").attr('data-display-name');
                 let thisUserEmail = $(this).find(".cf-user-list-item.active").attr('data-email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).attr('data-user-id');
-                const assigntoText = (currentBoardAssinger) ? 'Reassign to ' : 'Assign to ';
+                const assigntoText = (currentBoardAssinger) ? 'Reassign to  ' : 'Assign to  ';
                 let checkbox = `
                 <div class="cf-assign-to">
                 <div class="cf-assign-to-inner">
@@ -2044,7 +2051,7 @@ jQuery(document).ready(function () {
                 plugin_id:  '8961',
                 plan_id:    planId,
                 public_key: 'pk_6a91f1252c5c1715f64a8bc814685',
-                image:      'https://www.multicollabs.com/wp-content/uploads/sites/5/2020/12/commenting-logo.svg'
+                image:      'https://www.multicollab.com/wp-content/uploads/sites/5/2020/12/commenting-logo.svg'
                 });
                 
                     handler.open({
@@ -2080,10 +2087,11 @@ jQuery(document).ready(function () {
 
 
 function displaySuggestionBoards(){
+    wp.domReady( function() {
     wp.data.dispatch('core/editor').editPost({
         meta: { _sb_show_suggestion_boards: false },
     });
-
+});
     jQuery( 'body' ).removeClass( 'hide-sg' ); 
 }
 function createCommentNode(){

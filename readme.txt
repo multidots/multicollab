@@ -5,9 +5,9 @@ Author: Multidots
 Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
-Requires at least: 5.6
-Tested up to: 5.9
-Stable tag: 2.0.4.2
+Requires at least: 5.8
+Tested up to: 6.0
+Stable tag: 2.0.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,37 +112,37 @@ For a full list of differences between versions, <a href="https://bit.ly/3skcdDP
 7.
 
 
-== FAQs ==
+== Frequently Asked Questions ==
 
-<strong> Who is Multicollab for? </strong>
+= Who is Multicollab for? =
 
 Multicollab is great for content teams of all sizes: whether it’s just two people or a team of hundreds, Multicollab ensures editorial workflows are made easier by enabling collaborative editing directly on the WordPress Gutenberg interface. If your content requires a second opinion and collaboration, Multicollab will be perfect for your needs!
 
-<strong> Does this work with Gutenberg? </strong>
+= <strong> Does this work with Gutenberg? </strong> =
 
 Yes! Multicollab is built to work perfectly with Gutenberg versions 8.6 to 10.7 and is consistently being updated to work with the latest versions of Gutenberg as they roll out.
 
-<strong> Does this work with the Classic Editor? </strong>
+= Does this work with the Classic Editor?  =
 
 Unfortunately, the WordPress Classic Editor isn’t as versatile as Gutenberg and isn’t as good at handling collaboration and editing. That means that Multicollab doesn’t work on the classic editor - we recommend switching to Gutenberg instead.
 
-<strong> What is Multicollab compatible with? </strong>
+= What is Multicollab compatible with? =
 
 We’re constantly working to improve Multicollab and make it more widely available. The plugin is currently fully compatible with Gutenberg versions 8.6 to 10.7, WordPress versions 5.6 and above, and PHP versions 7.0 or 8.0.
 
-<strong> Which browsers does Multicollab work with? </strong>
+= Which browsers does Multicollab work with? =
 
 Multicollab works seamlessly with Google Chrome, Firefox, Edge, and Safari. We’re constantly working to add more features, so if your browser isn’t compatible, let us know!
 
-<strong> Can I add comments in custom post types? </strong>
+= Can I add comments in custom post types? =
 
 Yes you can! Multicollab works perfectly in posts and pages of all types, enabling you to implement an editorial workflow and collaborative editing to all types of updates you need to give your website over time.
 
-<strong> How about user roles and permissions? How do they work? </strong>
+= How about user roles and permissions? How do they work? =
 
 By default, all Super Admin, Administrator, and Editor roles can view, edit, delete, reply, and resolve comments on any posts and page. Authors and Contributors can only add, edit, delete, reply, and resolve their own posts’ comments. For full control over users’ permissions, consider upgrading to <a href="https://bit.ly/3skcdDP" target="_blank">Multicollab Premium</a>. 
 
-<strong> Which Gutenberg Blocks does Multicollab work with? </strong>
+= Which Gutenberg Blocks does Multicollab work with? =
 
 Multicollab is built to work out of the box with the following Gutenberg blocks:
 <ul>
@@ -167,17 +167,21 @@ The following blocks are also enabled for collaboration with <a href="https://bi
 <li>Media & Text</li>
 </ul>
 
-<strong> Can I remove all comments across all articles at one go? </strong>
+= Can I remove all comments across all articles at one go? =
 
 Multicollab is built to work exactly like you expect it to as part of your editorial workflow. This means that no, comments cannot be removed at one go, as we understand that attention needs to be given to each and every one individually during collaborative editing. Comments can only be removed by resolving the thread directly, or by deleting the individual comment, directly on the single page or post. 
 
 Similar to Google Docs, deleting all the text highlighted on which comments are added will remove all comments of that particular section of text.
 
-<strong> I have another question. How can I get support? </strong>
+= I have another question. How can I get support? =
 
 Have you had a look at our documentation? <a href="https://bit.ly/3FqfRRD" target="_blank">We’ve covered a lot of common questions in our repository available freely here</a>. If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as fast as we can!
 
 == Changelog ==
+
+= 2.0.4.3 - 27.05.2022 =
+* [Bug Fix] – Compatible with WordPress 6.0.
+* [Enhancement] – Fixed minor issues related to @mention.
 
 = 2.0.4.2 - 13.05.2022 =
 * [Enhancement] – Maintenance Release.
