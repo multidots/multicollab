@@ -178,7 +178,7 @@
             check_admin_referer( 'fs_dismiss_notice_action' );
 
             if ( ! is_numeric( $_POST['message_id'] ) ) {
-                $this->_sticky_storage->remove( $_POST['message_id'] );
+                $this->_sticky_storage->remove( sanitize_text_field($_POST['message_id']) );
             }
 
             wp_die();

@@ -71,7 +71,6 @@ class Commenting_block_Admin extends Commenting_block_Functions
     {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
-        //$basename = plugin_basename(__FILE__);
         // Publish Comments on status change.
         add_action(
             'post_updated',
@@ -115,7 +114,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
         add_filter( 'the_content', array( $this, 'cf_removeMdspan' ) );
         // Add untitled when page/post title blank
         add_filter( 'the_title', array( $this, 'cf_post_title' ) );
-        // Add user role to wordpress users api
+        // Add user role to WordPress users api
         add_action( 'rest_api_init', array( $this, 'create_api_user_meta_field_for_userrole' ) );
     }
     
@@ -145,6 +144,29 @@ class Commenting_block_Admin extends Commenting_block_Functions
             $regex = '#<mdspan(.*?)>#';
             $replacement = '';
             $content = preg_replace( $regex, $replacement, $content );
+        }
+        
+        return $content;
+    }
+    
+    /**
+     * Remove custom tag "mdspan" from the content.
+     *
+     * @param array $content content of post.
+     *
+     * @return mixed Updated content.
+     */
+    public function cf_remove_suggestions_tag( $content )
+    {
+        
+        if ( is_singular() && is_main_query() ) {
+            //mdadded remove text
+            $regx1 = '#<ins\\s+class="mdadded" (.*?)>(.*?)</ins>#s';
+            $replace = '';
+            $remove_added_content = preg_replace( $regx1, $replace, $content );
+            $regex = '#<(ins|del)\\s+class="(mdadded|mdremoved|mdmodified)" (.*?)>(\\<.*?\\>|.*?)#';
+            $replacement = '';
+            $content = preg_replace( $regex, $replacement, $remove_added_content );
         }
         
         return $content;
@@ -202,9 +224,12 @@ class Commenting_block_Admin extends Commenting_block_Functions
         $all_post_type = get_post_types_by_support( array( 'editor' ) );
         $post_type = filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_STRING );
         $type = get_post_type();
-        if ( in_array( trim( $post_type ), $all_post_type, true ) || in_array( trim( $type ), $all_post_type, true ) ) {
-            if ( (isset( $post_type ) || isset( $type )) && ($post_type !== 'product' || $type !== 'product') ) {
-                $defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ) . '" width=17/>' . __( 'Editorial Comments', 'content-collaboration-inline-commenting' );
+        $cf_hide_editorial_column = get_option( 'cf_hide_editorial_column' );
+        if ( empty($cf_hide_editorial_column) ) {
+            if ( in_array( trim( $post_type ), $all_post_type, true ) || in_array( trim( $type ), $all_post_type, true ) ) {
+                if ( (isset( $post_type ) || isset( $type )) && ($post_type !== 'product' || $type !== 'product') ) {
+                    $defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ) . '" width=17/>' . __( 'Editorial Comments', 'content-collaboration-inline-commenting' );
+                }
             }
         }
         return $defaults;
@@ -214,7 +239,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
      * Add content in a new column of the posts list.
      *
      * @param string $column_name Column name.
-     * @param int $post_ID Post ID.
+     * @param int    $post_ID Post ID.
      */
     public function cf_columns_content( $column_name, $post_ID )
     {
@@ -238,12 +263,11 @@ class Commenting_block_Admin extends Commenting_block_Functions
     
     /**
      * Add Setting Page.
-     *
      */
     public function cf_add_setting_page()
     {
         $settings_title = 'Multicollab';
-        //Adding a new admin page for MYS
+        // Adding a new admin page for MYS
         add_menu_page(
             __( esc_html( $settings_title ), 'content-collaboration-inline-commenting' ),
             __( esc_html( $settings_title ), 'content-collaboration-inline-commenting' ),
@@ -256,7 +280,6 @@ class Commenting_block_Admin extends Commenting_block_Functions
     
     /**
      * Plugin setting page callback function.
-     *
      */
     public function cf_settings_callback()
     {
@@ -267,9 +290,9 @@ class Commenting_block_Admin extends Commenting_block_Functions
     /**
      * Allowed Administrator, editor, author and contributor user to enter unfiltered html.
      *
-     * @param array $caps All caps.
+     * @param array  $caps All caps.
      * @param string $cap Cap in a loop.
-     * @param int $user_id User ID.
+     * @param int    $user_id User ID.
      *
      * @return array Caps.
      */
@@ -319,9 +342,9 @@ class Commenting_block_Admin extends Commenting_block_Functions
     }
     
     /**
-     * @param int $post_ID Post ID.
+     * @param int           $post_ID Post ID.
      * @param object/string $post Post Content.
-     * @param string $update Status of the update.
+     * @param string        $update Status of the update.
      */
     public function cf_post_status_changes( $post_ID, $post )
     {
@@ -363,12 +386,12 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 
                 }
                 $prev_state['updated_at'] = $current_timestamp;
-                //add th meta
+                // add th meta
                 update_post_meta( $post_ID, $el, $prev_state );
                 update_post_meta( $post_ID, 'th' . $el, $deleted_timestamp );
                 $metas[$el][0] = maybe_serialize( $prev_state );
             }
-            //add mc_updated
+            // add mc_updated
         }
         
         // Publish New Comments.
@@ -486,7 +509,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
         }
         
         if ( isset( $current_drafts ) && !empty($current_drafts) ) {
-            //create and update the mc_uodated meta
+            // create and update the mc_uodated meta
             update_post_meta( $post_ID, 'mc_updated', $current_timestamp );
         }
         // Flush Current Drafts Stack.
@@ -510,7 +533,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
     
     /**
      * @param string $string The string to be limited.
-     * @param int $limit The total number of characters allowed.
+     * @param int    $limit The total number of characters allowed.
      *
      * @return string The limited string with '...' appended.
      */
@@ -627,7 +650,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
             wp_enqueue_script(
                 'freemius-checkout-js',
                 'https://checkout.freemius.com/checkout.min.js',
-                [ 'jquery' ],
+                array( 'jquery' ),
                 '',
                 true
             );
@@ -663,13 +686,13 @@ class Commenting_block_Admin extends Commenting_block_Functions
             }
             
             $comment_id = filter_input( INPUT_GET, 'comment_id', FILTER_SANITIZE_STRING );
-            wp_localize_script( $this->plugin_name, 'adminLocalizer', [
+            wp_localize_script( $this->plugin_name, 'adminLocalizer', array(
                 'nonce'                  => wp_create_nonce( COMMENTING_NONCE ),
                 'comment_id'             => ( isset( $comment_id ) ? $comment_id : null ),
                 'allowed_attribute_tags' => apply_filters( 'commenting_block_allowed_attr_tags', static::$allowed_attribute_tags ),
                 'cf_permission_options'  => apply_filters( 'commenting_block_permission_options', static::$cf_permission_options ),
-            ] );
-            //set edit time timezone
+            ) );
+            // set edit time timezone
             $date_format = get_option( 'date_format' );
             $time_format = get_option( 'time_format' );
             $edited_timestamp = current_time( 'timestamp' );
@@ -693,12 +716,12 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 'avtarUrl' => get_avatar_url( $current_user->ID ),
             ) );
             $cf_options = get_option( 'cf_permissions' );
-            $cf_add_comment_permission = isset( $cf_options[$current_user->roles[0]]["add_comment"] ) ?? '';
-            $cf_resolved_comment_permission = isset( $cf_options[$current_user->roles[0]]["resolved_comment"] ) ?? '';
-            $cf_hide_comment_permission = isset( $cf_options[$current_user->roles[0]]["hide_comment"] ) ?? '';
-            $cf_add_suggestion_permission = isset( $cf_options[$current_user->roles[0]]["add_suggestion"] ) ?? '';
-            $cf_resolved_suggestion_permission = isset( $cf_options[$current_user->roles[0]]["resolved_suggestion"] ) ?? '';
-            $cf_hide_suggestion_permission = isset( $cf_options[$current_user->roles[0]]["hide_suggestion"] ) ?? '';
+            $cf_add_comment_permission = isset( $cf_options[$current_user->roles[0]]['add_comment'] ) ?? '';
+            $cf_resolved_comment_permission = isset( $cf_options[$current_user->roles[0]]['resolved_comment'] ) ?? '';
+            $cf_hide_comment_permission = isset( $cf_options[$current_user->roles[0]]['hide_comment'] ) ?? '';
+            $cf_add_suggestion_permission = isset( $cf_options[$current_user->roles[0]]['add_suggestion'] ) ?? '';
+            $cf_resolved_suggestion_permission = isset( $cf_options[$current_user->roles[0]]['resolved_suggestion'] ) ?? '';
+            $cf_hide_suggestion_permission = isset( $cf_options[$current_user->roles[0]]['hide_suggestion'] ) ?? '';
             wp_localize_script( $this->plugin_name, 'cf_permissions', array(
                 'add_comment'         => $cf_add_comment_permission,
                 'resolved_comment'    => $cf_resolved_comment_permission,
@@ -722,7 +745,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
             wp_enqueue_script(
                 'cf-activity-centre',
                 trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/activityCentre.build.min.js',
-                [
+                array(
                 'content-collaboration-inline-commenting',
                 'wp-plugins',
                 'wp-editor',
@@ -731,16 +754,16 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 'wp-element',
                 'wp-components',
                 'wp-data'
-            ],
+            ),
                 wp_rand(),
                 true
             );
-            wp_localize_script( 'cf-activity-centre', 'activityLocalizer', [
+            wp_localize_script( 'cf-activity-centre', 'activityLocalizer', array(
                 'nonce'         => wp_create_nonce( 'wp_rest' ),
                 'apiUrl'        => home_url( '/wp-json' ),
                 'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
                 'currentUserID' => get_current_user_id(),
-            ] );
+            ) );
         }
     
     }
@@ -754,7 +777,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
      */
     public function convert_str_to_email( $str )
     {
-        $mail_pattern = "/([A-z0-9\\._-]+\\@[A-z0-9_-]+\\.)([A-z0-9\\_\\-\\.]{1,}[A-z])/";
+        $mail_pattern = '/([A-z0-9\\._-]+\\@[A-z0-9_-]+\\.)([A-z0-9\\_\\-\\.]{1,}[A-z])/';
         return preg_replace( $mail_pattern, '<a href="mailto:$1$2">$1$2</a>', $str );
     }
     
@@ -770,11 +793,11 @@ class Commenting_block_Admin extends Commenting_block_Functions
         $list_of_comments = $commentList;
         // Get the assigned User ID.
         $assign_to = filter_input( INPUT_POST, 'assignTo', FILTER_SANITIZE_NUMBER_INT );
-        $current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
+        $current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
         $arr = array();
         $commentList = end( $commentList );
-        $metaId = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
-        $blockType = filter_input( INPUT_POST, "blockType", FILTER_SANITIZE_STRING );
+        $metaId = filter_input( INPUT_POST, 'metaId', FILTER_SANITIZE_STRING );
+        $blockType = filter_input( INPUT_POST, 'blockType', FILTER_SANITIZE_STRING );
         $login_user = wp_get_current_user();
         // If 'commented on' text is blank, stop process.
         
@@ -857,14 +880,14 @@ class Commenting_block_Admin extends Commenting_block_Functions
             $user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
             $displayName = ( $login_user->data->ID == $user_data->ID ? 'You' : $user_data->display_name );
             // phpcs:ignore
-            $assigned_to = [
+            $assigned_to = array(
                 'ID'           => $user_data->ID,
                 'display_name' => $displayName,
                 'user_email'   => $user_data->user_email,
-                'avatar'       => get_avatar_url( $user_data->ID, [
+                'avatar'       => get_avatar_url( $user_data->ID, array(
                 'size' => 32,
-            ] ),
-            ];
+            ) ),
+            );
         }
         
         echo  wp_json_encode( array(
@@ -911,8 +934,8 @@ class Commenting_block_Admin extends Commenting_block_Functions
      */
     public function cf_update_comment()
     {
-        $current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
-        $metaId = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
+        $current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
+        $metaId = filter_input( INPUT_POST, 'metaId', FILTER_SANITIZE_STRING );
         $edited_comment = filter_input( INPUT_POST, "editedComment", FILTER_DEFAULT );
         // phpcs:ignore
         $edited_comment = htmlspecialchars_decode( $edited_comment );
@@ -939,7 +962,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
         $current_drafts = maybe_unserialize( $current_drafts );
         $current_drafts = ( empty($current_drafts) ? array() : $current_drafts );
         $current_drafts['edited'][$metaId][] = $old_timestamp;
-        ////////////////// New code by pooja ///////////
+        // New code by pooja ///////////
         
         if ( metadata_exists( 'post', $current_post_id, 'th' . $metaId ) ) {
             // update meta if meta key exists
@@ -949,7 +972,6 @@ class Commenting_block_Admin extends Commenting_block_Functions
             add_post_meta( $current_post_id, 'th' . $metaId, $edited_comment['editedTimestamp'] );
         }
         
-        ////////////////////////////////////////////////
         update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
         update_post_meta( $current_post_id, 'mc_updated', $edited_timestamp );
         wp_die();
@@ -960,9 +982,9 @@ class Commenting_block_Admin extends Commenting_block_Functions
      */
     public function cf_delete_comment()
     {
-        $current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
-        $metaId = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
-        $timestamp = filter_input( INPUT_POST, "timestamp", FILTER_SANITIZE_NUMBER_INT );
+        $current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
+        $metaId = filter_input( INPUT_POST, 'metaId', FILTER_SANITIZE_STRING );
+        $timestamp = filter_input( INPUT_POST, 'timestamp', FILTER_SANITIZE_NUMBER_INT );
         $metas = get_post_meta( $current_post_id );
         // Update Current Drafts.
         $current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
@@ -1007,7 +1029,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
     public function cf_save_settings()
     {
         $form_data = array();
-        parse_str( filter_input( INPUT_POST, "formData", FILTER_SANITIZE_STRING ), $form_data );
+        parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_STRING ), $form_data );
         
         if ( isset( $form_data['cf_admin_notif'] ) ) {
             update_option( 'cf_admin_notif', $form_data['cf_admin_notif'] );
@@ -1022,6 +1044,13 @@ class Commenting_block_Admin extends Commenting_block_Functions
             delete_option( 'cf_show_infoboard' );
         }
         
+        
+        if ( isset( $form_data['cf_hide_editorial_column'] ) ) {
+            update_option( 'cf_hide_editorial_column', $form_data['cf_hide_editorial_column'] );
+        } else {
+            delete_option( 'cf_hide_editorial_column' );
+        }
+        
         echo  'saved' ;
         wp_die();
     }
@@ -1033,7 +1062,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
     {
         global  $wpdb ;
         $form_data = array();
-        parse_str( filter_input( INPUT_POST, "formData", FILTER_SANITIZE_STRING ), $form_data );
+        parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_STRING ), $form_data );
         foreach ( $form_data as $key => $val ) {
             
             if ( '1' === $form_data[$key]['hide_comment'] ) {
@@ -1049,7 +1078,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
         
         }
         $prev_data = $wpdb->get_results( $wpdb->prepare( "SELECT option_name,option_value FROM {$wpdb->options} WHERE option_name = '%s' ORDER BY option_id DESC" ), 'cf_permissions' );
-        //db call ok; no-cache ok
+        // db call ok; no-cache ok
         delete_option( 'cf_permissions', $prev_data );
         update_option( 'cf_permissions', $form_data );
         echo  'saved' ;
@@ -1063,7 +1092,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
     {
         // Returning show_avatar option to display avatars (or not to).
         $show_avatars = get_option( 'show_avatars' );
-        $show_avatars = ( "1" === $show_avatars ? $show_avatars : 0 );
+        $show_avatars = ( '1' === $show_avatars ? $show_avatars : 0 );
         // Store plugin URL in localstorage so that its easy
         // to get sub site URL in JS files in Multisite environment.
         echo  wp_json_encode( array(
@@ -1078,8 +1107,8 @@ class Commenting_block_Admin extends Commenting_block_Functions
      */
     public function cf_resolve_thread()
     {
-        $current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
-        $metaId = filter_input( INPUT_POST, "metaId", FILTER_SANITIZE_STRING );
+        $current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
+        $metaId = filter_input( INPUT_POST, 'metaId', FILTER_SANITIZE_STRING );
         $timestamp = current_time( 'timestamp' );
         // Update Current Drafts.
         $current_drafts = get_post_meta( $current_post_id, '_current_drafts', true );
@@ -1099,7 +1128,6 @@ class Commenting_block_Admin extends Commenting_block_Functions
     
     /**
      * Rest API for Gutenberg Commenting Feature.
-     *
      */
     public function cf_rest_api()
     {
@@ -1112,11 +1140,10 @@ class Commenting_block_Admin extends Commenting_block_Functions
     
     /**
      * Update Autodraft meta on load.
-     *
      */
     public function cf_update_meta()
     {
-        $current_post_id = filter_input( INPUT_POST, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
+        $current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
         $autoDraft_ids = $_POST['data'];
         //phpcs:ignore
         update_post_meta( $current_post_id, '_autodraft_ids', $autoDraft_ids );
@@ -1131,9 +1158,9 @@ class Commenting_block_Admin extends Commenting_block_Functions
      */
     public function cf_get_comments()
     {
-        $current_post_id = filter_input( INPUT_GET, "currentPostID", FILTER_SANITIZE_NUMBER_INT );
+        $current_post_id = filter_input( INPUT_GET, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
         $userDetails = array();
-        $elID = filter_input( INPUT_GET, "elID", FILTER_SANITIZE_STRING );
+        $elID = filter_input( INPUT_GET, 'elID', FILTER_SANITIZE_STRING );
         $commentList = get_post_meta( $current_post_id, $elID, true );
         $superCareerData = maybe_unserialize( $commentList );
         $comments = ( isset( $superCareerData['comments'] ) ? $superCareerData['comments'] : array() );
@@ -1158,10 +1185,10 @@ class Commenting_block_Admin extends Commenting_block_Functions
             $edited_draft = ( isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '' );
             $updatedTime = $val['editedTime'];
             $assigned_text = $val['assigned'];
-            $editedTimestamp = ( isset( $val['editedTimestamp'] ) ? $val['editedTimestamp'] : "" );
+            $editedTimestamp = ( isset( $val['editedTimestamp'] ) ? $val['editedTimestamp'] : '' );
             $date = gmdate( $time_format . ' ' . $date_format, $t );
             if ( 'deleted' !== $cstatus ) {
-                array_push( $userDetails, [
+                array_push( $userDetails, array(
                     'userName'        => $username,
                     'userRole'        => $user_role,
                     'profileURL'      => $profile_url,
@@ -1174,7 +1201,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                     'updatedTime'     => $updatedTime,
                     'editedTimestamp' => $editedTimestamp,
                     'assignedText'    => $assigned_text,
-                ] );
+                ) );
             }
         }
         // Get assigned user data
@@ -1185,14 +1212,14 @@ class Commenting_block_Admin extends Commenting_block_Functions
             $user_data = get_user_by( 'ID', $superCareerData['assigned_to'] );
             $displayName = ( $login_user->data->ID == $user_data->ID ? 'You' : $user_data->display_name );
             // phpcs:ignore
-            $assigned_to = [
+            $assigned_to = array(
                 'ID'           => $user_data->ID,
                 'display_name' => $displayName,
                 'user_email'   => $user_data->user_email,
-                'avatar'       => get_avatar_url( $user_data->ID, [
+                'avatar'       => get_avatar_url( $user_data->ID, array(
                 'size' => 32,
-            ] ),
-            ];
+            ) ),
+            );
         }
         
         $data = array();
@@ -1216,28 +1243,28 @@ class Commenting_block_Admin extends Commenting_block_Functions
             return;
         }
         // WP User Query.
-        $users = new WP_User_Query( [
+        $users = new WP_User_Query( array(
             'number' => 9999,
-        ] );
+        ) );
         // Fetch out all user's email.
-        $email_list = [];
+        $email_list = array();
         $system_users = $users->get_results();
         $options = get_option( 'cf_permissions' );
         foreach ( $system_users as $user ) {
             if ( $user->has_cap( 'edit_posts' ) || $user->has_cap( 'edit_pages' ) ) {
-                $email_list[] = [
+                $email_list[] = array(
                     'ID'                => $user->ID,
                     'role'              => implode( ', ', $user->roles ),
                     'display_name'      => $user->display_name,
                     'full_name'         => $user->display_name,
                     'first_name'        => $user->first_name,
                     'user_email'        => $user->user_email,
-                    'avatar'            => get_avatar_url( $user->ID, [
+                    'avatar'            => get_avatar_url( $user->ID, array(
                     'size' => '24',
-                ] ),
+                ) ),
                     'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
                     'edit_others_posts' => $user->allcaps['edit_others_posts'],
-                ];
+                );
             }
         }
         // Set transient
@@ -1264,44 +1291,44 @@ class Commenting_block_Admin extends Commenting_block_Functions
         $niddle = substr( $niddle, 1 );
         
         if ( !empty($niddle) && '@' !== $niddle ) {
-            $users = new WP_User_Query( [
+            $users = new WP_User_Query( array(
                 'number'         => 9999,
                 'search'         => $niddle . '*',
-                'search_columns' => [ 'display_name' ],
-            ] );
+                'search_columns' => array( 'display_name' ),
+            ) );
             // Fetch out matched user's email.
-            $email_list = [];
+            $email_list = array();
             $system_users = $users->get_results();
             $options = get_option( 'cf_permissions' );
             foreach ( $system_users as $user ) {
                 
                 if ( isset( $options[$user->roles[0]]['add_comment'] ) && '1' == $options[$user->roles[0]]['add_comment'] || isset( $options[$user->roles[0]]['add_suggestion'] ) && '1' == $options[$user->roles[0]]['add_suggestion'] ) {
                     //phpcs:ignore
-                    $email_list[] = [
+                    $email_list[] = array(
                         'ID'                => $user->ID,
                         'role'              => implode( ', ', $user->roles ),
                         'display_name'      => $user->display_name,
                         'full_name'         => $user->display_name,
                         'first_name'        => $user->first_name,
                         'user_email'        => $user->user_email,
-                        'avatar'            => get_avatar_url( $user->ID, [
+                        'avatar'            => get_avatar_url( $user->ID, array(
                         'size' => '24',
-                    ] ),
+                    ) ),
                         'edit_others_posts' => $user->allcaps['edit_others_posts'],
-                    ];
+                    );
                 } else {
-                    $email_list[] = [
+                    $email_list[] = array(
                         'ID'                => $user->ID,
                         'role'              => implode( ', ', $user->roles ),
                         'display_name'      => $user->display_name,
                         'full_name'         => $user->display_name,
                         'first_name'        => $user->first_name,
                         'user_email'        => $user->user_email,
-                        'avatar'            => get_avatar_url( $user->ID, [
+                        'avatar'            => get_avatar_url( $user->ID, array(
                         'size' => '24',
-                    ] ),
+                    ) ),
                         'edit_others_posts' => $user->allcaps['edit_others_posts'],
-                    ];
+                    );
                 }
             
             }
@@ -1334,17 +1361,17 @@ class Commenting_block_Admin extends Commenting_block_Functions
         preg_match_all( $pattern, $content, $matches );
         $user_emails = array_unique( $matches[0] );
         // Remove duplicate entries if any.
-        $results = [];
+        $results = array();
         if ( count( $user_emails ) > 0 ) {
             foreach ( $user_emails as $user_email ) {
                 $user_data = get_user_by( 'email', $user_email );
-                $results[] = [
+                $results[] = array(
                     'ID'           => $user_data->ID,
                     'display_name' => $user_data->display_name,
                     'user_email'   => $user_data->user_email,
                     'role'         => implode( ', ', $user_data->roles ),
                     'avatar'       => get_avatar_url( $user_data->ID ),
-                ];
+                );
             }
         }
         echo  wp_json_encode( $results ) ;
@@ -1352,7 +1379,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
     }
     
     /**
-     * Add user role to users wordpress api
+     * Add user role to users WordPress api
      *
      * @return void
      */
@@ -1372,11 +1399,11 @@ class Commenting_block_Admin extends Commenting_block_Functions
      */
     function get_userRole_for_api( $object )
     {
-        //get the id of the post object array
+        // get the id of the post object array
         $user_id = $object['id'];
         $user_meta = get_userdata( $user_id );
         $user_roles = $user_meta->roles;
-        //return the post meta
+        // return the post meta
         return $user_roles[0];
     }
 

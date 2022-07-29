@@ -157,13 +157,13 @@
              */
             switch ( $type ) {
                 case 'post':
-                    $value = isset( $_POST[ $key ] ) ? $_POST[ $key ] : $def;
+                    $value = isset( $_POST[ $key ] ) ? sanitize_text_field( $_POST[ $key ] ) : $def;
                     break;
                 case 'get':
-                    $value = isset( $_GET[ $key ] ) ? $_GET[ $key ] : $def;
+                    $value = isset( $_GET[ $key ] ) ? sanitize_text_field($_GET[ $key ]) : $def;
                     break;
                 default:
-                    $value = isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $def;
+                    $value = isset( $_REQUEST[ $key ] ) ? sanitize_text_field($_REQUEST[ $key ]) : $def;
                     break;
             }
 
@@ -219,27 +219,29 @@
 
     if ( ! function_exists( 'fs_request_is_post' ) ) {
         function fs_request_is_post() {
-            return ( 'post' === strtolower( $_SERVER['REQUEST_METHOD'] ) );
+            $ser_req_method_post = filter_input( INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING );
+            return ( 'post' === strtolower( $ser_req_method_post ) );
         }
     }
 
     if ( ! function_exists( 'fs_request_is_get' ) ) {
         function fs_request_is_get() {
-            return ( 'get' === strtolower( $_SERVER['REQUEST_METHOD'] ) );
+            $ser_req_method_get = filter_input( INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING );
+            return ( 'get' === strtolower( $ser_req_method_get ) );
         }
     }
 
     if ( ! function_exists( 'fs_get_action' ) ) {
         function fs_get_action( $action_key = 'action' ) {
             if ( ! empty( $_REQUEST[ $action_key ] ) && is_string( $_REQUEST[ $action_key ] ) ) {
-                return strtolower( $_REQUEST[ $action_key ] );
+                return strtolower( sanitize_text_field($_REQUEST[ $action_key ]) );
             }
 
             if ( 'action' == $action_key ) {
                 $action_key = 'fs_action';
 
                 if ( ! empty( $_REQUEST[ $action_key ] ) && is_string( $_REQUEST[ $action_key ] ) ) {
-                    return strtolower( $_REQUEST[ $action_key ] );
+                    return strtolower( sanitize_text_field($_REQUEST[ $action_key ]) );
                 }
             }
 
@@ -276,7 +278,7 @@
             }
 
             $nonce = ! empty( $_REQUEST[ $nonce_key ] ) ?
-                $_REQUEST[ $nonce_key ] :
+                sanitize_text_field($_REQUEST[ $nonce_key ]) :
                 '';
 
             if ( empty( $nonce ) ||
@@ -312,9 +314,9 @@
                 return wp_get_raw_referer();
             }
             if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
-                return wp_unslash( $_REQUEST['_wp_http_referer'] );
+                return wp_unslash( esc_url_raw($_REQUEST['_wp_http_referer']) );
             } else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
-                return wp_unslash( $_SERVER['HTTP_REFERER'] );
+                return wp_unslash( esc_url_raw($_SERVER['HTTP_REFERER']) );
             }
 
             return false;

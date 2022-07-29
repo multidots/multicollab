@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 5.8
 Tested up to: 6.0
-Stable tag: 2.0.4.3
+Stable tag: 2.0.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,6 +178,10 @@ Similar to Google Docs, deleting all the text highlighted on which comments are 
 Have you had a look at our documentation? <a href="https://bit.ly/3FqfRRD" target="_blank">We’ve covered a lot of common questions in our repository available freely here</a>. If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as fast as we can!
 
 == Changelog ==
+
+= 2.0.4.4 - 29.07.2022 =
+* [Enhancement] – Improvement on General Settings - User can enable/disable editorial comment column on post/page list.
+* [Enhancement] – Maintenance Release.
 
 = 2.0.4.3 - 27.05.2022 =
 * [Bug Fix] – Compatible with WordPress 6.0.

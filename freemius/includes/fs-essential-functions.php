@@ -249,7 +249,8 @@
 
 			foreach ( $fields as $ip_field ) {
 				if ( ! empty( $_SERVER[ $ip_field ] ) ) {
-					return $_SERVER[ $ip_field ];
+					$ser_ip_field = filter_input( INPUT_SERVER, $ip_field, FILTER_SANITIZE_STRING );
+					return $ser_ip_field;
 				}
 			}
 
