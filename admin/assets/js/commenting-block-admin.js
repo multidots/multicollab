@@ -62,6 +62,14 @@
         $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
     });
 
+    $(document).on('click', '.js-trash-suggestion', function () {
+        $(this).parents(".commentContainer").siblings().find(".comment-delete-overlay").removeClass("show");
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text("Delete this Suggestion");
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-delete").text("Yes");
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-cancel").text("No");
+        $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
+    });
+
     $(document).on('click', '.comment-delete-overlay .btn-cancel', function () {
         $(this).parents(".commentContainer").find(".comment-delete-overlay").removeClass("show");
         $(this).parents(".commentContainer").find(".comment-resolve .resolve-cb").prop("checked", false);

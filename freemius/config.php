@@ -150,10 +150,11 @@
     }
 
     if ( ! defined( 'WP_FS__IS_HTTPS' ) ) {
+        $forwd_proto = filter_input( INPUT_SERVER, 'HTTP_X_FORWARDED_PROTO', FILTER_SANITIZE_STRING );
         define( 'WP_FS__IS_HTTPS', ( WP_FS__IS_HTTP_REQUEST &&
                                      // Checks if CloudFlare's HTTPS (Flexible SSL support).
                                      isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) &&
-                                     'https' === strtolower( $_SERVER['HTTP_X_FORWARDED_PROTO'] )
+                                     'https' === strtolower( $forwd_proto )
                                    ) ||
                                    // Check if HTTPS request.
                                    ( isset( $_SERVER['HTTPS'] ) && 'on' == $_SERVER['HTTPS'] ) ||
@@ -162,8 +163,9 @@
     }
 
     if ( ! defined( 'WP_FS__IS_POST_REQUEST' ) ) {
+        $req_post = filter_input( INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING );
         define( 'WP_FS__IS_POST_REQUEST', ( WP_FS__IS_HTTP_REQUEST &&
-                                            strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' ) );
+                                            strtoupper( $req_post ) == 'POST' ) );
     }
 
     if ( ! defined( 'WP_FS__REMOTE_ADDR' ) ) {
@@ -183,8 +185,9 @@
     }
 
     if ( ! defined( 'WP_FS__IS_LOCALHOST_FOR_SERVER' ) ) {
+        $http_host = filter_input( INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_STRING );
         define( 'WP_FS__IS_LOCALHOST_FOR_SERVER', ( ! WP_FS__IS_HTTP_REQUEST ||
-                                                    false !== strpos( $_SERVER['HTTP_HOST'], 'localhost' ) ) );
+                                                    false !== strpos( $http_host, 'localhost' ) ) );
     }
 
     #endregion
@@ -388,4 +391,4 @@
     }
     if ( ! defined( 'FS_SDK__SSLVERIFY' ) ) {
         define( 'FS_SDK__SSLVERIFY', false );
-    }
+    }

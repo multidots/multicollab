@@ -3108,7 +3108,8 @@
          */
         private function is_matching_url( $sub_url, $url = '' ) {
             if ( empty( $url ) ) {
-                $url = $_SERVER['REQUEST_URI'];
+                $req_uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
+                $url = $req_uri;
             }
 
             $url     = strtolower( $url );
@@ -4002,10 +4003,10 @@
                 $this->is_plugin_update(),
                 $version
             );
-
+            $http_host = filter_input( INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_STRING );
             $this->_storage->connectivity_test = array(
                 'is_connected' => $is_connected,
-                'host'         => $_SERVER['HTTP_HOST'],
+                'host'         => $http_host,
                 'server_ip'    => WP_FS__REMOTE_ADDR,
                 'is_active'    => $is_active,
                 'timestamp'    => WP_FS__SCRIPT_START_TIME,
@@ -4679,6 +4680,7 @@
             $api_domain = substr( FS_API__ADDRESS, strpos( FS_API__ADDRESS, ':' ) + 3 );
 
             // Generate the default email sections.
+            $http_host_site = filter_input( INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_STRING );
             $sections = array(
                 'sdk'      => array(
                     'title' => 'SDK',
@@ -4718,7 +4720,7 @@
                         'address'     => array( 'Address', site_url() ),
                         'host'        => array(
                             'HTTP_HOST',
-                            ( ! empty( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '' )
+                            ( ! empty( $_SERVER['HTTP_HOST'] ) ? $http_host_site : '' )
                         ),
                         'hosting'     => array(
                             'Hosting Company' => fs_request_has( 'hosting_company' ) ?
@@ -7449,9 +7451,14 @@
             }
             $url .= "://";
             if ( $_SERVER["SERVER_PORT"] != "80" ) {
-                $url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+                $ser_name_cpu = filter_input( INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING );
+                $ser_port_cpu = filter_input( INPUT_SERVER, 'SERVER_PORT', FILTER_SANITIZE_STRING );
+                $ser_uri_cpu = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
+                $url .= $ser_name_cpu . ":" . $ser_port_cpu  . $ser_uri_cpu;
             } else {
-                $url .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+                $ser_name_cpus = filter_input( INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING );
+                $ser_uri_cpus = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
+                $url .= $ser_name_cpus . $ser_uri_cpus;
             }
 
             return esc_url( $url );
@@ -14165,12 +14172,13 @@
                      * @author Leo Fajardo (@leorw)
                      * @since 2.2.3
                      */
+                    $ser_php_self = filter_input( INPUT_SERVER, 'PHP_SELF', FILTER_SANITIZE_STRING );
                     if ( is_network_admin() ) {
-                        preg_match( '#/wp-admin/network/?(.*?)$#i', $_SERVER['PHP_SELF'], $self_matches );
+                        preg_match( '#/wp-admin/network/?(.*?)$#i', $ser_php_self, $self_matches );
                     } else if ( is_user_admin() ) {
-                        preg_match( '#/wp-admin/user/?(.*?)$#i', $_SERVER['PHP_SELF'], $self_matches );
+                        preg_match( '#/wp-admin/user/?(.*?)$#i', $ser_php_self, $self_matches );
                     } else {
-                        preg_match( '#/wp-admin/?(.*?)$#i', $_SERVER['PHP_SELF'], $self_matches );
+                        preg_match( '#/wp-admin/?(.*?)$#i', $ser_php_self, $self_matches );
                     }
 
                     $pagenow = $self_matches[1];
