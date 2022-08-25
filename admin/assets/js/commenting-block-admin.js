@@ -14,9 +14,9 @@
      *
      */
 
-    /*  Trigger to close sidebar on post editor focus */
     window.addEventListener('click', function(e){   
     if(jQuery('.edit-post-layout').hasClass('is-sidebar-opened')){
+        $('.md-floating-button').remove();
         jQuery('.interface-interface-skeleton__sidebar').removeClass('cf-sidebar-closed'); 
     }
         if (document.getElementsByClassName('edit-post-visual-editor').length > 0 && document.getElementsByClassName('edit-post-visual-editor')[0].contains(e.target)){
@@ -160,6 +160,8 @@
 
     // Resetting All Class From Activity Center
     $(document).on('click', '.cls-board-outer', function () {
+        $('.md-floating-button').remove();
+
         var boardID = $(this).attr('id');
 
         $('.js-activity-centre .user-data-row').removeClass('active');
@@ -261,6 +263,27 @@
         $(document).on('click', '.reset-filter', function () {
             $(this).parent().find('select').prop('selectedIndex', 0);
             $(this).parent().submit();
+        });
+         // Uncheck other suggestion setting if select one.
+         $('input.cf_suggestion_stop_publish_options').on('change', function() {
+            $('input.cf_suggestion_stop_publish_options').not(this).prop('checked', false);  
+        });
+
+        // Save Publishing Settings.
+        $('#cf_suggestion_settings').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_save_suggestions',
+                'formData': $(this).serialize()
+            };
+            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
+                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                $('#cf_settings .cf-success').slideDown(300);
+                setTimeout(function () {
+                    $('#cf_settings .cf-success').slideUp(300);
+                }, 3000);
+            });
         });
         // Save permissions.
              $('#cf_permissions').on('submit', function (e) {
@@ -732,28 +755,33 @@
                 var el = $(createTextarea).get(0);
                 cursorPos = getCaretPosition(el);
 
-
-
-               // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
-               if (('@' === e.key || 'KeyG' === e.code) && typedText.length > 0 && $(createTextarea).is(':focus') === true) {
+           // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
+               if ( '@' === e.key || 'KeyG' === e.code ||  50 === e.which  && (typedText && typedText.length > 0 ) && $(createTextarea).is(':focus') === true) {
                     doingAjax = false;
-                    var prevCharOfEmailSymbol = typedText.substr(-1, 1);
-                    var showSuggestionFunc;
-                    var index = typedText.indexOf("@");
-                    var preText = typedText.charAt(index);
+                    var prevCharOfEmailSymbol;
                     mentioncounter++;
-
-                    if (preText.indexOf(" ") > 0 || preText.length > 0) {
-                        var words = preText.split(" ");
-                        var prevWords = (words[words.length - 1]);
-                    }
-
-                    if ('@' === prevWords) {
-                        showSuggestionFunc = showSuggestion(prevWords);
-                    }
+                    var showSuggestionFunc;
+                    console.log(typedText);
+                    if(undefined !== typedText){
+                        prevCharOfEmailSymbol = typedText.substr(-1, 1);
+                    
                     if ('@' === prevCharOfEmailSymbol) {
                         showSuggestionFunc = showSuggestion(prevCharOfEmailSymbol);
+                    }else{
+                        
+                        var index = typedText.indexOf("@");
+                        var preText = typedText.charAt(index);
+                    
+                        if (preText.indexOf(" ") > 0 || preText.length > 0 ){
+                            var words = preText.split(" ");
+                            var prevWords = (words[words.length - 1]);
+                        }
+                        if ('@' === prevWords) {
+                            showSuggestionFunc = showSuggestion(prevWords);
+                        }
+                       
                     }
+                }
                     if (showSuggestionFunc && mentioncounter <= 1 && !doingAjax) {
                         doingAjax = true;
                         // Fetch all email list.
@@ -783,7 +811,7 @@
                 if ((32 === e.which) || (13 === e.which) || (8 === e.which)) {
                     mentioncounter = 0;
                 }
-                if (true === isEmail && typedText.length > 0 && $(createTextarea).is(':focus') === true) {
+                if (true === isEmail && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true) {
                     var checkKeys = function (key) {
                         if (key === e.key) {
                             return true;
@@ -798,16 +826,17 @@
 
                             let prevCharOfEmailSymbol = typedText.substr(-1, 1);
                             if ('@' === prevCharOfEmailSymbol) {
-                                if ('' !== typedText) {
-                                    trackedStr = '@';
-                                } else {
                                     trackedStr = '';
-                                }
                             } else {
                                 trackedStr = trackedStr.slice(0, -1);
                             }
+                        } else if( 50 === e.which ) {
+                            trackedStr += '@';
                         } else {
-                            trackedStr += e.key;
+                            if( 50 !== e.which ) {
+                                trackedStr += e.key;
+                            }
+                            
                         }
 
                         // Check for ctrl+backspace.
@@ -1055,22 +1084,36 @@
             var mentionedEmail = '.cf-system-user-email-list li';
             let checkBoxContainer = '.cf-assign-to';
             if (e.which == 13) {
+                let checkbox;
                 el = $(".cls-board-outer.focus.is-open").attr('id');
                 let thisUserId = $(this).find(".cf-user-list-item.active").attr('data-user-id');
                 let thisDisplayName = $(this).find(".cf-user-list-item.active").attr('data-display-name');
                 let thisUserEmail = $(this).find(".cf-user-list-item.active").attr('data-email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).attr('data-user-id');
                 const assigntoText = (currentBoardAssinger) ? 'Reassign to  ' : 'Assign to  ';
-                let checkbox = `
-                <div class="cf-assign-to">
-                <div class="cf-assign-to-inner">
-                    <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
-                    </label>
-                    <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                </div>
-                <span class="assignMessage">Your @mention will add people to this discussion and send an email.</span>     
-                </div>`;
+                if (multicollab_fs.can_use_premium_code) {
+                    checkbox = `
+                    <div class="cf-assign-to">
+                    <div class="cf-assign-to-inner">
+                        <label for="${el}-cf-assign-to-user">
+                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
+                        </label>
+                        <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+                    </div>
+                    <span class="assignMessage">Your @mention will add people to this discussion and send an email.</span>     
+                    </div>`;
+                } else {
+                    checkbox = `
+                    <div class="cf-assign-to">
+                    <div class="cf-assign-to-inner">
+                        <label for="${el}-cf-assign-to-user">
+                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
+                        </label>
+                        <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+                    </div>
+                    </div>`;
+   
+                } 
                 if ('' !== el) {
                     if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
                         $(`#${el} ${checkBoxContainer}`).empty();
@@ -1150,6 +1193,7 @@
 
                 if ($(this).parents(parentBoardClass).hasClass('cm-board')) {
                     // e.preventDefault();
+                    let checkbox;
                     el = $(this).parents(parentBoardClass).attr('id');
                     let appendTo = `#${el} .cf-assign-to`;
                     let assignablePopup = `#${el} .cf-assignable-list-popup`;
@@ -1158,15 +1202,29 @@
                     let thisDisplayName = $(this).data('display-name');
                     let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
                     const assigntoText = (currentBoardAssingerID) ? 'Reassign to ' : 'Assign to ';
-                    let checkbox = `
+                    if (multicollab_fs.can_use_premium_code) {
+                        checkbox = `
+                        <div class="cf-assign-to">
                         <div class="cf-assign-to-inner">
                             <label for="${el}-cf-assign-to-user">
                                 <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
                             </label>
-                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
-                        </div>    
-                        <span class="assignMessage">Your @mention will add people to this discussion and send an email.</span>  
-                    `;
+                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+                        </div>
+                        <span class="assignMessage">Your @mention will add people to this discussion and send an email.</span>     
+                        </div>`;
+                    } else {
+                        checkbox = `
+                        <div class="cf-assign-to">
+                        <div class="cf-assign-to-inner">
+                            <label for="${el}-cf-assign-to-user">
+                                <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
+                            </label>
+                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+                        </div>
+                        </div>`;
+       
+                    }
 
                     let checkboxFragments = document.createRange().createContextualFragment(checkbox);
                     let appendToSelector = document.querySelector(appendTo);
@@ -2048,9 +2106,9 @@ function getSelectionHtml() {
 }
 
 jQuery(document).ready(function () {
-    if('1' === showinfoboard.showinfoboard){showInfoBoardonNewComments();}
-   
+    if('1' === showinfoboard.showinfoboard){showInfoBoardonNewComments();}   
 });
+
 jQuery(document).ready(function () {
         function freemiusCheckout(planId,licenses){
             // Pricing  version

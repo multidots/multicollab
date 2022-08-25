@@ -278,7 +278,7 @@
             }
 
             $nonce = ! empty( $_REQUEST[ $nonce_key ] ) ?
-                sanitize_text_field($_REQUEST[ $nonce_key ]) :
+            sanitize_text_field($_REQUEST[ $nonce_key ]) :
                 '';
 
             if ( empty( $nonce ) ||

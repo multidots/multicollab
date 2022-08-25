@@ -160,7 +160,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
     {
         
         if ( is_singular() && is_main_query() ) {
-            //mdadded remove text
+            // mdadded remove text
             $regx1 = '#<ins\\s+class="mdadded" (.*?)>(.*?)</ins>#s';
             $replace = '';
             $remove_added_content = preg_replace( $regx1, $replace, $content );
@@ -478,7 +478,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                     
                     if ( count( $prev_state['comments'] ) > 0 ) {
                         foreach ( $prev_state['comments'] as $prev_state_cmnt ) {
-                            if ( 'draft' === $prev_state_cmnt['status'] ) {
+                            if ( 'draft' === isset( $prev_state_cmnt['status'] ) ) {
                                 $can_delete = true;
                             }
                             break;
@@ -709,10 +709,11 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 'timezoneOffset' => get_option( 'gmt_offset' ),
             ) );
             $current_user = wp_get_current_user();
+            $current_user_role = array_shift( array_values( $current_user->roles ) );
             wp_localize_script( $this->plugin_name, 'currentUserData', array(
                 'id'       => $current_user->ID,
                 'username' => $current_user->data->display_name,
-                'role'     => $current_user->roles[0],
+                'role'     => $current_user_role,
                 'avtarUrl' => get_avatar_url( $current_user->ID ),
             ) );
             $cf_options = get_option( 'cf_permissions' );
@@ -740,6 +741,8 @@ class Commenting_block_Admin extends Commenting_block_Functions
             wp_localize_script( $this->plugin_name, 'showinfoboard', array(
                 'showinfoboard' => get_option( 'cf_show_infoboard' ),
             ) );
+            $cf_give_alert_message = get_option( 'cf_give_alert_message' );
+            wp_localize_script( $this->plugin_name, 'multicollab_cf_alert', $cf_give_alert_message );
             wp_enqueue_script( 'jquery-ui-draggable' );
             wp_enqueue_script( 'jquery-ui-droppable' );
             wp_enqueue_script(
@@ -1065,13 +1068,13 @@ class Commenting_block_Admin extends Commenting_block_Functions
         parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_STRING ), $form_data );
         foreach ( $form_data as $key => $val ) {
             
-            if ( '1' === $form_data[$key]['hide_comment'] ) {
+            if ( '1' === isset( $form_data[$key]['hide_comment'] ) ) {
                 unset( $form_data[$key]['add_comment'] );
                 unset( $form_data[$key]['resolved_comment'] );
             }
             
             
-            if ( '1' === $form_data[$key]['hide_suggestion'] ) {
+            if ( '1' === isset( $form_data[$key]['hide_suggestion'] ) ) {
                 unset( $form_data[$key]['add_suggestion'] );
                 unset( $form_data[$key]['resolved_suggestion'] );
             }
@@ -1144,7 +1147,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
     public function cf_update_meta()
     {
         $current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
-        $autoDraft_ids = $_POST['data'];
+        $autoDraft_ids = ( isset( $_POST['data'] ) ? $_POST['data'] : '' );
         //phpcs:ignore
         update_post_meta( $current_post_id, '_autodraft_ids', $autoDraft_ids );
         wp_die();
@@ -1242,9 +1245,17 @@ class Commenting_block_Admin extends Commenting_block_Functions
         if ( $post_id <= 0 ) {
             return;
         }
+        // Get user roles who can edit pages/posts./@author Rishi Shah/@since 2.0.4.5
+        $roles = array();
+        foreach ( wp_roles()->roles as $role_name => $role_obj ) {
+            if ( !empty($role_obj['capabilities']['edit_pages']) || !empty($role_obj['capabilities']['edit_posts']) || !empty($role_obj['capabilities']['edit_others_pages']) || !empty($role_obj['capabilities']['edit_others_posts']) ) {
+                $roles[] = $role_name;
+            }
+        }
         // WP User Query.
         $users = new WP_User_Query( array(
-            'number' => 9999,
+            'number'   => 9999,
+            'role__in' => $roles,
         ) );
         // Fetch out all user's email.
         $email_list = array();
@@ -1263,7 +1274,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                     'size' => '24',
                 ) ),
                     'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
-                    'edit_others_posts' => $user->allcaps['edit_others_posts'],
+                    'edit_others_posts' => ( isset( $user->allcaps['edit_others_posts'] ) ? $user->allcaps['edit_others_posts'] : '' ),
                 );
             }
         }
@@ -1291,6 +1302,13 @@ class Commenting_block_Admin extends Commenting_block_Functions
         $niddle = substr( $niddle, 1 );
         
         if ( !empty($niddle) && '@' !== $niddle ) {
+            // Get user roles who can edit pages/posts.
+            $roles = array();
+            foreach ( wp_roles()->roles as $role_name => $role_obj ) {
+                if ( !empty($role_obj['capabilities']['edit_pages']) || !empty($role_obj['capabilities']['edit_posts']) || !empty($role_obj['capabilities']['edit_others_pages']) || !empty($role_obj['capabilities']['edit_others_posts']) ) {
+                    $roles[] = $role_name;
+                }
+            }
             $users = new WP_User_Query( array(
                 'number'         => 9999,
                 'search'         => $niddle . '*',
@@ -1314,7 +1332,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                         'avatar'            => get_avatar_url( $user->ID, array(
                         'size' => '24',
                     ) ),
-                        'edit_others_posts' => $user->allcaps['edit_others_posts'],
+                        'edit_others_posts' => ( isset( $user->allcaps['edit_others_posts'] ) ? $user->allcaps['edit_others_posts'] : '' ),
                     );
                 } else {
                     $email_list[] = array(
@@ -1327,7 +1345,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                         'avatar'            => get_avatar_url( $user->ID, array(
                         'size' => '24',
                     ) ),
-                        'edit_others_posts' => $user->allcaps['edit_others_posts'],
+                        'edit_others_posts' => ( isset( $user->allcaps['edit_others_posts'] ) ? $user->allcaps['edit_others_posts'] : '' ),
                     );
                 }
             

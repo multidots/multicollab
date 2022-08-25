@@ -19,7 +19,7 @@ if ( ! empty( $cf_permissions ) ) {
 			<h1><?php esc_html_e( 'Multicollab', 'content-collaboration-inline-commenting' ); ?></h1>
 		</div>
 		<div class="cf-plugin-version">
-			<span>Version 2.0.4.4</span>
+			<span>Version 2.0.4.5</span>
 		</div>
 	</div>
 	
@@ -184,7 +184,7 @@ if ( ! empty( $cf_permissions ) ) {
 							<div id="cf-settings" class="cf-tab-inner">
 							<div class="cf-content-box">
 								<div class="cf-cnt-box-header">
-									<h3><?php esc_html_e( 'General Settings', 'content-collaboration-inline-commenting' ); ?></h3>
+									<h3><?php esc_html_e( 'Notification Setting', 'content-collaboration-inline-commenting' ); ?></h3>
 								</div>
 								<form class="cf-cnt-box-body" id ="cf_settings"  method="post">
 									<div id="cf-notice">

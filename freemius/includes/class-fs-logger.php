@@ -386,6 +386,7 @@ KEY `type` (`type` ASC))" );
 			} else if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 				$request_type = 'ajax';
 			}
+
 			$ser_req_uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
 			$request_url = WP_FS__IS_HTTP_REQUEST ?
 				$ser_req_uri :
