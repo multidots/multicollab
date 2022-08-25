@@ -81,7 +81,7 @@ class Commenting_block_Functions {
 			$rejected_suggestions = 0;
 			$open_suggestions     = 0; 
 			foreach ( $suggestions_meta as $key => $sg ) {
-				$suggestion = $sg[0]; 
+				$suggestion = isset($sg[0]) ? $sg[0] : ''; 
 				if (isset($suggestion['status']) && 'accept' === $suggestion['status']['action'] ) {
 					$accepted_suggestions ++;
 				} else if (isset($suggestion['status']) && 'reject' === $suggestion['status']['action'] ) {

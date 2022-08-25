@@ -6,8 +6,8 @@ Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 5.8
-Tested up to: 6.0
-Stable tag: 2.0.4.4
+Tested up to: 6.1
+Stable tag: 2.0.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,7 @@ Multicollab works out of the box to insert collaborative tools which will transf
 
 This plugin works by adding inline commenting functionality to Gutenberg directly, making commenting a single click of a button away:
 
-[youtube https://youtu.be/rDdgh_u8oVQ]
+[youtube  https://youtu.be/wc2Lh4i0cL4]
 
 ><em>This an easy-to-use plugin—the best one I’m aware of—for those who have an editorial process. My wife is a blogger and I’m her editor. We’ve only begun taking advantage of it but I wanted to offer a positive shout out.
 <strong>-       Mario T. Lanza - Sr. Web Developer<strong></em>
@@ -178,6 +178,11 @@ Similar to Google Docs, deleting all the text highlighted on which comments are 
 Have you had a look at our documentation? <a href="https://bit.ly/3FqfRRD" target="_blank">We’ve covered a lot of common questions in our repository available freely here</a>. If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as fast as we can!
 
 == Changelog ==
+
+= 2.0.4.5 - 25.08.2022 =
+* [Enhancement] — User can add comments using a keyboard shortcut — For Windows (ctrl + alt + m) && For Mac  (⌘ Cmd + ⌥ Option + m)
+* [Enhancement] – Optimize code for @mention Feature.
+* [Bug Fix]     – PHP8 compatibilities warnings
 
 = 2.0.4.4 - 29.07.2022 =
 * [Enhancement] – Improvement on General Settings - User can enable/disable editorial comment column on post/page list.

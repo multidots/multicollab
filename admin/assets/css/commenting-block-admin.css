@@ -101,7 +101,7 @@ div#Div1{position:fixed;right:300px;width:250px;border:1px solid #000;padding:10
 body.commentOn mdspan[data-rich-text-format-boundary="true"],
 body.commentOn .rich-text:focus mdspan[data-rich-text-format-boundary="true"]{background-color:#fcef45}
 .comment-header .buttons-holder .buttons-wrapper button:hover{background-color:#edf2f9}
-body:not(.commentOn) #md-comments-suggestions-parent{z-index:-1;}
+/* body:not(.commentOn) #md-comments-suggestions-parent{z-index:-1;} */
 #md-comments-suggestions-parent{position:absolute;top:80px;right:0;-webkit-transition:all 0.5s;-o-transition:all 0.5s;transition:all 0.5s;/*z-index:1*/;height:100%;height:calc(100% - 100px);overflow:auto;width:345px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;overflow-x:hidden}
 #md-comments-suggestions-parent div#md-span-comments{height:100%;overflow:auto;padding:20px 10px 10px 42px;overflow-x:hidden}
 body.commentOn div#md-comments-suggestions-parent{z-index:9}
@@ -287,6 +287,23 @@ body.hide-sg.hide-comments .block-editor-writing-flow{width:100%;float:none}
 .cls-board-outer .board .commentContainer .commentText a.js-mentioned,
 .cls-board-outer .board .commentContainer .commentText a{color:#0568C1}
 .cls-board-outer .board .commentContainer .commentText a.js-mentioned{display:inline-block}
+
+/* Floating button css */
+.md-floating-button{display:flex;justify-content:flex-end;position:fixed;top:192px;right:16%;bottom:auto;transition:all .5s ease-in 0s;-webkit-transition:opacity 0.3s linear 2s;-moz-transition:all .5s ease-in 0s;-ms-transition:all .5s ease-in 0s;-o-transition:all .5s ease-in 0s;}
+.is-sidebar-opened .md-floating-button,
+div#md-comments-suggestions-parent div#md-span-comments:not(:empty) ~ .md-floating-button{right:28%;}
+.is-sidebar-opened div#md-comments-suggestions-parent div#md-span-comments:not(:empty) ~ .md-floating-button{right:45%;}
+.md-floating-button ul{margin:0;padding:0!important;border-radius:10px;filter:drop-shadow(0px 3px 6px rgba(0,0,0,0.05));background-color:#ffffff;border:1px solid #e2e4e7;}
+.md-floating-button ul li{line-height:normal;padding:12px;cursor:pointer;list-style:none;}
+.md-floating-button ul li:first-child{border-radius:10px 10px 0 0;-webkit-border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0;-ms-border-radius:10px 10px 0 0;-o-border-radius:10px 10px 0 0;}
+.md-floating-button ul li:last-child{border-radius:0 0 10px 10px;-webkit-border-radius:0 0 10px 10px;-moz-border-radius:0 0 10px 10px;-ms-border-radius:0 0 10px 10px;-o-border-radius:0 0 10px 10px;}
+.md-floating-button ul li.suggestion-active{background-color:rgb(0 124 186 / 10%);}
+.md-floating-button ul li:hover{background-color:#f1f3f4;}
+.md-floating-button ul li span{position:relative;}
+.md-floating-button ul li .admin-comments-holder::before{content:"";position:relative;top:0;width:24px;height:24px;background-image:url(../images/comment-fl-icon.svg);background-repeat:no-repeat;display:inline-block;line-height:normal;background-size:24px;}
+.md-floating-button ul li .admin-suggestion-holder::before{content:"";position:relative;top:0;width:24px;height:24px;background-image:url(../images/suggestion-float-icon.svg);background-repeat:no-repeat;display:inline-block;line-height:normal;background-size:24px;}
+.md-floating-button ul li .admin-comments-holder,
+.md-floating-button ul li .admin-suggestion-holder{line-height:13px;}
 
 /* Editorial comments page */
 .cf-plugin-settings{-webkit-box-sizing:border-box;box-sizing:border-box;padding-right:20px}
@@ -663,7 +680,7 @@ body.hide-comments .commentIcon.wp-block-audio{border-color:transparent}
 .commentContainer .suggestion-comment-accpt-meta li i:hover .tooltip{-webkit-transform:translate(-70px,0px);-ms-transform:translate(-70px,0px);transform:translate(-70px,0px);opacity: 1;visibility: visible}
 .cls-board-outer.sg-board .board .commentContainer .commentText em{color:#50575E;font-weight:400;}
 .js-activity-centre .user-commented-icon a>*{pointer-events:none}
-.wp-block.mdaligned,.wp-block[data-sgalign=true]{border: 2px solid #188651;}
+.wp-block.mdaligned,.wp-block[data-sgalign=true],.wp-block.mdheading,.wp-block[data-sgheading=true]{border: 2px solid #188651;}
 .wp-block.mdremoved,.wp-block[data-sgremove=true]{border: 2px solid #EA1010;}
 /* show/hide comment css for suggestion board*/
 #md-span-comments .cls-board-outer.focus .show-all-comments{display:none!important}
@@ -719,8 +736,11 @@ body.hide-comments .commentIcon.wp-block-audio{border-color:transparent}
 .cls-board-outer .cf-assign-to .cf-assign-to-inner .dashicons-arrow-down-alt2{margin-left:auto;font-size:16px;line-height:22px}
 .cls-board-outer .shareCommentContainer .tooltip,
 .cls-board-outer .commentContainer .tooltip,
-.user-data-row .user-data-box .tooltip{font-size:12px;line-height:18px;border-radius:4px;background:#1E1E1E;color:#fff;padding:5.5px 10px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;font-weight:500;position:absolute;top:100%;left:0;min-width:-webkit-max-content;min-width:-moz-max-content;min-width:max-content;-webkit-transform:translate(0,12px);-ms-transform:translate(0,12px);transform:translate(0,12px);display:none;cursor:pointer;}
-.cls-board-outer .shareCommentContainer .btn-cancel:hover .tooltip{display:block}
+.user-data-row .user-data-box .tooltip,
+.md-floating-button li .tooltip{font-size:12px;line-height:18px;border-radius:4px;background:#1E1E1E;color:#fff;padding:5.5px 10px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;font-weight:500;position:absolute;top:100%;left:0;min-width:-webkit-max-content;min-width:-moz-max-content;min-width:max-content;-webkit-transform:translate(0,12px);-ms-transform:translate(0,12px);transform:translate(0,12px);display:none;cursor:pointer;}
+.md-floating-button li:first-child:hover .tooltip{transform:translate(-108px,-78px);}
+.md-floating-button li:last-child:hover .tooltip{transform:translate(-108px,-35px);}
+.cls-board-outer .shareCommentContainer .btn-cancel:hover .tooltip,.md-floating-button li:hover .tooltip{display:block}
 .cls-board-outer .shareCommentContainer .btn-cancel .tooltip{-ms-transform:translate(-50%,7px);transform:translate(-50%,7px);-webkit-transform:translate(-50%,7px);left:50%}
 .cls-board-outer .board .commentContainer:hover .buttons-wrapper .more-option-btn,
 .cls-board-outer .board .commentContainer:hover .buttons-wrapper .more-option-btn::before,

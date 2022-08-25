@@ -74,8 +74,8 @@ class Commenting_Block_Rest_Routes
         $user_id = apply_filters( 'determine_current_user', false );
         wp_set_current_user( $user_id );
         $current_users = get_userdata( $user_id );
-        $hide_suggestion = $cf_options[$current_users->roles[0]]['hide_suggestion'];
-        $hide_comment = $cf_options[$current_users->roles[0]]['hide_comment'];
+        $hide_suggestion = ( isset( $cf_options[$current_users->roles[0]]['hide_suggestion'] ) ? $cf_options[$current_users->roles[0]]['hide_suggestion'] : '' );
+        $hide_comment = ( isset( $cf_options[$current_users->roles[0]]['hide_comment'] ) ? $cf_options[$current_users->roles[0]]['hide_comment'] : '' );
         $like = $wpdb->esc_like( '_el' ) . '%';
         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id=%d AND meta_key LIKE %s", $current_post_id, $like ), ARRAY_A );
         // phpcs:ignore
@@ -87,16 +87,22 @@ class Commenting_Block_Rest_Routes
             $editedLastUser = get_post_meta( $lastpostid, 'last_user_edited', true );
             $lasteditedtime = get_the_modified_time( 'U', $lastpostid );
             $usr_login_name = get_user_by( 'login', $editedLastUser );
-            $lasteditedUsersID = $usr_login_name->ID;
+            
+            if ( get_user_by( 'login', $editedLastUser ) !== false ) {
+                $lasteditedUsersID = ( isset( $usr_login_name ) ? (int) $usr_login_name->ID : 0 );
+            } else {
+                $lasteditedUsersID = null;
+            }
+            
             $lasteditedUsersUrl = get_avatar_url( $lasteditedUsersID );
             $elID = str_replace( '_', '', $row['meta_key'] );
             $comments = maybe_unserialize( $row['meta_value'] );
             foreach ( $comments['comments'] as $timestamp => $comment ) {
-                $user_info = get_userdata( $comment['userData'] );
-                if ( 'draft' !== $comment['status'] && 'permanent_draft' !== $comment['status'] ) {
+                $user_info = get_userdata( ( isset( $comment['userData'] ) ? $comment['userData'] : '' ) );
+                if ( 'draft' !== isset( $comment['status'] ) && 'permanent_draft' !== isset( $comment['status'] ) ) {
                     $cmnts[] = [
                         'id'              => $timestamp,
-                        'status'          => $comment['status'],
+                        'status'          => ( isset( $comment['status'] ) ? $comment['status'] : '' ),
                         'created_at'      => ( isset( $comment['created_at'] ) ? $comment['created_at'] : '' ),
                         'timestamp'       => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
                         'editedTime'      => ( isset( $comment['editedTime'] ) ? $comment['editedTime'] : '' ),

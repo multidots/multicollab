@@ -14180,7 +14180,6 @@
                     } else {
                         preg_match( '#/wp-admin/?(.*?)$#i', $ser_php_self, $self_matches );
                     }
-
                     $pagenow = $self_matches[1];
                     $pagenow = trim( $pagenow, '/' );
                     $pagenow = preg_replace( '#\?.*?$#', '', $pagenow );

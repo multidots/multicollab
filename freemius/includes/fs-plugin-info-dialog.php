@@ -933,7 +933,7 @@
             }
 
             $args = array(
-                'slug'   => wp_unslash( sanitize_text_field($_REQUEST['plugin']) ),
+                'slug'   => wp_unslash( sanitize_text_field($_REQUEST['plugin']) ),         
                 'is_ssl' => is_ssl(),
                 'fields' => array(
                     'banners'         => true,

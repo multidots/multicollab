@@ -177,7 +177,7 @@
         function dismiss_notice_ajax_callback() {
             check_admin_referer( 'fs_dismiss_notice_action' );
 
-            if ( ! is_numeric( $_POST['message_id'] ) ) {
+            if (isset($_POST['message_id']) && ! is_numeric( $_POST['message_id'] ) ) {
                 $this->_sticky_storage->remove( sanitize_text_field($_POST['message_id']) );
             }
 
