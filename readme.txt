@@ -179,7 +179,7 @@ Have you had a look at our documentation? <a href="https://bit.ly/3FqfRRD" targe
 
 == Changelog ==
 
-= 2.0.4.5 - 25.08.2022 =
+= 2.0.4.5 - 26.08.2022 =
 * [Enhancement] — User can add comments using a keyboard shortcut — For Windows ctrl + alt + m && For Mac  ⌘ Cmd + ⌥ Option + m
 * [Enhancement] – Optimize code for @mention Feature.
 * [Bug Fix]     – PHP8 compatibilities warnings
