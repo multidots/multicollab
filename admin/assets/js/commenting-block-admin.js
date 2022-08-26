@@ -611,7 +611,8 @@
 
             });
             // Restrict Br in newline in firefox
-            if ('firefox' === browser) {
+       
+            if ('firefox' === browser || 'safari' === browser) {
                 $(document.body).on("keydown", '.cf-share-comment', function (e) {
                     if (e.keyCode == 13 && !e.shiftKey) {
                         document.execCommand('insertHTML', false, '<br><br>');
@@ -1940,37 +1941,43 @@ function scrollBoardToPosition(topOfText) {
 
 
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
 function filterTextBeforeSave(newText){
     newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' ); 
     newText = newText.replace( /<br>/igm, ' <br> ' );
+    if ( isSafari || isChrome ) {
+        newText = newText.replace( /<div>/igm, ' <br> ' );
+        newText = newText.replace( /<\/div>/igm, '' );
+    }
     var link;
     // Adding anchor tag around the linkable text.
-    // For bug fixing of semicolon there is a little chnage in regex               
-    newText = newText.replace( /<a\s.*?>(.*?)<\/a>/g, function( match ) {   
+    // For bug fixing of semicolon there is a little chnage in regex   
+              
+    newText = newText.replace( /<a\s.*?>(.*?)<\/a>/g, function( match ) { 
+       
         return ' '+match+' ';
     });
-
+    
     // replace nbsp; with space for separate links
     newText = newText.replace( /&nbsp;|&nbsp/igm, ' ' );
+   
+  
 
     newText = newText.replace( /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function( match ) {   
         link = match;
         if((link.includes("www.") || link.includes("WWW.") )&& !link.includes("http://") && !link.includes("https://"))  {
           link = link.replace('WWW.','http://')
           link = link.replace('www.','http://')
-        }      
+        }    
+        
         return `<a href="${link}" target="_blank">${match}</a>`;
     }); 
+   
 
-    //remove leading and trailing <br/> 
-    if(isSafari){
-          newText = newText.replace(/(<div>)/ig, '<br>');
-          newText = newText.replace(/(<\/div>)/ig, '');
-    }
     newText = newText.replace( /&nbsp;|&nbsp/igm, ' ' );
     newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, ''); 
-    newText.trim();
+    newText.trim();  
     return newText;
 }
 
@@ -2005,7 +2012,10 @@ function filterTextForEdit(newText){
 }
 
 function validateCommentReplyText(newText){
-
+    if ( isSafari || isChrome ) {
+        newText = newText.replace( /<div>/igm, ' <br> ' );
+        newText = newText.replace( /<\/div>/igm, '' );
+    }
     newText = newText.replace( /<br>/igm, '' );
     newText = newText.replace( /&nbsp;|&nbsp/igm, '' );
     newText = newText.replace( /\s/igm, '' );

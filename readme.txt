@@ -5,7 +5,7 @@ Author: Multidots
 Author URI: https://www.multidots.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
-Requires at least: 5.8
+Requires at least: 5.9
 Tested up to: 6.1
 Stable tag: 2.0.4.5
 License: GPLv2 or later
@@ -180,7 +180,7 @@ Have you had a look at our documentation? <a href="https://bit.ly/3FqfRRD" targe
 == Changelog ==
 
 = 2.0.4.5 - 25.08.2022 =
-* [Enhancement] — User can add comments using a keyboard shortcut — For Windows (ctrl + alt + m) && For Mac  (⌘ Cmd + ⌥ Option + m)
+* [Enhancement] — User can add comments using a keyboard shortcut — For Windows ctrl + alt + m && For Mac  ⌘ Cmd + ⌥ Option + m
 * [Enhancement] – Optimize code for @mention Feature.
 * [Bug Fix]     – PHP8 compatibilities warnings
 
