@@ -376,7 +376,7 @@ class Commenting_block_Admin extends Commenting_block_Functions
                     $local_time = current_datetime();
                     $deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
                     // Update the timestamp of deleted comment.
-                    $previous_comment = $prev_state['comments'][$t];
+                    $previous_comment = ( !empty($prev_state['comments'][$t]) ? $prev_state['comments'][$t] : '' );
                     
                     if ( !empty($previous_comment) ) {
                         $prev_state['comments'][$deleted_timestamp] = $previous_comment;
@@ -433,7 +433,8 @@ class Commenting_block_Admin extends Commenting_block_Functions
                 $prev_state = $metas[$el][0];
                 $prev_state = maybe_unserialize( $prev_state );
                 foreach ( $timestamps as $t ) {
-                    $edited_draft = $prev_state['comments'][$t]['draft_edits']['thread'];
+                    //$edited_draft = $prev_state['comments'][ $t ]['draft_edits']['thread'] ;
+                    $edited_draft = ( isset( $prev_state['comments'][$t]['draft_edits']['thread'] ) ? $prev_state['comments'][$t]['draft_edits']['thread'] : '' );
                     if ( !empty($edited_draft) ) {
                         $prev_state['comments'][$t]['thread'] = $edited_draft;
                     }
