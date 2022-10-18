@@ -7,12 +7,12 @@ if ( !defined( 'WPINC' ) ) {
 /**
  * REST API endpoints functionality of the plugin.
  *
- * @link  #
- * @since 1.3.0
+ * @link       #
+ * @since      1.3.0
  *
- * @package content-collaboration-inline-commenting
+ * @package    content-collaboration-inline-commenting
  */
-class Commenting_Block_Rest_Routes
+class Commenting_Block_Rest_Routes extends Commenting_block_Functions
 {
     private  $namespace ;
     /**
@@ -21,7 +21,7 @@ class Commenting_Block_Rest_Routes
     public function __construct()
     {
         $this->namespace = 'cf/v2';
-        add_action( 'rest_api_init', [ $this, 'create_rest_routes' ] );
+        add_action( 'rest_api_init', array( $this, 'create_rest_routes' ) );
     }
     
     /**
@@ -31,16 +31,16 @@ class Commenting_Block_Rest_Routes
      */
     public function create_rest_routes()
     {
-        register_rest_route( $this->namespace, '/activities', [
+        register_rest_route( $this->namespace, '/activities', array(
             'methods'             => 'GET',
-            'callback'            => [ $this, 'get_activities' ],
-            'permission_callback' => [ $this, 'check_activity_permits' ],
-        ] );
-        register_rest_route( $this->namespace, '/getuserdata', [
+            'callback'            => array( $this, 'get_activities' ),
+            'permission_callback' => array( $this, 'check_activity_permits' ),
+        ) );
+        register_rest_route( $this->namespace, '/getuserdata', array(
             'methods'             => 'GET',
-            'callback'            => [ $this, 'getuserdata' ],
-            'permission_callback' => [ $this, 'check_activity_permits' ],
-        ] );
+            'callback'            => array( $this, 'getuserdata' ),
+            'permission_callback' => array( $this, 'check_activity_permits' ),
+        ) );
     }
     
     /**
@@ -56,7 +56,7 @@ class Commenting_Block_Rest_Routes
     /**
      * Callback to send the rest response.
      *
-     * @param  array $data
+     * @param array $data
      * @return array
      */
     public function get_activities( $data )
@@ -79,9 +79,9 @@ class Commenting_Block_Rest_Routes
         $like = $wpdb->esc_like( '_el' ) . '%';
         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id=%d AND meta_key LIKE %s", $current_post_id, $like ), ARRAY_A );
         // phpcs:ignore
-        $threads = [];
+        $threads = array();
         foreach ( $results as $row ) {
-            $cmnts = [];
+            $cmnts = array();
             // passing the last activity parameters in thread for displaying in activity center last activity.
             $lastpostid = $row['post_id'];
             $editedLastUser = get_post_meta( $lastpostid, 'last_user_edited', true );
@@ -100,53 +100,54 @@ class Commenting_Block_Rest_Routes
             foreach ( $comments['comments'] as $timestamp => $comment ) {
                 $user_info = get_userdata( ( isset( $comment['userData'] ) ? $comment['userData'] : '' ) );
                 if ( 'draft' !== isset( $comment['status'] ) && 'permanent_draft' !== isset( $comment['status'] ) ) {
-                    $cmnts[] = [
+                    $cmnts[] = array(
                         'id'              => $timestamp,
-                        'status'          => ( isset( $comment['status'] ) ? $comment['status'] : '' ),
+                        'status'          => $comment['status'],
                         'created_at'      => ( isset( $comment['created_at'] ) ? $comment['created_at'] : '' ),
                         'timestamp'       => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
                         'editedTime'      => ( isset( $comment['editedTime'] ) ? $comment['editedTime'] : '' ),
                         'editedTimestamp' => ( isset( $comment['editedTimestamp'] ) ? $comment['editedTimestamp'] : '' ),
-                        'userData'        => [
+                        'userData'        => array(
                         'id'        => ( isset( $user_info->ID ) ? intval( $user_info->ID ) : 0 ),
                         'username'  => ( isset( $user_info->display_name ) ? $user_info->display_name : '' ),
                         'avatarUrl' => get_avatar_url( ( isset( $user_info->user_email ) ? $user_info->user_email : '' ) ),
                         'userRole'  => ( isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '' ),
-                    ],
+                    ),
                         'thread'          => ( isset( $comment['thread'] ) ? $comment['thread'] : '' ),
-                    ];
+                        'attachmentText'  => ( isset( $comment['attachmentText'] ) ? $comment['attachmentText'] : '' ),
+                    );
                 }
             }
-            $resolved_by = [];
+            $resolved_by = array();
             if ( isset( $comments['resolved'] ) && 'true' === $comments['resolved'] ) {
                 
                 if ( isset( $comments['resolved_by'] ) ) {
                     $resolved_user = get_userdata( $comments['resolved_by'] );
-                    $resolved_by = [
+                    $resolved_by = array(
                         'username'  => $resolved_user->display_name,
                         'avatarUrl' => get_avatar_url( $resolved_user->user_email ),
-                    ];
+                    );
                 }
             
             }
-            $assigned_user = [];
+            $assigned_user = array();
             
             if ( isset( $comments['assigned_to'] ) ) {
                 $assigned_user_info = get_userdata( $comments['assigned_to'] );
-                $assigned_user = [
+                $assigned_user = array(
                     'username' => ( $user_id == $assigned_user_info->ID ? 'You' : $assigned_user_info->display_name ),
                     'email'    => $assigned_user_info->user_email,
-                ];
+                );
             }
             
             
             if ( !empty($cmnts) ) {
-                $threads[] = [
+                $threads[] = array(
                     'elID'              => $elID,
                     'activities'        => $cmnts,
                     'selectedText'      => $comments['commentedOnText'],
                     'resolved'          => ( isset( $comments['resolved'] ) ? $comments['resolved'] : 'false' ),
-                    'resolvedTimestamp' => ( isset( $comments['resolved_timestamp'] ) ? gmdate( $time_format . ' ' . $date_format, intval( $comments['resolved_timestamp'] ) ) : '' ),
+                    'resolvedTimestamp' => ( isset( $comments['resolved_timestamp'] ) ? $comments['resolved_timestamp'] : '' ),
                     'resolvedBy'        => $resolved_by,
                     'updatedAt'         => ( isset( $comments['updated_at'] ) ? $comments['updated_at'] : '' ),
                     'assignedTo'        => $assigned_user,
@@ -155,7 +156,7 @@ class Commenting_Block_Rest_Routes
                     'lastEditedTime'    => $lasteditedtime,
                     'lastUsersUrl'      => $lasteditedUsersUrl,
                     'type'              => 'el',
-                ];
+                );
                 $threads = $threads;
             }
         
@@ -165,9 +166,9 @@ class Commenting_Block_Rest_Routes
             add_post_meta( $current_post_id, '_autodraft_ids', '' );
         }
         array_multisort( array_column( $threads, 'updatedAt' ), SORT_DESC, $threads );
-        $response = [
+        $response = array(
             'threads' => $threads,
-        ];
+        );
         return rest_ensure_response( $response );
     }
     

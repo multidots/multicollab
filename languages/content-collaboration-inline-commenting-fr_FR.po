@@ -3,10 +3,10 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-16 12:44+0000\n"
+"PO-Revision-Date: 2022-03-04 08:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: French (France)\n"
-"Language: fr_FR\n"
+"Language: fr-FR\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,6 +14,23 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.5.1; wp-5.7\n"
 "X-Domain: content-collaboration-inline-commenting"
+
+#: admin/partials/commenting-block-settings-page.php:48
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "/Annually"
+msgstr "/Annuel"
+
+#: admin/partials/commenting-block-settings-page.php:49
+msgid "$200 Savings*"
+msgstr "200 $ d'économies*"
+
+#: admin/partials/commenting-block-settings-page.php:67
+msgid "$150 Savings*"
+msgstr "150 $ d'économies*"
+
+#: admin/partials/commenting-block-settings-page.php:105
+msgid "14 Days – 100% No-Risk Money Back Guarantee!"
+msgstr "14 jours - Garantie de remboursement sans risque à 100 % !"
 
 #: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
@@ -28,51 +45,456 @@ msgstr " Commentaires de discussion résolus"
 msgid "%s — %s"
 msgstr "%s — %s"
 
+#: admin/classes/class-commenting-block-admin.php:1026
+msgid "%s You"
+msgstr "%s Tu"
+
+#: admin/classes/class-commenting-block-activities.php:126
+msgid "%s By"
+msgstr "%s par"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1503
+msgid "%s (%d times)"
+msgstr "%s (%d fois)"
+
+#: admin/classes/class-commenting-block-admin.php:1026
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#: admin/assets/js/src/commenting-block-admin.js:1844
+msgid "%d minutes"
+msgstr "%d minutes"
+
+#: admin/assets/js/src/commenting-block-admin.js:1841
+msgid " ago"
+msgstr " depuis"
+
 #: admin/partials/commenting-block-settings-page.php:37
 msgid "About Plugin"
 msgstr "À propos du plugin"
 
-#: admin/classes/class-commenting-block-email-templates.php:225
+#: admin/assets/js/src/commenting-block-admin.js:1843
+msgid "about a minute"
+msgstr "environ une minute"
+
+#: admin/partials/commenting-block-settings-page.php:48
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "Annually for 1-site"
+msgstr "Annuellement pour 1 site"
+
+#: admin/partials/commenting-block-settings-page.php:101
+msgid "Attach Document To Comment"
+msgstr "Joindre un document au commentaire"
+
+#: admin/partials/commenting-block-settings-page.php:244
+msgid "Activate Plan"
+msgstr "Activer le forfait"
+
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:534
+msgid "Accept suggestion"
+msgstr "Accepter la suggestion"
+
+#: admin/classes/class-commenting-block-email-templates.php:1115
+msgid "accept"
+msgstr "accepter"
+
+#: admin/assets/js/dist/block.build.min.js:61601
+msgid "Add"
+msgstr "Ajouter"
+
+#: admin/assets/js/src/activityCentre:1078
+#: admin/assets/js/src/activityCentre:1248
+msgid "Accepted Suggestions"
+msgstr "Accepter la suggestion"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:46
+msgid "Activity Snapshot"
+msgstr "Instantané d'activité"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:45
+msgid "Activity Timeline"
+msgstr "Chronologie des activités"
+
+#: admin/partials/commenting-block-settings-page.php:237
+msgid "Action"
+msgstr "Action"
+
+#: admin/classes/class-commenting-block-email-templates.php:225 
+#: admin/assets/js/src/component/board.js:269
 msgid "Assigned to"
 msgstr "Assigné à"
 
-#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/assets/js/src/component/board.js:566
+msgid "Attach file"
+msgstr "Pièce jointe"
+
+#: admin/assets/js/src/commenting-block-admin.js:757
+msgid "Assign to %s"
+msgstr "Attribuer à %s"
+
+#: admin/partials/commenting-block-settings-page.php:298
+msgid "Activations"
+msgstr "Activations"
+
+#: admin/assets/js/src/commenting-block-admin.js:1224
+msgid "Assign to"
+msgstr "Affecter à"
+
+#: admin/classes/class-commenting-block-email-templates.php:325
+msgid "Assigned to You"
+msgstr "Attribué à vous"
+
+#: admin/assets/js/src/component/board.js:388
+msgid "Assigned to %s"
+msgstr "Affecté à %s"
+
+#: admin/assets/js/src/activityCentre.js:641
+msgid "Activities"
+msgstr "Activités"
+
+#: admin/assets/js/src/activityCentre.js:1013
+msgid "Accept All Suggestions"
+msgstr "Accepter toutes les suggestions"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Accept All Edits"
+msgstr "Accepter toutes les modifications"
+
+#: admin/partials/commenting-block-settings-page.php:284
+msgid "Activate License"
+msgstr "Activer la licence"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Accept All"
+msgstr "Accepter tout"
+
+#: admin/classes/class-commenting-block-settings-table.php:98
+msgid "All dates"
+msgstr "Toutes les dates"
+
+#: admin/classes/class-commenting-block-settings-table.php:112
+msgid "All pages/posts"
+msgstr "Toutes les pages/messages"
+
+#: admin/classes/class-commenting-block-settings-table.php:117
+msgid "All categories"
+msgstr "Toutes catégories"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:148
+msgid "Add Comment"
+msgstr "Ajouter un commentaire"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:155
+msgid "Add Suggestion"
+msgstr "Ajouter une suggestion"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:156
+msgid "Accept/Reject Suggestion"
+msgstr "Accepter/Rejeter la suggestion"
+
+#: admin/partials/commenting-block-settings-page.php:58
+msgid "Advanced Dashboard"
+msgstr "Tableau de bord avancé"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "All features of Plus Plan"
+msgstr "Toutes les fonctionnalités du plan Plus"
+
+#: admin/partials/commenting-block-settings-page.php:79
+msgid "All features of Basic Plan"
+msgstr "Toutes les fonctionnalités du plan de base"
+
+#: admin/partials/commenting-block-settings-page.php:128
+msgid "A great addition for author/editor collaboration"
+msgstr "Un excellent ajout pour la collaboration auteur/éditeur"
+
+#: admin/partials/commenting-block-settings-page.php:146
+msgid "Awesome plugin"
+msgstr "Plugin génial"
+
+#: admin/partials/commenting-block-settings-page.php:164
+msgid "Awesome plug-in"
+msgstr "Plug-in génial"
+
+#: admin/partials/commenting-block-settings-page.php:227
+msgid "Bengali"
+msgstr "bengali"
+
+#: admin/partials/commenting-block-settings-page.php:223
+msgid "Chinese"
+msgstr "Chinois"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1293
+msgid "Bold, Font"
+msgstr "Audacieux, Polices"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "Block Alignment"
+msgstr "Alignement des blocs"
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. Selecting this option will automatically turn ON Suggestions on all future posts on your website. You can still manually turn OFF suggestions mode for individual posts. We don't recommend turning Suggestions Mode ON for all the new posts unless you have specific business needs."
+msgstr "Par défaut, le mode Suggestions est désactivé pour chaque publication dans Multicollab. La sélection de cette option activera automatiquement les suggestions sur tous les futurs messages de votre site Web. Vous pouvez toujours désactiver manuellement le mode de suggestions pour les messages individuels. Nous vous déconseillons d'activer le mode Suggestions pour toutes les nouvelles publications, sauf si vous avez des besoins professionnels spécifiques."
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. This option will automatically turn ON Suggestions for selected post categories for future posts. You can still manually turn OFF suggestions mode for individual posts."
+msgstr "Par défaut, le mode Suggestions est désactivé pour chaque publication dans Multicollab. Cette option activera automatiquement les suggestions pour les catégories de publication sélectionnées pour les publications futures. Vous pouvez toujours désactiver manuellement le mode de suggestions pour les messages individuels."
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. This option will automatically turn ON Suggestions for selected Custom Post Types for future posts. You can still manually turn OFF suggestions mode for individual posts."
+msgstr "Par défaut, le mode Suggestions est désactivé pour chaque publication dans Multicollab. Cette option activera automatiquement les suggestions pour les types de publication personnalisés sélectionnés pour les publications futures. Vous pouvez toujours désactiver manuellement le mode de suggestions pour les messages individuels."
+
+#: admin/assets/js/src/component/board.js:518
+msgid "Cancel"
+msgstr "Annuler"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "Connect"
+msgstr "Relier"
+
+#: admin/partials/commenting-block-settings-page.php:65
+msgid "Comment Anywhere"
+msgstr "Commentez n'importe où"
+
+#: admin/partials/commenting-block-settings-page.php:331
+msgid "column on the Post Lists."
+msgstr "colonne sur les listes de messages."
+
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "Custom Permissions"
+msgstr "Autorisations personnalisées"
+
+#: admin/partials/commenting-block-settings-page.php:105
+msgid "Contact for Enterprise License"
+msgstr "Contact pour la licence d'entreprise"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Contact"
+msgstr "Contact"
+
+#: admin/classes/class-commenting-block-email-templates.php:95
+msgid "Comment Resolved"
+msgstr "Commentaire résolu"
+
+#: admin/classes/class-commenting-block-email-templates.php:251 
 #: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr "Cliquez ici pour voir ce commentaire"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Click"
+msgstr "Cliquez sur"
+
+#: admin/assets/js/src/component/activityCentre.js:112
+msgid "Collapse"
+msgstr "S'effondrer"
+
+#: admin/partials/commenting-block-settings-page.php:169
+msgid "Charudatta Mondale"
+msgstr "Charudatta Mondale"
+
+#: admin/partials/commenting-block-settings-page.php:170
+msgid "Co-Founder at QuickDraft LLP"
+msgstr "Co-fondateur de QuickDraft LLP"
+
+#: admin/assets/js/src/component/board.js:443
+#: admin/assets/js/src/block.js:486
+#: admin/assets/js/src/block.js:831
+#: admin/assets/js/src/block.js:846
+#: admin/assets/js/src/block.js:871
+#: admin/assets/js/src/block.js:886
+#: admin/assets/js/src/block.js:911
+#: admin/assets/js/src/block.js:926
+msgid "Comment"
+msgstr "Commenter"
+
+#: admin/assets/js/src/component/board.js:446
+msgid "Comment or add others with @"
+msgstr "Commentez ou ajoutez d'autres personnes avec @"
+
+#: admin/assets/js/src/activityCentre.js:438
+msgid "Comments are Hidden"
+msgstr "Les commentaires sont masqués"
+
+#: admin/partials/commenting-block-settings-page.php:76
+msgid "Comment on any text and media"
+msgstr "Commenter n'importe quel texte et média"
 
 #: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr "commenté"
 
-#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:245 
 #: admin/classes/class-commenting-block-email-templates.php:266
+#: admin/assets/js/src/activityCentre.js:1063
 msgid "Comments"
 msgstr "commentaires"
+
+#: admin/classes/class-commenting-block-settings-table.php:19
+msgid "Collaborators"
+msgstr "Collaborateurs"
 
 #: admin/partials/commenting-block-settings-page.php:84
 msgid "Contact Support"
 msgstr "Contactez le support"
 
+#:admin/assets/js/src/component/suggestion/suggestion-comment.js:537
+msgid "Copy Link"
+msgstr "Copier le lien"
+
+#: admin/assets/js/src/commenting-block-admin.js:2136
+msgid "Change Heading"
+msgstr "Changer Titre"
+
 #: admin/partials/commenting-block-settings-page.php:88
 msgid "Contact Us"
 msgstr "Nous contacter"
+
+#: admin/assets/js/src/nonTextblock.js:150
+msgid "Content Block"
+msgstr "bloc de contenu"
+
+#: admin/assets/js/src/activityCentre.js:490
+msgid "Comments are Visible"
+msgstr "Les commentaires sont visibles"
+
+#: admin/partials/commenting-block-settings-page.php:355
+msgid "Channel Name:"
+msgstr "Nom du canal:"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "center"
+msgstr "centrer"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "default"
+msgstr "défaut"
 
 #: admin/partials/commenting-block-settings-page.php:20
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
+#: admin/partials/commenting-block-settings-page.php:340
+msgid "Disconnect"
+msgstr "Déconnecter"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "draft comments/suggestions."
+msgstr "rédiger des commentaires/suggestions."
+
+#: admin/assets/js/src/component/comment.js:308
+msgid "Delete"
+msgstr "Supprimer"
+
+#: admin/assets/js/src/component/board.js:351
+msgid "Delete this comment thread?"
+msgstr "Supprimer ce fil de commentaires ?"
+
+#: admin/assets/js/src/component/comment.js:351
+msgid "Delete this comment?"
+msgstr "Supprimer ce commentaire ?"
+
+#: admin/assets/js/commenting-block-admin.js:131
+msgid "Delete this Suggestion?"
+msgstr "Supprimer cette suggestion ?"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Delete this thread?"
+msgstr "Supprimer ce fil ?"
+
 #: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "commentaire supprimé de"
+
+#: admin/classes/class-commenting-block-activities.php:147
+msgid "deleted"
+msgstr "supprimé"
+
+#: admin/assets/js/src/activityCentre.js:1081
+#: admin/assets/js/src/activityCentre.js:1290
+msgid "Deletions"
+msgstr "Suppressions"
+
+#: admin/assets/js/src/component/suggestion-comment.js:664
+#: admin/assets/js/src/component/comment.js:515
+msgid "Discard Changes"
+msgstr "Annuler les modifications"
+
+#: admin/partials/commenting-block-settings-page.php:257
+msgid "Deactivate License"
+msgstr "Désactiver la licence"
+
+#: admin/assets/js/src/component/board.js:518
+msgid "Discard Comment"
+msgstr "Ignorer le commentaire"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:150
+msgid "Disable Comments"
+msgstr "Désactiver les commentaires"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:157
+msgid "Disable Suggestion"
+msgstr "Désactiver les suggestions"
+
+#: admin/assets/js/src/component/comment.js:521
+msgid "Delete attachment"
+msgstr "Supprimer la pièce jointe"
+
+#: admin/assets/js/src/component/comment.js:305
+msgid "Edit"
+msgstr "Éditer"
+
+#: admin/partials/commenting-block-webiste-activity.php:307
+msgid "edited"
+msgstr "édité"
+
+#: admin/partials/commenting-block-settings-page.php:222
+msgid "English"
+msgstr "Anglais"
 
 #: admin/classes/class-commenting-block-admin.php:136
 msgid "Editorial Comments"
 msgstr "Commentaires éditoriaux"
 
+#: admin/assets/js/src/component/comment.js:430
+#: admin/assets/js/src/component/comment.js:433
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:793
+msgid "edited at %s"
+msgstr "modifié à %s"
+
+#: admin/assets/js/src/activityCentre.js:805
+#: admin/assets/js/src/activityCentre.js:882
+msgid "edited %s"
+msgstr "modifié %s"
+
+#: admin/assets/js/src/component/comment.js:490
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:863
+msgid "Edit your comments..."
+msgstr "Modifiez vos commentaires..."
+
+#: admin/partials/commenting-block-settings-page.php:77
+msgid "Email Notification"
+msgstr "Notification par e-mail"
+
+#: admin/partials/commenting-block-settings-page.php:297
+msgid "Expires"
+msgstr "Expire"
+
+#: admin/partials/commenting-block-settings-page.php:82
+msgid "Everything in PLUS"
+msgstr "Tout en PLUS"
+
+#: admin/partials/commenting-block-settings-page.php:99
+msgid "Everything in PRO"
+msgstr "Tout en PRO"
+
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
 msgstr "pour tous les nouveaux commentaires même s'ils ne sont pas mentionnés."
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "for all posts and pages on my website (Not Recommended)."
+msgstr "pour tous les articles et pages de mon site Web (non recommandé)."
 
 #: admin/partials/commenting-block-settings-page.php:87
 msgid ""
@@ -82,6 +504,76 @@ msgstr ""
 "Pour un support premium et de l'aide pour personnaliser ce plugin pour votre "
 "entreprise Besoins."
 
+#: admin/assets/js/src/commenting-block-admin.js:1842
+msgid "few seconds"
+msgstr "quelques secondes"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Feedback"
+msgstr "Retour d'information"
+
+#: admin/assets/js/src/activityCentre.js:1082
+#: admin/assets/js/src/activityCentre.js:1305
+msgid "Formatting"
+msgstr "Mise en page"
+
+#: admin/partials/commenting-block-settings-page.php:346
+msgid "Floating Comment Toolbar"
+msgstr "Barre d'outils des commentaires flottants"
+
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "for all new comments. (Not Recommended)"
+msgstr "pour tous les nouveaux commentaires. (Non recommandé)"
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "for these post categories:"
+msgstr "pour ces catégories de messages :"
+
+#: admin/partials/commenting-block-settings-page.php:433
+msgid "for these custom post types:"
+msgstr "pour ces types de messages personnalisés:"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1327
+msgid "Format"
+msgstr "Format"
+
+#: admin/classes/class-commenting-block-settings-table.php:126
+msgid "Filter"
+msgstr "Filtre"
+
+#: admin/partials/commenting-block-settings-page.php:226
+msgid "French"
+msgstr "Français"
+
+#: admin/partials/commenting-block-settings-page.php:228
+msgid "German"
+msgstr "Allemand"
+
+#:admin/partials/commenting-block-website-activity.php:32
+msgid "Go Back"
+msgstr "Retourner"
+
+#: admin/partials/commenting-block-settings-page.php:99
+msgid "General Settings"
+msgstr "réglages généraux"
+
+#: admin/partials/commenting-block-settings-page.php:363
+msgid "Guide to Setup Email Notifications"
+msgstr "Guide de configuration des notifications par e-mail"
+
+#: admin/partials/commenting-block-settings-page.php:318
+msgid "General"
+msgstr "Général"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:358
+#: admin/assets/js/src/suggestion/block-extend-control.js:428
+msgid "Gutenberg block alignment suggestions are already available. So you can not add other block alignment suggestions on the same block."
+msgstr "Des suggestions d'alignement de blocs Gutenberg sont déjà disponibles. Vous ne pouvez donc pas ajouter d'autres suggestions d'alignement de bloc sur le même bloc."
+
+#: admin/classes/class-commenting-block-email-templates.php:691
+msgid "has %sed the following suggestion."
+msgstr "a %s la suggestion suivante."
+
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
 msgstr "a résolu le fil suivant."
@@ -89,6 +581,107 @@ msgstr "a résolu le fil suivant."
 #. Author URI of the plugin
 msgid "https://www.multidots.com/"
 msgstr "https://www.multidots.com/"
+
+#: admin/assets/js/src/activityCentre.js:1028
+msgid "Hide Suggestions"
+msgstr "Masquer les suggestions"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1442
+msgid "Highlight"
+msgstr "Souligner"
+
+#: admin/partials/commenting-block-settings-page.php:224
+msgid "Hindi"
+msgstr "hindi"
+
+#: admin/assets/js/src/activityCentre.js:1041
+msgid "Hide Comments"
+msgstr "Masquer les commentaires"
+
+#: admin/partials/commenting-block-settings-page.php:331
+msgid "Hide the"
+msgstr "Masquer la"
+
+#: admin/partials/commenting-block-settings-page.php:91
+msgid "Having trouble? Check out our help documentation"
+msgstr "Avoir des problèmes? Consultez notre documentation d'aide"
+
+#: admin/partials/commenting-block-settings-page.php:92
+msgid "Help Documentation"
+msgstr "Documentation d'aide"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Help"
+msgstr "Aider"
+
+#: admin/assets/js/src/activityCentre.js:1080
+#: admin/assets/js/src/activityCentre.js:1275
+msgid "Insertions"
+msgstr "Insertions"
+
+#: admin/partials/commenting-block-settings-page.php:120
+msgid "Integrations"
+msgstr "Intégrations"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "If this option is selected, everyone will be reminded when they try to publish a post that has unresolved comments or pending suggestions. This is useful to alert authors to review the unresolved comments and changes before they Publish the post."
+msgstr "Si cette option est sélectionnée, tout le monde recevra un rappel lorsqu'il essaiera de publier un article contenant des commentaires non résolus ou des suggestions en attente. Ceci est utile pour alerter les auteurs afin qu'ils examinent les commentaires et les modifications non résolus avant de publier le message."
+
+#: admin/partials/commenting-block-settings-page.php:413
+msgid "If this option is selected, users will not be able to publish a post with unresolved comments or pending suggestions. This is useful to prevent publishing a post with unresolved comments and pending suggestions."
+msgstr "Si cette option est sélectionnée, les utilisateurs ne pourront pas publier une publication avec des commentaires non résolus ou des suggestions en attente. Ceci est utile pour empêcher la publication d'un message avec des commentaires non résolus et des suggestions en attente."
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1294
+msgid "Italic"
+msgstr "Italique"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1297
+msgid "Inline Code"
+msgstr "Code en ligne"
+
+#: admin/partials/commenting-block-settings-page.php:346
+msgid "in Block Editor."
+msgstr "dans l'éditeur de blocs."
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1301
+msgid "Image"
+msgstr "Image"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1484
+msgid "Image Size"
+msgstr "Taille de l'image"
+
+#: admin/partials/commenting-block-settings-page.php:151
+msgid "Ivan Ružević"
+msgstr "Ivan Ružević"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1298
+msgid "Keyboard Input"
+msgstr "La saisie au clavier"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1417
+msgid "Link"
+msgstr "Lien"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1478
+msgid "Link Target"
+msgstr "Cible du lien"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1304
+msgid "Line Break"
+msgstr "Saut de ligne"
+
+#: admin/assets/js/src/activityCentre.js:924
+msgid "Last Edited By"
+msgstr "Dernière modification par"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "left"
+msgstr "la gauche"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:76
+msgid "Latest Activity"
+msgstr "Dernère Activité"
 
 #: admin/partials/commenting-block-settings-page.php:37
 msgid "Learn More"
@@ -98,13 +691,99 @@ msgstr "Apprendre encore plus"
 msgid "Live Demo"
 msgstr "Démo en direct"
 
+#: admin/assets/js/src/activityCentre.js:668
+#: admin/assets/js/src/activityCentre.js:1091
+msgid "Loading..."
+msgstr "Chargement..."
+
+#: admin/partials/commenting-block-settings-page.php:217
+msgid "Language Options"
+msgstr "Options de langue"
+
+#: admin/partials/commenting-block-settings-page.php:217
+msgid "Licenses"
+msgstr "Licences"
+
+#: admin/partials/commenting-block-settings-page.php:292
+msgid "License Information:"
+msgstr "Informations sur la licence:"
+
+#: admin/partials/commenting-block-settings-page.php:296
+msgid "License Status"
+msgstr "État de la licence"
+
+#: admin/assets/js/src/commenting-block-admin.js:2136
+msgid "level"
+msgstr "niveau"
+
+#: admin/assets/js/src/component/comment.js:128
+msgid "Link Copied!"
+msgstr "Lien copié !"
+
+#: admin/partials/commenting-block-website-activity.php:366
+msgid "Load More"
+msgstr "Charger plus"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "language. But compatible with these languages and will sync with your selected language for the WordPress Admin area."
+msgstr "Langue. Mais compatible avec ces langues et se synchronisera avec la langue sélectionnée pour la zone d'administration WordPress."
+
+#: admin/assets/js/src/component/comment.js:283
+#: admin/assets/js/src/activityCentre.js:818
+#: admin/assets/js/src/activityCentre.js:837
+msgid "Mark as Resolved"
+msgstr "Marquer comme résolu"
+
+#: admin/assets/js/src/activityCentre.js:820 
+#: admin/partials/commenting-block-website-activity.php:144
+msgid "Marked as Resolved"
+msgstr "Marqué comme résolu"
+
 #: admin/classes/class-commenting-block-email-templates.php:64
 msgid "Marked as resolved by"
 msgstr "Marqué comme résolu par"
 
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "My Account"
+msgstr "Mon compte"
+
+#: admin/partials/commenting-block-settings-page.php:320
+msgid "Manage Permissions"
+msgstr "Gérer les autorisations"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab is Default to the"
+msgstr "Multicollab est défini par défaut sur"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:110
+msgid "Migration Setting"
+msgstr "Paramètre de migration"
+
+#: admin/partials/commenting-block-settings-page.php:525
+msgid "Multilingual Options"
+msgstr "Options multilingues"
+
+#: admin/partials/commenting-block-settings-page.php:133
+msgid "Mario T. Lanza"
+msgstr "Mario T. Lanza"
+
+#: admin/assets/js/src/component/comment.js:314
+#: admin/assets/js/src/component/comment.js:362
+#: admin/assets/js/src/component/comment.js:379
+msgid "More Options..."
+msgstr "Plus d'options..."
+
+#: admin/partials/commenting-block-settings-page.php:102
+msgid "Multilingual"
+msgstr "Multilingue"
+
 #. Name of the plugin
 msgid "Multicollab"
 msgstr "Multicollab"
+
+#. Description of the Plugin
+msgid "A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress."
+msgstr "A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress."
 
 #: admin/partials/commenting-block-settings-page.php:13
 msgid "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
@@ -114,47 +793,568 @@ msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 msgid "multidots"
 msgstr "multidots"
 
+#: admin/partials/commenting-block-settings-page.php:220
+msgid "Multicollab supports these languages."
+msgstr "Multicollab prend en charge ces langues."
+
+#: admin/classes/class-commenting-block-email-templates.php:296
+#: admin/classes/class-commenting-block-email-templates.php:579
+msgid "Mentioned you in a comment in the following page."
+msgstr "Je vous ai mentionné dans un commentaire sur la page suivante."
+
 #: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr "Aucun commentaire trouvé."
 
-#: admin/partials/commenting-block-settings-page.php:45
-msgid "Notification Setting"
-msgstr "Paramètre de notification"
+#: admin/assets/js/src/commenting-block-admin.js:121
+msgid "No"
+msgstr "Non"
+
+#: admin/partials/commenting-block-settings-page.php:104
+#: admin/partials/commenting-block-settings-page.php:231
+msgid "Notification Settings"
+msgstr "Paramètres de notification"
+
+#: admin/partials/commenting-block-settings-page.php:236
+msgid "Notifications"
+msgstr "Notifications"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "Notify site admin"
 msgstr "Notifier l'administrateur du site"
 
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "Notify"
+msgstr "Notifier"
+
+#: admin/classes/class-commenting-block-activities.php:280
+#: admin/partials/commenting-block-settings-page__premium_only.php:63
+msgid "No activities found."
+msgstr "Aucune activité trouvée."
+
+#: admin/classes/class-commenting-block-activities.php:283
+msgid "No more activities."
+msgstr "Plus d'activités."
+
+#: admin/assets/js/src/activityCentre.js:662
+msgid "No recent activities found!"
+msgstr "Aucune activité récente trouvée !"
+
+#: admin/classes/class-commenting-block-email-templates.php:356
+#: admin/classes/class-commenting-block-email-templates.php:387
+#: admin/classes/class-commenting-block-email-templates.php:405
+#: admin/classes/class-commenting-block-email-templates.php:423
+msgid "New Comment"
+msgstr "Nouveau commentaire"
+
+#: admin/classes/class-commenting-block-email-templates.php:615
+#: admin/classes/class-commenting-block-email-templates.php:636
+msgid "New Suggestion"
+msgstr "Nouvelle suggestion"
+
+#: admin/classes/class-commenting-block-email-templates.php:617
+#: admin/classes/class-commenting-block-email-templates.php:638
+msgid "New Comment on Suggestion"
+msgstr "Nouveau commentaire sur la suggestion"
+
+#: admin/assets/js/src/activityCentre.js:1066
+#: admin/assets/js/src/activityCentre.js:1156
+msgid "Open Comments"
+msgstr "Ouvrir les commentaires"
+
+#: admin/assets/js/src/activityCentre.js:1077
+#: admin/assets/js/src/activityCentre.js:1235
+msgid "Open Suggestions"
+msgstr "Ouvrir les suggestions"
+
+#:admin/classes/class-commenting-block-activities.php:119
+#: admin/classes/class-commenting-block-email-templates.php:285
+#: admin/classes/class-commenting-block-email-templates.php:308
+msgid "Open"
+msgstr "Ouvrir"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:493
+#: admin/assets/js/src/suggestion/block-extend-control.js:501
+msgid "One suggestion is already available on selected text. So you can not add other suggestions to the same text."
+msgstr "Une suggestion est déjà disponible sur le texte sélectionné. Vous ne pouvez donc pas ajouter d'autres suggestions au même texte."
+
+#: admin/partials/commenting-block-settings-page.php:55
+#: admin/partials/commenting-block-settings-page.php:74
+msgid "or start 14-day free trial"
+msgstr "ou commencez un essai gratuit de 14 jours"
+
+#: admin/assets/js/dist/suggestion-comment.js:79
+msgid "Please edit your comment."
+msgstr "Veuillez modifier le texte avant d'enregistrer !"
+
+#: admin/assets/js/src/nonTextblock.js:75
+msgid "Please select block/image to comment on."
+msgstr "Veuillez sélectionner le bloc/l'image à commenter."
+
+#: admin/assets/js/dist/block.build.min.js:56440
+msgid "Please select a block, text or media to comment on."
+msgstr "Veuillez sélectionner le texte à commenter."
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:419
+msgid "Please select a channel"
+msgstr "Veuillez sélectionner une chaîne"
+
+#: admin/assets/js/dist/block.build.min.js:57233 
+#: admin/assets/js/dist/block.build.min.js:57628 
+#: admin/assets/js/dist/block.build.min.js:57658 
+#: admin/assets/js/dist/block.build.min.js:60412 
+#: admin/assets/js/dist/block.build.min.js:60657
+msgid "Please add some comment. "
+msgstr "S'il vous plaît écrivez un commentaire à partager!"
+
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
 msgstr "Développeur de plugins"
+
+#: admin/settings/settings-suggestion-mode.php:53
+msgid "Please select a category"
+msgstr "Veuillez sélectionner une catégorie"
+
+#: admin/settings/settings-suggestion-mode.php:99
+msgid "Please select a post type"
+msgstr "Veuillez sélectionner un type de publication"
+
+#: admin/settings/settings-suggestion-mode.php:7
+msgid "Please select any option to save!"
+msgstr "Veuillez sélectionner une option pour enregistrer !"
+
+#: admin/assets/js/dist/block.build.min.js:57372
+msgid "Post Comment"
+msgstr "Poster un commentaire"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:34
+msgid "Permissions"
+msgstr "Autorisations"
+
+#: admin/partials/commenting-block-settings-page.php:264
+msgid "Please renew your license key."
+msgstr "Veuillez renouveler votre clé de licence."
+
+#: admin/partials/commenting-block-settings-page.php:320
+msgid "Premium"
+msgstr "prime"
+
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "Please enter the license key that you received in the email right after the purchase. OR You can access your licenses anytime from the"
+msgstr "Veuillez entrer la clé de licence que vous avez reçue dans l'e-mail juste après l'achat. OU Vous pouvez accéder à vos licences à tout moment à partir du"
+
+#: admin/classes/class-commenting-block-settings-table.php:113
+msgid "Pages"
+msgstr "pages"
+
+#: admin/classes/class-commenting-block-settings-table.php:114
+msgid "Posts"
+msgstr "Des postes"
+
+#: admin/partials/commenting-block-settings-page.php:46
+msgid "PRO"
+msgstr "PRO"
+
+#: admin/partials/commenting-block-settings-page.php:64
+msgid "PLUS"
+msgstr "PLUS"
+
+#: admin/partials/commenting-block-settings-page.php:59
+msgid "Pro Support"
+msgstr "D'assistance Pro"
+
+#: admin/partials/commenting-block-settings-page.php:78
+msgid "Plus Support"
+msgstr "D'assistance Plus"
+
+#: admin/partials/commenting-block-settings-page.php:301
+msgid "Permissions saved!"
+msgstr "Autorisations enregistrées !"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "publish the post."
+msgstr "ils peuvent publier le message."
+
+#: admin/partials/commenting-block-settings-page.php:295
+msgid "Plan"
+msgstr "Planifier"
+
+#: admin/partials/commenting-block-settings-page.php:385
+msgid "Publishing"
+msgstr "Édition"
+
+#: admin/classes/class-commenting-block-admin.php:936
+msgid "Reassigned to"
+msgstr "Réaffecté à"
+
+#: admin/assets/js/src/component/board.js:269
+msgid "Reassigned to You"
+msgstr "Réaffecté à vous"
+
+#: admin/assets/js/src/component/board.js:391
+msgid "Reassigned to %s"
+msgstr "Réaffecté à %s"
+
+#: admin/assets/js/src/commenting-block-admin.js:1224
+msgid "Reassign to"
+msgstr "Réaffecter à"
+
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:537
+msgid "Reject suggestion"
+msgstr "Refuser la suggestion"
+
+#: admin/classes/class-commenting-block-email-templates.php:1115
+msgid "reject"
+msgstr "refuser"
+
+#: admin/assets/js/src/activityCentre.js:1079
+#: admin/assets/js/src/activityCentre.js:1261
+msgid "Rejected Suggestions"
+msgstr "Suggestions rejetées"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Reports"
+msgstr "Rapports"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "right"
+msgstr "droit"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1385
+msgid "Remove Link with URL"
+msgstr "Supprimer le lien avec l'URL"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1475
+msgid "Replace"
+msgstr "Remplacer"
 
 #: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
 msgstr "a répondu"
 
+#: admin/partials/commenting-block-website-activity.php:322
+msgid "replies"
+msgstr "réponses"
+
+#: admin/assets/js/src/component/board.js:443
+#: admin/assets/js/src/activityCentre.js:798
+#: admin/assets/js/src/activityCentre.js:808
+#: admin/assets/js/src/activityCentre.js:828
+msgid "Reply"
+msgstr "Répondre"
+
+#: admin/assets/js/src/component/board.js:446
+msgid "Reply or add others with @"
+msgstr "Répondre ou ajouter d'autres avec @"
+
+#: admin/assets/js/src/suggestion/suggestion-board.js:211
+#: admin/assets/js/src/suggestion/suggestion-board.js:251
+msgid "Reply to comment"
+msgstr "Répondre au commentaire"
+
+#: admin/partials/commenting-block-website-activity.php:334
+#: admin/assets/js/src/activityCentre.js:799
+#: admin/assets/js/src/activityCentre.js:809
+#: admin/assets/js/src/activityCentre.js:829
+msgid "Reply to this comment"
+msgstr "Répondre à ce commentaire"
+
+#: admin/assets/js/src/activityCentre.js:537
+msgid "Resolve"
+msgstr "Résoudre"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Resolve this thread?"
+msgstr "Résoudre ce fil ?"
+
+#: admin/partials/commenting-block-activities.php:120
+#: admin/classes/class-commenting-block-activities.php:120
+#: admin/assets/js/src/component/comment.js:300
+#: admin/assets/js/src/component/comment.js:310
+msgid "Resolved"
+msgstr "Résolue"
+
+#: admin/assets/js/src/activityCentre.js:1067
+#: admin/assets/js/src/activityCentre.js:1170
+msgid "Resolved Comments"
+msgstr "Commentaires résolus"
+
 #: admin/classes/class-commenting-block-admin.php:790
 msgid "resolved thread"
 msgstr "thread résolu"
 
+#: admin/classes/class-commenting-block-settings-table.php:20
+msgid "Recent Activities"
+msgstr "Activités récentes"
+
+#: admin/assets/js/src/activityCentre.js:1018
+msgid "Reject All Suggestions"
+msgstr "Rejeter toutes les suggestions"
+
+#: admin/assets/js/src/activityCentre.js:656
+msgid "Review All Suggestions"
+msgstr "Examiner toutes les suggestions"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Reject All Edits"
+msgstr "Rejeter toutes les modifications"
+
+#: admin/classes/class-commenting-block-settings-table.php:127
+msgid "Reset Filter"
+msgstr "Réinitialiser le filtre"
+
+#: admin/partials/commenting-block-settings-page.php:338
+msgid "reminder in Block Editor."
+msgstr "rappel dans l'éditeur de blocs."
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "Remind"
+msgstr "Rappeler"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:147
+msgid "Roles"
+msgstr "Rôles"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:149
+msgid "Resolve Comment"
+msgstr "Résoudre le commentaire"
+
+#: admin/assets/js/src/activityCentre:642
+msgid "Review suggested edits"
+msgstr "Examiner les modifications suggérées"
+
+#: admin/assets/js/src/activityCentre.js:645
+msgid "Review Suggestions"
+msgstr "Suggestions de révision"
+
+#: admin/partials/commenting-block-settings-page.php:229
+msgid "Run Test"
+msgstr "Exécuter le test"
+
+#: admin/assets/js/src/activityCentre:660
+msgid "Reject All"
+msgstr "Tout rejeter"
+
 #: admin/partials/commenting-block-settings-page.php:60
+#: admin/assets/js/src/component/comment.js:511
 msgid "Save Changes"
 msgstr "Sauvegarder les modifications"
 
 #: admin/partials/commenting-block-settings-page.php:21
+#: admin/assets/js/src/activityCentre.js:646
 msgid "Settings"
 msgstr "Réglages"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1295
+msgid "Superscript"
+msgstr "Exposant"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1296
+msgid "Subscript"
+msgstr "Indice"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1299
+msgid "Strikethrough"
+msgstr "Barré"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1233
+msgid "Space"
+msgstr "Espace"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1233
+msgid "times)"
+msgstr "fois)"
 
 #: admin/partials/commenting-block-settings-page.php:50
 msgid "Settings saved!"
 msgstr "Paramètres sauvegardés!"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Save Draft"
+msgstr "Enregistrer le brouillon"
+
+#: admin/partials/commenting-block-settings-page.php:338
+msgid "Save Draft Comment"
+msgstr "Enregistrer le brouillon de commentaire"
+
+#: admin/partials/commenting-block-settings-page.php:385
+msgid "Suggestion Mode"
+msgstr "Mode suggestion"
+
+#: admin/partials/commenting-block-settings-page.php:225
+msgid "Spanish"
+msgstr "Espagnol"
+
+#: admin/assets/js/src/component/comment.js:300
+msgid "Share"
+msgstr "Partager"
+
+#: admin/partials/commenting-block-webiste-activity.php:259
+#: admin/assets/js/src/activityCentre.js:118
+#: admin/assets/js/src/activityCentre.js:729
+#: admin/assets/js/src/activityCentre.js:744
+msgid "Show all"
+msgstr "Afficher tout"
+
+#: admin/assets/js/src/activityCentre.js:930
+#: admin/assets/js/src/suggestion/suggestion-board.js:187
+msgid "Show all %d replies"
+msgstr "afficher toutes les %d réponses"
+
+#: admin/assets/js/src/component/comment.js:342
+msgid "show less"
+msgstr "Montrer moins"
+
+#: admin/assets/js/src/component/comment.js:341
+msgid "show more"
+msgstr "montre plus"
+
+#: admin/assets/js/src/activityCentre.js:808 
+#: admin/partials/commenting-block-website-activity.php:87
+#: admin/classes/class-commenting-block-email-templates.php:701
+#: admin/classes/class-commenting-block-functions:146
+msgid "Suggestion Accepted"
+msgstr "Suggestion acceptée"
+
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "Super Admin"
+msgstr "Super administrateur"
+
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "section on the Multicollab website"
+msgstr "rubrique sur le site Multicollab"
+
+#: admin/assets/js/src/activityCentre.js:814 
+#: admin/partials/commenting-block-website-activity.php:87
+#: admin/classes/class-commenting-block-email-templates.php:704
+#: admin/classes/class-commenting-block-functions:146
+msgid "Suggestion Rejected"
+msgstr "Suggestion rejetée"
+
+#: admin/classes/class-commenting-block-email-templates.php:734
+msgid "Suggestion Resolved"
+msgstr "Suggestion résolue"
+
+#: admin/assets/js/src/block.js:631
+msgid "Suggestion Mode is ON"
+msgstr "Le mode suggestion est activé"
+
+#: admin/assets/js/src/block.js:648
+msgid "Suggestion Mode is OFF"
+msgstr "Le mode suggestion est désactivé"
+
+#: admin/assets/js/src/block.js:629
+msgid "Suggestion Mode only works with Paragraph and Heading Block."
+msgstr "Le mode suggestion ne fonctionne qu'avec le bloc paragraphe et titre."
+
+#: admin/assets/js/src/activityCentre.js:599
+msgid "Suggestions are Hidden"
+msgstr "Les suggestions sont masquées"
+
+#: admin/assets/js/src/activityCentre.js:619
+msgid "Suggestions Accepted"
+msgstr "Suggestions acceptées"
+
+#: admin/assets/js/src/activityCentre.js:639
+msgid "Suggestions Rejected"
+msgstr "Suggestions rejetées"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "Stop"
+msgstr "Arrêt"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "stop them from publishing it."
+msgstr "les empêcher de le publier."
+
+#: admin/assets/js/src/activityCentre.js:651
+msgid "Summary"
+msgstr "Résumé"
+
+#: admin/assets/js/src/activityCentre.js:1000
+msgid "Suggest Edits"
+msgstr "Suggérer des modifications"
+
+#: admin/partials/commenting-block-settings-page.php:83
+msgid "Suggest Edits (Track Changes)"
+msgstr "Suggérer des modifications (Suivre les modifications)"
+
+#: admin/partials/commenting-block-settings-page.php:100
+msgid "Slack Integration"
+msgstr "Intégration Slack"
+
+#: admin/assets/js/src/activityCentre.js:1003
+msgid "Suggestion Mode works only with a draft page or post."
+msgstr "Le mode suggestion fonctionne uniquement avec un brouillon de page ou de publication."
+
+#: admin/assets/js/src/activityCentre.js:1072
+msgid "Suggestions"
+msgstr "Suggestions"
+
+#: admin/assets/js/src/component/comment.js:499
+msgid "Save"
+msgstr "Sauver"
+
+#: admin/partials/commenting-block-settings-page.php:199
+msgid "Show draft Info board"
+msgstr "Afficher le brouillon du tableau d'informations"
+
+#: admin/assets/js/src/activityCentre.js:658
+msgid "Suggestions are Visible"
+msgstr "Les suggestions sont visibles"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:585
+msgid "Something went wrong!. Kindly Please save, refresh and then try again."
+msgstr "Quelque chose s'est mal passé !. Veuillez enregistrer, actualiser, puis réessayer."
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:935
+#: admin/assets/js/src/suggestion/block-extend-control.js:940
+#: admin/assets/js/src/suggestion/block-extend-control.js:945
+#: admin/assets/js/src/suggestion/block-extend-control.js:987
+#: admin/assets/js/src/suggestion/block-extend-control.js:1037
+#: admin/assets/js/src/suggestion/block-extend-control.js:1049
+msgid "Suggestions over suggestion are restricted!"
+msgstr "Les suggestions sur suggestion sont limitées !"
+
+#: admin/partials/commenting-block-settings-page.php:57
+msgid "Suggestion Mode (Track Changes)"
+msgstr "Mode suggestion (suivi des modifications)"
+
+#: admin/partials/commenting-block-settings-page.php:134
+msgid "Sr. Web Developer"
+msgstr "Développeur Web principal"
+
+#: admin/assets/js//commenting-block-admin.js:1254
+msgid "Sorry! No user found!"
+msgstr "Pardon! Aucun utilisateur trouvé !"
+
+#: admin/partials/commenting-block-settings-page.php:209
+msgid "Slack"
+msgstr "Slack"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "Slack Channel Notifications"
+msgstr "Notifications de canal Slack"
+
+#: admin/partials/commenting-block-settings-page.php:355
+msgid "Slack Settings"
+msgstr "Paramètres Slack"
+
+#: admin/partials/commenting-block-settings-page.php:212
+msgid "Setup integration between WordPress and Slack."
+msgstr "Intégration de la configuration entre WordPress et Slack."
 
 #: admin/partials/commenting-block-settings-page.php:27
 msgid "Thanks for installing Google Doc-Style Editorial Commenting Plugin."
 msgstr ""
 "Merci d'avoir installé le plugin de commentaire éditorial de Google Doc-"
 "Style."
+
+#: admin/assets/js/commenting-block-admin.js:1162
+msgid ""
+"The Assigned person will be notified and responsible for marking as done."
+msgstr ""
+"La personne assignée sera avisée et responsable du marquage comme fait."
 
 #. Description of the plugin
 msgid ""
@@ -164,10 +1364,257 @@ msgstr ""
 "Ce plugin sert la fonctionnalité de commentaire comme Google Docs dans le "
 "Éditeur Gutenberg!"
 
+#: admin/assets/js/src/activityCentre.js:1065
+#: admin/assets/js/src/activityCentre.js:1143
+msgid "Total Comments"
+msgstr "Total des commentaires"
+
+#: admin/assets/js/src/activityCentre.js:1076
+#: admin/assets/js/src/activityCentre.js:1222
+msgid "Total Suggestions"
+msgstr "Nombre total de suggestions"
+
+#: admin/classes/class-commenting-block-activities.php:121
+msgid "Total"
+msgstr "Total"
+
+#: admin/partials/commenting-block-settings-page.php:88
+msgid "Technical Help"
+msgstr "Aide technique"
+
+#: admin/assets/js//commenting-block-admin.js:2490
+msgid "There are a few pending suggestions or comments in this post. Do you still want to publish the post?"
+msgstr "Il y a peu de suggestions ou de commentaires en attente dans cet article. Souhaitez-vous toujours publier le message ?"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "to apply comments/suggestions."
+msgstr "pour appliquer les commentaires/suggestions."
+
+#: admin/assets/js/src/commenting-block-admin.js:2088
+msgid "to apply changes."
+msgstr "pour appliquer les modifications."
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "to save comments."
+msgstr "pour enregistrer les commentaires."
+
+#: admin/classes/class-commenting-block-settings-table.php:17
+msgid "Title"
+msgstr "Titre"
+
+#: admin/partials/commenting-block-webiste-activity.php:101
+#: admin/assets/js/src/commenting-block-admin.js:1848
+#: admin/assets/js/src/commenting-block-admin.js:1884
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: admin/partials/commenting-block-settings-page.php:228
+msgid "Test Integration"
+msgstr "Tester l'intégration"
+
+#: admin/assets/js/dist/block.build.min.js:56051 
+#: admin/assets/js/dist/block.build.min.js:56125
+msgid "The comment you are trying to access has been closed!"
+msgstr "Le commentaire auquel vous tentez d'accéder est fermé !"
+
+#: admin/partials/commenting-block-settings-page.php:129
+msgid "This an easy-to-use plugin—the best one I’m aware of—for those who have an editorial process. My wife is a blogger and I’m her editor. We’ve only begun taking advantage of it but I wanted to offer a positive shout out."
+msgstr "C'est un plugin facile à utiliser - le meilleur que je connaisse - pour ceux qui ont un processus éditorial. Ma femme est blogueuse et je suis son éditeur. Nous avons seulement commencé à en profiter, mais je voulais offrir un cri positif."
+
+#: admin/partials/commenting-block-settings-page.php:147
+msgid "This is exactly what I was looking for. This plugin works flawlessly. Great job."
+msgstr "Ceci est exactement ce que je cherchais. Ce plugin fonctionne parfaitement. Bon travail."
+
+#: admin/settings/settings-general.php:17
+msgid "This column will disappear from the Post List if this is checked."
+msgstr "Cette colonne disparaîtra de la liste des publications si cette case est cochée."
+
+#: admin/settings/settings-general.php:30
+msgid "This reminder will disappear from the Block Editor if this is checked."
+msgstr "Ce rappel disparaîtra de l'éditeur de blocs si cette case est cochée."
+
+#: admin/settings/settings-general.php:54
+msgid "This floating toolbar to add quick comments and suggestions will disappear from the Block Editor if this is checked."
+msgstr "Cette barre d'outils flottante pour ajouter des commentaires rapides et des suggestions disparaîtra de l'éditeur de blocs si elle est cochée."
+
+#: admin/partials/commenting-block-settings-page.php:165
+msgid "The plug-in an awesome. It works fantastic. It is one of the great features of our platform.The plug-in an awesome. It works fantastic. It is one of the great features of our platform."
+msgstr "Le plug-in est génial. Cela fonctionne fantastique. C'est l'une des grandes fonctionnalités de notre plateforme. Le plug-in est génial. Cela fonctionne fantastique. C'est l'une des grandes fonctionnalités de notre plateforme."
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1303
+msgid "Text Color"
+msgstr "Couleur du texte"
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "Turn ON"
+msgstr "Allumer"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1475
+msgid "to"
+msgstr "à"
+
+#: admin/assets/js/src/activityCentre.js:1069
+#: admin/assets/js/src/activityCentre.js:1083
+#: admin/assets/js/src/activityCentre.js:1185
+#: admin/assets/js/src/activityCentre.js:1320
+msgid "Users Collaboration"
+msgstr "Collaboration des utilisateurs"
+
+#: admin/assets/js/src/component/board.js:493
+msgid "Unknown User"
+msgstr "Utilisateur inconnu"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1300
+msgid "Underline"
+msgstr "Souligner"
+
+#: admin/partials/commenting-block-settings-page.php:52
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Upgrade"
+msgstr "Mise à niveau"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "unsaved comments."
+msgstr "commentaires non enregistrés."
+
 #: admin/partials/commenting-block-settings-page.php:79
 msgid "Visit Site"
 msgstr "Visitez le site"
 
+#: admin/partials/commenting-block-settings-page.php:90
+msgid "VIP"
+msgstr "VIP"
+
+#: admin/partials/commenting-block-settings-page.php:103
+msgid "VIP Support"
+msgstr "D'assistance VIP"
+
+#: admin/partials/commenting-block-settings-page.php:22
+#: admin/partials/commenting-block-settings-page__premium_only.php:23
+msgid "Version 3.0.1"
+msgstr "Variante 3.0.1"
+
 #: admin/partials/commenting-block-settings-page.php:78
 msgid "WordPress Development Experts & WordPress VIP Partner Agency"
 msgstr "Experts en développement WordPress et agence partenaire WordPress VIP"
+
+#: admin/assets/js/src/activityCentre.js:1031
+msgid "When enabled, all the notification boxes for suggested edits will disappear to provide a non-distracted editing experience. You can continue to track your edits."
+msgstr "Lorsqu'elle est activée, toutes les boîtes de notification pour les modifications suggérées disparaissent pour offrir une expérience d'édition sans distraction. Vous pouvez continuer à suivre vos modifications."
+
+#: admin/assets/js/src/activityCentre.js:1043
+msgid "When enabled, all the comment boxes will disappear to provide a non-distracted editing experience. You can still add a comment to your post."
+msgstr "Lorsqu'elles sont activées, toutes les zones de commentaires disparaissent pour offrir une expérience d'édition sans distraction. Vous pouvez toujours ajouter un commentaire à votre publication."
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "When an author tries to Publish a post with pending comments or suggestions, alert and remind them about it, but they can"
+msgstr "Lorsqu'un auteur essaie de publier un message avec des commentaires ou des suggestions en attente, alertez-le et rappelez-le, mais il peut"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "When an author tries to publish a post with pending comments or suggestions, remind them about it and"
+msgstr "Lorsqu'un auteur essaie de publier un article avec des commentaires ou des suggestions en attente, rappelez-le-lui et"
+
+#: admin/partials/commenting-block-settings-page.php:152
+msgid "WordPress Team Lead"
+msgstr "Chef d'équipe WordPress"
+
+#: admin/partials/commenting-block-settings-page.php:220
+msgid "Webhook URL"
+msgstr "URL du webhook"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1418
+msgid "with URL"
+msgstr "avec URL"
+
+#: admin/assets/js/src/commenting-block-admin.js:115
+msgid "Yes"
+msgstr "Oui"
+
+#: admin/assets/js/dist/block.build.min.js:58295
+msgid "Multiple comments are not possible on the same block"
+msgstr "Vous ne pouvez pas donner plusieurs commentaires sur le même bloc."
+
+#: admin/assets/js/dist/block.build.min.js:56458
+msgid "Multiple comments are not possible on the same block."
+msgstr "Vous ne pouvez pas donner plusieurs commentaires sur le même Texte."
+
+
+#: admin/assets/js/commenting-block-admin.js:1162
+msgid "Your @mention will add people to this discussion and send an email."
+msgstr ""
+"Votre @mention ajoutera des personnes à cette discussion et enverra un e-"
+"mail."
+
+#: admin/assets/js/src/activityCentre.js:1003
+msgid "You can suggest changes to a post without changing the original text with the suggesting-edit feature. When enabled, any changes to this post will be highlighted to review by the post’s author."
+msgstr "Vous pouvez suggérer des modifications à un article sans modifier le texte d'origine grâce à la fonctionnalité de suggestion de modification. Lorsque cette option est activée, toute modification apportée à cette publication sera mise en surbrillance pour être examinée par l'auteur de la publication."
+
+#: admin/assets/js/src/activityCentre.js:615
+#: admin/assets/js/src/activityCentre.js:622
+msgid "You are not Authorised to view this..."
+msgstr "Vous n'êtes pas autorisé à voir ceci..."
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:1046
+msgid "You can not give multiple suggestions on the same Text."
+msgstr "Vous ne pouvez pas donner plusieurs suggestions sur le même texte."
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:527
+#: admin/assets/js/src/suggestion/block-extend-control.js:538
+msgid "Your last action has generated unexpected output. So that is why you face some issues like breaking the editing block."
+msgstr "Votre dernière action a généré une sortie inattendue. C'est pourquoi vous rencontrez des problèmes tels que la rupture du bloc d'édition."
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:573
+msgid "Your HTML return output is not valid. It may break or faced some issue of editing Gutenberg block."
+msgstr "Votre sortie de retour HTML n'est pas valide. Il peut casser ou faire face à un problème d'édition du bloc Gutenberg."
+
+#: admin/classes/class-commenting-block-email-templates.php:347
+#: admin/classes/class-commenting-block-email-templates.php:378
+#: admin/classes/class-commenting-block-email-templates.php:399
+#: admin/classes/class-commenting-block-email-templates.php:608
+msgid "You have been mentioned"
+msgstr "Vous avez été mentionné"
+
+#: admin/assets/js/src/component/board.js:288
+msgid "You"
+msgstr "Tu"
+
+#: admin/partials/commenting-block-webiste-activity.php:103
+#: admin/assets/js/src/commenting-block-admin.js:1876
+msgid "Yesterday"
+msgstr "Hier"
+
+#: admin/partials/commenting-block-settings-page.php:264
+msgid "Your license key expires on"
+msgstr "Votre clé de licence expire le"
+
+#: admin/assets/js//commenting-block-admin.js:2530
+msgid "You can't publish this post before resolving all suggestions or comments. Please review and resolve all open suggestions and comments before moving forward."
+msgstr "Vous ne pouvez pas publier le message avec des commentaires ou des suggestions en attente. Veuillez examiner et résoudre tous les commentaires et suggestions avant de le publier."
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "You have"
+msgstr "Tu as"
+
+#: admin/partials/commenting-block-settings-page.php:106
+msgid "You are fully protected by our 100% Money Back Guarantee. If you don’t like our products over the next 14 days, then we will gladly refund your money. No questions asked!"
+msgstr "Vous êtes entièrement protégé par notre garantie de remboursement à 100 %. Si vous n'aimez pas nos produits au cours des 14 prochains jours, nous nous ferons un plaisir de vous rembourser. Aucune question posée!"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "You will get real-time updates for mentions, replies, and other comment activities of Multicollab in your Slack channel. It allows you to fit Multicollab in a place you know your team is checking all day."
+msgstr "Vous obtiendrez des mises à jour en temps réel pour les mentions, réponses et autres activités de commentaires de Multicollab dans votre chaîne Slack. Il vous permet d'installer Multicollab dans un endroit que vous savez que votre équipe vérifie toute la journée."
+
+#:
+msgid "PM"
+msgstr "PM"
+
+#:
+msgid "pm"
+msgstr "pm"
+
+#:
+msgid "am"
+msgstr "un m"
+
+#:
+msgid "AM"
+msgstr "UN M"

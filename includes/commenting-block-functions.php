@@ -39,7 +39,6 @@ function gc_after_edit_load()
         // WP User Query.
         $users = new WP_User_Query([
                 'number'   => 9999,
-                'role__in' => [ 'Administrator', 'Editor', 'Contributor', 'Author' ],
                 'exclude'  => array( get_current_user_id() ), // phpcs:ignore
             ]);
 
@@ -57,7 +56,7 @@ function gc_after_edit_load()
                         'user_email'        => $user->user_email,
                         'avatar'            => get_avatar_url($user->ID, [ 'size' => '24' ]),
                         'profile'           => admin_url("/user-edit.php?user_id={$user->ID}"),
-                        'edit_others_posts' => isset($user->allcaps['edit_others_posts'])??'',
+                        'edit_others_posts' => isset($user->allcaps['edit_others_posts']) ? $user->allcaps['edit_others_posts'] : '',
                     ];
             }
         }

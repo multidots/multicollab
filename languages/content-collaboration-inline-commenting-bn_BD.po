@@ -3,10 +3,10 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-16 12:40+0000\n"
+"PO-Revision-Date: 2022-03-04 08:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: Bengali (Bangladesh)\n"
-"Language: bn_BD\n"
+"Language: bn-BD\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,6 +14,23 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.5.1; wp-5.6.2\n"
 "X-Domain: content-collaboration-inline-commenting"
+
+#: admin/partials/commenting-block-settings-page.php:48
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "/Annually"
+msgstr "/বার্ষিক"
+
+#: admin/partials/commenting-block-settings-page.php:49
+msgid "$200 Savings*"
+msgstr "$200 সঞ্চয়*"
+
+#: admin/partials/commenting-block-settings-page.php:67
+msgid "$150 Savings*"
+msgstr "$150 সঞ্চয়*"
+
+#: admin/partials/commenting-block-settings-page.php:105
+msgid "14 Days – 100% No-Risk Money Back Guarantee!"
+msgstr "14 দিন - 100% বিনা ঝুঁকির টাকা ফেরত গ্যারান্টি!"
 
 #: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
@@ -28,51 +45,456 @@ msgstr " সমাধান থ্রেড মন্তব্যসমূহ"
 msgid "%s — %s"
 msgstr "%s — %s"
 
+#: admin/classes/class-commenting-block-admin.php:1026
+msgid "%s You"
+msgstr "আপনি %s"
+
+#: admin/classes/class-commenting-block-activities.php:126
+msgid "%s By"
+msgstr "দ্বারা %s"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1503
+msgid "%s (%d times)"
+msgstr "%s (%d বার)"
+
+#: admin/classes/class-commenting-block-admin.php:1026
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#: admin/assets/js/src/commenting-block-admin.js:1844
+msgid "%d minutes"
+msgstr "%d মিনিট"
+
+#: admin/assets/js/src/commenting-block-admin.js:1841
+msgid " ago"
+msgstr " আগে"
+
 #: admin/partials/commenting-block-settings-page.php:37
 msgid "About Plugin"
 msgstr "প্লাগইন সম্পর্কে"
 
-#: admin/classes/class-commenting-block-email-templates.php:225
+#: admin/assets/js/src/commenting-block-admin.js:1843
+msgid "about a minute"
+msgstr "প্রায় এক মিনিট"
+
+#: admin/partials/commenting-block-settings-page.php:48
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "Annually for 1-site"
+msgstr "1-সাইটের জন্য বার্ষিক"
+
+#: admin/partials/commenting-block-settings-page.php:101
+msgid "Attach Document To Comment"
+msgstr "মন্তব্য করার জন্য নথি সংযুক্ত করুন"
+
+#: admin/partials/commenting-block-settings-page.php:244
+msgid "Activate Plan"
+msgstr "পরিকল্পনা সক্রিয় করুন"
+
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:534
+msgid "Accept suggestion"
+msgstr "পরামর্শ গ্রহণ করুন"
+
+#: admin/classes/class-commenting-block-email-templates.php:1115
+msgid "accept"
+msgstr "গ্রহণ"
+
+#: admin/assets/js/src/activityCentre:1078
+#: admin/assets/js/src/activityCentre:1248
+msgid "Accepted Suggestions"
+msgstr "গৃহীত প্রস্তাবনা"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:46
+msgid "Activity Snapshot"
+msgstr "কার্যকলাপ স্ন্যাপশট"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:45
+msgid "Activity Timeline"
+msgstr "কার্যকলাপ সময়রেখা"
+
+#: admin/partials/commenting-block-settings-page.php:237
+msgid "Action"
+msgstr "কর্ম"
+
+#: admin/classes/class-commenting-block-email-templates.php:225 
+#: admin/assets/js/src/component/board.js:269
 msgid "Assigned to"
 msgstr "নির্ধারিত"
 
-#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/assets/js/src/component/board.js:566
+msgid "Attach file"
+msgstr "ফাইল সংযুক্ত"
+
+#: admin/assets/js/src/commenting-block-admin.js:757
+msgid "Assign to %s"
+msgstr "%s কে বরাদ্দ করুন"
+
+#: admin/partials/commenting-block-settings-page.php:298
+msgid "Activations"
+msgstr "সক্রিয়করণ"
+
+#: admin/assets/js/src/commenting-block-admin.js:1224
+msgid "Assign to"
+msgstr "ধার্য"
+
+#: admin/assets/js/dist/block.build.min.js:61601
+msgid "Add"
+msgstr "যোগ করুন"
+
+#: admin/classes/class-commenting-block-email-templates.php:325
+msgid "Assigned to You"
+msgstr "আপনাকে বরাদ্দ করা হয়েছে"
+
+#: admin/assets/js/src/component/board.js:388
+msgid "Assigned to %s"
+msgstr "%s অর্পণ করা হয়েছে"
+
+#: admin/assets/js/src/activityCentre.js:641
+msgid "Activities"
+msgstr "কার্যক্রম"
+
+#: admin/assets/js/src/activityCentre.js:1013
+msgid "Accept All Suggestions"
+msgstr "সমস্ত পরামর্শ গ্রহণ করুন"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Accept All Edits"
+msgstr "সমস্ত সম্পাদনা গ্রহণ করুন"
+
+#: admin/partials/commenting-block-settings-page.php:284
+msgid "Activate License"
+msgstr "লাইসেন্স সক্রিয় করুন"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Accept All"
+msgstr "সব নাও"
+
+#: admin/classes/class-commenting-block-settings-table.php:98
+msgid "All dates"
+msgstr "সব তারিখ"
+
+#: admin/classes/class-commenting-block-settings-table.php:112
+msgid "All pages/posts"
+msgstr "সকল পেজ/পোস্ট"
+
+#: admin/classes/class-commenting-block-settings-table.php:117
+msgid "All categories"
+msgstr "সব ধরনের"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:148
+msgid "Add Comment"
+msgstr "মন্তব্য যোগ করুন"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:155
+msgid "Add Suggestion"
+msgstr "সাজেশন যোগ করুন"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:156
+msgid "Accept/Reject Suggestion"
+msgstr "প্রস্তাবনা গ্রহণ/প্রত্যাখ্যান করুন"
+
+#: admin/partials/commenting-block-settings-page.php:58
+msgid "Advanced Dashboard"
+msgstr "উন্নত ড্যাশবোর্ড"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "All features of Plus Plan"
+msgstr "প্লাস প্ল্যানের সমস্ত বৈশিষ্ট্য"
+
+#: admin/partials/commenting-block-settings-page.php:79
+msgid "All features of Basic Plan"
+msgstr "মৌলিক পরিকল্পনার সমস্ত বৈশিষ্ট্য"
+
+#: admin/partials/commenting-block-settings-page.php:128
+msgid "A great addition for author/editor collaboration"
+msgstr "লেখক/সম্পাদকের সহযোগিতার জন্য একটি দুর্দান্ত সংযোজন"
+
+#: admin/partials/commenting-block-settings-page.php:146
+msgid "Awesome plugin"
+msgstr "দুর্দান্ত প্লাগইন"
+
+#: admin/partials/commenting-block-settings-page.php:164
+msgid "Awesome plug-in"
+msgstr "দুর্দান্ত প্লাগ-ইন"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1293
+msgid "Bold, Font"
+msgstr "মোটা, হরফ"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "Block Alignment"
+msgstr "ব্লক প্রান্তিককরণ"
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. Selecting this option will automatically turn ON Suggestions on all future posts on your website. You can still manually turn OFF suggestions mode for individual posts. We don't recommend turning Suggestions Mode ON for all the new posts unless you have specific business needs."
+msgstr "ডিফল্টরূপে, Multicollab-এ প্রতিটি পোস্টের জন্য সাজেশন মোড বন্ধ থাকে। এই বিকল্পটি নির্বাচন করলে তা স্বয়ংক্রিয়ভাবে আপনার ওয়েবসাইটের সমস্ত ভবিষ্যত পোস্টে সাজেশন চালু করবে। আপনি এখনও পৃথক পোস্টের জন্য ম্যানুয়ালি প্রস্তাবনা মোড বন্ধ করতে পারেন৷ আপনার নির্দিষ্ট ব্যবসায়িক প্রয়োজন না থাকলে আমরা সমস্ত নতুন পোস্টের জন্য সাজেশন মোড চালু করার পরামর্শ দিই না।"
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. This option will automatically turn ON Suggestions for selected post categories for future posts. You can still manually turn OFF suggestions mode for individual posts."
+msgstr "ডিফল্টরূপে, Multicollab-এ প্রতিটি পোস্টের জন্য সাজেশন মোড বন্ধ থাকে। এই বিকল্পটি স্বয়ংক্রিয়ভাবে ভবিষ্যতের পোস্টের জন্য নির্বাচিত পোস্ট বিভাগের জন্য সাজেশন চালু করবে। আপনি এখনও পৃথক পোস্টের জন্য ম্যানুয়ালি প্রস্তাবনা মোড বন্ধ করতে পারেন৷"
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. This option will automatically turn ON Suggestions for selected Custom Post Types for future posts. You can still manually turn OFF suggestions mode for individual posts."
+msgstr "ডিফল্টরূপে, Multicollab-এ প্রতিটি পোস্টের জন্য সাজেশন মোড বন্ধ থাকে। এই বিকল্পটি ভবিষ্যতের পোস্টের জন্য নির্বাচিত কাস্টম পোস্ট প্রকারের জন্য স্বয়ংক্রিয়ভাবে সাজেশন চালু করবে। আপনি এখনও পৃথক পোস্টের জন্য ম্যানুয়ালি প্রস্তাবনা মোড বন্ধ করতে পারেন৷"
+
+#: admin/partials/commenting-block-settings-page.php:227
+msgid "Bengali"
+msgstr "বাংলা"
+
+#: admin/partials/commenting-block-settings-page.php:223
+msgid "Chinese"
+msgstr "চাইনিজ"
+
+#: admin/assets/js/src/component/board.js:518
+msgid "Cancel"
+msgstr "বাতিল করুন"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "Connect"
+msgstr "সংযোগ করুন"
+
+#: admin/partials/commenting-block-settings-page.php:65
+msgid "Comment Anywhere"
+msgstr "যে কোন জায়গায় মন্তব্য করুন"
+
+#: admin/partials/commenting-block-settings-page.php:331
+msgid "column on the Post Lists."
+msgstr "কলাম পোস্ট তালিকার।"
+
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "Custom Permissions"
+msgstr "কাস্টম অনুমতি"
+
+#: admin/partials/commenting-block-settings-page.php:105
+msgid "Contact for Enterprise License"
+msgstr "এন্টারপ্রাইজ লাইসেন্সের জন্য যোগাযোগ করুন"
+
+#: admin/classes/class-commenting-block-email-templates.php:95
+msgid "Comment Resolved"
+msgstr "মন্তব্য সমাধান করা হয়েছে"
+
+#: admin/classes/class-commenting-block-email-templates.php:251 
 #: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr "এই মন্তব্যটি দেখতে এখানে ক্লিক করুন"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Click"
+msgstr "ক্লিক"
+
+#: admin/assets/js/src/component/activityCentre.js:112
+msgid "Collapse"
+msgstr "পতন"
+
+#: admin/partials/commenting-block-settings-page.php:169
+msgid "Charudatta Mondale"
+msgstr "চারুদত্ত মন্ডলে"
+
+#: admin/partials/commenting-block-settings-page.php:170
+msgid "Co-Founder at QuickDraft LLP"
+msgstr "QuickDraft LLP-এর সহ-প্রতিষ্ঠাতা"
+
+#: admin/assets/js/src/component/board.js:443
+#: admin/assets/js/src/block.js:486
+#: admin/assets/js/src/block.js:831
+#: admin/assets/js/src/block.js:846
+#: admin/assets/js/src/block.js:871
+#: admin/assets/js/src/block.js:886
+#: admin/assets/js/src/block.js:911
+#: admin/assets/js/src/block.js:926
+msgid "Comment"
+msgstr "মন্তব্য করুন"
+
+#: admin/assets/js/src/component/board.js:446
+msgid "Comment or add others with @"
+msgstr "মন্তব্য করুন বা @ এর সাথে অন্যদের যোগ করুন"
+
+#: admin/assets/js/src/activityCentre.js:438
+msgid "Comments are Hidden"
+msgstr "মন্তব্য লুকানো হয়"
+
+#: admin/partials/commenting-block-settings-page.php:76
+msgid "Comment on any text and media"
+msgstr "যে কোন টেক্সট এবং মিডিয়া মন্তব্য"
 
 #: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr "মন্তব্য করেছেন"
 
-#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:245 
 #: admin/classes/class-commenting-block-email-templates.php:266
+#: admin/assets/js/src/activityCentre.js:1063
 msgid "Comments"
 msgstr "মন্তব্য"
+
+#: admin/classes/class-commenting-block-settings-table.php:19
+msgid "Collaborators"
+msgstr "সহযোগীরা"
 
 #: admin/partials/commenting-block-settings-page.php:84
 msgid "Contact Support"
 msgstr "যোগাযোগ সমর্থন"
 
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Contact"
+msgstr "যোগাযোগ"
+
+#:admin/assets/js/src/component/suggestion/suggestion-comment.js:537
+msgid "Copy Link"
+msgstr "লিংক কপি করুন"
+
+#: admin/assets/js/src/commenting-block-admin.js:2136
+msgid "Change Heading"
+msgstr "শিরোনাম পরিবর্তন করুন"
+
 #: admin/partials/commenting-block-settings-page.php:88
 msgid "Contact Us"
 msgstr "যোগাযোগ করুন"
+
+#: admin/assets/js/src/nonTextblock.js:150
+msgid "Content Block"
+msgstr "বিষয়বস্তু ব্লক"
+
+#: admin/assets/js/src/activityCentre.js:490
+msgid "Comments are Visible"
+msgstr "মন্তব্য দৃশ্যমান"
+
+#: admin/partials/commenting-block-settings-page.php:355
+msgid "Channel Name:"
+msgstr "চ্যানেলের নাম:"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "center"
+msgstr "মধ্য"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "default"
+msgstr "ডিফল্ট"
 
 #: admin/partials/commenting-block-settings-page.php:20
 msgid "Dashboard"
 msgstr "ড্যাশবোর্ড"
 
+#: admin/partials/commenting-block-settings-page.php:340
+msgid "Disconnect"
+msgstr "সংযোগ বিচ্ছিন্ন করুন"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "draft comments/suggestions."
+msgstr "খসড়া মন্তব্য/পরামর্শ।"
+
+#: admin/assets/js/src/component/comment.js:308
+msgid "Delete"
+msgstr "মুছে ফেলা"
+
+#: admin/assets/js/src/component/board.js:351
+msgid "Delete this comment thread?"
+msgstr "এই মন্তব্য থ্রেড মুছে ফেলবেন?"
+
+#: admin/assets/js/src/component/comment.js:351
+msgid "Delete this comment?"
+msgstr "এই মন্তব্য মুছবেন?"
+
+#: admin/assets/js/commenting-block-admin.js:131
+msgid "Delete this Suggestion?"
+msgstr "এই সাজেশনটি মুছবেন?"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Delete this thread?"
+msgstr "এই থ্রেড মুছে ফেলবেন?"
+
 #: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "মুছে ফেলা মন্তব্য"
+
+#: admin/classes/class-commenting-block-activities.php:147
+msgid "deleted"
+msgstr "মুছে ফেলা হয়েছে"
+
+#: admin/assets/js/src/activityCentre.js:1081
+#: admin/assets/js/src/activityCentre.js:1290
+msgid "Deletions"
+msgstr "মুছে ফেলা"
+
+#: admin/assets/js/src/component/suggestion-comment.js:664
+#: admin/assets/js/src/component/comment.js:515
+msgid "Discard Changes"
+msgstr "পরিবর্তন বাতিল"
+
+#: admin/partials/commenting-block-settings-page.php:257
+msgid "Deactivate License"
+msgstr "লাইসেন্স নিষ্ক্রিয় করুন"
+
+#: admin/assets/js/src/component/board.js:518
+msgid "Discard Comment"
+msgstr "মন্তব্য বাতিল করুন"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:150
+msgid "Disable Comments"
+msgstr "মন্তব্য নিষ্ক্রিয়"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:157
+msgid "Disable Suggestion"
+msgstr "প্রস্তাবনা অক্ষম করুন"
+
+#: admin/assets/js/src/component/comment.js:521
+msgid "Delete attachment"
+msgstr "সংযুক্তি মুছুন"
+
+#: admin/assets/js/src/component/comment.js:305
+msgid "Edit"
+msgstr "সম্পাদনা করুন"
+
+#: admin/partials/commenting-block-webiste-activity.php:307
+msgid "edited"
+msgstr "সম্পাদিত"
 
 #: admin/classes/class-commenting-block-admin.php:136
 msgid "Editorial Comments"
 msgstr "সম্পাদকীয় মন্তব্য"
 
+#: admin/assets/js/src/component/comment.js:430
+#: admin/assets/js/src/component/comment.js:433
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:793
+msgid "edited at %s"
+msgstr "%s এ সম্পাদিত"
+
+#: admin/assets/js/src/activityCentre.js:805
+#: admin/assets/js/src/activityCentre.js:882
+msgid "edited %s"
+msgstr "%s সম্পাদিত"
+
+#: admin/assets/js/src/component/comment.js:490
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:863
+msgid "Edit your comments..."
+msgstr "আপনার মন্তব্য সম্পাদনা করুন..."
+
+#: admin/partials/commenting-block-settings-page.php:77
+msgid "Email Notification"
+msgstr "ইমেল বিজ্ঞপ্তি"
+
+#: admin/partials/commenting-block-settings-page.php:297
+msgid "Expires"
+msgstr "মেয়াদ শেষ"
+
+#: admin/partials/commenting-block-settings-page.php:82
+msgid "Everything in PLUS"
+msgstr "প্প্লাস তে সবকিছু"
+
+#: admin/partials/commenting-block-settings-page.php:99
+msgid "Everything in PRO"
+msgstr "প্প্রো তে সবকিছু"
+
+#: admin/partials/commenting-block-settings-page.php:222
+msgid "English"
+msgstr "ইংরেজি"
+
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
 msgstr "সমস্ত নতুন মন্তব্যের জন্য উল্লেখ না থাকলেও।"
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "for all posts and pages on my website (Not Recommended)."
+msgstr "আমার ওয়েবসাইটের সমস্ত পোস্ট এবং পৃষ্ঠাগুলির জন্য (প্রস্তাবিত নয়)।"
 
 #: admin/partials/commenting-block-settings-page.php:87
 msgid ""
@@ -82,6 +504,76 @@ msgstr ""
 "আপনার ব্যবসায়ের জন্য এই প্লাগইনটি কাস্টমাইজ করতে প্রিমিয়াম সহায়তা এবং "
 "সহায়তার জন্য চাহিদা."
 
+#: admin/assets/js/src/commenting-block-admin.js:1842
+msgid "few seconds"
+msgstr "কয়েক সেকেন্ডের"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Feedback"
+msgstr "প্রতিক্রিয়া"
+
+#: admin/assets/js/src/activityCentre.js:1082
+#: admin/assets/js/src/activityCentre.js:1305
+msgid "Formatting"
+msgstr "ফরম্যাটিং"
+
+#: admin/partials/commenting-block-settings-page.php:346
+msgid "Floating Comment Toolbar"
+msgstr "ভাসমান মন্তব্য টুলবার"
+
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "for all new comments. (Not Recommended)"
+msgstr "সব নতুন মন্তব্যের জন্য। (প্রস্তাবিত নয়)"
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "for these post categories:"
+msgstr "এই পোস্ট বিভাগের জন্য:"
+
+#: admin/partials/commenting-block-settings-page.php:433
+msgid "for these custom post types:"
+msgstr "এই কাস্টম পোস্ট ধরনের জন্য:"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1327
+msgid "Format"
+msgstr "বিন্যাস"
+
+#: admin/classes/class-commenting-block-settings-table.php:126
+msgid "Filter"
+msgstr "ছাঁকনি"
+
+#: admin/partials/commenting-block-settings-page.php:226
+msgid "French"
+msgstr "ফরাসি"
+
+#: admin/partials/commenting-block-settings-page.php:228
+msgid "German"
+msgstr "জার্মান"
+
+#:admin/partials/commenting-block-website-activity.php:32
+msgid "Go Back"
+msgstr "ফিরে যাও"
+
+#: admin/partials/commenting-block-settings-page.php:99
+msgid "General Settings"
+msgstr "সাধারণ সেটিংস"
+
+#: admin/partials/commenting-block-settings-page.php:363
+msgid "Guide to Setup Email Notifications"
+msgstr "ইমেল বিজ্ঞপ্তি সেটআপ করার জন্য গাইড"
+
+#: admin/partials/commenting-block-settings-page.php:318
+msgid "General"
+msgstr "সাধারণ"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:358
+#: admin/assets/js/src/suggestion/block-extend-control.js:428
+msgid "Gutenberg block alignment suggestions are already available. So you can not add other block alignment suggestions on the same block."
+msgstr "গুটেনবার্গ ব্লক প্রান্তিককরণ পরামর্শ ইতিমধ্যে উপলব্ধ আছে। তাই আপনি একই ব্লকে অন্যান্য ব্লক প্রান্তিককরণ পরামর্শ যোগ করতে পারবেন না।"
+
+#: admin/classes/class-commenting-block-email-templates.php:691
+msgid "has %sed the following suggestion."
+msgstr "নিম্নলিখিত পরামর্শ %s করেছে"
+
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
 msgstr "নিম্নলিখিত থ্রেডটি সমাধান করেছে।"
@@ -89,6 +581,107 @@ msgstr "নিম্নলিখিত থ্রেডটি সমাধান 
 #. Author URI of the plugin
 msgid "https://www.multidots.com/"
 msgstr "https://www.multidots.com/"
+
+#: admin/assets/js/src/activityCentre.js:1028
+msgid "Hide Suggestions"
+msgstr "পরামর্শ লুকান"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1442
+msgid "Highlight"
+msgstr "লক্ষণীয় করা"
+
+#: admin/assets/js/src/activityCentre.js:1041
+msgid "Hide Comments"
+msgstr "মন্তব্য লুকান"
+
+#: admin/partials/commenting-block-settings-page.php:331
+msgid "Hide the"
+msgstr "লুকান"
+
+#: admin/partials/commenting-block-settings-page.php:224
+msgid "Hindi"
+msgstr "হিন্দি"
+
+#: admin/partials/commenting-block-settings-page.php:91
+msgid "Having trouble? Check out our help documentation"
+msgstr "সমস্যা হচ্ছে? আমাদের সাহায্য ডকুমেন্টেশন দেখুন"
+
+#: admin/partials/commenting-block-settings-page.php:92
+msgid "Help Documentation"
+msgstr "সাহায্য ডকুমেন্টেশন"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Help"
+msgstr "সাহায্য"
+
+#: admin/assets/js/src/activityCentre.js:1080
+#: admin/assets/js/src/activityCentre.js:1275
+msgid "Insertions"
+msgstr "সন্নিবেশ"
+
+#: admin/partials/commenting-block-settings-page.php:120
+msgid "Integrations"
+msgstr "ইন্টিগ্রেশন"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "If this option is selected, everyone will be reminded when they try to publish a post that has unresolved comments or pending suggestions. This is useful to alert authors to review the unresolved comments and changes before they Publish the post."
+msgstr "যদি এই বিকল্পটি নির্বাচন করা হয়, অমীমাংসিত মন্তব্য বা মুলতুবি পরামর্শ আছে এমন একটি পোস্ট প্রকাশ করার চেষ্টা করার সময় প্রত্যেককে মনে করিয়ে দেওয়া হবে। এটি লেখকদের পোস্ট প্রকাশ করার আগে অমীমাংসিত মন্তব্য এবং পরিবর্তনগুলি পর্যালোচনা করার জন্য সতর্ক করার জন্য দরকারী।"
+
+#: admin/partials/commenting-block-settings-page.php:413
+msgid "If this option is selected, users will not be able to publish a post with unresolved comments or pending suggestions. This is useful to prevent publishing a post with unresolved comments and pending suggestions."
+msgstr "যদি এই বিকল্পটি নির্বাচন করা হয়, ব্যবহারকারীরা অমীমাংসিত মন্তব্য বা মুলতুবি পরামর্শ সহ একটি পোস্ট প্রকাশ করতে সক্ষম হবেন না৷ অমীমাংসিত মন্তব্য এবং মুলতুবি পরামর্শ সহ একটি পোস্ট প্রকাশ করা প্রতিরোধ করতে এটি কার্যকর।"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1294
+msgid "Italic"
+msgstr "তির্যক"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1297
+msgid "Inline Code"
+msgstr "ইনলাইন কোড"
+
+#: admin/partials/commenting-block-settings-page.php:346
+msgid "in Block Editor."
+msgstr "ব্লক এডিটরে।"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1301
+msgid "Image"
+msgstr "ছবি"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1484
+msgid "Image Size"
+msgstr "ছবির আকার"
+
+#: admin/partials/commenting-block-settings-page.php:151
+msgid "Ivan Ružević"
+msgstr "ইভান রুজেভিচ"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1298
+msgid "Keyboard Input"
+msgstr "কীবোর্ড ইনপুট"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1417
+msgid "Link"
+msgstr "লিঙ্ক"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1478
+msgid "Link Target"
+msgstr "লিঙ্ক টার্গেট"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1304
+msgid "Line Break"
+msgstr "লাইন বিরতি"
+
+#: admin/assets/js/src/activityCentre.js:924
+msgid "Last Edited By"
+msgstr "দ্বারা শেষ সম্পাদিত"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "left"
+msgstr "বাম"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:76
+msgid "Latest Activity"
+msgstr "সর্বশেষ কার্যকলাপ"
 
 #: admin/partials/commenting-block-settings-page.php:37
 msgid "Learn More"
@@ -98,13 +691,99 @@ msgstr "আরও জানুন"
 msgid "Live Demo"
 msgstr "জীবন্ত উদাহরণ"
 
+#: admin/assets/js/src/activityCentre.js:668
+#: admin/assets/js/src/activityCentre.js:1091
+msgid "Loading..."
+msgstr "লোড হচ্ছে..."
+
+#: admin/partials/commenting-block-settings-page.php:217
+msgid "Language Options"
+msgstr "ভাষার বিকল্প"
+
+#: admin/partials/commenting-block-settings-page.php:217
+msgid "Licenses"
+msgstr "লাইসেন্স"
+
+#: admin/partials/commenting-block-settings-page.php:292
+msgid "License Information:"
+msgstr "লাইসেন্স তথ্য:"
+
+#: admin/partials/commenting-block-settings-page.php:296
+msgid "License Status"
+msgstr "লাইসেন্স স্ট্যাটাস"
+
+#: admin/assets/js/src/commenting-block-admin.js:2136
+msgid "level"
+msgstr "স্তর"
+
+#: admin/assets/js/src/component/comment.js:128
+msgid "Link Copied!"
+msgstr "লিঙ্ক কপি করা হয়েছে!"
+
+#: admin/partials/commenting-block-website-activity.php:366
+msgid "Load More"
+msgstr "আর ঢুকাও"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "language. But compatible with these languages and will sync with your selected language for the WordPress Admin area."
+msgstr "ভাষা৷ কিন্তু এই ভাষাগুলির সাথে সামঞ্জস্যপূর্ণ এবং ওয়ার্ডপ্রেস অ্যাডমিন এলাকার জন্য আপনার নির্বাচিত ভাষার সাথে সিঙ্ক হবে৷"
+
+#: admin/assets/js/src/component/comment.js:283
+#: admin/assets/js/src/activityCentre.js:818
+#: admin/assets/js/src/activityCentre.js:837
+msgid "Mark as Resolved"
+msgstr "সমাধান করা হিসাবে চিহ্নিত করুন"
+
+#: admin/assets/js/src/activityCentre.js:820 
+#: admin/partials/commenting-block-website-activity.php:144
+msgid "Marked as Resolved"
+msgstr "সমাধান করা হিসাবে চিহ্নিত"
+
 #: admin/classes/class-commenting-block-email-templates.php:64
 msgid "Marked as resolved by"
 msgstr "হিসাবে সমাধান হিসাবে চিহ্নিত"
 
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "My Account"
+msgstr "আমার অ্যাকাউন্ট"
+
+#: admin/partials/commenting-block-settings-page.php:320
+msgid "Manage Permissions"
+msgstr "অনুমতি পরিচালনা করুন"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab is Default to the"
+msgstr "Multicollab ডিফল্ট হয়"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:110
+msgid "Migration Setting"
+msgstr "মাইগ্রেশন সেটিং"
+
+#: admin/partials/commenting-block-settings-page.php:525
+msgid "Multilingual Options"
+msgstr "বহুভাষিক বিকল্প"
+
+#: admin/partials/commenting-block-settings-page.php:133
+msgid "Mario T. Lanza"
+msgstr "মারিও টি. ল্যাঞ্জা"
+
+#: admin/assets/js/src/component/comment.js:314
+#: admin/assets/js/src/component/comment.js:362
+#: admin/assets/js/src/component/comment.js:379
+msgid "More Options..."
+msgstr "আরও বিকল্প..."
+
+#: admin/partials/commenting-block-settings-page.php:102
+msgid "Multilingual"
+msgstr "বহুভাষিক"
+
 #. Name of the plugin
 msgid "Multicollab"
 msgstr "Multicollab"
+
+#. Description of the Plugin
+msgid "A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress."
+msgstr "A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress."
 
 #: admin/partials/commenting-block-settings-page.php:13
 msgid "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
@@ -114,35 +793,375 @@ msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 msgid "multidots"
 msgstr "multidots"
 
+#: admin/partials/commenting-block-settings-page.php:220
+msgid "Multicollab supports these languages."
+msgstr "Multicollab এই ভাষা সমর্থন করে."
+
+#: admin/classes/class-commenting-block-email-templates.php:296
+#: admin/classes/class-commenting-block-email-templates.php:579
+msgid "Mentioned you in a comment in the following page."
+msgstr "নিম্নলিখিত পৃষ্ঠায় একটি মন্তব্য আপনাকে উল্লেখ."
+
 #: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr "কোন মন্তব্য পাওয়া যায় নি।"
 
-#: admin/partials/commenting-block-settings-page.php:45
-msgid "Notification Setting"
-msgstr "বিজ্ঞপ্তি সেটিং"
+#: admin/assets/js/src/commenting-block-admin.js:121
+msgid "No"
+msgstr "না"
+
+#: admin/partials/commenting-block-settings-page.php:104
+#: admin/partials/commenting-block-settings-page.php:231
+msgid "Notification Settings"
+msgstr "বিজ্ঞপ্তি সেটিংস"
+
+#: admin/partials/commenting-block-settings-page.php:236
+msgid "Notifications"
+msgstr "বিজ্ঞপ্তি"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "Notify site admin"
 msgstr "সাইট প্রশাসককে অবহিত করুন"
 
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "Notify"
+msgstr "অবহিত"
+
+#: admin/classes/class-commenting-block-activities.php:280
+#: admin/partials/commenting-block-settings-page__premium_only.php:63
+msgid "No activities found."
+msgstr "কোন কার্যক্রম পাওয়া যায়নি।"
+
+#: admin/classes/class-commenting-block-activities.php:283
+msgid "No more activities."
+msgstr "আর কোনো কার্যক্রম নেই।"
+
+#: admin/assets/js/src/activityCentre.js:662
+msgid "No recent activities found!"
+msgstr "কোন সাম্প্রতিক কার্যকলাপ পাওয়া যায়নি!"
+
+#: admin/classes/class-commenting-block-email-templates.php:356
+#: admin/classes/class-commenting-block-email-templates.php:387
+#: admin/classes/class-commenting-block-email-templates.php:405
+#: admin/classes/class-commenting-block-email-templates.php:423
+msgid "New Comment"
+msgstr "নতুন মন্তব্য"
+
+#: admin/classes/class-commenting-block-email-templates.php:615
+#: admin/classes/class-commenting-block-email-templates.php:636
+msgid "New Suggestion"
+msgstr "নতুন সাজেশন"
+
+#: admin/classes/class-commenting-block-email-templates.php:617
+#: admin/classes/class-commenting-block-email-templates.php:638
+msgid "New Comment on Suggestion"
+msgstr "পরামর্শের উপর নতুন মন্তব্য"
+
+#: admin/assets/js/src/activityCentre.js:1066
+#: admin/assets/js/src/activityCentre.js:1156
+msgid "Open Comments"
+msgstr "মন্তব্য খুলুন"
+
+#: admin/assets/js/src/activityCentre.js:1077
+#: admin/assets/js/src/activityCentre.js:1235
+msgid "Open Suggestions"
+msgstr "সাজেশন খুলুন"
+
+#:admin/classes/class-commenting-block-activities.php:119
+#: admin/classes/class-commenting-block-email-templates.php:285
+#: admin/classes/class-commenting-block-email-templates.php:308
+msgid "Open"
+msgstr "খোলা"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:493
+#: admin/assets/js/src/suggestion/block-extend-control.js:501
+msgid "One suggestion is already available on selected text. So you can not add other suggestions to the same text."
+msgstr "একটি প্রস্তাবনা ইতিমধ্যেই নির্বাচিত পাঠ্যে উপলব্ধ। তাই আপনি একই টেক্সট অন্যান্য পরামর্শ যোগ করতে পারবেন না।"
+
+#: admin/partials/commenting-block-settings-page.php:55
+#: admin/partials/commenting-block-settings-page.php:74
+msgid "or start 14-day free trial"
+msgstr "অথবা 14-দিনের বিনামূল্যে ট্রায়াল শুরু করুন"
+
+#: admin/assets/js/dist/suggestion-comment.js:79
+msgid "Please edit your comment."
+msgstr "সংরক্ষণ করার আগে পাঠ্য সম্পাদনা করুন!"
+
+#: admin/assets/js/src/nonTextblock.js:75
+msgid "Please select block/image to comment on."
+msgstr "মন্তব্য করতে ব্লক/ছবি নির্বাচন করুন."
+
+#: admin/assets/js/dist/block.build.min.js:56440
+msgid "Please select a block, text or media to comment on."
+msgstr "মন্তব্য করতে পাঠ্য নির্বাচন করুন."
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:419
+msgid "Please select a channel"
+msgstr "একটি চ্যানেল নির্বাচন করুন"
+
+#: admin/assets/js/dist/block.build.min.js:57233 
+#: admin/assets/js/dist/block.build.min.js:57628 
+#: admin/assets/js/dist/block.build.min.js:57658 
+#: admin/assets/js/dist/block.build.min.js:60412 
+#: admin/assets/js/dist/block.build.min.js:60657
+msgid "Please add some comment. "
+msgstr "শেয়ার করার জন্য একটি মন্তব্য লিখুন!"
+
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
 msgstr "প্লাগিন বিকাশকারী"
+
+#: admin/settings/settings-suggestion-mode.php:53
+msgid "Please select a category"
+msgstr "একটি বিভাগ নির্বাচন করুন"
+
+#: admin/settings/settings-suggestion-mode.php:99
+msgid "Please select a post type"
+msgstr "একটি পোস্টের ধরন নির্বাচন করুন"
+
+#: admin/settings/settings-suggestion-mode.php:7
+msgid "Please select any option to save!"
+msgstr "সংরক্ষণ করার জন্য কোনো বিকল্প নির্বাচন করুন!"
+
+#: admin/assets/js/dist/block.build.min.js:57372
+msgid "Post Comment"
+msgstr "মন্তব্য প্রকাশ করুন"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:34
+msgid "Permissions"
+msgstr "অনুমতি"
+
+#: admin/partials/commenting-block-settings-page.php:264
+msgid "Please renew your license key."
+msgstr "আপনার লাইসেন্স কী পুনর্নবীকরণ করুন."
+
+#: admin/partials/commenting-block-settings-page.php:320
+msgid "Premium"
+msgstr "প্রিমিয়াম"
+
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "Please enter the license key that you received in the email right after the purchase. OR You can access your licenses anytime from the"
+msgstr "অনুগ্রহ করে ক্রয়ের পরেই আপনি ইমেলে প্রাপ্ত লাইসেন্স কীটি লিখুন৷ অথবা আপনি যেকোনো সময় থেকে আপনার লাইসেন্স অ্যাক্সেস করতে পারেন"
+
+#: admin/classes/class-commenting-block-settings-table.php:113
+msgid "Pages"
+msgstr "পাতা"
+
+#: admin/classes/class-commenting-block-settings-table.php:114
+msgid "Posts"
+msgstr "পোস্ট"
+
+#: admin/partials/commenting-block-settings-page.php:46
+msgid "PRO"
+msgstr "প্প্রো"
+
+#: admin/partials/commenting-block-settings-page.php:64
+msgid "PLUS"
+msgstr "প্প্লাস"
+
+#: admin/partials/commenting-block-settings-page.php:59
+msgid "Pro Support"
+msgstr "প্প্রো সমর্থন"
+
+#: admin/partials/commenting-block-settings-page.php:78
+msgid "Plus Support"
+msgstr "প্প্লাস সমর্থন"
+
+#: admin/partials/commenting-block-settings-page.php:301
+msgid "Permissions saved!"
+msgstr "অনুমতি সংরক্ষিত!"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "publish the post."
+msgstr "তারা পোস্ট প্রকাশ করতে পারেন।"
+
+#: admin/partials/commenting-block-settings-page.php:295
+msgid "Plan"
+msgstr "পরিকল্পনা"
+
+#: admin/partials/commenting-block-settings-page.php:385
+msgid "Publishing"
+msgstr "প্রকাশনা"
+
+#: admin/classes/class-commenting-block-admin.php:936
+msgid "Reassigned to"
+msgstr "আবার নিয়োগ করা হয়েছে"
+
+#: admin/assets/js/src/component/board.js:269
+msgid "Reassigned to You"
+msgstr "আপনাকে পুনরায় নিয়োগ করা হয়েছে"
+
+#: admin/assets/js/src/component/board.js:391
+msgid "Reassigned to %s"
+msgstr "%s পুনরায় নিয়োগ করা হয়েছে"
+
+#: admin/assets/js/src/commenting-block-admin.js:1224
+msgid "Reassign to"
+msgstr "পুনরায় বরাদ্দ করুন"
+
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:537
+msgid "Reject suggestion"
+msgstr "প্রস্তাব প্রত্যাখ্যান করুন"
+
+#: admin/classes/class-commenting-block-email-templates.php:1115
+msgid "reject"
+msgstr "প্রত্যাখ্যান"
+
+#: admin/assets/js/src/activityCentre.js:1079
+#: admin/assets/js/src/activityCentre.js:1261
+msgid "Rejected Suggestions"
+msgstr "প্রত্যাখ্যান প্রস্তাব"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Reports"
+msgstr "রিপোর্ট"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "right"
+msgstr "ডান"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1385
+msgid "Remove Link with URL"
+msgstr "URL সহ লিঙ্ক সরান"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1475
+msgid "Replace"
+msgstr "প্রতিস্থাপন করুন"
 
 #: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
 msgstr "জবাব দিল"
 
+#: admin/partials/commenting-block-website-activity.php:322
+msgid "replies"
+msgstr "উত্তর"
+
+#: admin/assets/js/src/component/board.js:443
+#: admin/assets/js/src/activityCentre.js:798
+#: admin/assets/js/src/activityCentre.js:808
+#: admin/assets/js/src/activityCentre.js:828
+msgid "Reply"
+msgstr "উত্তর দিন"
+
+#: admin/assets/js/src/component/board.js:446
+msgid "Reply or add others with @"
+msgstr "@ এর সাথে উত্তর দিন বা অন্যদের যোগ করুন"
+
+#: admin/assets/js/src/suggestion/suggestion-board.js:211
+#: admin/assets/js/src/suggestion/suggestion-board.js:251
+msgid "Reply to comment"
+msgstr "মন্তব্য উত্তর"
+
+#: admin/partials/commenting-block-website-activity.php:334
+#: admin/assets/js/src/activityCentre.js:799
+#: admin/assets/js/src/activityCentre.js:809
+#: admin/assets/js/src/activityCentre.js:829
+msgid "Reply to this comment"
+msgstr "এই মন্তব্য উত্তর"
+
+#: admin/assets/js/src/activityCentre.js:537
+msgid "Resolve"
+msgstr "সমাধান করুন"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Resolve this thread?"
+msgstr "এই থ্রেড সমাধান?"
+
+#: admin/partials/commenting-block-activities.php:120
+#: admin/classes/class-commenting-block-activities.php:120
+#: admin/assets/js/src/component/comment.js:300
+#: admin/assets/js/src/component/comment.js:310
+msgid "Resolved"
+msgstr "সমাধান করা হয়েছে"
+
+#: admin/assets/js/src/activityCentre.js:1067
+#: admin/assets/js/src/activityCentre.js:1170
+msgid "Resolved Comments"
+msgstr "সমাধান করা মন্তব্য"
+
 #: admin/classes/class-commenting-block-admin.php:790
 msgid "resolved thread"
 msgstr "সমাধান থ্রেড"
 
+#: admin/classes/class-commenting-block-settings-table.php:20
+msgid "Recent Activities"
+msgstr "সাম্প্রতিক কার্যক্রম"
+
+#: admin/assets/js/src/activityCentre.js:1018
+msgid "Reject All Suggestions"
+msgstr "সমস্ত পরামর্শ প্রত্যাখ্যান করুন"
+
+#: admin/assets/js/src/activityCentre.js:656
+msgid "Review All Suggestions"
+msgstr "সমস্ত পরামর্শ পর্যালোচনা করুন"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Reject All Edits"
+msgstr "সমস্ত সম্পাদনা প্রত্যাখ্যান করুন"
+
+#: admin/classes/class-commenting-block-settings-table.php:127
+msgid "Reset Filter"
+msgstr "ফিল্টার রিসেট করুন"
+
+#: admin/partials/commenting-block-settings-page.php:338
+msgid "reminder in Block Editor."
+msgstr "ব্অনুস্মারক লক এডিটরে।"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "Remind"
+msgstr "মনে করিয়ে দিন"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:147
+msgid "Roles"
+msgstr "ভূমিকা"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:149
+msgid "Resolve Comment"
+msgstr "মন্তব্য সমাধান"
+
+#: admin/assets/js/src/activityCentre:642
+msgid "Review suggested edits"
+msgstr "প্রস্তাবিত সম্পাদনা পর্যালোচনা করুন"
+
+#: admin/assets/js/src/activityCentre.js:645
+msgid "Review Suggestions"
+msgstr "পর্যালোচনা পরামর্শ"
+
+#: admin/partials/commenting-block-settings-page.php:229
+msgid "Run Test"
+msgstr "পরীক্ষা চালান"
+
+#: admin/assets/js/src/activityCentre:660
+msgid "Reject All"
+msgstr "সকলকে প্রত্যাখ্যান করুন"
+
 #: admin/partials/commenting-block-settings-page.php:60
+#: admin/assets/js/src/component/comment.js:511
 msgid "Save Changes"
 msgstr "পরিবর্তনগুলোর সংরক্ষন"
 
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1295
+msgid "Superscript"
+msgstr "সুপারস্ক্রিপ্ট"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1296
+msgid "Subscript"
+msgstr "সাবস্ক্রিপ্ট"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1299
+msgid "Strikethrough"
+msgstr "স্ট্রাইকথ্রু"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1233
+msgid "Space"
+msgstr "স্থান"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1233
+msgid "times)"
+msgstr "বার)"
+
 #: admin/partials/commenting-block-settings-page.php:21
+#: admin/assets/js/src/activityCentre.js:646
 msgid "Settings"
 msgstr "সেটিংস"
 
@@ -150,9 +1169,191 @@ msgstr "সেটিংস"
 msgid "Settings saved!"
 msgstr "সেটিংস সংরক্ষিত!"
 
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Save Draft"
+msgstr "খসড়া সংরক্ষণ"
+
+#: admin/partials/commenting-block-settings-page.php:338
+msgid "Save Draft Comment"
+msgstr "খসড়া মন্তব্য সংরক্ষণ করুন"
+
+#: admin/partials/commenting-block-settings-page.php:385
+msgid "Suggestion Mode"
+msgstr "সাজেশন মোড"
+
+#: admin/assets/js/src/component/comment.js:300
+msgid "Share"
+msgstr "শেয়ার করুন"
+
+#: admin/partials/commenting-block-webiste-activity.php:259
+#: admin/assets/js/src/activityCentre.js:118
+#: admin/assets/js/src/activityCentre.js:729
+#: admin/assets/js/src/activityCentre.js:744
+msgid "Show all"
+msgstr "সব দেখাও"
+
+#: admin/assets/js/src/activityCentre.js:930
+#: admin/assets/js/src/suggestion/suggestion-board.js:187
+msgid "Show all %d replies"
+msgstr "সমস্ত %dটি উত্তর দেখান"
+
+#: admin/assets/js/src/component/comment.js:342
+msgid "show less"
+msgstr "প্রদর্শন কম"
+
+#: admin/assets/js/src/component/comment.js:341
+msgid "show more"
+msgstr "আরো দেখুন"
+
+#: admin/assets/js/src/activityCentre.js:808 
+#: admin/partials/commenting-block-website-activity.php:87
+#: admin/classes/class-commenting-block-email-templates.php:701
+#: admin/classes/class-commenting-block-functions:146
+msgid "Suggestion Accepted"
+msgstr "প্রস্তাবনা গৃহীত"
+
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "Super Admin"
+msgstr "সুপার অ্যাডমিন"
+
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "section on the Multicollab website"
+msgstr "Multicollab ওয়েবসাইটে বিভাগ"
+
+#: admin/assets/js/src/activityCentre.js:814 
+#: admin/partials/commenting-block-website-activity.php:87
+#: admin/classes/class-commenting-block-email-templates.php:704
+#: admin/classes/class-commenting-block-functions:146
+msgid "Suggestion Rejected"
+msgstr "প্রস্তাব প্রত্যাখ্যান"
+
+#: admin/classes/class-commenting-block-email-templates.php:734
+msgid "Suggestion Resolved"
+msgstr "প্রস্তাবনা সমাধান করা হয়েছে"
+
+#: admin/assets/js/src/block.js:631
+msgid "Suggestion Mode is ON"
+msgstr "সাজেশন মোড চালু আছে"
+
+#: admin/assets/js/src/block.js:648
+msgid "Suggestion Mode is OFF"
+msgstr "সাজেশন মোড বন্ধ আছে"
+
+#: admin/assets/js/src/block.js:629
+msgid "Suggestion Mode only works with Paragraph and Heading Block."
+msgstr "সাজেশন মোড শুধুমাত্র অনুচ্ছেদ এবং শিরোনাম ব্লকের সাথে কাজ করে।"
+
+#: admin/assets/js/src/activityCentre.js:599
+msgid "Suggestions are Hidden"
+msgstr "পরামর্শ লুকানো হয়"
+
+#: admin/assets/js/src/activityCentre.js:619
+msgid "Suggestions Accepted"
+msgstr "পরামর্শ গৃহীত"
+
+#: admin/assets/js/src/activityCentre.js:639
+msgid "Suggestions Rejected"
+msgstr "প্রস্তাবনা প্রত্যাখ্যাত"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "Stop"
+msgstr "থামো"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "stop them from publishing it."
+msgstr "তাদের এটি প্রকাশ করা থেকে বিরত রাখুন।"
+
+#: admin/assets/js/src/activityCentre.js:651
+msgid "Summary"
+msgstr "সারসংক্ষেপ"
+
+#: admin/assets/js/src/activityCentre.js:1000
+msgid "Suggest Edits"
+msgstr "সম্পাদনার পরামর্শ দিন"
+
+#: admin/partials/commenting-block-settings-page.php:83
+msgid "Suggest Edits (Track Changes)"
+msgstr "সম্পাদনার পরামর্শ দিন (ট্র্যাক পরিবর্তন)"
+
+#: admin/partials/commenting-block-settings-page.php:100
+msgid "Slack Integration"
+msgstr "স্ল্যাক ইন্টিগ্রেশন"
+
+#: admin/assets/js/src/activityCentre.js:1003
+msgid "Suggestion Mode works only with a draft page or post."
+msgstr "সাজেশন মোড শুধুমাত্র একটি খসড়া পৃষ্ঠা বা পোস্টের সাথে কাজ করে।"
+
+#: admin/assets/js/src/activityCentre.js:1072
+msgid "Suggestions"
+msgstr "পরামর্শ"
+
+#: admin/assets/js/src/component/comment.js:499
+msgid "Save"
+msgstr "সংরক্ষণ"
+
+#: admin/partials/commenting-block-settings-page.php:199
+msgid "Show draft Info board"
+msgstr "খসড়া তথ্য বোর্ড দেখান"
+
+#: admin/assets/js/src/activityCentre.js:658
+msgid "Suggestions are Visible"
+msgstr "পরামর্শ দৃশ্যমান হয়"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:585
+msgid "Something went wrong!. Kindly Please save, refresh and then try again."
+msgstr "কিছু ভুল হয়েছে!. দয়া করে সংরক্ষণ করুন, রিফ্রেশ করুন এবং তারপর আবার চেষ্টা করুন।"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:935
+#: admin/assets/js/src/suggestion/block-extend-control.js:940
+#: admin/assets/js/src/suggestion/block-extend-control.js:945
+#: admin/assets/js/src/suggestion/block-extend-control.js:987
+#: admin/assets/js/src/suggestion/block-extend-control.js:1037
+#: admin/assets/js/src/suggestion/block-extend-control.js:1049
+msgid "Suggestions over suggestion are restricted!"
+msgstr "পরামর্শের উপর পরামর্শ সীমাবদ্ধ!"
+
+#: admin/partials/commenting-block-settings-page.php:57
+msgid "Suggestion Mode (Track Changes)"
+msgstr "সাজেশন মোড (ট্র্যাক পরিবর্তন)"
+
+#: admin/partials/commenting-block-settings-page.php:134
+msgid "Sr. Web Developer"
+msgstr "সিনিয়র ওয়েব ডেভেলপার"
+
+#: admin/assets/js//commenting-block-admin.js:1254
+msgid "Sorry! No user found!"
+msgstr "দুঃখিত! কোন ব্যবহারকারী পাওয়া যায়নি!"
+
+#: admin/partials/commenting-block-settings-page.php:209
+msgid "Slack"
+msgstr "স্ল্যাক"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "Slack Channel Notifications"
+msgstr "স্ল্যাক চ্যানেল বিজ্ঞপ্তি"
+
+#: admin/partials/commenting-block-settings-page.php:355
+msgid "Slack Settings"
+msgstr "স্ল্যাক সেটিংস"
+
+#: admin/partials/commenting-block-settings-page.php:225
+msgid "Spanish"
+msgstr "স্পেনীয়"
+
+#: admin/partials/commenting-block-settings-page.php:212
+msgid "Setup integration between WordPress and Slack."
+msgstr "ওয়ার্ডপ্রেস এবং স্ল্যাক মধ্যে সেটআপ ইন্টিগ্রেশন।"
+
 #: admin/partials/commenting-block-settings-page.php:27
 msgid "Thanks for installing Google Doc-Style Editorial Commenting Plugin."
 msgstr "গুগল ডক-স্টাইল সম্পাদকীয় মন্তব্য প্লাগইন ইনস্টল করার জন্য ধন্যবাদ।"
+
+#: admin/assets/js/commenting-block-admin.js:1162
+msgid ""
+"The Assigned person will be notified and responsible for marking as done."
+msgstr ""
+"অর্পিত ব্যক্তিকে অবহিত করা হবে এবং সম্পন্ন হিসাবে চিহ্নিত করার জন্য দায়ী "
+"করা হবে৷"
 
 #. Description of the plugin
 msgid ""
@@ -162,11 +1363,259 @@ msgstr ""
 "এই প্লাগইনটি এর মধ্যে গুগল ডক্সের মতো মন্তব্য বৈশিষ্ট্য সরবরাহ "
 "করেগুটেনবার্গের সম্পাদক!"
 
+#: admin/assets/js/src/activityCentre.js:1065
+#: admin/assets/js/src/activityCentre.js:1143
+msgid "Total Comments"
+msgstr "মোট মন্তব্য"
+
+#: admin/assets/js/src/activityCentre.js:1076
+#: admin/assets/js/src/activityCentre.js:1222
+msgid "Total Suggestions"
+msgstr "মোট পরামর্শ"
+
+#: admin/classes/class-commenting-block-activities.php:121
+#: admin/assets/js/src/commenting-block-admin.js:1848
+#: admin/assets/js/src/commenting-block-admin.js:1884
+msgid "Total"
+msgstr "মোট"
+
+#: admin/partials/commenting-block-settings-page.php:88
+msgid "Technical Help"
+msgstr "প্রযুক্তিগত সাহায্য"
+
+#: admin/assets/js//commenting-block-admin.js:2490
+msgid "There are a few pending suggestions or comments in this post. Do you still want to publish the post?"
+msgstr "এই পোস্টে কিছু মুলতুবি পরামর্শ বা মন্তব্য আছে. আপনি কি এখনও পোস্টটি প্রকাশ করতে চান?"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "to apply comments/suggestions."
+msgstr "মন্তব্য/পরামর্শ প্রয়োগ করতে।"
+
+#: admin/assets/js/src/commenting-block-admin.js:2088
+msgid "to apply changes."
+msgstr "পরিবর্তন প্রয়োগ করতে।"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "to save comments."
+msgstr "মন্তব্য সংরক্ষণ করতে।"
+
+#: admin/classes/class-commenting-block-settings-table.php:17
+msgid "Title"
+msgstr "শিরোনাম"
+
+#: admin/partials/commenting-block-webiste-activity.php:101
+msgid "Today"
+msgstr "আজ"
+
+#: admin/partials/commenting-block-settings-page.php:228
+msgid "Test Integration"
+msgstr "টেস্ট ইন্টিগ্রেশন"
+
+#: admin/assets/js/dist/block.build.min.js:56051 
+#: admin/assets/js/dist/block.build.min.js:56125
+msgid "The comment you are trying to access has been closed!"
+msgstr "আপনি অ্যাক্সেস করার চেষ্টা করছেন মন্তব্য বন্ধ!"
+
+#: admin/partials/commenting-block-settings-page.php:129
+msgid "This an easy-to-use plugin—the best one I’m aware of—for those who have an editorial process. My wife is a blogger and I’m her editor. We’ve only begun taking advantage of it but I wanted to offer a positive shout out."
+msgstr "এটি একটি সহজে-ব্যবহারযোগ্য প্লাগইন—যাদের সম্পাদকীয় প্রক্রিয়া আছে তাদের জন্য সর্বোত্তম প্লাগইন যা সম্পর্কে আমি সচেতন। আমার স্ত্রী একজন ব্লগার এবং আমি তার সম্পাদক। আমরা কেবল এটির সুবিধা নেওয়া শুরু করেছি তবে আমি একটি ইতিবাচক চিৎকার দিতে চেয়েছিলাম।"
+
+#: admin/partials/commenting-block-settings-page.php:147
+msgid "This is exactly what I was looking for. This plugin works flawlessly. Great job."
+msgstr "এটা ঠিক কি আমি খুঁজছিলাম. এই প্লাগইন নির্দোষভাবে কাজ করে। দারূন কাজ."
+
+#: admin/settings/settings-general.php:17
+msgid "This column will disappear from the Post List if this is checked."
+msgstr "এই কলামটি পোস্ট তালিকা থেকে অদৃশ্য হয়ে যাবে যদি এটি চেক করা হয়।"
+
+#: admin/settings/settings-general.php:30
+msgid "This reminder will disappear from the Block Editor if this is checked."
+msgstr "এই অনুস্মারকটি ব্লক সম্পাদক থেকে অদৃশ্য হয়ে যাবে যদি এটি চেক করা হয়।"
+
+#: admin/settings/settings-general.php:54
+msgid "This floating toolbar to add quick comments and suggestions will disappear from the Block Editor if this is checked."
+msgstr "দ্রুত মন্তব্য এবং পরামর্শ যোগ করার জন্য এই ভাসমান টুলবারটি ব্লক এডিটর থেকে অদৃশ্য হয়ে যাবে যদি এটি চেক করা হয়।"
+
+#: admin/partials/commenting-block-settings-page.php:165
+msgid "The plug-in an awesome. It works fantastic. It is one of the great features of our platform.The plug-in an awesome. It works fantastic. It is one of the great features of our platform."
+msgstr "প্লাগ-ইন একটি দুর্দান্ত। এটা চমত্কার কাজ করে. এটি আমাদের প্ল্যাটফর্মের একটি দুর্দান্ত বৈশিষ্ট্য। প্লাগ-ইন একটি দুর্দান্ত। এটা চমত্কার কাজ করে. এটি আমাদের প্ল্যাটফর্মের একটি দুর্দান্ত বৈশিষ্ট্য।"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1303
+msgid "Text Color"
+msgstr "লেখার রঙ"
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "Turn ON"
+msgstr "চালু করা"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1475
+msgid "to"
+msgstr "প্রতি"
+
+#: admin/assets/js/src/activityCentre.js:1069
+#: admin/assets/js/src/activityCentre.js:1083
+#: admin/assets/js/src/activityCentre.js:1185
+#: admin/assets/js/src/activityCentre.js:1320
+msgid "Users Collaboration"
+msgstr "ব্যবহারকারীদের সহযোগিতা"
+
+#: admin/assets/js/src/component/board.js:493
+msgid "Unknown User"
+msgstr "অপরিচিত ব্যবহারকারী"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1300
+msgid "Underline"
+msgstr "আন্ডারলাইন করুন"
+
+#: admin/partials/commenting-block-settings-page.php:52
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Upgrade"
+msgstr "আপগ্রেড করুন"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "unsaved comments."
+msgstr "অসংরক্ষিত মন্তব্য."
+
 #: admin/partials/commenting-block-settings-page.php:79
 msgid "Visit Site"
 msgstr "সাইট দেখুন"
+
+#: admin/partials/commenting-block-settings-page.php:90
+msgid "VIP"
+msgstr "ভিআইপি"
+
+#: admin/partials/commenting-block-settings-page.php:103
+msgid "VIP Support"
+msgstr "ভিআইপি সমর্থন"
+
+#: admin/partials/commenting-block-settings-page.php:22
+#: admin/partials/commenting-block-settings-page__premium_only.php:23
+msgid "Version 3.0.1"
+msgstr "সংস্করণ 3.0.1"
 
 #: admin/partials/commenting-block-settings-page.php:78
 msgid "WordPress Development Experts & WordPress VIP Partner Agency"
 msgstr ""
 "ওয়ার্ডপ্রেস ডেভলপমেন্ট এক্সপার্টস এবং ওয়ার্ডপ্রেস ভিআইপি পার্টনার এজেন্সি"
+
+#: admin/assets/js/src/activityCentre.js:1031
+msgid "When enabled, all the notification boxes for suggested edits will disappear to provide a non-distracted editing experience. You can continue to track your edits."
+msgstr "সক্রিয় করা হলে, প্রস্তাবিত সম্পাদনাগুলির জন্য সমস্ত বিজ্ঞপ্তি বাক্সগুলি একটি অ-বিক্ষিপ্ত সম্পাদনা অভিজ্ঞতা প্রদান করতে অদৃশ্য হয়ে যাবে৷ আপনি আপনার সম্পাদনাগুলি ট্র্যাক করা চালিয়ে যেতে পারেন৷"
+
+#: admin/assets/js/src/activityCentre.js:1043
+msgid "When enabled, all the comment boxes will disappear to provide a non-distracted editing experience. You can still add a comment to your post."
+msgstr "সক্রিয় করা হলে, একটি অ-বিক্ষিপ্ত সম্পাদনা অভিজ্ঞতা প্রদান করতে সমস্ত মন্তব্য বাক্স অদৃশ্য হয়ে যাবে৷ আপনি এখনও আপনার পোস্টে একটি মন্তব্য যোগ করতে পারেন."
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "When an author tries to Publish a post with pending comments or suggestions, alert and remind them about it, but they can"
+msgstr "যখন একজন লেখক মুলতুবি মন্তব্য বা পরামর্শ সহ একটি পোস্ট প্রকাশ করার চেষ্টা করেন, তখন তাদের সতর্ক করুন এবং এটি সম্পর্কে মনে করিয়ে দিন, কিন্তু তারা করতে পারেন"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "When an author tries to publish a post with pending comments or suggestions, remind them about it and"
+msgstr "যখন একজন লেখক মুলতুবি মন্তব্য বা পরামর্শ সহ একটি পোস্ট প্রকাশ করার চেষ্টা করেন, তখন তাদের এটি সম্পর্কে মনে করিয়ে দিন এবং"
+
+#: admin/partials/commenting-block-settings-page.php:152
+msgid "WordPress Team Lead"
+msgstr "ওয়ার্ডপ্রেস টিম লিড"
+
+#: admin/partials/commenting-block-settings-page.php:220
+msgid "Webhook URL"
+msgstr "ওয়েবহুক ইউআরএল"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1418
+msgid "with URL"
+msgstr "URL সহ"
+
+#: admin/assets/js/src/commenting-block-admin.js:115
+msgid "Yes"
+msgstr "হ্যাঁ"
+
+#: admin/assets/js/dist/block.build.min.js:58295
+msgid "Multiple comments are not possible on the same block"
+msgstr "আপনি একই ব্লকে একাধিক মন্তব্য দিতে পারবেন না।"
+
+#: admin/assets/js/dist/block.build.min.js:56458
+msgid "Multiple comments are not possible on the same block."
+msgstr "আপনি একই টেক্সট একাধিক মন্তব্য দিতে পারবেন না."
+
+#: admin/assets/js/dist/block.build.min.js:56453
+msgid "Multiple comments are not possible on the same block."
+msgstr "আপনি ইতিমধ্যে একটি শব্দের মন্তব্য দিয়েছেন!"
+
+#: admin/assets/js/commenting-block-admin.js:1162
+msgid "Your @mention will add people to this discussion and send an email."
+msgstr "আপনার @উল্লেখ লোকেদের এই আলোচনায় যোগ করবে এবং একটি ইমেল পাঠাবে।"
+
+#: admin/assets/js/src/activityCentre.js:1003
+msgid "You can suggest changes to a post without changing the original text with the suggesting-edit feature. When enabled, any changes to this post will be highlighted to review by the post’s author."
+msgstr "আপনি সাজেস্টিং-এডিট ফিচারের মাধ্যমে মূল লেখা পরিবর্তন না করেই একটি পোস্টে পরিবর্তনের পরামর্শ দিতে পারেন। সক্রিয় করা হলে, এই পোস্টের যেকোনো পরিবর্তন পোস্টের লেখক দ্বারা পর্যালোচনা করার জন্য হাইলাইট করা হবে।"
+
+#: admin/assets/js/src/activityCentre.js:615
+#: admin/assets/js/src/activityCentre.js:622
+msgid "You are not Authorised to view this..."
+msgstr "আপনি এটি দেখার জন্য অনুমোদিত নন..."
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:1046
+msgid "You can not give multiple suggestions on the same Text."
+msgstr "আপনি একই পাঠ্যে একাধিক পরামর্শ দিতে পারবেন না।"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:527
+#: admin/assets/js/src/suggestion/block-extend-control.js:538
+msgid "Your last action has generated unexpected output. So that is why you face some issues like breaking the editing block."
+msgstr "আপনার শেষ ক্রিয়াটি অপ্রত্যাশিত আউটপুট তৈরি করেছে৷ তাই আপনি সম্পাদনা ব্লক ভাঙ্গা মত কিছু সমস্যার সম্মুখীন কেন."
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:573
+msgid "Your HTML return output is not valid. It may break or faced some issue of editing Gutenberg block."
+msgstr "আপনার HTML রিটার্ন আউটপুট বৈধ নয়। এটি গুটেনবার্গ ব্লক সম্পাদনা করার কিছু সমস্যার সম্মুখীন হতে পারে।"
+
+#: admin/classes/class-commenting-block-email-templates.php:347
+#: admin/classes/class-commenting-block-email-templates.php:378
+#: admin/classes/class-commenting-block-email-templates.php:399
+#: admin/classes/class-commenting-block-email-templates.php:608
+msgid "You have been mentioned"
+msgstr "আপনি উল্লেখ করা হয়েছে"
+
+#: admin/assets/js/src/component/board.js:288
+msgid "You"
+msgstr "আপনি"
+
+#: admin/partials/commenting-block-webiste-activity.php:103
+#: admin/assets/js/src/commenting-block-admin.js:1876
+msgid "Yesterday"
+msgstr "গতকাল"
+
+#: admin/partials/commenting-block-settings-page.php:264
+msgid "Your license key expires on"
+msgstr "আপনার লাইসেন্স কী মেয়াদ শেষ হয়"
+
+#: admin/assets/js//commenting-block-admin.js:2530
+msgid "You can't publish this post before resolving all suggestions or comments. Please review and resolve all open suggestions and comments before moving forward."
+msgstr "আপনি এটিতে মুলতুবি মন্তব্য বা পরামর্শ সহ পোস্টটি প্রকাশ করতে পারবেন না। এটি প্রকাশ করার আগে সমস্ত মন্তব্য এবং পরামর্শ পর্যালোচনা করুন এবং সমাধান করুন."
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "You have"
+msgstr "তোমার আছে"
+
+#: admin/partials/commenting-block-settings-page.php:106
+msgid "You are fully protected by our 100% Money Back Guarantee. If you don’t like our products over the next 14 days, then we will gladly refund your money. No questions asked!"
+msgstr "আপনি আমাদের 100% মানি ব্যাক গ্যারান্টি দ্বারা সম্পূর্ণ সুরক্ষিত। আপনি যদি পরবর্তী 14 দিনের মধ্যে আমাদের পণ্যগুলি পছন্দ না করেন, তাহলে আমরা আনন্দের সাথে আপনার অর্থ ফেরত দেব। কোন প্রশ্ন করা হয়নি!"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "You will get real-time updates for mentions, replies, and other comment activities of Multicollab in your Slack channel. It allows you to fit Multicollab in a place you know your team is checking all day."
+msgstr "আপনি আপনার স্ল্যাক চ্যানেলে মাল্টিকল্যাবের উল্লেখ, উত্তর এবং অন্যান্য মন্তব্য কার্যকলাপের জন্য রিয়েল-টাইম আপডেট পাবেন। এটি আপনাকে এমন একটি জায়গায় মাল্টিকল্যাব ফিট করতে দেয় যা আপনি জানেন যে আপনার দল সারাদিন পরীক্ষা করছে।"
+
+#:
+msgid "AM"
+msgstr "এএম"
+
+#:
+msgid "am"
+msgstr "এএম"
+
+#:
+msgid "PM"
+msgstr "পিএম"
+
+#:
+msgid "pm"
+msgstr "পিএম"

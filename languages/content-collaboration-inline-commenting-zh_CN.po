@@ -3,10 +3,10 @@ msgstr ""
 "Project-Id-Version: Multicollab\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 08:21+0000\n"
-"PO-Revision-Date: 2021-03-17 05:14+0000\n"
+"PO-Revision-Date: 2022-03-04 08:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: Chinese (China)\n"
-"Language: zh_CN\n"
+"Language: zh-CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,6 +14,23 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.5.1; wp-5.6.2\n"
 "X-Domain: content-collaboration-inline-commenting"
+
+#: admin/partials/commenting-block-settings-page.php:48
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "/Annually"
+msgstr "/每年"
+
+#: admin/partials/commenting-block-settings-page.php:49
+msgid "$200 Savings*"
+msgstr "节省 200 美元*"
+
+#: admin/partials/commenting-block-settings-page.php:67
+msgid "$150 Savings*"
+msgstr "节省 150 美元*"
+
+#: admin/partials/commenting-block-settings-page.php:105
+msgid "14 Days – 100% No-Risk Money Back Guarantee!"
+msgstr "14 天 – 100% 无风险退款保证！"
 
 #: admin/classes/class-commenting-block-admin.php:797
 msgid " on"
@@ -28,57 +45,531 @@ msgstr " 已解决的线程注释"
 msgid "%s — %s"
 msgstr "%s — %s"
 
+#: admin/classes/class-commenting-block-admin.php:1026
+msgid "%s You"
+msgstr "%s 你"
+
+#: admin/classes/class-commenting-block-activities.php:126
+msgid "%s By"
+msgstr "%s 经过"
+
+#: admin/classes/class-commenting-block-admin.php:1026
+msgid "%1$s %2$s"
+msgstr "%2$s %1$s"
+
+#: admin/assets/js/src/commenting-block-admin.js:1844
+msgid "%d minutes"
+msgstr "%d 分钟"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1503
+msgid "%s (%d times)"
+msgstr "%s (%d 次)"
+
+#: admin/assets/js/src/commenting-block-admin.js:1841
+msgid " ago"
+msgstr " 前"
+
 #: admin/partials/commenting-block-settings-page.php:37
 msgid "About Plugin"
 msgstr "关于插件"
 
-#: admin/classes/class-commenting-block-email-templates.php:225
+#: admin/assets/js/src/commenting-block-admin.js:1843
+msgid "about a minute"
+msgstr "大约一分钟"
+
+#: admin/partials/commenting-block-settings-page.php:48
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "Annually for 1-site"
+msgstr "每年 1 个站点"
+
+#: admin/partials/commenting-block-settings-page.php:101
+msgid "Attach Document To Comment"
+msgstr "附加文档以发表评论"
+
+#: admin/partials/commenting-block-settings-page.php:244
+msgid "Activate Plan"
+msgstr "激活计划"
+
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:534
+msgid "Accept suggestion"
+msgstr "接受建议"
+
+#: admin/classes/class-commenting-block-email-templates.php:1115
+msgid "accept"
+msgstr "接受"
+
+#: admin/assets/js/dist/block.build.min.js:61601
+msgid "Add"
+msgstr "添加"
+
+#: admin/assets/js/src/activityCentre:1078
+#: admin/assets/js/src/activityCentre:1248
+msgid "Accepted Suggestions"
+msgstr "接受的建议"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:46
+msgid "Activity Snapshot"
+msgstr "活动快照"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:45
+msgid "Activity Timeline"
+msgstr "活动时间表"
+
+#: admin/partials/commenting-block-settings-page.php:237
+msgid "Action"
+msgstr "行动"
+
+#: admin/classes/class-commenting-block-email-templates.php:225 
+#: admin/assets/js/src/component/board.js:269
 msgid "Assigned to"
 msgstr "分配给"
 
-#: admin/classes/class-commenting-block-email-templates.php:251
+#: admin/assets/js/src/component/board.js:566
+msgid "Attach file"
+msgstr "附加文件"
+
+#: admin/assets/js/src/commenting-block-admin.js:757
+msgid "Assign to %s"
+msgstr "分配给 %s"
+
+#: admin/partials/commenting-block-settings-page.php:298
+msgid "Activations"
+msgstr "激活"
+
+#: admin/assets/js/src/commenting-block-admin.js:1224
+msgid "Assign to"
+msgstr "分配给"
+
+#: admin/classes/class-commenting-block-email-templates.php:325
+msgid "Assigned to You"
+msgstr "分配给你"
+
+#: admin/assets/js/src/component/board.js:388
+msgid "Assigned to %s"
+msgstr "分配给 %s"
+
+#: admin/assets/js/src/activityCentre.js:641
+msgid "Activities"
+msgstr "活动"
+
+#: admin/assets/js/src/activityCentre.js:1013
+msgid "Accept All Suggestions"
+msgstr "接受所有建议"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Accept All Edits"
+msgstr "接受所有编辑"
+
+#: admin/partials/commenting-block-settings-page.php:284
+msgid "Activate License"
+msgstr "激活许可证"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Accept All"
+msgstr "全都接受"
+
+#: admin/classes/class-commenting-block-settings-table.php:98
+msgid "All dates"
+msgstr "所有日期"
+
+#: admin/classes/class-commenting-block-settings-table.php:112
+msgid "All pages/posts"
+msgstr "所有页面/帖子"
+
+#: admin/classes/class-commenting-block-settings-table.php:117
+msgid "All categories"
+msgstr "所有类别"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:148
+msgid "Add Comment"
+msgstr "添加评论"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:155
+msgid "Add Suggestion"
+msgstr "添加建议"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:156
+msgid "Accept/Reject Suggestion"
+msgstr "接受/拒绝建议"
+
+#: admin/partials/commenting-block-settings-page.php:58
+msgid "Advanced Dashboard"
+msgstr "高级仪表板"
+
+#: admin/partials/commenting-block-settings-page.php:60
+msgid "All features of Plus Plan"
+msgstr "Plus 计划的所有功能"
+
+#: admin/partials/commenting-block-settings-page.php:79
+msgid "All features of Basic Plan"
+msgstr "基本计划的所有功能"
+
+#: admin/partials/commenting-block-settings-page.php:128
+msgid "A great addition for author/editor collaboration"
+msgstr "作者/编辑协作的一个很好的补充"
+
+#: admin/partials/commenting-block-settings-page.php:146
+msgid "Awesome plugin"
+msgstr "很棒的插件"
+
+#: admin/partials/commenting-block-settings-page.php:164
+msgid "Awesome plug-in"
+msgstr "很棒的插件"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1293
+msgid "Bold, Font"
+msgstr "粗, 体"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "Block Alignment"
+msgstr "块对齐"
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. Selecting this option will automatically turn ON Suggestions on all future posts on your website. You can still manually turn OFF suggestions mode for individual posts. We don't recommend turning Suggestions Mode ON for all the new posts unless you have specific business needs."
+msgstr "默认情况下，Multicollab 中的每个帖子的建议模式都处于关闭状态。选择此选项将自动打开您网站上所有未来帖子的建议。您仍然可以手动关闭个别帖子的建议模式。除非您有特定的业务需求，否则我们不建议为所有新帖子打开建议模式。"
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. This option will automatically turn ON Suggestions for selected post categories for future posts. You can still manually turn OFF suggestions mode for individual posts."
+msgstr "默认情况下，Multicollab 中的每个帖子的建议模式都处于关闭状态。此选项将自动为将来的帖子打开所选帖子类别的建议。您仍然可以手动关闭个别帖子的建议模式。"
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "By default, Suggestions Mode is OFF on for each post in Multicollab. This option will automatically turn ON Suggestions for selected Custom Post Types for future posts. You can still manually turn OFF suggestions mode for individual posts."
+msgstr "默认情况下，Multicollab 中的每个帖子的建议模式都处于关闭状态。此选项将自动为将来的帖子打开所选自定义帖子类型的建议。您仍然可以手动关闭个别帖子的建议模式。"
+
+#: admin/partials/commenting-block-settings-page.php:227
+msgid "Bengali"
+msgstr "孟加拉"
+
+#: admin/partials/commenting-block-settings-page.php:223
+msgid "Chinese"
+msgstr "中国人"
+
+#: admin/assets/js/src/component/board.js:518
+msgid "Cancel"
+msgstr "取消"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "Connect"
+msgstr "连接"
+
+#: admin/partials/commenting-block-settings-page.php:65
+msgid "Comment Anywhere"
+msgstr "随处评论"
+
+#: admin/partials/commenting-block-settings-page.php:331
+msgid "column on the Post Lists."
+msgstr "帖子列表上的列。"
+
+#: admin/partials/commenting-block-settings-page.php:66
+msgid "Custom Permissions"
+msgstr "自定义权限"
+
+#: admin/partials/commenting-block-settings-page.php:105
+msgid "Contact for Enterprise License"
+msgstr "联系企业许可证"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Contact"
+msgstr "接触"
+
+#: admin/classes/class-commenting-block-email-templates.php:95
+msgid "Comment Resolved"
+msgstr "评论已解决"
+
+#: admin/classes/class-commenting-block-email-templates.php:251 
 #: admin/classes/class-commenting-block-email-templates.php:272
 msgid "Click here to view this comment"
 msgstr "点击这里查看此评论"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Click"
+msgstr "点击"
+
+#: admin/assets/js/src/component/activityCentre.js:112
+msgid "Collapse"
+msgstr "坍塌"
+
+#: admin/partials/commenting-block-settings-page.php:169
+msgid "Charudatta Mondale"
+msgstr "查鲁达塔·蒙代尔"
+
+#: admin/partials/commenting-block-settings-page.php:170
+msgid "Co-Founder at QuickDraft LLP"
+msgstr "QuickDraft LLP 联合创始人"
+
+#: admin/assets/js/src/component/board.js:443
+#: admin/assets/js/src/block.js:486
+#: admin/assets/js/src/block.js:831
+#: admin/assets/js/src/block.js:846
+#: admin/assets/js/src/block.js:871
+#: admin/assets/js/src/block.js:886
+#: admin/assets/js/src/block.js:911
+#: admin/assets/js/src/block.js:926
+msgid "Comment"
+msgstr "评论"
+
+#: admin/assets/js/src/component/board.js:446
+msgid "Comment or add others with @"
+msgstr "用@评论或添加其他人"
+
+#: admin/assets/js/src/activityCentre.js:438
+msgid "Comments are Hidden"
+msgstr "评论被隐藏"
+
+#: admin/partials/commenting-block-settings-page.php:76
+msgid "Comment on any text and media"
+msgstr "评论任何文字和媒体"
 
 #: admin/classes/class-commenting-block-admin.php:796
 msgid "commented"
 msgstr "已评论"
 
-#: admin/classes/class-commenting-block-email-templates.php:245
+#: admin/classes/class-commenting-block-email-templates.php:245 
 #: admin/classes/class-commenting-block-email-templates.php:266
 msgid "Comments"
 msgstr "评论"
+
+#: admin/classes/class-commenting-block-settings-table.php:19
+msgid "Collaborators"
+msgstr "合作者"
 
 #: admin/partials/commenting-block-settings-page.php:84
 msgid "Contact Support"
 msgstr "与支持人员联系"
 
+#:admin/assets/js/src/component/suggestion/suggestion-comment.js:537
+msgid "Copy Link"
+msgstr "复制链接"
+
+#: admin/assets/js/src/commenting-block-admin.js:2136
+msgid "Change Heading"
+msgstr "改变标题"
+
 #: admin/partials/commenting-block-settings-page.php:88
 msgid "Contact Us"
 msgstr "联系我们"
+
+#: admin/assets/js/src/nonTextblock.js:150
+msgid "Content Block"
+msgstr "内容块"
+
+#: admin/assets/js/src/activityCentre.js:490
+msgid "Comments are Visible"
+msgstr "评论可见"
+
+#: admin/partials/commenting-block-settings-page.php:355
+msgid "Channel Name:"
+msgstr "频道名称："
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "center"
+msgstr "中心"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "default"
+msgstr "默认"
 
 #: admin/partials/commenting-block-settings-page.php:20
 msgid "Dashboard"
 msgstr "仪表板"
 
+#: admin/partials/commenting-block-settings-page.php:340
+msgid "Disconnect"
+msgstr "断开"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "draft comments/suggestions."
+msgstr "意见/建议草案。"
+
+#: admin/assets/js/src/component/comment.js:308
+msgid "Delete"
+msgstr "删除"
+
+#: admin/assets/js/src/component/board.js:351
+msgid "Delete this comment thread?"
+msgstr "删除此评论线程？"
+
+#: admin/assets/js/src/component/comment.js:351
+msgid "Delete this comment?"
+msgstr "删除这条评论？"
+
+#: admin/assets/js/commenting-block-admin.js:131
+msgid "Delete this Suggestion?"
+msgstr "删除此建议？"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Delete this thread?"
+msgstr "删除这个话题？"
+
 #: admin/classes/class-commenting-block-admin.php:799
 msgid "deleted comment of"
 msgstr "已删除的评论"
+
+#: admin/classes/class-commenting-block-activities.php:147
+msgid "deleted"
+msgstr "已删除"
+
+#: admin/assets/js/src/activityCentre.js:1081
+#: admin/assets/js/src/activityCentre.js:1290
+msgid "Deletions"
+msgstr "删除"
+
+#: admin/assets/js/src/component/suggestion-comment.js:664
+#: admin/assets/js/src/component/comment.js:515
+msgid "Discard Changes"
+msgstr "放弃更改"
+
+#: admin/partials/commenting-block-settings-page.php:257
+msgid "Deactivate License"
+msgstr "停用许可证"
+
+#: admin/assets/js/src/component/board.js:518
+msgid "Discard Comment"
+msgstr "放弃评论"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:150
+msgid "Disable Comments"
+msgstr "禁用评论"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:157
+msgid "Disable Suggestion"
+msgstr "禁用建议"
+
+#: admin/assets/js/src/component/comment.js:521
+msgid "Delete attachment"
+msgstr "删除附件"
+
+#: admin/assets/js/src/component/comment.js:305
+msgid "Edit"
+msgstr "编辑"
+
+#: admin/partials/commenting-block-webiste-activity.php:307
+msgid "edited"
+msgstr "已编辑"
+
+#: admin/partials/commenting-block-settings-page.php:222
+msgid "English"
+msgstr "英语"
 
 #: admin/classes/class-commenting-block-admin.php:136
 msgid "Editorial Comments"
 msgstr "编辑评论"
 
+#: admin/assets/js/src/component/comment.js:430
+#: admin/assets/js/src/component/comment.js:433
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:793
+msgid "edited at %s"
+msgstr "在 %s 编辑"
+
+#: admin/assets/js/src/activityCentre.js:805
+#: admin/assets/js/src/activityCentre.js:882
+msgid "edited %s"
+msgstr "已编辑 %s"
+
+#: admin/assets/js/src/component/comment.js:490
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:863
+msgid "Edit your comments..."
+msgstr "编辑您的评论..."
+
+#: admin/partials/commenting-block-settings-page.php:77
+msgid "Email Notification"
+msgstr "电子邮件通知"
+
+#: admin/partials/commenting-block-settings-page.php:297
+msgid "Expires"
+msgstr "过期"
+
+#: admin/partials/commenting-block-settings-page.php:82
+msgid "Everything in PLUS"
+msgstr "PLUS中的一切"
+
+#: admin/partials/commenting-block-settings-page.php:99
+msgid "Everything in PRO"
+msgstr "PRO 中的一切"
+
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "for all new comments even if not mentioned."
 msgstr "对于所有新评论，即使未提及。"
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "for all posts and pages on my website (Not Recommended)."
+msgstr "对于我网站上的所有帖子和页面（不推荐）。"
 
 #: admin/partials/commenting-block-settings-page.php:87
 msgid ""
 "For premium support and help with customizing this plugin for your business "
 "needs."
 msgstr "提供高级支持并帮助您针对您的业务需求自定义此插件。"
+
+#: admin/assets/js/src/commenting-block-admin.js:1842
+msgid "few seconds"
+msgstr "几秒钟"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Feedback"
+msgstr "反馈"
+
+#: admin/assets/js/src/activityCentre.js:1082
+#: admin/assets/js/src/activityCentre.js:1305
+msgid "Formatting"
+msgstr "格式化"
+
+#: admin/partials/commenting-block-settings-page.php:346
+msgid "Floating Comment Toolbar"
+msgstr "浮动评论工具栏"
+
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "for all new comments. (Not Recommended)"
+msgstr "对于所有新评论。 （不建议）"
+
+#: admin/partials/commenting-block-settings-page.php:423
+msgid "for these post categories:"
+msgstr "对于这些帖子类别："
+
+#: admin/partials/commenting-block-settings-page.php:433
+msgid "for these custom post types:"
+msgstr "对于这些自定义帖子类型："
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1327
+msgid "Format"
+msgstr "格式"
+
+#: admin/classes/class-commenting-block-settings-table.php:126
+msgid "Filter"
+msgstr "筛选"
+
+#: admin/partials/commenting-block-settings-page.php:226
+msgid "French"
+msgstr "法语"
+
+#: admin/partials/commenting-block-settings-page.php:228
+msgid "German"
+msgstr "德语"
+
+#:admin/partials/commenting-block-website-activity.php:32
+msgid "Go Back"
+msgstr "回去"
+
+#: admin/partials/commenting-block-settings-page.php:99
+msgid "General Settings"
+msgstr "通用设置"
+
+#: admin/partials/commenting-block-settings-page.php:363
+msgid "Guide to Setup Email Notifications"
+msgstr "设置电子邮件通知指南"
+
+#: admin/partials/commenting-block-settings-page.php:318
+msgid "General"
+msgstr "一般的"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:358
+#: admin/assets/js/src/suggestion/block-extend-control.js:428
+msgid "Gutenberg block alignment suggestions are already available. So you can not add other block alignment suggestions on the same block."
+msgstr "Gutenberg 块对齐建议已经可用。所以你不能在同一个块上添加其他块对齐建议。"
+
+#: admin/classes/class-commenting-block-email-templates.php:691
+msgid "has %sed the following suggestion."
+msgstr "已 %s 以下建议。"
 
 #: admin/classes/class-commenting-block-admin.php:414
 msgid "has resolved the following thread."
@@ -88,6 +579,107 @@ msgstr "解决了以下线程。"
 msgid "https://www.multidots.com/"
 msgstr "https://www.multidots.com/"
 
+#: admin/assets/js/src/activityCentre.js:1028
+msgid "Hide Suggestions"
+msgstr "隐藏建议"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1442
+msgid "Highlight"
+msgstr "强调"
+
+#: admin/partials/commenting-block-settings-page.php:224
+msgid "Hindi"
+msgstr "印地语"
+
+#: admin/assets/js/src/activityCentre.js:1041
+msgid "Hide Comments"
+msgstr "隐藏评论"
+
+#: admin/partials/commenting-block-settings-page.php:331
+msgid "Hide the"
+msgstr "隐藏"
+
+#: admin/partials/commenting-block-settings-page.php:91
+msgid "Having trouble? Check out our help documentation"
+msgstr "遇到麻烦？查看我们的帮助文档"
+
+#: admin/partials/commenting-block-settings-page.php:92
+msgid "Help Documentation"
+msgstr "帮助文档"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Help"
+msgstr "帮助"
+
+#: admin/assets/js/src/activityCentre.js:1080
+#: admin/assets/js/src/activityCentre.js:1275
+msgid "Insertions"
+msgstr "插入"
+
+#: admin/partials/commenting-block-settings-page.php:120
+msgid "Integrations"
+msgstr "集成"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "If this option is selected, everyone will be reminded when they try to publish a post that has unresolved comments or pending suggestions. This is useful to alert authors to review the unresolved comments and changes before they Publish the post."
+msgstr "如果选择此选项，当每个人尝试发布具有未解决的评论或待处理建议的帖子时，都会收到提醒。这有助于提醒作者在发布帖子之前查看未解决的评论和更改。"
+
+#: admin/partials/commenting-block-settings-page.php:413
+msgid "If this option is selected, users will not be able to publish a post with unresolved comments or pending suggestions. This is useful to prevent publishing a post with unresolved comments and pending suggestions."
+msgstr "如果选择此选项，用户将无法发布带有未解决评论或待处理建议的帖子。这对于防止发布带有未解决的评论和待处理建议的帖子很有用。"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1294
+msgid "Italic"
+msgstr "斜体"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1297
+msgid "Inline Code"
+msgstr "内联代码"
+
+#: admin/partials/commenting-block-settings-page.php:346
+msgid "in Block Editor."
+msgstr "在块编辑器中。"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1301
+msgid "Image"
+msgstr "图片"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1484
+msgid "Image Size"
+msgstr "图片尺寸"
+
+#: admin/partials/commenting-block-settings-page.php:151
+msgid "Ivan Ružević"
+msgstr "伊万·鲁热维奇"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1298
+msgid "Keyboard Input"
+msgstr "键盘输入"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1417
+msgid "Link"
+msgstr "关联"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1478
+msgid "Link Target"
+msgstr "链接目标"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1304
+msgid "Line Break"
+msgstr "越线"
+
+#: admin/assets/js/src/activityCentre.js:924
+msgid "Last Edited By"
+msgstr "最后编辑者"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "left"
+msgstr "左"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:76
+msgid "Latest Activity"
+msgstr "最新活动"
+
 #: admin/partials/commenting-block-settings-page.php:37
 msgid "Learn More"
 msgstr "了解更多"
@@ -96,13 +688,99 @@ msgstr "了解更多"
 msgid "Live Demo"
 msgstr "现场演示"
 
+#: admin/assets/js/src/activityCentre.js:668
+#: admin/assets/js/src/activityCentre.js:1091
+msgid "Loading..."
+msgstr "正在加载..."
+
+#: admin/partials/commenting-block-settings-page.php:217
+msgid "Language Options"
+msgstr "语言选项"
+
+#: admin/partials/commenting-block-settings-page.php:217
+msgid "Licenses"
+msgstr "许可证"
+
+#: admin/partials/commenting-block-settings-page.php:292
+msgid "License Information:"
+msgstr "许可证信息："
+
+#: admin/partials/commenting-block-settings-page.php:296
+msgid "License Status"
+msgstr "许可证状态"
+
+#: admin/assets/js/src/commenting-block-admin.js:2136
+msgid "level"
+msgstr "等级"
+
+#: admin/assets/js/src/component/comment.js:128
+msgid "Link Copied!"
+msgstr "链接已复制！"
+
+#: admin/partials/commenting-block-website-activity.php:366
+msgid "Load More"
+msgstr "装载更多"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "language. But compatible with these languages and will sync with your selected language for the WordPress Admin area."
+msgstr "语。但与这些语言兼容，并将与您为 WordPress 管理区域选择的语言同步。"
+
+#: admin/assets/js/src/component/comment.js:283
+#: admin/assets/js/src/activityCentre.js:818
+#: admin/assets/js/src/activityCentre.js:837
+msgid "Mark as Resolved"
+msgstr "标记为已解决"
+
+#: admin/assets/js/src/activityCentre.js:820 
+#: admin/partials/commenting-block-website-activity.php:144
+msgid "Marked as Resolved"
+msgstr "标记为已解决"
+
 #: admin/classes/class-commenting-block-email-templates.php:64
 msgid "Marked as resolved by"
 msgstr "标记为已解决"
 
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "My Account"
+msgstr "我的帐户"
+
+#: admin/partials/commenting-block-settings-page.php:320
+msgid "Manage Permissions"
+msgstr "管理权限"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab is Default to the"
+msgstr "Multicollab 默认为"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:110
+msgid "Migration Setting"
+msgstr "迁移设置"
+
+#: admin/partials/commenting-block-settings-page.php:525
+msgid "Multilingual Options"
+msgstr "多语言选项"
+
+#: admin/partials/commenting-block-settings-page.php:133
+msgid "Mario T. Lanza"
+msgstr "马里奥·T·兰扎"
+
+#: admin/assets/js/src/component/comment.js:314
+#: admin/assets/js/src/component/comment.js:362
+#: admin/assets/js/src/component/comment.js:379
+msgid "More Options..."
+msgstr "更多选择..."
+
+#: admin/partials/commenting-block-settings-page.php:102
+msgid "Multilingual"
+msgstr "多种语言"
+
 #. Name of the plugin
 msgid "Multicollab"
 msgstr "Multicollab"
+
+#. Description of the Plugin
+msgid "A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress."
+msgstr "A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress."
 
 #: admin/partials/commenting-block-settings-page.php:13
 msgid "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
@@ -112,31 +790,350 @@ msgstr "Multicollab - Google Doc-Style Editorial Commenting for WordPress"
 msgid "multidots"
 msgstr "multidots"
 
+#: admin/partials/commenting-block-settings-page.php:220
+msgid "Multicollab supports these languages."
+msgstr "Multicollab 支持这些语言。"
+
+#: admin/classes/class-commenting-block-email-templates.php:296
+#: admin/classes/class-commenting-block-email-templates.php:579
+msgid "Mentioned you in a comment in the following page."
+msgstr "在下一页的评论中提到了您。"
+
 #: admin/classes/class-commenting-block-admin.php:879
 msgid "No comments found."
 msgstr "找不到评论。"
 
-#: admin/partials/commenting-block-settings-page.php:45
-msgid "Notification Setting"
-msgstr "通知设定"
+#: admin/assets/js/src/commenting-block-admin.js:121
+msgid "No"
+msgstr "不"
+
+#: admin/partials/commenting-block-settings-page.php:104
+#: admin/partials/commenting-block-settings-page.php:231
+msgid "Notification Settings"
+msgstr "通知设置"
+
+#: admin/partials/commenting-block-settings-page.php:236
+msgid "Notifications"
+msgstr "通知"
 
 #: admin/partials/commenting-block-settings-page.php:58
 msgid "Notify site admin"
 msgstr "通知网站管理员"
 
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "Notify"
+msgstr "通知"
+
+#: admin/classes/class-commenting-block-activities.php:280
+#: admin/partials/commenting-block-settings-page__premium_only.php:63
+msgid "No activities found."
+msgstr "未找到任何活动。"
+
+#: admin/classes/class-commenting-block-activities.php:283
+msgid "No more activities."
+msgstr "没有更多的活动。"
+
+#: admin/assets/js/src/activityCentre.js:662
+msgid "No recent activities found!"
+msgstr "没有找到最近的活动！"
+
+#: admin/classes/class-commenting-block-email-templates.php:356
+#: admin/classes/class-commenting-block-email-templates.php:387
+#: admin/classes/class-commenting-block-email-templates.php:405
+#: admin/classes/class-commenting-block-email-templates.php:423
+msgid "New Comment"
+msgstr "新评论"
+
+#: admin/classes/class-commenting-block-email-templates.php:615
+#: admin/classes/class-commenting-block-email-templates.php:636
+msgid "New Suggestion"
+msgstr "新建议"
+
+#: admin/classes/class-commenting-block-email-templates.php:617
+#: admin/classes/class-commenting-block-email-templates.php:638
+msgid "New Comment on Suggestion"
+msgstr "对建议的新评论"
+
+#: admin/assets/js/src/activityCentre.js:1066
+#: admin/assets/js/src/activityCentre.js:1156
+msgid "Open Comments"
+msgstr "打开评论"
+
+#: admin/assets/js/src/activityCentre.js:1077
+#: admin/assets/js/src/activityCentre.js:1235
+msgid "Open Suggestions"
+msgstr "公开建议"
+
+#:admin/classes/class-commenting-block-activities.php:119
+#: admin/classes/class-commenting-block-email-templates.php:285
+#: admin/classes/class-commenting-block-email-templates.php:308
+msgid "Open"
+msgstr "打开"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:493
+#: admin/assets/js/src/suggestion/block-extend-control.js:501
+msgid "One suggestion is already available on selected text. So you can not add other suggestions to the same text."
+msgstr "已针对所选文本提供了一项建议。因此，您不能在同一文本中添加其他建议。"
+
+#: admin/partials/commenting-block-settings-page.php:55
+#: admin/partials/commenting-block-settings-page.php:74
+msgid "or start 14-day free trial"
+msgstr "或开始 14 天免费试用"
+
+#: admin/assets/js/dist/suggestion-comment.js:79
+msgid "Please edit your comment."
+msgstr "请在保存前编辑文本！"
+
+#: admin/assets/js/src/nonTextblock.js:75
+msgid "Please select block/image to comment on."
+msgstr "请选择要评论的块/图像。"
+
+#: admin/assets/js/dist/block.build.min.js:56440
+msgid "Please select a block, text or media to comment on."
+msgstr "请选择要评论的文字。"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:419
+msgid "Please select a channel"
+msgstr "请选择一个频道"
+
+#: admin/assets/js/dist/block.build.min.js:57233 
+#: admin/assets/js/dist/block.build.min.js:57628 
+#: admin/assets/js/dist/block.build.min.js:57658 
+#: admin/assets/js/dist/block.build.min.js:60412 
+#: admin/assets/js/dist/block.build.min.js:60657
+msgid "Please add some comment. "
+msgstr "请写评论分享！"
+
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
 msgstr "插件开发人员"
+
+#: admin/settings/settings-suggestion-mode.php:53
+msgid "Please select a category"
+msgstr "请选择一个类别"
+
+#: admin/settings/settings-suggestion-mode.php:99
+msgid "Please select a post type"
+msgstr "请选择帖子类型"
+
+#: admin/settings/settings-suggestion-mode.php:7
+msgid "Please select any option to save!"
+msgstr "请选择任何选项进行保存！"
+
+#: admin/assets/js/dist/block.build.min.js:57372
+msgid "Post Comment"
+msgstr "发表评论"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:34
+msgid "Permissions"
+msgstr "权限"
+
+#: admin/partials/commenting-block-settings-page.php:264
+msgid "Please renew your license key."
+msgstr "请更新您的许可证密钥。"
+
+#: admin/partials/commenting-block-settings-page.php:320
+msgid "Premium"
+msgstr "优质的"
+
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "Please enter the license key that you received in the email right after the purchase. OR You can access your licenses anytime from the"
+msgstr "请输入您在购买后立即在电子邮件中收到的许可证密钥。或者您可以随时从"
+
+#: admin/classes/class-commenting-block-settings-table.php:113
+msgid "Pages"
+msgstr "页面"
+
+#: admin/classes/class-commenting-block-settings-table.php:114
+msgid "Posts"
+msgstr "帖子"
+
+#: admin/partials/commenting-block-settings-page.php:46
+msgid "PRO"
+msgstr "临"
+
+#: admin/partials/commenting-block-settings-page.php:64
+msgid "PLUS"
+msgstr "加"
+
+#: admin/partials/commenting-block-settings-page.php:59
+msgid "Pro Support"
+msgstr "临支持"
+
+#: admin/partials/commenting-block-settings-page.php:78
+msgid "Plus Support"
+msgstr "加支持"
+
+#: admin/partials/commenting-block-settings-page.php:301
+msgid "Permissions saved!"
+msgstr "权限已保存！"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "publish the post."
+msgstr "他们可以发布帖子。"
+
+#: admin/partials/commenting-block-settings-page.php:295
+msgid "Plan"
+msgstr "计划"
+
+#: admin/partials/commenting-block-settings-page.php:385
+msgid "Publishing"
+msgstr "出版"
+
+#: admin/classes/class-commenting-block-admin.php:936
+msgid "Reassigned to"
+msgstr "重新分配给"
+
+#: admin/assets/js/src/component/board.js:269
+msgid "Reassigned to You"
+msgstr "重新分配给你"
+
+#: admin/assets/js/src/component/board.js:391
+msgid "Reassigned to %s"
+msgstr "重新分配给 %s"
+
+#: admin/assets/js/src/commenting-block-admin.js:1224
+msgid "Reassign to"
+msgstr "重新分配给"
+
+#: admin/assets/js/src/component/suggestion/suggestion-comment.js:537
+msgid "Reject suggestion"
+msgstr "拒绝建议"
+
+#: admin/classes/class-commenting-block-email-templates.php:1115
+msgid "reject"
+msgstr "拒绝"
+
+#: admin/assets/js/src/activityCentre.js:1079
+#: admin/assets/js/src/activityCentre.js:1261
+msgid "Rejected Suggestions"
+msgstr "被拒绝的建议"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Reports"
+msgstr "报告"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:458
+msgid "right"
+msgstr "权利"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1385
+msgid "Remove Link with URL"
+msgstr "删除带有 URL 的链接"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1475
+msgid "Replace"
+msgstr "代替"
 
 #: admin/classes/class-commenting-block-admin.php:796
 msgid "replied"
 msgstr "回覆"
 
+#: admin/partials/commenting-block-website-activity.php:322
+msgid "replies"
+msgstr "回复"
+
+#: admin/assets/js/src/component/board.js:443
+#: admin/assets/js/src/activityCentre.js:798
+#: admin/assets/js/src/activityCentre.js:808
+#: admin/assets/js/src/activityCentre.js:828
+msgid "Reply"
+msgstr "回复"
+
+#: admin/assets/js/src/component/board.js:446
+msgid "Reply or add others with @"
+msgstr "用@回复或添加其他人"
+
+#: admin/assets/js/src/suggestion/suggestion-board.js:211
+#: admin/assets/js/src/suggestion/suggestion-board.js:251
+msgid "Reply to comment"
+msgstr "回复评论"
+
+#: admin/partials/commenting-block-website-activity.php:334
+#: admin/assets/js/src/activityCentre.js:799
+#: admin/assets/js/src/activityCentre.js:809
+#: admin/assets/js/src/activityCentre.js:829
+msgid "Reply to this comment"
+msgstr "回复此评论"
+
+#: admin/assets/js/src/activityCentre.js:537
+msgid "Resolve"
+msgstr "解决"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Resolve this thread?"
+msgstr "解决这个问题？"
+
+#: admin/partials/commenting-block-activities.php:120
+#: admin/classes/class-commenting-block-activities.php:120
+#: admin/assets/js/src/component/comment.js:300
+#: admin/assets/js/src/component/comment.js:310
+msgid "Resolved"
+msgstr "解决"
+
+#: admin/assets/js/src/activityCentre.js:1067
+#: admin/assets/js/src/activityCentre.js:1170
+msgid "Resolved Comments"
+msgstr "已解决的评论"
+
 #: admin/classes/class-commenting-block-admin.php:790
 msgid "resolved thread"
 msgstr "解决的线程"
 
+#: admin/classes/class-commenting-block-settings-table.php:20
+msgid "Recent Activities"
+msgstr "近期活动"
+
+#: admin/assets/js/src/activityCentre.js:1018
+msgid "Reject All Suggestions"
+msgstr "拒绝所有建议"
+
+#: admin/assets/js/src/activityCentre.js:656
+msgid "Review All Suggestions"
+msgstr "查看所有建议"
+
+#: admin/assets/js/src/activityCentre:656
+msgid "Reject All Edits"
+msgstr "拒绝所有编辑"
+
+#: admin/classes/class-commenting-block-settings-table.php:127
+msgid "Reset Filter"
+msgstr "重置过滤器"
+
+#: admin/partials/commenting-block-settings-page.php:338
+msgid "reminder in Block Editor."
+msgstr "块编辑器中的提醒。"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "Remind"
+msgstr "提醒"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:147
+msgid "Roles"
+msgstr "角色"
+
+#: admin/partials/commenting-block-settings-page__premium_only.php:149
+msgid "Resolve Comment"
+msgstr "解决评论"
+
+#: admin/assets/js/src/activityCentre:642
+msgid "Review suggested edits"
+msgstr "查看建议的修改"
+
+#: admin/assets/js/src/activityCentre.js:645
+msgid "Review Suggestions"
+msgstr "审核建议"
+
+#: admin/partials/commenting-block-settings-page.php:229
+msgid "Run Test"
+msgstr "运行测试"
+
+#: admin/assets/js/src/activityCentre:660
+msgid "Reject All"
+msgstr "全部拒绝"
+
 #: admin/partials/commenting-block-settings-page.php:60
+#: admin/assets/js/src/component/comment.js:511
 msgid "Save Changes"
 msgstr "保存更改"
 
@@ -148,9 +1145,209 @@ msgstr "设定值"
 msgid "Settings saved!"
 msgstr "设置已保存！"
 
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "Save Draft"
+msgstr "保存草稿"
+
+#: admin/partials/commenting-block-settings-page.php:338
+msgid "Save Draft Comment"
+msgstr "保存草稿评论"
+
+#: admin/partials/commenting-block-settings-page.php:385
+msgid "Suggestion Mode"
+msgstr "建议模式"
+
+#: admin/assets/js/src/component/comment.js:300
+msgid "Share"
+msgstr "分享"
+
+#: admin/partials/commenting-block-webiste-activity.php:259
+#: admin/assets/js/src/activityCentre.js:118
+#: admin/assets/js/src/activityCentre.js:729
+#: admin/assets/js/src/activityCentre.js:744
+msgid "Show all"
+msgstr "显示所有"
+
+#: admin/assets/js/src/activityCentre.js:930
+#: admin/assets/js/src/suggestion/suggestion-board.js:187
+msgid "Show all %d replies"
+msgstr "显示所有 %d 回复"
+
+#: admin/assets/js/src/component/comment.js:342
+msgid "show less"
+msgstr "显示较少"
+
+#: admin/assets/js/src/component/comment.js:341
+msgid "show more"
+msgstr "展示更多"
+
+#: admin/assets/js/src/activityCentre.js:808 
+#: admin/partials/commenting-block-website-activity.php:87
+#: admin/classes/class-commenting-block-email-templates.php:701
+#: admin/classes/class-commenting-block-functions:146
+msgid "Suggestion Accepted"
+msgstr "已接受建议"
+
+#: admin/partials/commenting-block-settings-page.php:376
+msgid "Super Admin"
+msgstr "超级管理员"
+
+#: admin/partials/commenting-block-settings-page.php:247
+msgid "section on the Multicollab website"
+msgstr "Multicollab 网站上的部分"
+
+#: admin/assets/js/src/activityCentre.js:814 
+#: admin/partials/commenting-block-website-activity.php:87
+#: admin/classes/class-commenting-block-email-templates.php:704
+#: admin/classes/class-commenting-block-functions:146
+msgid "Suggestion Rejected"
+msgstr "建议被拒绝"
+
+#: admin/classes/class-commenting-block-email-templates.php:734
+msgid "Suggestion Resolved"
+msgstr "建议已解决"
+
+#: admin/assets/js/src/block.js:631
+msgid "Suggestion Mode is ON"
+msgstr "建议模式开启"
+
+#: admin/assets/js/src/block.js:648
+msgid "Suggestion Mode is OFF"
+msgstr "建议模式关闭"
+
+#: admin/assets/js/src/block.js:629
+msgid "Suggestion Mode only works with Paragraph and Heading Block."
+msgstr "建议模式仅适用于段落和标题块。"
+
+#: admin/assets/js/src/activityCentre.js:599
+msgid "Suggestions are Hidden"
+msgstr "建议被隐藏"
+
+#: admin/assets/js/src/activityCentre.js:619
+msgid "Suggestions Accepted"
+msgstr "接受的建议"
+
+#: admin/assets/js/src/activityCentre.js:639
+msgid "Suggestions Rejected"
+msgstr "建议被拒绝"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "Stop"
+msgstr "停止"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "stop them from publishing it."
+msgstr "阻止他们发布它。"
+
+#: admin/assets/js/src/activityCentre.js:651
+msgid "Summary"
+msgstr "概括"
+
+#: admin/assets/js/src/activityCentre.js:1000
+msgid "Suggest Edits"
+msgstr "建议编辑"
+
+#: admin/partials/commenting-block-settings-page.php:83
+msgid "Suggest Edits (Track Changes)"
+msgstr "建议编辑（跟踪更改）"
+
+#: admin/partials/commenting-block-settings-page.php:100
+msgid "Slack Integration"
+msgstr "Slack一体化"
+
+#: admin/assets/js/src/activityCentre.js:1003
+msgid "Suggestion Mode works only with a draft page or post."
+msgstr "建议模式仅适用于草稿页面或帖子。"
+
+#: admin/assets/js/src/activityCentre.js:1072
+msgid "Suggestions"
+msgstr "建议"
+
+#: admin/partials/commenting-block-settings-page.php:225
+msgid "Spanish"
+msgstr "西班牙语"
+
+#: admin/assets/js/src/component/comment.js:499
+msgid "Save"
+msgstr "节省"
+
+#: admin/partials/commenting-block-settings-page.php:199
+msgid "Show draft Info board"
+msgstr "显示草稿信息板"
+
+#: admin/assets/js/src/activityCentre.js:658
+msgid "Suggestions are Visible"
+msgstr "建议可见"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:585
+msgid "Something went wrong!. Kindly Please save, refresh and then try again."
+msgstr "出问题了！。请保存，刷新，然后重试。"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:935
+#: admin/assets/js/src/suggestion/block-extend-control.js:940
+#: admin/assets/js/src/suggestion/block-extend-control.js:945
+#: admin/assets/js/src/suggestion/block-extend-control.js:987
+#: admin/assets/js/src/suggestion/block-extend-control.js:1037
+#: admin/assets/js/src/suggestion/block-extend-control.js:1049
+msgid "Suggestions over suggestion are restricted!"
+msgstr "对建议的建议受到限制！"
+
+#: admin/partials/commenting-block-settings-page.php:57
+msgid "Suggestion Mode (Track Changes)"
+msgstr "建议模式（跟踪更改）"
+
+#: admin/partials/commenting-block-settings-page.php:134
+msgid "Sr. Web Developer"
+msgstr "高级网络开发人员"
+
+#: admin/assets/js//commenting-block-admin.js:1254
+msgid "Sorry! No user found!"
+msgstr "对不起！没有找到用户！"
+
+#: admin/partials/commenting-block-settings-page.php:209
+msgid "Slack"
+msgstr "Slack"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "Slack Channel Notifications"
+msgstr "Slack 频道通知"
+
+#: admin/partials/commenting-block-settings-page.php:355
+msgid "Slack Settings"
+msgstr "Slack 设置"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1295
+msgid "Superscript"
+msgstr "上标"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1296
+msgid "Subscript"
+msgstr "下标"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1299
+msgid "Strikethrough"
+msgstr "删除线"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1233
+msgid "Space"
+msgstr "空间"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1233
+msgid "times)"
+msgstr "次)"
+
+#: admin/partials/commenting-block-settings-page.php:212
+msgid "Setup integration between WordPress and Slack."
+msgstr "设置 WordPress 和 Slack 之间的集成。"
+
 #: admin/partials/commenting-block-settings-page.php:27
 msgid "Thanks for installing Google Doc-Style Editorial Commenting Plugin."
 msgstr "感谢您安装Google Doc-Style编辑评论插件。"
+
+#: admin/assets/js/commenting-block-admin.js:1162
+msgid ""
+"The Assigned person will be notified and responsible for marking as done."
+msgstr "将通知指定人员并负责将其标记为已完成。"
 
 #. Description of the plugin
 msgid ""
@@ -158,10 +1355,255 @@ msgid ""
 "Gutenberg Editor!"
 msgstr "此插件具有Gutenberg编辑器中的注释功能，例如Google Docs！"
 
+#: admin/assets/js/src/activityCentre.js:1065
+#: admin/assets/js/src/activityCentre.js:1143
+msgid "Total Comments"
+msgstr "总评论"
+
+#: admin/assets/js/src/activityCentre.js:1076
+#: admin/assets/js/src/activityCentre.js:1222
+msgid "Total Suggestions"
+msgstr "总建议"
+
+#: admin/classes/class-commenting-block-activities.php:121
+msgid "Total"
+msgstr "全部的"
+
+#: admin/partials/commenting-block-settings-page.php:88
+msgid "Technical Help"
+msgstr "技术帮助"
+
+#: admin/assets/js//commenting-block-admin.js:2490
+msgid "There are a few pending suggestions or comments in this post. Do you still want to publish the post?"
+msgstr "这篇文章中几乎没有待处理的建议或评论。你还想发布帖子吗？"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "to apply comments/suggestions."
+msgstr "应用意见/建议。"
+
+#: admin/assets/js/src/commenting-block-admin.js:2088
+msgid "to apply changes."
+msgstr "应用更改。"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "to save comments."
+msgstr "保存评论。"
+
+#: admin/classes/class-commenting-block-settings-table.php:17
+msgid "Title"
+msgstr "标题"
+
+#: admin/partials/commenting-block-webiste-activity.php:101
+#: admin/assets/js/src/commenting-block-admin.js:1848
+#: admin/assets/js/src/commenting-block-admin.js:1884
+msgid "Today"
+msgstr "今天"
+
+#: admin/partials/commenting-block-settings-page.php:228
+msgid "Test Integration"
+msgstr "测试集成"
+
+#: admin/assets/js/dist/block.build.min.js:56051 
+#: admin/assets/js/dist/block.build.min.js:56125
+msgid "The comment you are trying to access has been closed!"
+msgstr "您尝试访问的评论已关闭！"
+
+#: admin/partials/commenting-block-settings-page.php:129
+msgid "This an easy-to-use plugin—the best one I’m aware of—for those who have an editorial process. My wife is a blogger and I’m her editor. We’ve only begun taking advantage of it but I wanted to offer a positive shout out."
+msgstr "这是一个易于使用的插件——我所知道的最好的插件——适合那些有编辑过程的人。我的妻子是一位博主，我是她的编辑。我们才刚刚开始利用它，但我想发出积极的声音。"
+
+#: admin/partials/commenting-block-settings-page.php:147
+msgid "This is exactly what I was looking for. This plugin works flawlessly. Great job."
+msgstr "这正是我一直在寻找的。这个插件完美无缺。很好。"
+
+#: admin/settings/settings-general.php:17
+msgid "This column will disappear from the Post List if this is checked."
+msgstr "如果选中此项，该列将从帖子列表中消失。"
+
+#: admin/settings/settings-general.php:30
+msgid "This reminder will disappear from the Block Editor if this is checked."
+msgstr "如果选中此项，此提醒将从块编辑器中消失。"
+
+#: admin/settings/settings-general.php:54
+msgid "This floating toolbar to add quick comments and suggestions will disappear from the Block Editor if this is checked."
+msgstr "如果选中此项，用于添加快速评论和建议的浮动工具栏将从块编辑器中消失。"
+
+#: admin/partials/commenting-block-settings-page.php:165
+msgid "The plug-in an awesome. It works fantastic. It is one of the great features of our platform.The plug-in an awesome. It works fantastic. It is one of the great features of our platform."
+msgstr "该插件很棒。它工作得很好。这是我们平台的一大特色。插件很棒。它工作得很好。这是我们平台的一大特色。"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1303
+msgid "Text Color"
+msgstr "文字颜色"
+
+#: admin/partials/commenting-block-settings-page.php:415
+msgid "Turn ON"
+msgstr "打开"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1475
+msgid "to"
+msgstr "至"
+
+#: admin/assets/js/src/activityCentre.js:1069
+#: admin/assets/js/src/activityCentre.js:1083
+#: admin/assets/js/src/activityCentre.js:1185
+#: admin/assets/js/src/activityCentre.js:1320
+msgid "Users Collaboration"
+msgstr "用户协作"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1300
+msgid "Underline"
+msgstr "强调"
+
+#: admin/assets/js/src/component/board.js:493
+msgid "Unknown User"
+msgstr "未知用户"
+
+#: admin/partials/commenting-block-settings-page.php:52
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "Upgrade"
+msgstr "升级"
+
+#: admin/partials/commenting-block-settings-page.php:70
+msgid "unsaved comments."
+msgstr "未保存的评论。"
+
 #: admin/partials/commenting-block-settings-page.php:79
 msgid "Visit Site"
 msgstr "造访网站"
 
+#: admin/partials/commenting-block-settings-page.php:90
+msgid "VIP"
+msgstr "贵宾"
+
+#: admin/partials/commenting-block-settings-page.php:103
+msgid "VIP Support"
+msgstr "贵宾支持"
+
+#: admin/partials/commenting-block-settings-page.php:22
+#: admin/partials/commenting-block-settings-page__premium_only.php:23
+msgid "Version 3.0.1"
+msgstr "版本 3.0.1"
+
 #: admin/partials/commenting-block-settings-page.php:78
 msgid "WordPress Development Experts & WordPress VIP Partner Agency"
 msgstr "WordPress开发专家和WordPress VIP合作伙伴代理"
+
+#: admin/assets/js/src/activityCentre.js:1031
+msgid "When enabled, all the notification boxes for suggested edits will disappear to provide a non-distracted editing experience. You can continue to track your edits."
+msgstr "启用后，建议编辑的所有通知框都将消失，以提供不分心的编辑体验。您可以继续跟踪您的编辑。"
+
+#: admin/assets/js/src/activityCentre.js:1043
+msgid "When enabled, all the comment boxes will disappear to provide a non-distracted editing experience. You can still add a comment to your post."
+msgstr "启用后，所有评论框都将消失，以提供不分心的编辑体验。您仍然可以在帖子中添加评论。"
+
+#: admin/partials/commenting-block-settings-page.php:402
+msgid "When an author tries to Publish a post with pending comments or suggestions, alert and remind them about it, but they can"
+msgstr "当作者尝试发布带有未决评论或建议的帖子时，提醒并提醒他们，但他们可以"
+
+#: admin/partials/commenting-block-settings-page.php:414
+msgid "When an author tries to publish a post with pending comments or suggestions, remind them about it and"
+msgstr "当作者尝试发布带有未决评论或建议的帖子时，提醒他们并"
+
+#: admin/partials/commenting-block-settings-page.php:152
+msgid "WordPress Team Lead"
+msgstr "WordPress 团队负责人"
+
+#: admin/partials/commenting-block-settings-page.php:220
+msgid "Webhook URL"
+msgstr "网络挂钩网址"
+
+#: admin/assets/js/src/suggestion/block-extend-controls.js:1418
+msgid "with URL"
+msgstr "使用 URL"
+
+#: admin/assets/js/src/commenting-block-admin.js:115
+msgid "Yes"
+msgstr "是的"
+
+#: admin/assets/js/dist/block.build.min.js:58295
+msgid "Multiple comments are not possible on the same block"
+msgstr "您不能对同一个块发表多个评论。"
+
+#: admin/assets/js/dist/block.build.min.js:56458
+msgid "Multiple comments are not possible on the same block."
+msgstr "您不能对同一文本给出多个评论。"
+
+
+#: admin/assets/js/commenting-block-admin.js:1162
+msgid "Your @mention will add people to this discussion and send an email."
+msgstr "您的 @mention 会将人员添加到此讨论中并发送电子邮件。"
+
+#: admin/assets/js/src/activityCentre.js:1003
+msgid "You can suggest changes to a post without changing the original text with the suggesting-edit feature. When enabled, any changes to this post will be highlighted to review by the post’s author."
+msgstr "您可以使用建议编辑功能在不更改原始文本的情况下建议对帖子的更改。启用后，此帖子的任何更改都将突出显示以供帖子作者查看。"
+
+#: admin/assets/js/src/activityCentre.js:615
+#: admin/assets/js/src/activityCentre.js:622
+msgid "You are not Authorised to view this..."
+msgstr "您无权查看此内容..."
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:527
+#: admin/assets/js/src/suggestion/block-extend-control.js:538
+msgid "Your last action has generated unexpected output. So that is why you face some issues like breaking the editing block."
+msgstr "您的最后一个操作产生了意外的输出。所以这就是为什么你会遇到一些问题，比如破坏编辑块。"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:1046
+msgid "You can not give multiple suggestions on the same Text."
+msgstr "您不能对同一文本给出多个建议。"
+
+#: admin/assets/js/src/suggestion/block-extend-control.js:573
+msgid "Your HTML return output is not valid. It may break or faced some issue of editing Gutenberg block."
+msgstr "您的 HTML 返回输出无效。它可能会破坏或面临编辑古腾堡块的一些问题。"
+
+#: admin/classes/class-commenting-block-email-templates.php:347
+#: admin/classes/class-commenting-block-email-templates.php:378
+#: admin/classes/class-commenting-block-email-templates.php:399
+#: admin/classes/class-commenting-block-email-templates.php:608
+msgid "You have been mentioned"
+msgstr "你被提及"
+
+#: admin/assets/js/src/component/board.js:288
+msgid "You"
+msgstr "你"
+
+#: admin/partials/commenting-block-webiste-activity.php:103
+#: admin/assets/js/src/commenting-block-admin.js:1876
+msgid "Yesterday"
+msgstr "昨天"
+
+#: admin/partials/commenting-block-settings-page.php:264
+msgid "Your license key expires on"
+msgstr "您的许可证密钥到期日期"
+
+#: admin/assets/js//commenting-block-admin.js:2530
+msgid "You can't publish this post before resolving all suggestions or comments. Please review and resolve all open suggestions and comments before moving forward."
+msgstr "您无法发布带有待处理评论或建议的帖子。请在发布之前查看并解决所有意见和建议。"
+
+#: admin/assets/js/src/commenting-block-admin.js:109
+msgid "You have"
+msgstr "你有"
+
+#: admin/partials/commenting-block-settings-page.php:106
+msgid "You are fully protected by our 100% Money Back Guarantee. If you don’t like our products over the next 14 days, then we will gladly refund your money. No questions asked!"
+msgstr "您受到我们 100% 退款保证的全面保护。如果您在接下来的 14 天内不喜欢我们的产品，那么我们很乐意为您退款。无话可问！"
+
+#: admin/partials/commenting-block-settings-page.php:312
+msgid "You will get real-time updates for mentions, replies, and other comment activities of Multicollab in your Slack channel. It allows you to fit Multicollab in a place you know your team is checking all day."
+msgstr "您将在 Slack 频道中获得 Multicollab 的提及、回复和其他评论活动的实时更新。它允许您将 Multicollab 安装在您知道您的团队整天都在检查的地方。"
+
+#:
+msgid "PM"
+msgstr "下午"
+
+#:
+msgid "pm"
+msgstr "下午"
+
+#:
+msgid "am"
+msgstr "上午"
+
+#:
+msgid "AM"
+msgstr "上午"

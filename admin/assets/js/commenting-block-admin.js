@@ -4,6 +4,7 @@
 
 (function ($) {
     'use strict';
+    const { __ } = wp.i18n;
     /**
      * All of the code for the admin-facing JavaScript source
      * should reside in this file.
@@ -14,30 +15,29 @@
      *
      */
 
-    window.addEventListener('click', function(e){   
-    if(jQuery('.edit-post-layout').hasClass('is-sidebar-opened')){
-        $('.md-floating-button').remove();
-        jQuery('.interface-interface-skeleton__sidebar').removeClass('cf-sidebar-closed'); 
-    }
-        if (document.getElementsByClassName('edit-post-visual-editor').length > 0 && document.getElementsByClassName('edit-post-visual-editor')[0].contains(e.target)){
-          // Clicked in editor
-          jQuery('.interface-interface-skeleton__sidebar').addClass('cf-sidebar-closed');
-          closeMulticollabSidebar();
-        } 
-       // $('.interface-interface-skeleton__sidebar').removeClass('cf-sidebar-closed'); 
-      });
-     
+    /*  Trigger to close sidebar on post editor focus */
+    window.addEventListener('click', function (e) {
+        if (jQuery('.edit-post-layout').hasClass('is-sidebar-opened')) {
+            jQuery('.interface-interface-skeleton__sidebar').removeClass('cf-sidebar-closed');
+        }
+        if (document.getElementsByClassName('edit-post-visual-editor').length > 0 && document.getElementsByClassName('edit-post-visual-editor')[0].contains(e.target)) {
+            jQuery('.interface-interface-skeleton__sidebar').addClass('cf-sidebar-closed');
+            // Clicked in editor
+            closeMulticollabSidebar();
+        }
+    });
+
     /** last suggestion reply button tooltip */
     $(document).on('mouseover', '.shareCommentContainer .btn', function () {
         var boxHeight = jQuery(this).parents(".cls-board-outer").outerHeight() + 30;
         var parentHeight = jQuery("#md-comments-suggestions-parent").outerHeight() - boxHeight - 50;
         var boxPosition = jQuery(this).parents(".cls-board-outer").css('top');
-        if( parentHeight < parseInt(boxPosition) - boxHeight + 30 ) {            
+        if (parentHeight < parseInt(boxPosition) - boxHeight + 30) {
             var currentTop = jQuery(this).parents(".cls-board-outer").css('top');
-            currentTop = parseInt( currentTop.replace('px', '') ) - 50;
-            jQuery(this).parents(".cls-board-outer").css('top', currentTop + 'px'); 
+            currentTop = parseInt(currentTop.replace('px', '')) - 50;
+            jQuery(this).parents(".cls-board-outer").css('top', currentTop + 'px');
         }
-    });  
+    });
     /* Trigger to add/remove class from block
        when block level sugggestions are created  */
     
@@ -46,14 +46,14 @@
     $(document).on('click', '.js-resolve-comment', function () {
         $(this).parents(".commentContainer").siblings().find(".comment-delete-overlay").removeClass("show");
         $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text("Delete this thread?");
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text(__('Delete this thread?', 'content-collaboration-inline-commenting'));
     });
 
     $(document).on('click', '.resolve-cb', function () {
         $(this).parents(".commentContainer").siblings().find(".comment-delete-overlay").removeClass("show");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text("Resolve this thread?");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-delete").text("Yes");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-cancel").text("No");
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text(__('Resolve this thread?', 'content-collaboration-inline-commenting'));
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-delete").text(__('Yes', 'content-collaboration-inline-commenting'));
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-cancel").text(__('No', 'content-collaboration-inline-commenting'));
         $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
     });
 
@@ -64,9 +64,9 @@
 
     $(document).on('click', '.js-trash-suggestion', function () {
         $(this).parents(".commentContainer").siblings().find(".comment-delete-overlay").removeClass("show");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text("Delete this Suggestion");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-delete").text("Yes");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-cancel").text("No");
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text(__('Delete this Suggestion?', 'content-collaboration-inline-commenting'));
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-delete").text(__('Yes', 'content-collaboration-inline-commenting'));
+        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-cancel").text(__('No', 'content-collaboration-inline-commenting'));
         $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
     });
 
@@ -82,11 +82,11 @@
         if ($this.closest('.user-commented-on').find(".show-all").hasClass('js-hide')) {
             $this.closest('.user-commented-on').find(".show-all").removeClass('js-hide');
             $this.closest('.user-commented-on').find(".show-less").addClass('js-hide');
-            $(this).text('Collapse');
+            $(this).text(__('Collapse', 'content-collaboration-inline-commenting'));
         } else {
             $this.closest('.user-commented-on').find(".show-all").addClass('js-hide');
             $this.closest('.user-commented-on').find(".show-less").removeClass('js-hide');
-            $(this).text('Show all');
+            $(this).text(__('Show all', 'content-collaboration-inline-commenting'));
         }
     });
 
@@ -98,7 +98,7 @@
                 let commentCount = parseInt($(this).find('.boardTop .commentContainer').length);
 
                 if (commentCount > getCommentsLimit() && !$(this).hasClass('focus')) {
-                    $(this).find('.show-all-comments').html(`Show all ${commentCount - 1} replies`);
+                    $(this).find('.show-all-comments').html(`${sprintf(__('Show all %d replies', 'content-collaboration-inline-commenting'), commentCount - 1)}`); //phpcs:ignore
                     $(this).find('.show-all-comments').show(); //phpcs:ignore
                     $(this).find('.boardTop .commentContainer').hide();
                     $(this).find('.boardTop .commentContainer').slice(0, getCommentsLimit()).show();
@@ -125,7 +125,7 @@
         $(this).parents(".user-data-row").find(".user-data-box").show();
         $(this).parents(".user-data-row").find(".show-all-comments").hide();
     });
-    
+
     /* editor layout update action trigger for commentOn class  */
     $(document).on("editorLayoutUpdate", function () {
 
@@ -145,7 +145,7 @@
         }
     });
 
-
+    // alert(  );
     // Stripping out unwanted <mdspan> tags from the content.
     $(window).on('load', function () {
         var findMdSpan = 'mdspan';
@@ -156,12 +156,11 @@
             }
 
         });
+
     })
 
     // Resetting All Class From Activity Center
     $(document).on('click', '.cls-board-outer', function () {
-        $('.md-floating-button').remove();
-
         var boardID = $(this).attr('id');
 
         $('.js-activity-centre .user-data-row').removeClass('active');
@@ -172,21 +171,39 @@
         const queryString = window.location.search; //phpcs:ignore
         const urlParams = new URLSearchParams(queryString);
         const current_url = urlParams.get('current_url');
+        let shareUrl = getCookie("current_url");
+
         if (current_url) {
             urlParams.delete('current_url');
             window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
         }
+        if (shareUrl) {
+            deleteCookie('current_url');
+
+        }
+
         $('[datatext="' + boardID + '"]').addClass('is-selected');
         jQuery.event.trigger({ type: "showHideComments" });
 
     });
     $(document).on('focus', '.cf-share-comment', function () {
         $('.cf-share-comment').addClass('comment-focus');
-        $('.js-cf-edit-comment a.js-mentioned').css('white-space', 'pre-wrap');
-        $('.btn-wrapper').css('display','block');
+        // commented for (save button activated when mention user available at last and press arrow keys) /@author Meet Mehta /@since VIP Plan
+        //$('.js-cf-edit-comment a.js-mentioned').css('white-space', 'pre-wrap');
+        $('.btn-wrapper').css('display', 'block');
+
+        // Add space between suggestion and comment loating board. @author: Rishi Shah.
+        $('.cls-board-outer').css('opacity', '0.4');
+        //var focusParentElement = $(this).parent().parent().parent().parent().attr('id');
+        var focusParentElement = $(this).closest('.cls-board-outer').attr('id');
+        $('#' + focusParentElement).css('opacity', '1');
+        $('#' + focusParentElement).css('z-index', '999999');
+        $(".cls-board-outer:not(#" + focusParentElement + ")").css('top', '0');
+
     })
     $(document).on('focusout', '.cf-share-comment', function () {
         $('.cf-share-comment').removeClass('comment-focus');
+
     })
 
     $(document).on('click', '.cf-sidebar-settings', function () {
@@ -200,7 +217,11 @@
     //comment below line to resolved copy url board hilight issue.
     //$('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
     // On Document Ready Event.
-    $(document).ready(function () {
+    $(document).ready(function () {        
+        // Add loader on setting page loading. @author: Rishi @since-3.0
+        $(".cf_settings_loader").delay(100).fadeOut("slow");
+        $('body').css('overflow-y', 'unset');
+
         let doingAjax = false;
         // If thread focused via an activity center,
         // it is in lock mode, so clicking any para
@@ -243,6 +264,22 @@
             $('#' + tabID).show();
         });
 
+        //Hide free guide notification popup
+        $(document).on('click', '.cf-pluginpop-close', function () {
+            var popupName = $(this).attr('data-popup-name');
+            setCookie( 'banner_' + popupName, "yes", 60 * 24);
+            $('.' + popupName).hide();
+        });
+
+
+        // Dashboard features popup /@Minal Diwan Version 3.0
+        $(document).on('click', '.cf-board-overlap-feature .cf-board-overlapbox', function () {
+            //  e.preventDefault();
+              $('.cf-board-overlapboxhover').not($(this).find('.cf-board-overlapboxhover')).hide();
+              $(this).find('.cf-board-overlapboxhover').toggle();
+          });
+
+
         // Save Settings.
         $('#cf_settings').on('submit', function (e) {
             e.preventDefault();
@@ -259,14 +296,114 @@
                 }, 3000);
             });
         });
+        // Uncheck other suggestion setting if select one.
+        $('input.cf_suggestion_stop_publish_options').on('change', function () {
+            $('input.cf_suggestion_stop_publish_options').not(this).prop('checked', false);
+        });
+
+        // On change event for suggestion mode options.
+        $(document).on('change', 'input.cf_suggestion_mode_options', function () {
+
+            //Uncheck other options.
+            $('input.cf_suggestion_mode_options').not(this).prop('checked', false);
+
+            var val = $('input.cf_suggestion_mode_options:checked').val();
+            if (val) {
+                if ('cf_suggestion_specific_post_categories' === val) {
+                    //jQuery('.cf_specific_post_categories_section').css('display', 'block');
+                    jQuery('.cf_specific_post_categories_section').show();
+                } else {
+                    jQuery('.cf_specific_post_categories_section').hide();
+                }
+
+                if ('cf_suggestion_specific_post_types' === val) {
+                    //jQuery('.cf_specific_post_categories_section').css('display', 'block');
+                    jQuery('.cf_specific_post_type_section').show();
+                } else {
+                    jQuery('.cf_specific_post_type_section').hide();
+                }
+
+            } else {
+                jQuery('.cf_specific_post_categories_section').hide();
+                jQuery('.cf_specific_post_type_section').hide();
+            }
+        });
+
+        // Save Publishing Settings.
+        $('#cf_suggestion_settings').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_save_suggestions',
+                'formData': $(this).serialize()
+            };
+            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
+                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                $('#cf_suggestion_settings .cf-success').slideDown(300);
+                setTimeout(function () {
+                    $('#cf_suggestion_settings .cf-success').slideUp(300);
+                }, 3000);
+            });
+        });
+
+        // Save Publishing Settings.
+        $('#cf_email_notification').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_save_email_notification',
+                'formData': $(this).serialize()
+            };
+            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
+                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                $('#cf_email_notification .cf-success').slideDown(300);
+                setTimeout(function () {
+                    $('#cf_email_notification .cf-success').slideUp(300);
+                }, 3000);
+            });
+        });
+
+        $('.cf-specific-post-categories-multiple').select2({
+            placeholder: "Please select a category"
+        });
+
+        $('.cf-specific-post-type-multiple').select2({
+            placeholder: "Please select a post type"
+        });
+
+        // Save Suggestion Mode.
+        $('#cf_suggestion_mode').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_save_suggestions_mode',
+                'formData': $(this).serialize()
+            };
+
+            $.post(ajaxurl, settingsData, function (data) { // eslint-disable-line
+                if ('saved' === data) {
+                    $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                    $('#cf_suggestion_mode .cf-success').slideDown(300);
+                    setTimeout(function () {
+                        $('#cf_suggestion_mode .cf-success').slideUp(300);
+                    }, 3000);
+                } else {
+                    $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                    $('#cf_suggestion_mode .cf-error').slideDown(300);
+                    setTimeout(function () {
+                        $('#cf_suggestion_mode .cf-error').slideUp(300);
+                    }, 3000);
+                }
+            });
+        });
 
         $(document).on('click', '.reset-filter', function () {
             $(this).parent().find('select').prop('selectedIndex', 0);
             $(this).parent().submit();
         });
-         // Uncheck other suggestion setting if select one.
-         $('input.cf_suggestion_stop_publish_options').on('change', function() {
-            $('input.cf_suggestion_stop_publish_options').not(this).prop('checked', false);  
+        // Uncheck other suggestion setting if select one.
+        $('input.cf_suggestion_stop_publish_options').on('change', function () {
+            $('input.cf_suggestion_stop_publish_options').not(this).prop('checked', false);
         });
 
         // Save Publishing Settings.
@@ -285,26 +422,85 @@
                 }, 3000);
             });
         });
+
+        // Save Settings for slack intigration.
+        $('#cf_slack_intigration').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_save_slack_intigration',
+                'formData': $(this).serialize()
+            };
+            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
+                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                $('#cf-slack-notice .cf-success').slideDown(300);
+                setTimeout(function () {
+                    $('#cf-slack-notice .cf-success').slideUp(300);
+                }, 3000);
+            });
+        });
+
+        // Add slect2 for channel selectbox.
+        jQuery('#cf_slack_channels').select2({
+            templateResult: formatState,
+            templateSelection: formatState
+        });
+
+        function formatState(opt) {
+            if (!opt.id) {
+                return opt.text.toLowerCase();
+            }
+
+            var optimage = $(opt.element).attr('data-image');
+            if (!optimage) {
+                return opt.text.toLowerCase();
+            } else {
+                var $opt = $(
+                    '<span><img src="' + optimage + '" width="12px" /> ' + opt.text.toLowerCase() + '</span>'
+                );
+                return $opt;
+            }
+        };
+
+
+
+        // Slack test intigration.
+        $('#cf-slack-integration-disconnect').on('click', function (e) {
+
+            var hidden_site_url = jQuery('.hidden_site_url').val();
+
+            const settingsData = {
+                'action': 'cf_slack_intigration_revoke',
+            };
+            $.post(ajaxurl, settingsData, function (data) { // eslint-disable-line
+                if ('ok' === data) {
+                    jQuery('.cf-slack-integration-button').html('<a href="https://slack.com/oauth/v2/authorize?client_id=3297732204756.3694963903943&scope=incoming-webhook,chat:write,commands,conversations.connect:write&user_scope=groups:write,channels:read,groups:read,channels:write&state=' + hidden_site_url + '" class="cf-slack-integration-connect">' + __('Connect', 'content-collaboration-inline-commenting') + '</a>'); // phpcs:ignore
+                    jQuery('.cf_slack_channel_setting').hide();
+                }
+            });
+        });
+
+
+        $(document).on('click', '.reset-filter', function () {
+            $(this).parent().find('select').prop('selectedIndex', 0);
+            $(this).parent().submit();
+        });
         // Save permissions.
-             $('#cf_permissions').on('submit', function (e) {
-                e.preventDefault();
-                $(this).find('[type="submit"]').addClass('loading');
-                const settingsData = {
-                    'action': 'cf_save_permissions',
-                    'formData': $(this).serialize()
-                };
-                $.post(ajaxurl, settingsData, function () { // eslint-disable-line
-                    $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                    $('#cf-permissions-notice .cf-success').slideDown(300);
-                    setTimeout(function () {
-                        $('#cf-permissions-notice .cf-success').slideUp(300);
-                    }, 3000);
-                });
+        $('#cf_permissions').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_save_permissions',
+                'formData': $(this).serialize()
+            };
+            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
+                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                $('#cf-permissions-notice .cf-success').slideDown(300);
+                setTimeout(function () {
+                    $('#cf-permissions-notice .cf-success').slideUp(300);
+                }, 3000);
             });
-            $(document).on('click', '.reset-filter', function () {
-                $(this).parent().find('select').prop('selectedIndex', 0);
-                $(this).parent().submit();
-            });
+        });
 
         // Save show_avatar option in a localstorage.
         const data = {
@@ -315,6 +511,7 @@
             localStorage.setItem("showAvatars", response.showAvatars);
             localStorage.setItem("commentingPluginUrl", response.commentingPluginUrl);
         });
+
         // Focus comment popup on click.
 
         $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function (e) {
@@ -324,7 +521,6 @@
             if (target.is(".commentContainer .comment-actions, .commentContainer .comment-actions *")) {
                 return;
             }
-
             const _this = $(this);
             // Reset Comments Float.
             $('#md-span-comments .cls-board-outer').removeAttr('style');
@@ -333,7 +529,8 @@
             $('#md-span-comments .comment-delete-overlay').removeClass('show');
             $('#md-span-comments .comment-resolve .resolve-cb').prop("checked", false);
             $('#md-span-comments .cls-board-outer .buttons-wrapper').removeClass('active');
-            $('.btn-wrapper').css('display','none');
+            $('.btn-wrapper').css('display', 'none');
+            removeFloatingIcon();
             _this.addClass('focus');
             _this.addClass('is-open');
 
@@ -350,30 +547,6 @@
             _this.css('opacity', '1');
             _this.offset({ top: topOfText });
             scrollBoardToPosition(topOfText);
-            /*var scrollTopClass = '';
-            if (0 !== $('.interface-interface-skeleton__content').length) {
-                // Latest WP Version
-                scrollTopClass = '.interface-interface-skeleton__content';
-
-            } else if (0 !== $('.block-editor-editor-skeleton__content').length) {
-                // Latest WP Version
-                scrollTopClass = '.block-editor-editor-skeleton__content';
-
-            } else if (0 !== $('.edit-post-layout__content').length) {
-                // Old WP Versions
-                scrollTopClass = '.edit-post-layout__content';
-
-            } else {
-                // Default
-                scrollTopClass = 'body';
-            }
-
-            topOfText = topOfText + $(scrollTopClass).scrollTop();
-
-            $(scrollTopClass).animate({
-                scrollTop: topOfText - 150
-            }, 1000);*/
-
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
 
@@ -424,7 +597,7 @@
                         <li class="cf-user-list-item active" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
                             <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
                             <div class="cf-user-info">
-                                <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${user.role}</small></p>
+                                <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
                             </div>
                         </li>`;
                     } else {
@@ -432,7 +605,7 @@
                         <li class="cf-user-list-item" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
                             <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
                             <div class="cf-user-info">
-                                <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${user.role}</small></p>
+                                <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
                             </div>
                         </li>`;
                     }
@@ -445,6 +618,7 @@
                     </div>
                 `;
                 emailList = DOMPurify.sanitize(emailList);
+
                 $(emailList).insertAfter(appendTo); // phpcs:ignore
             }
         }
@@ -601,7 +775,6 @@
                 })
             }
             $(document.body).on('focus keyup paste', '.js-cf-edit-comment', function () {
-
                 mood = 'edit';
                 el = $(this).parents(parentBoardClass).attr('id');
                 currentCommentBoardID = $(this).parents('.commentContainer').attr('id');
@@ -611,7 +784,6 @@
 
             });
             // Restrict Br in newline in firefox
-       
             if ('firefox' === browser || 'safari' === browser) {
                 $(document.body).on("keydown", '.cf-share-comment', function (e) {
                     if (e.keyCode == 13 && !e.shiftKey) {
@@ -622,7 +794,8 @@
             }
 
             // Clearing out assignable dom on edit save or edit cancel.
-            $(document.body).on('click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function () {
+            // remove body from document.body - modified by /@author Meet Mehta/@since VIP Plan
+            $(document).on('click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function () {
                 $(`${currentBoardID} .cf-assign-to`).remove();
             })
 
@@ -634,6 +807,7 @@
             var mentioncounter = 0;
             $(document.body).on('click', '.cls-board-outer, .commentInnerContainer .btn-comment, .cf-share-comment-wrapper .btn, .block-editor-writing-flow .is-root-container', function () {
                 mentioncounter = 0;
+                removeFloatingIcon();
             });
             /**
              * ========================================
@@ -655,7 +829,7 @@
 
 
                 // Removing assignable checkbox if that user's email is not in the content or removed.
-               
+
                 if (undefined !== typedText && typedText.length > 0) {
                     var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
                     var emailSet = typedText.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm);
@@ -673,7 +847,7 @@
                             let isThere = typedText.match(checkEmailPattern);
                             if (!isThere && !doingAjax) {
 
-                                doingAjax=true;
+                                doingAjax = true;
                                 var appendInCheckbox = [];
                                 $.ajax({
                                     url: ajaxurl, // eslint-disable-line
@@ -707,12 +881,14 @@
                                             $(assignCheckBoxId).prop('checked', false);
                                             $(assignCheckBoxId).data('user-email', appendInCheckbox[0].user_email)
                                             $(assignCheckBoxId).val(appendInCheckbox[0].ID);
-                                            $(assignCheckBoxId).next('i').text(`Assign to  ${appendInCheckbox[0].display_name}`);
+
+                                            // code - added by meet - solution of assign to when delete
+                                            $(assignCheckBoxId).next('i').text(`${sprintf(__('Assign to %s', 'content-collaboration-inline-commenting'), appendInCheckbox[0].display_name)}`);
                                         }
 
                                     }
                                 })
-                               
+
                             }
                         }
                     } else {
@@ -756,33 +932,31 @@
                 var el = $(createTextarea).get(0);
                 cursorPos = getCaretPosition(el);
 
-           // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
-               if ( '@' === e.key || 'KeyG' === e.code ||  50 === e.which  && (typedText && typedText.length > 0 ) && $(createTextarea).is(':focus') === true) {
+                // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
+                if ('@' === e.key || 'KeyG' === e.code || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true) {
                     doingAjax = false;
                     var prevCharOfEmailSymbol;
                     mentioncounter++;
                     var showSuggestionFunc;
-                    console.log(typedText);
-                    if(undefined !== typedText){
+                    if (undefined !== typedText) {
                         prevCharOfEmailSymbol = typedText.substr(-1, 1);
-                    
-                    if ('@' === prevCharOfEmailSymbol) {
-                        showSuggestionFunc = showSuggestion(prevCharOfEmailSymbol);
-                    }else{
-                        
-                        var index = typedText.indexOf("@");
-                        var preText = typedText.charAt(index);
-                    
-                        if (preText.indexOf(" ") > 0 || preText.length > 0 ){
-                            var words = preText.split(" ");
-                            var prevWords = (words[words.length - 1]);
+
+                        if ('@' === prevCharOfEmailSymbol) {
+                            showSuggestionFunc = showSuggestion(prevCharOfEmailSymbol);
+                        } else {
+                            var index = typedText.indexOf("@");
+                            var preText = typedText.charAt(index);
+
+                            if (preText.indexOf(" ") > 0 || preText.length > 0) {
+                                var words = preText.split(" ");
+                                var prevWords = (words[words.length - 1]);
+                            }
+                            if ('@' === prevWords) {
+                                showSuggestionFunc = showSuggestion(prevWords);
+                            }
+
                         }
-                        if ('@' === prevWords) {
-                            showSuggestionFunc = showSuggestion(prevWords);
-                        }
-                       
                     }
-                }
                     if (showSuggestionFunc && mentioncounter <= 1 && !doingAjax) {
                         doingAjax = true;
                         // Fetch all email list.
@@ -801,6 +975,7 @@
                                 $(assignablePopup).remove(); // Remove previous DOM.
                                 var data = JSON.parse(res);
                                 emailList(createTextarea, data);
+                                mentioncounter = 0;  // Issue solved for add 2 mentions continues without space. @author: Rishi Shah.
                             }
                         })
                     } else {
@@ -812,6 +987,15 @@
                 if ((32 === e.which) || (13 === e.which) || (8 === e.which)) {
                     mentioncounter = 0;
                 }
+
+                //console.log(e.key);
+                // Issue solved after backspace and last work @. @author: Rishi Shah.
+                if ('Backspace' === e.key) {
+                    if (!$(createTextarea).text()) {
+                        trackedStr = '';
+                    }
+                }
+
                 if (true === isEmail && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true) {
                     var checkKeys = function (key) {
                         if (key === e.key) {
@@ -820,79 +1004,66 @@
                         return false;
                     }
 
+                    // console.log( "Cdsjbvdhk" );
+
                     if (!keysToAvoid.find(checkKeys)) {
 
                         // Check for backspace.
+                        //console.log( e.key );
                         if ('Backspace' === e.key) {
-
+                            //alert("single backspace");
                             let prevCharOfEmailSymbol = typedText.substr(-1, 1);
+                            //trackedStr = '';
+                            //console.log(prevCharOfEmailSymbol);
                             if ('@' === prevCharOfEmailSymbol) {
-                                    trackedStr = '';
+                                //trackedStr = '';
+                                trackedStr = '@'; // Issue solved after backspace and last work @. @author: Rishi Shah.
                             } else {
                                 trackedStr = trackedStr.slice(0, -1);
                             }
-                        } else if( 50 === e.which ) {
-                            trackedStr += '@';
+                        } else if (50 === e.which) {
+                            if ('@' !== trackedStr) {
+                                trackedStr += '@';
+                            }
                         } else {
-                            if( 50 !== e.which ) {
+                            if (50 !== e.which) {
                                 trackedStr += e.key;
                             }
-                            
                         }
 
+                        //trackedStr.replace("@@", "@");
+
                         // Check for ctrl+backspace.
-                        if ('Backspace' === e.key && true === e.ctrlKey) {
-                            let prevCharOfEmailSymbol = typedText.substr(-1, 1);
-                            if ('@' === prevCharOfEmailSymbol) {
-                                if ('' !== typedText) {
-                                    trackedStr = '@';
-                                } else {
-                                    trackedStr = '';
-                                }
-                            } else {
-                                trackedStr = '';
-                            }
-                        }
+                        // if ('Backspace' === e.key && true === e.ctrlKey) {
+                        //     //alert("Cntl backspace");
+                        //     let prevCharOfEmailSymbol = typedText.substr(-1, 1);
+                        //     //trackedStr = '';
+                        //     if ('@' === prevCharOfEmailSymbol) {
+
+                        //         if ('' !== typedText) {
+                        //             trackedStr = '@';
+                        //         } else {
+                        //             trackedStr = '';
+                        //         }
+                        //     } else {
+                        //         trackedStr = '';
+                        //     }
+                        // }
                     }
                     if (13 === e.which) {
                         $(appendIn).remove();
                         $(assignablePopup).remove();
                     }
-               
-                    // If trackedStr is left to @ commented by pooja
-                   /* if ('@' === trackedStr && $(createTextarea).is(':focus') === true && cursorPos != 0 && !doingAjax) {
-                            doingAjax = true;
-                        //if(!keysToAvoid.includes(e.key) && 'Backspace' != e.key){
-                        $.ajax({
-                            url: ajaxurl, // eslint-disable-line
-                            type: 'post',
-                            data: {
-                                action: 'cf_get_user_email_list',
-                                postID: currentPostID,
-                                nonce: adminLocalizer.nonce, // eslint-disable-line
-                            },
-                            beforeSend: function () { },
-                            success: function (res) {
-                                $(appendIn).remove(); // Remove previous DOM.
-                                $(assignablePopup).remove(); // Remove previous DOM.
-                                var data = JSON.parse(res);
-                                emailList(createTextarea, data);
-                               
-                            }
-                            
-                        })
-                       
-                        //}   
-                       
-                    }*/
                     doingAjax = false;
+                    //console.log(trackedStr);
                     // If trackedStr contains other chars with @ as well.
                     if ('@' !== trackedStr && $(createTextarea).is(':focus') === true) {
+
                         let checkEmailSymbol = trackedStr.match(/^@\w+$/ig);
                         if (checkEmailSymbol && cursorPos != 0) {
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr(1);
-                            if ('' !== niddle && niddle.length >3) {
+                            if ('' !== niddle && niddle.length > 3) {
                                 // Sending Ajax Call to get the matched email list(s).
                                 $.ajax({
                                     url: ajaxurl, // eslint-disable-line
@@ -935,7 +1106,8 @@
             });
             // email list controlling by keyboard keys
             $(document.body).on('keydown', `.cf-share-comment`, function (e) {
-                if ([38, 40].indexOf(e.keyCode) > -1) {
+                // Replace '>' with '<' for UP and DOWN arrow key not working in Comment/Reply Board /@author Meet Mehta /@since VIP Plan
+                if ([38, 40].indexOf(e.keyCode) < -1) {
                     e.preventDefault();
                 }
                 if (e.which == 40) {
@@ -1080,41 +1252,40 @@
         }
         $(document.body).on('keydown', '.cf-system-user-email-list', function (e) {
             let el = '';
+            let checkbox;
             var parentBoardClass = '.cls-board-outer';
             let appendTo = '.cf-share-comment';
             var mentionedEmail = '.cf-system-user-email-list li';
             let checkBoxContainer = '.cf-assign-to';
             if (e.which == 13) {
-                let checkbox;
                 el = $(".cls-board-outer.focus.is-open").attr('id');
                 let thisUserId = $(this).find(".cf-user-list-item.active").attr('data-user-id');
                 let thisDisplayName = $(this).find(".cf-user-list-item.active").attr('data-display-name');
                 let thisUserEmail = $(this).find(".cf-user-list-item.active").attr('data-email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).attr('data-user-id');
-                const assigntoText = (currentBoardAssinger) ? 'Reassign to  ' : 'Assign to  ';
+                const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
                 if (multicollab_fs.can_use_premium_code) {
                     checkbox = `
                     <div class="cf-assign-to">
                     <div class="cf-assign-to-inner">
                         <label for="${el}-cf-assign-to-user">
-                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
+                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
                         </label>
                         <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
                     </div>
-                    <span class="assignMessage">Your @mention will add people to this discussion and send an email.</span>     
+                    <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
                     </div>`;
                 } else {
                     checkbox = `
                     <div class="cf-assign-to">
                     <div class="cf-assign-to-inner">
                         <label for="${el}-cf-assign-to-user">
-                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
+                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
                         </label>
                         <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
                     </div>
                     </div>`;
-   
-                } 
+                }
                 if ('' !== el) {
                     if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
                         $(`#${el} ${checkBoxContainer}`).empty();
@@ -1140,25 +1311,25 @@
 
             // On Suggested Email Click.
             $(document.body).on('click', mentionedEmail, function () {
-                let checkbox ;
+                let checkbox;
                 let thisUserId = $(this).data('user-id');
                 let thisDisplayName = $(this).data('display-name');
                 let thisUserEmail = $(this).data('email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).data('user-id');
-                const assigntoText = (currentBoardAssinger) ? 'Reassign to ' : 'Assign to ';
+                const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
                 if (multicollab_fs.can_use_premium_code) {
-                 checkbox = `
+                    checkbox = `
                 <div class="cf-assign-to">
                 <div class="cf-assign-to-inner">
                     <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
+                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
                     </label>
                     <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
                 </div>
-                <span class="assignMessage">Your @mention will add people to this discussion and send an email.</span>     
+                <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
                 </div>`;
-                }else{
-                     checkbox = `
+                } else {
+                    checkbox = `
                 <div class="cf-assign-to">
                 <div class="cf-assign-to-inner">
                     <label for="${el}-cf-assign-to-user">
@@ -1168,7 +1339,7 @@
                 </div>
                 </div>`;
 
-                } 
+                }
                 // Get the assigner id of the current board.
                 let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
                 if (thisUserId !== currentBoardAssingerID) {
@@ -1184,7 +1355,7 @@
                 if (multicollab_fs.can_use_premium_code) {
                     $(document).on("click", '#' + el + '-cf-assign-to-user', function () {
                         var checked = $('#' + el + ' .cf-assign-to-user').is(':checked');
-                        $('#' + el + ' .assignMessage').text(checked ? 'The Assigned person will be notified and responsible for marking as done.' : 'Your @mention will add people to this discussion and send an email.');
+                        $('#' + el + ' .assignMessage').text(checked ? __('The Assigned person will be notified and responsible for marking as done.', 'content-collaboration-inline-commenting') : __('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting'));
                     });
                 }
             });
@@ -1194,37 +1365,33 @@
 
                 if ($(this).parents(parentBoardClass).hasClass('cm-board')) {
                     // e.preventDefault();
-                    let checkbox;
                     el = $(this).parents(parentBoardClass).attr('id');
+                    let checkbox;
                     let appendTo = `#${el} .cf-assign-to`;
                     let assignablePopup = `#${el} .cf-assignable-list-popup`;
                     let thisUserId = $(this).data('user-id');
                     let thisUserEmail = $(this).data('email');
                     let thisDisplayName = $(this).data('display-name');
                     let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
-                    const assigntoText = (currentBoardAssingerID) ? 'Reassign to ' : 'Assign to ';
+                    const assigntoText = (currentBoardAssingerID) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
                     if (multicollab_fs.can_use_premium_code) {
                         checkbox = `
-                        <div class="cf-assign-to">
-                        <div class="cf-assign-to-inner">
-                            <label for="${el}-cf-assign-to-user">
-                                <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
-                            </label>
-                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                        </div>
-                        <span class="assignMessage">Your @mention will add people to this discussion and send an email.</span>     
-                        </div>`;
+                            <div class="cf-assign-to-inner">
+                                <label for="${el}-cf-assign-to-user">
+                                    <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
+                                </label>
+                                <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
+                            </div>    
+                            <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>  
+                        `;
                     } else {
                         checkbox = `
-                        <div class="cf-assign-to">
-                        <div class="cf-assign-to-inner">
-                            <label for="${el}-cf-assign-to-user">
-                                <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
-                            </label>
-                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                        </div>
-                        </div>`;
-       
+                            <div class="cf-assign-to-inner">
+                                <label for="${el}-cf-assign-to-user">
+                                    <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
+                                </label>
+                                <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
+                            </div>`;
                     }
 
                     let checkboxFragments = document.createRange().createContextualFragment(checkbox);
@@ -1248,14 +1415,14 @@
                     <li data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}">
                         <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
                         <div class="cf-user-info">
-                            <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${user.role}</small></p>
+                            <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
                         </div>
                     </li>
                     `;
                 });
                 listItem += `</ul>`
             } else {
-                listItem += `<strong class="cf-no-assignee">Sorry! No user found!</strong>`;
+                listItem += `<strong class="cf-no-assignee"> ${__('Sorry! No user found!', 'content-collaboration-inline-commenting')} </strong>`;
             }
             var assignListTemplate = `
                 <div class="cf-assignable-list-popup">
@@ -1366,7 +1533,7 @@
                 }
             })();
         }
-        manageContentEditableConsoleIssue();
+        // manageContentEditableConsoleIssue();
 
         // Read More Comments
         $(document).on('click', '.readmoreComment, .readlessComment', function () {
@@ -1431,6 +1598,17 @@
             });
         }
         //adjustSuccessButtonStatus();
+        $(document).on("click", ".slack-accordion-settings", function () {
+            $(this).parents(".cf-cnt-box-body").find(".cf-slack-inner-integration-box").slideToggle();
+        });
+
+        //Show hide notification Tooltip /@author Minal Diwan/@since VIP Plan
+        $(document).on('click', '.md-plugin-tooltip svg', function (e) {
+            e.preventDefault();
+            $('.cf_suggestion-tooltip-box').not($(e.target).parents('.md-plugin-tooltip').find('.cf_suggestion-tooltip-box')).hide();
+            $(e.target).parents('.md-plugin-tooltip').find('.cf_suggestion-tooltip-box').toggle();
+        });
+
 
     });
 
@@ -1481,7 +1659,7 @@
                 displayedDates: displayedDates,
             },
             success: function (result) {
-                $('#cf-dashboard .board-items-main.list-view').append(result);
+                $('#cf-dashboard .board-items-main.list-view').append(result); //phpcs:ignore
             }
         });
     });
@@ -1504,20 +1682,30 @@
         }
     });
     if (multicollab_fs.can_use_premium_code) {
-        if (multicollab_fs.is_plan_pro || multicollab_fs.is_plan_plus) {
-            $( document ).ready(function() {
+        if (multicollab_fs.is_plan_pro || multicollab_fs.is_plan_plus || multicollab_fs.is_plan_vip) {
+            $(document).ready(function () {
                 var postType = $('.filter-allpagepost').val();
-                if( postType === 'page' ){
+                var postTYpeReport = $('.filter-allpagepost-report').val();
+                if (postType !== 'post' || postTYpeReport !== 'post') {
                     $('.filter-allcategory').hide();
-                } 
-            });  
-            $(document).on('change', '.filter-allpagepost', function () {
-                if( this.value === 'page' ){
+                }
+            });
+
+            $(document).on('change', '.filter-allpagepost-report', function () {
+                if (this.value !== 'post') {
                     $('.filter-allcategory').hide();
-                }else{
+                } else {
                     $('.filter-allcategory').show();
                 }
-            });         
+            });
+
+            $(document).on('change', '.filter-allpagepost', function () {
+                if (this.value !== 'post') {
+                    $('.filter-allcategory').hide();
+                } else {
+                    $('.filter-allcategory').show();
+                }
+            });
 
             $(document).on('click', '.show_activity_details', function () {
                 let postID = $(this).attr('data-id');
@@ -1532,11 +1720,30 @@
                         $("html, body").animate({ scrollTop: 200 });
                         $('.board-items-main.list-view').fadeOut();
                         $('.board-items-main.detail-view').fadeIn();
-                        $('#board-item-detail').fadeIn().html(result);
+                        $('#board-item-detail').fadeIn().html(result); //phpcs:ignore
                         $('.bulkactions').hide();
                     }
                 });
             });
+
+            $(document).on('click', '.cf-tabs li', function () {
+                var dataId = jQuery('.cf-tab-active a').attr('data-id');
+                var queryString = window.location.search;
+                var urlParams = new URLSearchParams(queryString);
+                var current_url = urlParams.get('page');
+                var curruntUrl = location.protocol + '//' + location.host + location.pathname + '?page=' + current_url;
+
+                if ('cf-dashboard' === dataId) {
+                    window.location.href = curruntUrl + '&view=web-activity';
+                } else if ('cf-reports' === dataId) {
+                    window.location.href = curruntUrl + '&view=post-activity';
+                } else if ('cf-settings' === dataId) {
+                    window.location.href = curruntUrl + '&view=settings';
+                } else if ('cf-roles-slack-integration' === dataId) {
+                    window.location.href = curruntUrl + '&view=intigrations';
+                }
+            });
+
         }
         $(document).on('click', '#pro-migration-button', function () {
             $('#migration-progress-bar span').attr('data-percentage', '0').css('width', '0%');
@@ -1562,8 +1769,8 @@
                         if (0 !== pendingArray.length) {
                             localStorage.setItem("pendingMigrationPosts", result.pending);
 
-                            $('#migration-progress-info').html('<p>Total ' + pendingArray.length + ' items need to be fixed.</p>');
-                            $('#migration-progress-info').append('<p><span id="pending">0</span> out of <span id="total">' + pendingArray.length + '</span> items migrated successfully!</p>');
+                            $('#migration-progress-info').html('<p>Total ' + pendingArray.length + ' items need to be fixed.</p>'); //phpcs:ignore
+                            $('#migration-progress-info').append('<p><span id="pending">0</span> out of <span id="total">' + pendingArray.length + '</span> items migrated successfully!</p>'); //phpcs:ignore
 
                             let nextID = pendingArray[0];
                             migratePostMC(nextID);
@@ -1595,8 +1802,8 @@
 
                     // If this is a second attempt on a fresh load.
                     if (0 === $('#migration-progress-info span').length) {
-                        $('#migration-progress-info').html('<p>Total ' + arrayPendingMigrationPosts.length + ' items need to be fixed.</p>');
-                        $('#migration-progress-info').append('<p><span id="pending">0</span> out of <span id="total">' + arrayPendingMigrationPosts.length + '</span> items migrated successfully!</p>');
+                        $('#migration-progress-info').html('<p>Total ' + arrayPendingMigrationPosts.length + ' items need to be fixed.</p>');//phpcs:ignore
+                        $('#migration-progress-info').append('<p><span id="pending">0</span> out of <span id="total">' + arrayPendingMigrationPosts.length + '</span> items migrated successfully!</p>'); //phpcs:ignore
                     }
                     let totalPosts = parseInt($('#migration-progress-info span#total').text());
                     let completedPosts = totalPosts - arrayPendingMigrationPosts.length;
@@ -1657,19 +1864,19 @@
         }
     });
 
-    $(document).on('click', '.cf-tabs-main .cf-tabs .cf-tab-item', function () {
-        let getTabID = $(this).attr('data-id');
-        $(this).parent().addClass('cf-tab-active').siblings().removeClass('cf-tab-active');
-        $('#' + getTabID).addClass('cf-tab-active').show().siblings().removeClass('cf-tab-active').hide();
-    });
+    // $(document).on('click', '.cf-tabs-main .cf-tabs .cf-tab-item', function () {
+    //     let getTabID = $(this).attr('data-id');
+    //     $(this).parent().addClass('cf-tab-active').siblings().removeClass('cf-tab-active');
+    //     $('#' + getTabID).addClass('cf-tab-active').show().siblings().removeClass('cf-tab-active').hide();
+    // });
 
-    $( document ).ready(function() {
+    $(document).ready(function () {
         // Add Testimonial Slider for Free Dashboard
         $('.pricing-testi-slider').bxSlider({
-            adaptiveHeight:true
+            adaptiveHeight: true
         });
-    }); 
- 
+    });
+
 
 })(jQuery); // eslint-disable-line
 
@@ -1700,12 +1907,12 @@ var removeTag = function (elIDRemove) { // eslint-disable-line
     var blockType = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-type'); // eslint-disable-line
     const findAttributes = window.adminLocalizer.allowed_attribute_tags;
     const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId); // eslint-disable-line
-    
-    if('core/gallery' === blockType){
-        removeGalleryTag(blockAttributes,clientId,elIDRemove)
+
+    if ('core/gallery' === blockType) {
+        removeGalleryTag(blockAttributes, clientId, elIDRemove)
     }
-    if('core/table' === blockType){
-        removeTableTag(blockAttributes,clientId,elIDRemove)
+    if ('core/table' === blockType) {
+        removeTableTag(blockAttributes, clientId, elIDRemove)
     }
     if (null !== blockAttributes) {
 
@@ -1726,7 +1933,7 @@ var removeTag = function (elIDRemove) { // eslint-disable-line
                             var parent = childElements[i].parentNode;
 
                             while (childElements[i].firstChild) {
-                                parent.insertBefore(childElements[i].firstChild, childElements[i]);
+                                parent.insertBefore(childElements[i].firstChild, childElements[i]); //phpcs:ignore
                             }
                             parent.removeChild(childElements[i]);
 
@@ -1743,53 +1950,13 @@ var removeTag = function (elIDRemove) { // eslint-disable-line
         });
     }
 }
-var removeGalleryTag = function(blockAttributes,clientId,elIDRemove){        
-    jQuery('.blocks-gallery-item').each(function(index, el){
-        if( jQuery(el).find('figure figcaption').length ){
-       blockAttributes.images?.forEach( ( image ) => {
-           const caption = image.caption;
-           let tempDiv = document.createElement('div');
-           tempDiv.innerHTML = caption; // phpcs:ignore
-           let childElements = tempDiv.getElementsByTagName('mdspan');
-           for (let i = 0; i < childElements.length; i++) {
-                if (elIDRemove === childElements[i].attributes.datatext.value) {
-                    //Change logic to keep other HTML Tag in content..only remove mdspan tag
-
-                    var parent = childElements[i].parentNode;
-
-                    while (childElements[i].firstChild) {
-                        parent.insertBefore(childElements[i].firstChild, childElements[i]);
-                    }
-                    parent.removeChild(childElements[i]);
-                     image.caption = tempDiv.innerHTML;
-                    wp.data.dispatch('core/editor').updateBlockAttributes( clientId,{
-                        attributes:{
-                            images :{
-                                id: image.id,
-                                caption: image.caption,
-                            },
-                        },
-                    } );
-                    
-                    break;
-                }
-            }
-        })
-       }
-    });
-}
-var removeTableTag = function(blockAttributes,clientId,elIDRemove){
-    let table_attrb = ['head','body','foot'];
-    jQuery(table_attrb).each(function (i, attrb) {
-       
-        blockAttributes[attrb]?.forEach( ( tableCells ) => {
-        var cells = tableCells.cells;
-        cells.forEach(function(data){
-            var content = data.content;
-          
-            if ('' !== content) {
+var removeGalleryTag = function (blockAttributes, clientId, elIDRemove) {
+    jQuery('.blocks-gallery-item').each(function (index, el) {
+        if (jQuery(el).find('figure figcaption').length) {
+            blockAttributes.images?.forEach((image) => {
+                const caption = image.caption;
                 let tempDiv = document.createElement('div');
-                tempDiv.innerHTML = content; // phpcs:ignore
+                tempDiv.innerHTML = caption; // phpcs:ignore
                 let childElements = tempDiv.getElementsByTagName('mdspan');
                 for (let i = 0; i < childElements.length; i++) {
                     if (elIDRemove === childElements[i].attributes.datatext.value) {
@@ -1798,25 +1965,65 @@ var removeTableTag = function(blockAttributes,clientId,elIDRemove){
                         var parent = childElements[i].parentNode;
 
                         while (childElements[i].firstChild) {
-                            parent.insertBefore(childElements[i].firstChild, childElements[i]);
+                            parent.insertBefore(childElements[i].firstChild, childElements[i]); //phpcs:ignore
                         }
-
                         parent.removeChild(childElements[i]);
-                        data.content = tempDiv.innerHTML;
-                        wp.data.dispatch('core/editor').updateBlockAttributes( clientId,{
-                            attributes:{
-                                attrb :{
-                                    content:data.content
+                        image.caption = tempDiv.innerHTML;
+                        wp.data.dispatch('core/editor').updateBlockAttributes(clientId, {
+                            attributes: {
+                                images: {
+                                    id: image.id,
+                                    caption: image.caption,
                                 },
                             },
-                        } );
+                        });
+
+                        break;
                     }
                 }
-            }
+            })
+        }
+    });
+}
+var removeTableTag = function (blockAttributes, clientId, elIDRemove) {
+    let table_attrb = ['head', 'body', 'foot'];
+    jQuery(table_attrb).each(function (i, attrb) {
 
+        blockAttributes[attrb]?.forEach((tableCells) => {
+            var cells = tableCells.cells;
+            cells.forEach(function (data) {
+                var content = data.content;
+
+                if ('' !== content) {
+                    let tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = content; // phpcs:ignore
+                    let childElements = tempDiv.getElementsByTagName('mdspan');
+                    for (let i = 0; i < childElements.length; i++) {
+                        if (elIDRemove === childElements[i].attributes.datatext.value) {
+                            //Change logic to keep other HTML Tag in content..only remove mdspan tag
+
+                            var parent = childElements[i].parentNode;
+
+                            while (childElements[i].firstChild) {
+                                parent.insertBefore(childElements[i].firstChild, childElements[i]); //phpcs:ignore
+                            }
+
+                            parent.removeChild(childElements[i]);
+                            data.content = tempDiv.innerHTML;
+                            wp.data.dispatch('core/editor').updateBlockAttributes(clientId, {
+                                attributes: {
+                                    attrb: {
+                                        content: data.content
+                                    },
+                                },
+                            });
+                        }
+                    }
+                }
+
+            })
         })
     })
-})
 }
 var getCommentsLimit = function () {
     return 5;
@@ -1824,24 +2031,24 @@ var getCommentsLimit = function () {
 
 /* function for calculating diff of time. */
 var timeAgo = function (time) {
-   
+
     try {
         /* for time formats of time in seconds and minutes */
         var templates = {
             prefix: "",
-            suffix: " ago",
-            seconds: "few seconds",
-            minute: "about a minute",
-            minutes: "%d minutes"
+            suffix: wp.i18n.__(' ago', 'content-collaboration-inline-commenting'),
+            seconds: wp.i18n.__('few seconds', 'content-collaboration-inline-commenting'),
+            minute: wp.i18n.__('about a minute', 'content-collaboration-inline-commenting'),
+            minutes: wp.i18n.__('%d minutes', 'content-collaboration-inline-commenting')
         };
         /* for time format like hrs + today */
         var forhrsToday = function (timeInHrs) {
-            return timeInHrs + " Today";
+            return timeInHrs + ' ' + wp.i18n.__('Today', 'content-collaboration-inline-commenting');
         }
         var template = function (t, n) {
             return templates[t] && templates[t].replace(/%d/i, Math.abs(Math.round(n)));
         };
-       
+
         if (!time) return;
         /* function for converting timestamp into required format */
         var convertedDatetime = function (date) {
@@ -1849,9 +2056,9 @@ var timeAgo = function (time) {
             let dateFormat = 'm/d/Y';
             let timeFormat = 'H:i:s';
             let dateTime = wp.date.gmdate(dateFormat + ' ' + timeFormat, date);
-
             return dateTime;
         }
+        let newtime;
         var convertedTime = convertedDatetime(time);
         time = new Date(convertedTime * 1000 || convertedTime);
         var now = new Date(convertedDatetime(getTimestampWithTimezone()));
@@ -1864,19 +2071,23 @@ var timeAgo = function (time) {
                 return dispTime;
             } else {
                 if (timeinDate[2] < now.getDate() && (parseInt(now.getDate()) - parseInt(timeinDate[2])) < 2) {
-                    return time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true }) + " Yesterday";
+                    newtime = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true });
+                    newTimeString = translateTimeString(newtime) + ' ' + wp.i18n.__('Yesterday', 'content-collaboration-inline-commenting');
+                    return newTimeString;
                 } else {
                     return dispTime;
                 }
             }
         } else {
             if ((now.getTime() - time.getTime()) < 0) {
-                return time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true }) + " Today";
+                newtime = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true });
+                newTimeString = translateTimeString(newtime) + ' ' + wp.i18n.__('Today', 'content-collaboration-inline-commenting');
+                return newTimeString;
             } else {
                 var seconds = ((now.getTime() - time) * .001) >> 0;
                 var minutes = seconds / 60;
-                var hrsFormat = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true });
-               // console.log((seconds < 60 && template('seconds', seconds) || minutes < 60 && template('minutes', minutes) || minutes > 60 && forhrsToday(hrsFormat)) + (minutes < 60 ? templates.suffix : ""));
+                var hrsFormat = translateTimeString(time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true }));
+                // console.log((seconds < 60 && template('seconds', seconds) || minutes < 60 && template('minutes', minutes) || minutes > 60 && forhrsToday(hrsFormat)) + (minutes < 60 ? templates.suffix : ""));
                 return templates.prefix + (
                     seconds < 60 && template('seconds', seconds) || minutes < 60 && template('minutes', minutes) || minutes > 60 && forhrsToday(hrsFormat)) + (minutes < 60 ? templates.suffix : "");
             }
@@ -1898,6 +2109,14 @@ function convertedDatetime(date) {
     let dateTime = wp.date.gmdate(timeFormat + ' ' + dateFormat, date);
 
     return dateTime;
+}
+
+function translateTimeString(time) {
+
+    let newtime = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true });
+    splitarray = newtime.split(" ");
+    newTimeString = splitarray[0] + ' ' + wp.i18n.__(splitarray[1], 'content-collaboration-inline-commenting');
+    return newTimeString;
 }
 
 function getCurrentUserId() {
@@ -1939,160 +2158,256 @@ function scrollBoardToPosition(topOfText) {
     }, 1000);
 }
 
+function removeFloatingIcon() {
+    var floatingNode = document.getElementsByClassName('md-floating-wrapper');
+
+    if (floatingNode.length > 0) {
+        jQuery(floatingNode).remove()
+    }
+}
 
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
-function filterTextBeforeSave(newText){
-    newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' ); 
-    newText = newText.replace( /<br>/igm, ' <br> ' );
-    if ( isSafari || isChrome ) {
-        newText = newText.replace( /<div>/igm, ' <br> ' );
-        newText = newText.replace( /<\/div>/igm, '' );
+function filterTextBeforeSave(newText) {
+    newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
+    newText = newText.replace(/<br>/igm, ' <br> ');
+    if (isSafari || isChrome) {
+        newText = newText.replace(/<div>/igm, ' <br> ');
+        newText = newText.replace(/<\/div>/igm, '');
     }
     var link;
     // Adding anchor tag around the linkable text.
     // For bug fixing of semicolon there is a little chnage in regex   
-              
-    newText = newText.replace( /<a\s.*?>(.*?)<\/a>/g, function( match ) { 
-       
-        return ' '+match+' ';
+
+    newText = newText.replace(/<a\s.*?>(.*?)<\/a>/g, function (match) {
+
+        return ' ' + match + ' ';
     });
-    
+
     // replace nbsp; with space for separate links
-    newText = newText.replace( /&nbsp;|&nbsp/igm, ' ' );
-   
-  
+    //newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');
 
-    newText = newText.replace( /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function( match ) {   
+
+
+    newText = newText.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function (match) {
         link = match;
-        if((link.includes("www.") || link.includes("WWW.") )&& !link.includes("http://") && !link.includes("https://"))  {
-          link = link.replace('WWW.','http://')
-          link = link.replace('www.','http://')
-        }    
-        
-        return `<a href="${link}" target="_blank">${match}</a>`;
-    }); 
-   
+        if ((link.includes("www.") || link.includes("WWW.")) && !link.includes("http://") && !link.includes("https://")) {
+            link = link.replace('WWW.', 'http://')
+            link = link.replace('www.', 'http://')
+        }
 
-    newText = newText.replace( /&nbsp;|&nbsp/igm, ' ' );
-    newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, ''); 
-    newText.trim();  
+        return `<a href="${link}" target="_blank">${match}</a>`;
+    });
+
+
+    newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');
+    newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, '');
+    newText.trim();
+
     return newText;
 }
 
-function removeLinkFromEditableText(editedValue){
+function removeLinkFromEditableText(editedValue) {
 
     // Filtering anchor tag and return the url text only.
     // For bug fixing of semicolon there is a little chnage in regex
     // this wont apply over mentioned user link
-    editedValue = editedValue.replace( /<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)([^&nbsp;|^<br>])\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)([^&nbsp;|^<br>])<\/a>/igm, function( match ) {
-        return match.replace( /(<([^>]+)>)/ig, '');
-    } );
-    
+    editedValue = editedValue.replace(/<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)([^&nbsp;|^<br>])\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)([^&nbsp;|^<br>])<\/a>/igm, function (match) {
+        return match.replace(/(<([^>]+)>)/ig, '');
+    });
+
     // regex to remove anchor tag with target
-    editedValue = editedValue.replace(/(<a([^>]+)target=([^>]+)>)([^<]+)<\/a>/ig, function( match ) {   
-     return match.replace( /(<([^>]+)>)/ig, ''); 
-    } );
+    editedValue = editedValue.replace(/(<a([^>]+)target=([^>]+)>)([^<]+)<\/a>/ig, function (match) {
+        return match.replace(/(<([^>]+)>)/ig, '');
+    });
 
     editedValue.trim();
 
     return editedValue;
 }
 
-function filterTextForEdit(newText){
+function filterTextForEdit(newText) {
 
     newText = newText.replace(/  +/g, ' ');
-    newText = newText.replace( /&nbsp;|&nbsp/igm, ' ' ); 
-    newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, ''); 
-    newText = newText.replace(/\s/g, '');
-    newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' );      
-    newText = newText.trim();
-    return newText;
-}
-
-function validateCommentReplyText(newText){
-    if ( isSafari || isChrome ) {
-        newText = newText.replace( /<div>/igm, ' <br> ' );
-        newText = newText.replace( /<\/div>/igm, '' );
+    // Added for remove br and div for line breaks and button gets enable/@author Meet Mehta /@since VIP Plan
+    if (isSafari || isChrome) {
+        newText = newText.replace(/<\/?div[^>]*>/g, '');
+        newText = newText.replace(/<\/?span[^>]*>/g, '');
     }
-    newText = newText.replace( /<br>/igm, '' );
-    newText = newText.replace( /&nbsp;|&nbsp/igm, '' );
-    newText = newText.replace( /\s/igm, '' );
-    newText = newText.replace( /<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '' );      
+    newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');
+    newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, '');
+    newText = newText.replace(/\s/g, '');
+    newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
+    newText = newText.trim();
+    return newText;
+}
+
+function validateCommentReplyText(newText) {
+
+    if (isSafari || isChrome) {
+        newText = newText.replace(/<div>/igm, ' <br> ');
+        newText = newText.replace(/<\/div>/igm, '');
+    }
+    newText = newText.replace(/<br>/igm, '');
+    newText = newText.replace(/&nbsp;|&nbsp/igm, '');
+    newText = newText.replace(/\s/igm, '');
+    newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
     newText = newText.trim();
 
     return newText;
 }
 
+function translateStringFormat(str) {
+    let translatedStringFormats = str;
+    let splitString, concatBreakedString, removedHTMLTag;
+    if (translatedStringFormats.includes("Space (")) {
+        splitString = translatedStringFormats.split(" ");
+        translatedStringFormats = sprintf('%s %s %s', wp.i18n.__(splitString[0], 'content-collaboration-inline-commenting'), splitString[1], wp.i18n.__(splitString[2], 'content-collaboration-inline-commenting'));
+    } else if (translatedStringFormats.includes("Remove Link with URL")) {
+        splitString = translatedStringFormats.split("Remove Link with URL ");
+        translatedStringFormats = sprintf('%s %s', wp.i18n.__('Remove Link with URL', 'content-collaboration-inline-commenting'), splitString[1]);
+    } else if (translatedStringFormats.includes("with URL")) {
+        splitString = translatedStringFormats.split("with URL ");
+        translatedStringFormats = sprintf('%s %s', wp.i18n.__('with URL', 'content-collaboration-inline-commenting'), splitString[1]);
+    } else if (translatedStringFormats.includes("Replace")) {
+        splitString = translatedStringFormats.split(" ");
+        translatedStringFormats = sprintf('%s %s %s %s', wp.i18n.__('Replace', 'content-collaboration-inline-commenting'), splitString[1], wp.i18n.__('to', 'content-collaboration-inline-commenting'), splitString[3]);
+    } else if (translatedStringFormats.includes("Line Break (")) {
+        splitString = translatedStringFormats.split(" ");
+        concatBreakedString = splitString[0] + ' ' + splitString[1];
+        translatedStringFormats = sprintf('%s %s %s', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), splitString[2], wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'));
+    } else if (translatedStringFormats.includes("Block Alignment")) {
+        removedHTMLTag = translatedStringFormats.replace(/<[^>]*>/g, '');
+        splitString = removedHTMLTag.split(" ");
+        concatBreakedString = splitString[0] + ' ' + splitString[1];
+        translatedStringFormats = sprintf('%s <em>%s</em> %s <em>%s</em>', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[2], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[4], 'content-collaboration-inline-commenting'));
+    } else if (translatedStringFormats.includes("Change Heading")) {
+        removedHTMLTag = translatedStringFormats.replace(/<[^>]*>/g, '');
+        splitString = removedHTMLTag.split(" ");
+        concatBreakedString = splitString[0] + ' ' + splitString[1];
+        translatedStringFormats = sprintf('%s <em> %s %s </em> %s <em> %s %s </em>', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'), splitString[4], wp.i18n.__(splitString[5], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[7], 'content-collaboration-inline-commenting'), splitString[8]);
+    }
+    str = translatedStringFormats;
+    return str;
+}
 
-function closeMulticollabSidebar () {
-   
+// display ... if multiple user exists.
+function userroleDisplay(myStr) {
+    let newRole;
+    let myRole = myStr.split(",");
+    if (myRole.length > 1) {
+        newRole = myRole[0] + '...';
+    } else {
+        newRole = myRole[0];
+    }
+    return newRole;
+}
+
+function closeMulticollabSidebar() {
+
     //to close sidebar in gutenberg
     //const isSidebarOpened = wp.data.select( 'core/edit-post' ).isEditorSidebarOpened();
-    const sidebarName = wp.data.select( 'core/edit-post' ).getActiveGeneralSidebarName();
-    if ( sidebarName === 'cf-activity-center/cf-activity-center' ) { 
-         wp.data.dispatch('core/edit-post').closeGeneralSidebar();
+    const sidebarName = wp.data.select('core/edit-post').getActiveGeneralSidebarName();
+    if (sidebarName === 'cf-activity-center/cf-activity-center') {
+        wp.data.dispatch('core/edit-post').closeGeneralSidebar();
     }
 }
 
-function getPostSaveStatus(){
+function getPostSaveStatus() {
     const isNew = wp.data.select('core/editor').isEditedPostNew();
     const isDirty = wp.data.select('core/editor').isEditedPostDirty();
     const isSaving = wp.data.select('core/editor').isSavingPost();
-    const isSaved = ( ! isNew && ! isDirty );
+    const isSaved = (!isNew && !isDirty);
     const isSavedState = isSaving || isSaved;
     return isSavedState;
 }
 
-function appendInfoBoardDiv(){
+function appendInfoBoardDiv() {
     var pinboardNode = document.createElement('div');
-    pinboardNode.setAttribute("id", 'md-span-status'); 
-    pinboardNode.setAttribute('style','display:none');
-    pinboardNode.innerHTML = wp.i18n.__( "You have <span>x</span> <strong>Save Draft</strong> to apply changes." );
+    pinboardNode.setAttribute("id", 'md-span-status');
+    pinboardNode.setAttribute("class", 'md-board-notice');
+    pinboardNode.setAttribute('style', 'display:none');
+    pinboardNode.innerHTML = sprintf('%s <span>x</span> %s <br> %s <strong>%s</strong> %s', wp.i18n.__('You have', 'content-collaboration-inline-commenting'), wp.i18n.__('unsaved comments.', 'content-collaboration-inline-commenting'), wp.i18n.__('Click', 'content-collaboration-inline-commenting'), wp.i18n.__("'Save Draft'", 'content-collaboration-inline-commenting'), wp.i18n.__('to save.', 'content-collaboration-inline-commenting'));
     var parentNodeRef = document.getElementById('md-comments-suggestions-parent');
     if (null !== parentNodeRef) {
         parentNodeRef.appendChild(pinboardNode);
     }
 }
-function showInfoBoardonNewComments(){
- 
+function showInfoBoardonNewComments() {
+
     appendInfoBoardDiv();
 
-    wp.data.subscribe( function () { 
-            
-        let pinboard = document.getElementById("md-span-status");  
+    wp.data.subscribe(function () {
+
+        let pinboard = document.getElementById("md-span-status");
         if (null === pinboard) {
             appendInfoBoardDiv();
             pinboard = document.getElementById("md-span-status");
         }
 
-        setTimeout( function() { 
-            let count = document.querySelectorAll('.draftComment').length;          
-            if( pinboard && !getPostSaveStatus() && count > 0  ){  
-                pinboard.getElementsByTagName("SPAN")[0].innerHTML = count; 
-                pinboard.setAttribute('style','');   
+        setTimeout(function () {
+            let count = document.querySelectorAll('.draftComment').length;
+            if (pinboard && !getPostSaveStatus() && count > 0) {
+                pinboard.getElementsByTagName("SPAN")[0].innerHTML = count; //phpcs:ignore
+                pinboard.setAttribute('style', '');
             }
-            if( pinboard && count === 0 ){
-                pinboard.setAttribute('style','display:none'); 
+            if (pinboard && count === 0) {
+                pinboard.setAttribute('style', 'display:none');
             }
-         }, 300 );
 
-        var isSavingPost              = wp.data.select( 'core/editor' ).isSavingPost();
-        var isAutosavingPost          = wp.data.select( 'core/editor' ).isAutosavingPost();
-        var didPostSaveRequestSucceed = wp.data.select( 'core/editor' ).didPostSaveRequestSucceed(); 
+        }, 300);
 
-        if( isSavingPost || isAutosavingPost ){
-           //console.log('saving post');
-           if( didPostSaveRequestSucceed ) {
-               if(null !== pinboard){
-                pinboard.setAttribute('style','display:none');
-                Array.from(document.querySelectorAll('.draftComment')).forEach((el) => el.classList.remove('draftComment'));
-               }
-           }
+        var isSavingPost = wp.data.select('core/editor').isSavingPost();
+        var isAutosavingPost = wp.data.select('core/editor').isAutosavingPost();
+        var didPostSaveRequestSucceed = wp.data.select('core/editor').didPostSaveRequestSucceed();
+
+        if (isSavingPost || isAutosavingPost) {
+            //console.log('saving post');
+            if (didPostSaveRequestSucceed) {
+                if (null !== pinboard) {
+                    pinboard.setAttribute('style', 'display:none');
+                    Array.from(document.querySelectorAll('.draftComment')).forEach((el) => el.classList.remove('draftComment'));
+                }
+            }
         }
 
-    } );   
+    });
+}
+
+function appendNoticeBoardDiv() {
+    var noticeboardNode = document.createElement('div');
+    noticeboardNode.setAttribute("id", 'md-board-notice');
+    noticeboardNode.setAttribute("class", 'md-board-notice');
+    noticeboardNode.setAttribute('style', 'display:none');
+    noticeboardNode.innerHTML = 'default notice here';
+    var parentNodeRef = document.getElementById('md-comments-suggestions-parent');
+    if (null !== parentNodeRef) {
+        parentNodeRef.appendChild(noticeboardNode);
+    }
+}
+
+function showNoticeBoardonNewComments() {
+    appendNoticeBoardDiv();
+    wp.data.subscribe(function () {
+
+        let noticeboard = document.getElementById("md-board-notice");
+        if (null === noticeboard) {
+            appendNoticeBoardDiv();
+            noticeboard = document.getElementById("md-board-notice");
+        }
+        setTimeout(function () {
+            if( noticeboard !== null ) {
+                // if( noticeboard.innerHTML === "" ){
+                //     noticeboard.setAttribute('style','display:none');
+                // } else {
+                //    noticeboard.setAttribute('style','display:block');
+                // }
+            }
+
+        }, 300);
+
+    });
 }
 
 function getSelectionHtml() {
@@ -2114,71 +2429,201 @@ function getSelectionHtml() {
     }
     return html;
 }
+function cf_removeAllNotices() {
+    var notices = wp.data.select('core/notices').getNotices();
+    if (undefined !== notices) {
+        notices.forEach(function (data) {
+            wp.data.dispatch('core/notices').removeNotice(data.id);
+            console.log(data.id);
+        })
+    }
 
-jQuery(document).ready(function () {
-    if('1' === showinfoboard.showinfoboard){showInfoBoardonNewComments();}   
-});
-
-jQuery(document).ready(function () {
-        function freemiusCheckout(planId,licenses){
-            // Pricing  version
-            let handler;
-             handler = FS.Checkout.configure({
-                plugin_id:  '8961',
-                plan_id:    planId,
-                public_key: 'pk_6a91f1252c5c1715f64a8bc814685',
-                image:      'https://www.multicollab.com/wp-content/uploads/sites/5/2020/12/commenting-logo.svg'
-                });
-                
-                    handler.open({
-                        name     : 'Multicollab',
-                        licenses : licenses,
-                        // You can consume the response for after purchase logic.
-                        purchaseCompleted  : function (response) {
-                            // The logic here will be executed immediately after the purchase confirmation.                                // alert(response.user.email);
-                        },
-                        success  : function (response) {
-                            // The logic here will be executed after the customer closes the checkout, after a successful purchase.                                // alert(response.user.email);
-                        }
-                    });
-                    e.preventDefault();
-                
-        }
-        
-        jQuery('.free-btn a').on('click', function (e) {
-            e.preventDefault();
-            freemiusCheckout('15022','');
-        } );
-        jQuery('.plus-btn a').on('click', function (e) {
-            e.preventDefault();
-            let licenses = jQuery('#licenses').val();
-            freemiusCheckout('15023',licenses);
-        } );
-        jQuery('.pro-btn a').on('click', function (e) {
-            e.preventDefault();
-            let licenses = jQuery('#licenses').val();
-            freemiusCheckout('15024',licenses);
-        } );
-    });
-
-
-function displaySuggestionBoards(){
-    wp.domReady( function() {
-    wp.data.dispatch('core/editor').editPost({
-        meta: { _sb_show_suggestion_boards: false },
-    });
-});
-    jQuery( 'body' ).removeClass( 'hide-sg' ); 
 }
-function createCommentNode(){
+jQuery(document).ready(function () {
+    if ('1' !== showinfoboard.showinfoboard) { showInfoBoardonNewComments(); }
+   
+    setTimeout(function () {
+        var publishBtn = document.querySelector(".editor-post-publish-button__button");
+        if (publishBtn) {
+            publishBtn.addEventListener('click', publishBtnClick);
+        }
+    }, 1000);
+    function publishBtnClick(e) {
+        openBoards = jQuery('.cls-board-outer').length;
+        if (0 !== openBoards) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            e.stopPropagation();
+            prePostChecks(e);
+        }
+    }
+    function prePostChecks(e) {
+        e.stopPropagation()
+        e.preventDefault()
+        openBoards = jQuery('.cls-board-outer').length;
+        let locked = false;
+        if ('remind' === multicollab_cf_alert.cf_give_alert_message && 0 !== openBoards) {
+            if (!confirm(wp.i18n.__('There are a few pending suggestions or comments in this post. Do you still want to publish the post?', 'content-collaboration-inline-commenting'))) {
+                if (!locked) {
+                    locked = true;
+                    wp.data.dispatch('core/editor').lockPostSaving('title-lock');
+                    setTimeout(function () {
+                        wp.data.dispatch('core/editor').unlockPostSaving('title-lock');
+                    }, 3000);
+                }
+
+            } else {
+
+                locked = false;
+                wp.data.dispatch('core/editor').unlockPostSaving('title-lock');
+                wp.data.dispatch("core/editor").editPost({
+                    status: "publish",
+                });
+                wp.data.dispatch('core/editor').savePost();
+            }
+        } else if ('stop' === multicollab_cf_alert.cf_give_alert_message && 0 !== openBoards) {
+            alert(wp.i18n.__("You can't publish this post before resolving all suggestions or comments. Please review and resolve all open suggestions and comments before moving forward.", "content-collaboration-inline-commenting"));
+            wp.data.dispatch('core/editor').lockPostSaving('title-lock');
+
+            setTimeout(function () {
+                wp.data.dispatch('core/editor').unlockPostSaving('title-lock');
+            }, 3000);
+        } else {
+            wp.data.dispatch('core/editor').unlockPostSaving('title-lock');
+            wp.data.dispatch("core/editor").editPost({
+                status: "publish",
+            });
+            wp.data.dispatch('core/editor').savePost();
+        }
+
+    }
+
+    document.addEventListener('keydown', function (e) {
+        var status = wp.data.select('core/editor').getEditedPostAttribute('status');
+        if('stop' === multicollab_cf_alert.cf_give_alert_message || 'remind' === multicollab_cf_alert.cf_give_alert_message){
+            if ('publish' === status && wp.keycodes.isKeyboardEvent.primary(e, 's')) {
+
+                e.stopImmediatePropagation()
+                prePostChecks(e)
+           
+        }
+        }
+    }, true);
+
+
+
+
+});
+jQuery(document).ready(function () {
+    function freemiusCheckout(planId, licenses) {
+        // Pricing  version
+        let handler;
+        handler = FS.Checkout.configure({
+            plugin_id: '8961',
+            plan_id: planId,
+            public_key: 'pk_6a91f1252c5c1715f64a8bc814685',
+            image: 'https://www.multicollab.com/wp-content/uploads/sites/5/2020/12/commenting-logo.svg'
+        });
+
+        handler.open({
+            name: 'Multicollab',
+            licenses: licenses,
+            // You can consume the response for after purchase logic.
+            purchaseCompleted: function (response) {
+                // The logic here will be executed immediately after the purchase confirmation.                                // alert(response.user.email);
+            },
+            success: function (response) {
+                // The logic here will be executed after the customer closes the checkout, after a successful purchase.                                // alert(response.user.email);
+            }
+        });
+        e.preventDefault();
+
+    }
+
+    jQuery('.free-btn a').on('click', function (e) {
+        e.preventDefault();
+        freemiusCheckout('15022', '');
+    });
+    jQuery('.plus-btn a').on('click', function (e) {
+        e.preventDefault();
+        let licenses = jQuery('#licenses').val();
+        freemiusCheckout('15023', licenses);
+    });
+    jQuery('.pro-btn a').on('click', function (e) {
+        e.preventDefault();
+        let licenses = jQuery('#licenses').val();
+        freemiusCheckout('15024', licenses);
+    });
+    jQuery('.vip-btn a').on('click', function (e) {
+        e.preventDefault();
+        let licenses = jQuery('#licenses').val();
+        freemiusCheckout('17708', licenses);
+    });
+
+    // Disable all input for disabled class for free version. @author: Rishi Shah.
+    jQuery(".cf_disabled_input input").attr('disabled', 'disabled');
+
+    jQuery('.md-plugin-tooltip, .cf_premium_star').on("click", function (event) {
+        event.preventDefault()
+    });
+
+});
+
+
+function displaySuggestionBoards() {
+
+    wp.domReady(function () {
+        wp.data.dispatch('core/editor').editPost({
+            meta: { _sb_show_suggestion_boards: false },
+        });
+    });
+
+    jQuery('body').removeClass('hide-sg');
+}
+function createCommentNode() {
     var parentNode = document.createElement('div');
     parentNode.setAttribute("id", 'md-comments-suggestions-parent');
     var referenceNode = document.querySelector('.block-editor-writing-flow');
-    if(null !== referenceNode){
+    if (null !== referenceNode) {
         referenceNode.appendChild(parentNode);
         var commentNode = document.createElement('div');
         commentNode.setAttribute("id", 'md-span-comments');
         var parentNodeRef = document.getElementById('md-comments-suggestions-parent');
         parentNodeRef.appendChild(commentNode);
     }
+}
+//set cookies
+function setCookie(name, value, minutes) {
+    var expires = "";
+    if (minutes) {
+        var date = new Date();
+        date.setTime(date.getTime() + (minutes * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+function deleteCookie(name) {
+    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+function readCookie(name) {
+    var nameEQ = encodeURIComponent(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ')
+            c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0)
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
 }
