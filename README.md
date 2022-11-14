@@ -1,4 +1,4 @@
-# Multicollab — Google Doc-Style Editorial collaboration for WordPress
+# Multicollab — Google Doc-Style Editorial Collaboration for WordPress
 
 <p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://user-images.githubusercontent.com/82029773/196437606-feb8a469-0588-4d4e-8f43-f4b31098b0c7.jpg" alt="Commenting Demo"></a></p>
 
@@ -20,15 +20,15 @@ All types of contributions are most welcome.
 - Fork the repository to your account (you will get this option at top right of this page);
 - Create a branch into your fork repository as development if it exists else from the master.
 - Take a clone of the forked repository to your local system.
-- Write your clean code and test with PHPCS with `WordpressVIPMinimum` coding standard.
+- Write your clean code and test with PHPCS with `WordPressVIPMinimum` coding standard.
 - Commit Your code from your local system. 
 - Finally, click `Pull Request` from your fork repository.
-- This [github article](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork) will helpful for how to submit pull request from the fork.
+- This [Github Article](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork) will helpful for how to submit pull request from the fork.
 
 
 
 ## Support 
-This repository is not for support. Please use it for contributions only. To get help/support, please email us at [multicollab@multidots.com](mailto:multicollab@multidots.com) or [Contact us](https://www.multicollab.com/)
+This repository is not for support. Please use it for contributions only. To get help/support, please email us at [contact@multidots.com](mailto:contact@multidots.com) or [Contact us](https://www.multicollab.com/contact/)
 
 ## License 
 
