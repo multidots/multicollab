@@ -23,7 +23,7 @@ All types of contributions are most welcome.
 - Write your clean code and test with PHPCS with `WordPressVIPMinimum` coding standard.
 - Commit Your code from your local system. 
 - Finally, click `Pull Request` from your fork repository.
-- This [Github Article](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork) will helpful for how to submit pull request from the fork.
+- This [GitHub Article](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork) will helpful for how to submit pull request from the fork.
 
 
 
