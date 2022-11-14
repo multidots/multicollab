@@ -1,6 +1,6 @@
 # Multicollab — Google Doc-Style Editorial collaboration for WordPress
 
-<p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://ps.w.org/commenting-feature/assets/banner-772x250.png" alt="Commenting Demo"></a></p>
+<p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://user-images.githubusercontent.com/82029773/196437606-feb8a469-0588-4d4e-8f43-f4b31098b0c7.jpg" alt="Commenting Demo"></a></p>
 
 <a href="https://www.multicollab.com/" target="_blank">About Multicollab</a> | <a href="https://www.multicollab.com/publishers/" target="_blank">Publishers</a> | <a href="https://www.multicollab.com/agencies/" target="_blank"> Agencies </a> | <a href="https://www.multicollab.com/features/" target="_blank"> Features  </a> | 
 <a href="https://www.multicollab.com/?demo=start" target="_blank">Live Demo</a> | <a href="https://www.multicollab.com/pricing/" target="_blank"> Pricing  </a>
