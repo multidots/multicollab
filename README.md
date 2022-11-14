@@ -1,13 +1,13 @@
-# Multicollab — Google Doc-Style Editorial Commenting for WordPress
+# Multicollab — Google Doc-Style Editorial collaboration for WordPress
 
-<p align="center"><a href="https://www.multicollab.com" target="_blank"><img src="https://user-images.githubusercontent.com/82029773/196437606-feb8a469-0588-4d4e-8f43-f4b31098b0c7.jpg" alt="Commenting Demo"></a></p>
+<p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://ps.w.org/commenting-feature/assets/banner-772x250.png" alt="Commenting Demo"></a></p>
 
-<a href="https://www.multicollab.com/" target="_blank">About Multicollab</a> | 
-<a href="https://www.multicollab.com/?demo=start" target="_blank">Live Demo</a>
+<a href="https://www.multicollab.com/" target="_blank">About Multicollab</a> | <a href="https://www.multicollab.com/publishers/" target="_blank">Publishers</a> | <a href="https://www.multicollab.com/agencies/" target="_blank"> Agencies </a> | <a href="https://www.multicollab.com/features/" target="_blank"> Features  </a> | 
+<a href="https://www.multicollab.com/?demo=start" target="_blank">Live Demo</a> | <a href="https://www.multicollab.com/pricing/" target="_blank"> Pricing  </a>
 
 ## Content Collaboration made easy for WordPress
 
-Google Doc-Style Editorial Commenting plugin for WordPress makes it simpler and quicker to share editorial feedback. Edits and comments can be placed from within the WordPress Gutenberg editor, giving you the same functionality available on Google Docs. This plugin makes the publishing experience more collaborative, meaningful and results-oriented.
+Google Docs-Style Editorial Commenting plugin for WordPress makes it simpler and quicker to share editorial feedback and suggestion. Edits, Add comments and Add suggestions can be placed from within the WordPress Gutenberg editor, giving you the same functionality available on Google Docs. This plugin makes the publishing experience more collaborative, meaningful and results-oriented.
 
 [![Watch the video](https://yt-embed.herokuapp.com/embed?v=wc2Lh4i0cL4)](https://www.youtube.com/watch?v=wc2Lh4i0cL4)
 
@@ -15,11 +15,11 @@ Google Doc-Style Editorial Commenting plugin for WordPress makes it simpler and 
 
 ## How to Contribute 
 
-All type of contributions from are most welcome.
+All types of contributions are most welcome.
 
 - Fork the repository to your account (you will get this option at top right of this page);
-- Create a branch into your fork repository like `development` if it exists else from master.
-- Take a clone of the fork repository to your local system.
+- Create a branch into your fork repository as development if it exists else from the master.
+- Take a clone of the forked repository to your local system.
 - Write your clean code and test with PHPCS with `WordpressVIPMinimum` coding standard.
 - Commit Your code from your local system. 
 - Finally, click `Pull Request` from your fork repository.
