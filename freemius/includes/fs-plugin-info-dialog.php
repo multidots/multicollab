@@ -933,7 +933,7 @@
             }
 
             $args = array(
-                'slug'   => wp_unslash( sanitize_text_field($_REQUEST['plugin']) ),         
+                'slug'   => wp_unslash( $_REQUEST['plugin'] ),
                 'is_ssl' => is_ssl(),
                 'fields' => array(
                     'banners'         => true,
@@ -1024,7 +1024,7 @@
 
             $_tab = esc_attr( $tab );
 
-            $section = isset( $_REQUEST['section'] ) ? wp_unslash( sanitize_text_field($_REQUEST['section']) ) : 'description'; // Default to the Description tab, Do not translate, API returns English.
+            $section = isset( $_REQUEST['section'] ) ? wp_unslash( $_REQUEST['section'] ) : 'description'; // Default to the Description tab, Do not translate, API returns English.
             if ( empty( $section ) || ! isset( $api->sections[ $section ] ) ) {
                 $section_titles = array_keys( (array) $api->sections );
                 $section        = array_shift( $section_titles );
@@ -1306,8 +1306,8 @@
                                     <?php endif ?>
                                 </div>
                             </div>
-                            </div>
                         <?php endforeach ?>
+                      </div>
                     <?php endif ?>
                 <?php endif ?>
                 <div>

@@ -1,5 +1,5 @@
 === Multicollab - power up your editorial workflow and collaboration with direct commenting and tagging! ===
-Plugin Name: Multicollab - Google Doc-Style Editorial Commenting for WordPress
+Plugin Name: Multicollab - Google Doc-Style Editorial Collaboration for WordPress
 Plugin URI: https://plugins.svn.wordpress.org/commenting-feature
 Author: Multidots
 Author URI: https://www.multidots.com/
@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 5.9
 Tested up to: 6.1
-Stable tag: 3.0
+Stable tag: 3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,150 +179,153 @@ Have you had a look at our documentation? <a href="https://bit.ly/3FqfRRD" targe
 
 == Changelog ==
 
+= 3.1 - 16.11.2022 =
+* [Enhancement] Maintenance Release.
+
 = 3.0 - 17.10.2022 =
-* [Enhancement] — Improve Multicollab Plugin Settings and Dashboard UI
-* [Enhancement] – Improve @mention user experience
-* [Enhancement] – UI/UX improvement for notification, icons and settings options.
-* [Bug Fix] – Compatible with PHPCS and PHP8.
+* [Enhancement] Improved @mention user experience and performance. 
+* [Enhancement] Improved performance and design enhancement for floating add comment and suggestion buttons. 
+* [Enhancement] Updated add comment button design. 
+* [Bug Fix]     Compatible with PHPCS and PHP8.
 
 = 2.0.4.5 - 26.08.2022 =
-* [Enhancement] — User can add comments using a keyboard shortcut — For Windows ctrl + alt + m && For Mac  ⌘ Cmd + ⌥ Option + m
-* [Enhancement] – Optimize code for @mention Feature.
-* [Bug Fix]     – PHP8 compatibilities warnings
+* [Enhancement] User can add comments using a keyboard shortcut — For Windows ctrl + alt + m && For Mac  ⌘ Cmd + ⌥ Option + m
+* [Enhancement] Optimize code for @mention Feature.
+* [Bug Fix]     PHP8 compatibilities warnings
 
 = 2.0.4.4 - 29.07.2022 =
-* [Enhancement] – Improvement on General Settings - User can enable/disable editorial comment column on post/page list.
-* [Enhancement] – Maintenance Release.
+* [Enhancement] Improvement on General Settings - User can enable/disable editorial comment column on post/page list.
+* [Enhancement] Maintenance Release.
 
 = 2.0.4.3 - 27.05.2022 =
-* [Bug Fix] – Compatible with WordPress 6.0.
-* [Enhancement] – Fixed minor issues related to @mention.
+* [Bug Fix] Compatible with WordPress 6.0.
+* [Enhancement] Fixed minor issues related to @mention.
 
 = 2.0.4.2 - 13.05.2022 =
-* [Enhancement] – Maintenance Release.
+* [Enhancement] Maintenance Release.
 
 = 2.0.4.1 - 04.04.2022 =
-* [Enhancement] — Admin can set permission for info board from the settings panel.
-* [Enhancement] – Optimize AJAX request.
-* [Bug Fix] – Minor fixes related to the comment board and formatting.
+* [Enhancement] Admin can set permission for info board from the settings panel.
+* [Enhancement] Optimize AJAX request.
+* [Bug Fix] Minor fixes related to the comment board and formatting.
 
 
 = 2.0.4 - 07.03.2022 =
-* [Enhancement] – Security Release.
+* [Enhancement] Security Release.
 
 = 2.0.3 - 07.02.2022 =
-* [Enhancement] – Performances improvements.
-* [Enhancement] – Compatible with Table Block.
-* [Enhancement] – UI improvement on comment board.
-* [Bug Fix] – <a href ="https://github.com/multidots/multicollab/issues/45" target="_blank"> Github issue #45</a> Multicolab breaks when used with plugin HTML Editor Syntax Highlighter is fixed.
-* [Bug Fix] – <a href ="https://github.com/multidots/multicollab/issues/40" target="_blank"> Github issue #40</a> WP-CLI plugin activation breaks due to redirect are fixed.
-* [Bug Fix] – Compatible with WordPress 5.9.x.
-* [Bug Fix] – Compatible with PHP 8.0
+* [Enhancement] Performances improvements.
+* [Enhancement] Compatible with Table Block.
+* [Enhancement] UI improvement on comment board.
+* [Bug Fix] <a href ="https://github.com/multidots/multicollab/issues/45" target="_blank"> Github issue #45</a> Multicolab breaks when used with plugin HTML Editor Syntax Highlighter is fixed.
+* [Bug Fix] <a href ="https://github.com/multidots/multicollab/issues/40" target="_blank"> Github issue #40</a> WP-CLI plugin activation breaks due to redirect are fixed.
+* [Bug Fix] Compatible with WordPress 5.9.x.
+* [Bug Fix] Compatible with PHP 8.0
 
 = 2.0.2 - 10.12.2021 =
-* [Enhancement] – Maintenance Release.
+* [Enhancement] Maintenance Release.
 
 = 2.0 - 26.10.2021 =
-* [Enhancement] – Show comment icon in the main toolbar.
-* [Enhancement] – User-friendly Board design.
-* [New Feature] – View Summary of comments in Activity Centre.
-* [New Feature] – Mention  and Assign self in Comment.
+* [Enhancement] Show comment icon in the main toolbar.
+* [Enhancement] User-friendly Board design.
+* [New Feature] View Summary of comments in Activity Centre.
+* [New Feature] Mention  and Assign self in Comment.
 
 = 1.3.8 - 12.08.2021 =
-* [Enhancement] – Maintenance Release.
-* [Enhancement] – Fixed minor issues related to email notification.
+* [Enhancement] Maintenance Release.
+* [Enhancement] Fixed minor issues related to email notification.
 
 = 1.3.7 - 2.08.2021 =
-* [Enhancement] – Maintenance Release.
-* [Enhancement] – Fixed minor issues related to activity and settings panel.
-* [Enhancement] – Made few enhancements for compatibility with Safari and Firefox browsers.
-* [Bug Fix] — Compatible with WordPress 5.8.x.
+* [Enhancement] Maintenance Release.
+* [Enhancement] Fixed minor issues related to activity and settings panel.
+* [Enhancement] Made few enhancements for compatibility with Safari and Firefox browsers.
+* [Bug Fix]     Compatible with WordPress 5.8.x.
 
 = 1.3.6 - 24.06.2021 =
-* [Bug Fix] – Maintenance Release and Made few enhancements.
+* [Bug Fix] Maintenance Release and Made few enhancements.
 
 = 1.3.5 - 08.06.2021 =
-* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/24" target="_blank"> Github issue #24 </a> Block editor has encountered an unexpected error is fixed.
-* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/23" target="_blank"> Github issue #23 </a> Can't use the Enter Key to add a new paragraph is fixed.
-* [Enhancement] – Maintaince Release.
+* [Bug Fix] This <a href ="https://github.com/multidots/gutenberg_commenting/issues/24" target="_blank"> Github issue #24 </a> Block editor has encountered an unexpected error is fixed.
+* [Bug Fix] This <a href ="https://github.com/multidots/gutenberg_commenting/issues/23" target="_blank"> Github issue #23 </a> Can't use the Enter Key to add a new paragraph is fixed.
+* [Enhancement] Maintaince Release.
 
 = 1.3.4 - 03.06.2021 =
-* [Enhancement] – Made few enhancements for compatibility with Safari Browser.
+* [Enhancement] Made few enhancements for compatibility with Safari Browser.
 
 = 1.3.3 - 02.06.2021 =
-* [New Feature] — Generate a link to a particular comment and share it with other team members.
-* [New Feature] — Team members can see recently edited time on the comments and activity center. 
-* [New Feature] —  Restricted multiple comments on the same word.
-* [Enhancement] —If there is no comment on Page/Post, then Gutenberg editor will be center aligned.
-* [Bug Fix] – This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  related to Gutenberg Comments Panel always visible is fixed.
-* [Bug Fix] — Copy & Paste issue with @mention in a comment is fixed. 
-* [Bug Fix] — Issue related to “Link to a comment box from activity center” on a tablet device is fixed. 
-* [Bug Fix] — Fixed issues related to comment formatting.
-* [Bug Fix] — Old Comments not showing up on some Pages issue fixed. 
-* [Bug Fix] — Issue related to Deleted comments visibility in the activity center is fixed. 
-* [Bug Fix] — Compatible with WordPress 5.7.x.
-* [Bug Fix] — Other minor fixes.
+* [New Feature] Generate a link to a particular comment and share it with other team members.
+* [New Feature] Team members can see recently edited time on the comments and activity center. 
+* [New Feature] Restricted multiple comments on the same word.
+* [Enhancement] If there is no comment on Page/Post, then Gutenberg editor will be center aligned.
+* [Bug Fix] This <a href ="https://github.com/multidots/gutenberg_commenting/issues/6" target="_blank">Github issue #6</a>  related to Gutenberg Comments Panel always visible is fixed.
+* [Bug Fix] Copy & Paste issue with @mention in a comment is fixed. 
+* [Bug Fix] Issue related to “Link to a comment box from activity center” on a tablet device is fixed. 
+* [Bug Fix] Fixed issues related to comment formatting.
+* [Bug Fix] Old Comments not showing up on some Pages issue fixed. 
+* [Bug Fix] Issue related to Deleted comments visibility in the activity center is fixed. 
+* [Bug Fix] Compatible with WordPress 5.7.x.
+* [Bug Fix] Other minor fixes.
 
 = 1.3.2 - 23.04.2021 =
-* [Bug Fix] — Compatible with WordPress 5.7.1
-* [Bug Fix] — Resolved jQuery issue and normal bugs
+* [Bug Fix] Compatible with WordPress 5.7.1
+* [Bug Fix] Resolved jQuery issue and normal bugs
 
 = 1.3.1 - 22.04.2021 =
-* [Bug Fix] — SEO Plugins and excerpts section, content copy and paste issue are resolved
+* [Bug Fix] SEO Plugins and excerpts section, content copy and paste issue are resolved
 
 = 1.3.0 - 19.04.2021 =
-* [Enhancement] — New Design and Placement of Activity Center. 
-* [New Feature] — Threaded comments in the activity center.
-* [New Feature] — Ability to Reply, Resolve, Edit, and Delete comment or thread from the activity center.
-* [Enhancement] —  New Settings tab in the sidebar for post-specific comment settings. 
-* [Bug Fix] —  Copy/paste content in the comment box is fixed. 
-* [Bug Fix] — Firefox @mention multiple user issues are resolved.
-* [Bug Fix] —  Responsive device usability updated. 
-* [Enhancement] — Several performances, stability, and design improvements. 
+* [Enhancement] New Design and Placement of Activity Center. 
+* [New Feature] Threaded comments in the activity center.
+* [New Feature] Ability to Reply, Resolve, Edit, and Delete comment or thread from the activity center.
+* [Enhancement] New Settings tab in the sidebar for post-specific comment settings. 
+* [Bug Fix] Copy/paste content in the comment box is fixed. 
+* [Bug Fix] Firefox @mention multiple user issues are resolved.
+* [Bug Fix] Responsive device usability updated. 
+* [Enhancement] Several performances, stability, and design improvements. 
 
 = 1.2.0 - 19.03.2021 =
-* [New Feature] – When you delete a WordPress user, you can assign the deleted user’s comments to other WordPress users. 
-* [Bug Fix] –  Edit and Delete operation from the activity center were not working for a few users. 
-* [Bug Fix] – Do not allow whitespace on edit reply.
-* [Bug Fix] – Few issues related to @mention Editor in the comment. 
-* [Bug Fix] – When you copy and paste a web page URL in reply, the comment was not working as expected. 
-* [Bug Fix] – <a href ="https://github.com/multidots/gutenberg_commenting/issues/7" target="_blank">This Github issue</a> related to the “register_rest_route” warning error on the WordPress dashboard fixed.
-* [Bug Fix] – When the “Hide All Comments” option is selected, and you click on any comment from the activity center, it didn’t bring the related comment. 
-* [Bug Fix] – Fixed compatibility issues related to small screen resolution like 1024x768. 
-* [Bug Fix] –  <a href ="https://github.com/multidots/gutenberg_commenting/issues/8" target="_blank">This Github issue</a> related to ‘custom meta fields’ is fixed. 
-* [Enhancement] –  Made few enhancements for compatibility with Safari Browser. 
-* [Bug Fix] — Compatible with WordPress 5.7.x
+* [New Feature] When you delete a WordPress user, you can assign the deleted user’s comments to other WordPress users. 
+* [Bug Fix] Edit and Delete operation from the activity center were not working for a few users. 
+* [Bug Fix] Do not allow whitespace on edit reply.
+* [Bug Fix] Few issues related to @mention Editor in the comment. 
+* [Bug Fix] When you copy and paste a web page URL in reply, the comment was not working as expected. 
+* [Bug Fix] <a href ="https://github.com/multidots/gutenberg_commenting/issues/7" target="_blank">This Github issue</a> related to the “register_rest_route” warning error on the WordPress dashboard fixed.
+* [Bug Fix] When the “Hide All Comments” option is selected, and you click on any comment from the activity center, it didn’t bring the related comment. 
+* [Bug Fix] Fixed compatibility issues related to small screen resolution like 1024x768. 
+* [Bug Fix] <a href ="https://github.com/multidots/gutenberg_commenting/issues/8" target="_blank">This Github issue</a> related to ‘custom meta fields’ is fixed. 
+* [Enhancement] Made few enhancements for compatibility with Safari Browser. 
+* [Bug Fix] Compatible with WordPress 5.7.x
 
 = 1.1.0 - 24.02.2021 =
-* [New Feature] – Mention Team Members in Comment and invite them to collaborate by @mentioned user name
-* [New Feature] – Assign comments thread to team members
-* [New Feature] – See all Page & Post comments activities in the activity center
-* [New Feature] – Send email to @mentioned users in the comment.New – Send email to all users involved in the current thread.
-* [New Feature] – Send an email to the assigned user.
-* [New Feature] – Check open comments on each page and posts in your posts list.
-* [New Feature] –  Admin settings panel.
-* [New Feature] –  Send email notification to admin if notification enabled.
-* [New Feature] –  All major browser supports (Chrome, EDGE, Firefox)  Note: Safari browser is not compatible with this plugin)
-* [Bug Fix] – Compatible with WordPress version 5.3.6 to 5.6.2
-* [Bug Fix] – Few other fixes and improvements.
-* [Bug Fix] – Improve performance of the plugin 
-* [Bug Fix] – Checked WordPress Accessibility
-* [Bug Fix] – Checked Standard WordPress security
+* [New Feature] Mention Team Members in Comment and invite them to collaborate by @mentioned user name
+* [New Feature] Assign comments thread to team members
+* [New Feature] See all Page & Post comments activities in the activity center
+* [New Feature] Send email to @mentioned users in the comment.New – Send email to all users involved in the current thread.
+* [New Feature] Send an email to the assigned user.
+* [New Feature] Check open comments on each page and posts in your posts list.
+* [New Feature] Admin settings panel.
+* [New Feature] Send email notification to admin if notification enabled.
+* [New Feature] All major browser supports (Chrome, EDGE, Firefox)  Note: Safari browser is not compatible with this plugin)
+* [Bug Fix] Compatible with WordPress version 5.3.6 to 5.6.2
+* [Bug Fix] Few other fixes and improvements.
+* [Bug Fix] Improve performance of the plugin 
+* [Bug Fix] Checked WordPress Accessibility
+* [Bug Fix] Checked Standard WordPress security
 
 = 1.0.4 - 18.12.2020 =
 * [Bug Fix] Compatible with WordPress 5.6.
-* [Enhancement] - Characters limited for the "Comment Resolved Email" Subject.
-* [Bug Fix] - HTML tags filter issue for Authors and Contributors in Multisite.
-* [Bug Fix] - Few other fixes and improvements.
+* [Enhancement] Characters limited for the "Comment Resolved Email" Subject.
+* [Bug Fix] HTML tags filter issue for Authors and Contributors in Multisite.
+* [Bug Fix] Few other fixes and improvements.
 
 = 1.0.3 - 14.12.2020 =
-* [Enhancement] - New Activity centre icon
-* [Enhancement] - Removed Hide icon from the top bar and put it inside the Activity centre with " Show Comment / Hide Comment"
-* [Bug Fix] - Compatible with WordPress 5.6.x
+* [Enhancement] New Activity centre icon
+* [Enhancement] Removed Hide icon from the top bar and put it inside the Activity centre with " Show Comment / Hide Comment"
+* [Bug Fix] Compatible with WordPress 5.6.x
 
 = 1.0.2 - 09.12.2020 =
-* [Bug Fix] - Avatars are removed from comments if disabled from WordPress settings.
-* [Bug Fix] - Removed link from Comment Activity area.
+* [Bug Fix] Avatars are removed from comments if disabled from WordPress settings.
+* [Bug Fix] Removed link from Comment Activity area.
 
 = 1.0.1 - 05.11.2020 =
 * No comments popup removed

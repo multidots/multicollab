@@ -188,6 +188,11 @@
     });
     $(document).on('focus', '.cf-share-comment', function () {
         $('.cf-share-comment').addClass('comment-focus');
+
+        // Solved overlap issue for adding comment on suggestion. @author: Rishi Shah.
+        $('.cls-board-outer').removeClass( 'focus onGoing' );
+        $(this).parent().closest('.cls-board-outer').addClass('focus onGoing');
+        
         // commented for (save button activated when mention user available at last and press arrow keys) /@author Meet Mehta /@since VIP Plan
         //$('.js-cf-edit-comment a.js-mentioned').css('white-space', 'pre-wrap');
         $('.btn-wrapper').css('display', 'block');
@@ -267,7 +272,7 @@
         //Hide free guide notification popup
         $(document).on('click', '.cf-pluginpop-close', function () {
             var popupName = $(this).attr('data-popup-name');
-            setCookie( 'banner_' + popupName, "yes", 60 * 24);
+            setCookie( 'banner_' + popupName, "yes", 60 * 24 * 7);
             $('.' + popupName).hide();
         });
 
@@ -474,7 +479,7 @@
             };
             $.post(ajaxurl, settingsData, function (data) { // eslint-disable-line
                 if ('ok' === data) {
-                    jQuery('.cf-slack-integration-button').html('<a href="https://slack.com/oauth/v2/authorize?client_id=3297732204756.3694963903943&scope=incoming-webhook,chat:write,commands,conversations.connect:write&user_scope=groups:write,channels:read,groups:read,channels:write&state=' + hidden_site_url + '" class="cf-slack-integration-connect">' + __('Connect', 'content-collaboration-inline-commenting') + '</a>'); // phpcs:ignore
+                    jQuery('.cf-slack-integration-button').html('<a href="https://slack.com/oauth/v2/authorize?client_id=3297732204756.3694963903943&scope=incoming-webhook,chat:write,commands&user_scope=groups:write,channels:read,groups:read,channels:write&state=' + hidden_site_url + '" class="cf-slack-integration-connect">' + __('Connect', 'content-collaboration-inline-commenting') + '</a>'); // phpcs:ignore
                     jQuery('.cf_slack_channel_setting').hide();
                 }
             });
@@ -933,7 +938,7 @@
                 cursorPos = getCaretPosition(el);
 
                 // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
-                if ('@' === e.key || 'KeyG' === e.code || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true) {
+                if (  '@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true && '2' !== e.key ) { // Removed 'KeyG' === e.code conditions in first or conditions. @author: Rishi Shah.
                     doingAjax = false;
                     var prevCharOfEmailSymbol;
                     mentioncounter++;
@@ -951,7 +956,8 @@
                                 var words = preText.split(" ");
                                 var prevWords = (words[words.length - 1]);
                             }
-                            if ('@' === prevWords) {
+
+                            if ('@' === prevWords ) {
                                 showSuggestionFunc = showSuggestion(prevWords);
                             }
 
@@ -988,7 +994,6 @@
                     mentioncounter = 0;
                 }
 
-                //console.log(e.key);
                 // Issue solved after backspace and last work @. @author: Rishi Shah.
                 if ('Backspace' === e.key) {
                     if (!$(createTextarea).text()) {
@@ -1004,12 +1009,9 @@
                         return false;
                     }
 
-                    // console.log( "Cdsjbvdhk" );
-
                     if (!keysToAvoid.find(checkKeys)) {
 
                         // Check for backspace.
-                        //console.log( e.key );
                         if ('Backspace' === e.key) {
                             //alert("single backspace");
                             let prevCharOfEmailSymbol = typedText.substr(-1, 1);
@@ -1726,7 +1728,7 @@
                 });
             });
 
-            $(document).on('click', '.cf-tabs li', function () {
+            $(document).on('click', '.cf-tabs li:not(.cf_subscription_tab)', function () {
                 var dataId = jQuery('.cf-tab-active a').attr('data-id');
                 var queryString = window.location.search;
                 var urlParams = new URLSearchParams(queryString);
@@ -2434,7 +2436,6 @@ function cf_removeAllNotices() {
     if (undefined !== notices) {
         notices.forEach(function (data) {
             wp.data.dispatch('core/notices').removeNotice(data.id);
-            console.log(data.id);
         })
     }
 

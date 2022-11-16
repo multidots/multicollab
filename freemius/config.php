@@ -150,11 +150,10 @@
     }
 
     if ( ! defined( 'WP_FS__IS_HTTPS' ) ) {
-        $forwd_proto = filter_input( INPUT_SERVER, 'HTTP_X_FORWARDED_PROTO', FILTER_SANITIZE_STRING );
         define( 'WP_FS__IS_HTTPS', ( WP_FS__IS_HTTP_REQUEST &&
                                      // Checks if CloudFlare's HTTPS (Flexible SSL support).
                                      isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) &&
-                                     'https' === strtolower( $forwd_proto )
+                                     'https' === strtolower( $_SERVER['HTTP_X_FORWARDED_PROTO'] )
                                    ) ||
                                    // Check if HTTPS request.
                                    ( isset( $_SERVER['HTTPS'] ) && 'on' == $_SERVER['HTTPS'] ) ||
@@ -163,9 +162,8 @@
     }
 
     if ( ! defined( 'WP_FS__IS_POST_REQUEST' ) ) {
-        $req_post = filter_input( INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING );
         define( 'WP_FS__IS_POST_REQUEST', ( WP_FS__IS_HTTP_REQUEST &&
-                                            strtoupper( $req_post ) == 'POST' ) );
+                                            strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' ) );
     }
 
     if ( ! defined( 'WP_FS__REMOTE_ADDR' ) ) {
@@ -185,9 +183,8 @@
     }
 
     if ( ! defined( 'WP_FS__IS_LOCALHOST_FOR_SERVER' ) ) {
-        $http_host = filter_input( INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_STRING );
         define( 'WP_FS__IS_LOCALHOST_FOR_SERVER', ( ! WP_FS__IS_HTTP_REQUEST ||
-                                                    false !== strpos( $http_host, 'localhost' ) ) );
+                                                    false !== strpos( $_SERVER['HTTP_HOST'], 'localhost' ) ) );
     }
 
     #endregion
@@ -357,7 +354,7 @@
             is_multisite() &&
             ( is_network_admin() ||
               ( ( defined( 'DOING_AJAX' ) && DOING_AJAX &&
-                  ( isset( $_REQUEST['_fs_network_admin'] ) /*||
+                  ( isset( $_REQUEST['_fs_network_admin'] ) && 'true' === $_REQUEST['_fs_network_admin'] /*||
                     ( ! empty( $_REQUEST['action'] ) && 'delete-plugin' === $_REQUEST['action'] )*/ )
                 ) ||
                 // Plugin uninstall.

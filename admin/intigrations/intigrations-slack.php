@@ -28,7 +28,7 @@
 						<?php
 				} else {
 					?>
-					<a href="https://slack.com/oauth/v2/authorize?client_id=<?php echo esc_attr( CF_SLACK_CLIENT_ID ); ?>&scope=incoming-webhook,chat:write,commands,conversations.connect:write&user_scope=groups:write,channels:read,groups:read,channels:write&state=<?php echo esc_attr( site_url() ); ?>" class="cf-slack-integration-connect"><?php esc_html_e( 'Connect', 'content-collaboration-inline-commenting' ); ?></a>	
+					<a href="https://slack.com/oauth/v2/authorize?client_id=<?php echo esc_attr( CF_SLACK_CLIENT_ID ); ?>&scope=incoming-webhook,chat:write,commands&user_scope=groups:write,channels:read,groups:read,channels:write&state=<?php echo esc_attr( site_url() ); ?>" class="cf-slack-integration-connect"><?php esc_html_e( 'Connect', 'content-collaboration-inline-commenting' ); ?></a>	
 						<?php
 				}
 				?>

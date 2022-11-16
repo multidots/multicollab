@@ -15,7 +15,7 @@
 	 *
 	 * @var string
 	 */
-	$this_sdk_version = '2.4.5';
+	$this_sdk_version = '2.5.2';
 
 	#region SDK Selection Logic --------------------------------------------------------------------
 
@@ -68,7 +68,11 @@
 
 	if ( ! isset( $fs_active_plugins ) ) {
 		// Load all Freemius powered active plugins.
-		$fs_active_plugins = get_option( 'fs_active_plugins', new stdClass() );
+		$fs_active_plugins = get_option( 'fs_active_plugins' );
+
+        if ( ! is_object( $fs_active_plugins ) ) {
+            $fs_active_plugins = new stdClass();
+        }
 
 		if ( ! isset( $fs_active_plugins->plugins ) ) {
 			$fs_active_plugins->plugins = array();
@@ -181,8 +185,7 @@
 			}
 
 			// Refresh page.
-			$req_uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
-			fs_redirect( $req_uri );
+			fs_redirect( $_SERVER['REQUEST_URI'] );
 		}
 	} else {
 		if ( ! function_exists( 'get_plugins' ) ) {
@@ -270,8 +273,7 @@
 				if ( fs_newest_sdk_plugin_first() ) {
 					// Refresh page after re-order to make sure activated plugin loads newest SDK.
 					if ( class_exists( 'Freemius' ) ) {
-						$f_req_uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
-						fs_redirect( $f_req_uri );
+						fs_redirect( $_SERVER['REQUEST_URI'] );
 					}
 				}
 			}

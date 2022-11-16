@@ -31,9 +31,15 @@ printf( '%s <b>%s</b>', esc_html__( 'Notify', 'content-collaboration-inline-comm
 echo  esc_html( get_option( 'admin_email' ) ) ;
 ?>) <?php 
 esc_html_e( 'for all new comments. (Not Recommended)', 'content-collaboration-inline-commenting' );
-?><span class="cf_premium_star"><?php 
+?>
+			<?php 
+?>
+				<span class="cf_premium_star"><?php 
 printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium', 'content-collaboration-inline-commenting' ) );
-?></span></label>
+?></span>
+			<?php 
+?>
+		</label>
 	</div>
 	<div class="cf-submit-button-settings"><?php 
 submit_button( __( 'Save', 'content-collaboration-inline-commenting' ) );

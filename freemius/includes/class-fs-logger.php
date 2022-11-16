@@ -38,9 +38,10 @@
 		private static $_HOOKED_FOOTER = false;
 
 		private function __construct( $id, $on = false, $echo = false ) {
+            $bt = debug_backtrace();
+
 			$this->_id = $id;
 
-			$bt     = debug_backtrace();
 			$caller = $bt[2];
 
 			if ( false !== strpos( $caller['file'], 'plugins' ) ) {
@@ -387,9 +388,8 @@ KEY `type` (`type` ASC))" );
 				$request_type = 'ajax';
 			}
 
-			$ser_req_uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
 			$request_url = WP_FS__IS_HTTP_REQUEST ?
-				$ser_req_uri :
+				$_SERVER['REQUEST_URI'] :
 				'';
 
 			return $wpdb->insert(

@@ -129,8 +129,8 @@ $cf_slack_channels = get_option( 'cf_slack_channels' );
 <div class="cf-plugin-settings">
 <div class="cf_settings_loader"></div>
 			<?php 
-$CF_PROMOTIONAL_BANNER_API_URL = CF_PROMOTIONAL_BANNER_API_URL . 'wp-json/promotional-banner/v2/promotional-banner?' . rand();
-$promotional_banner_request = wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL );
+$CF_PROMOTIONAL_BANNER_API_URL = CF_PROMOTIONAL_BANNER_API_URL . 'wp-json/promotional-banner/v2/promotional-banner?' . wp_rand();
+$promotional_banner_request = wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL ); // phpcs:ignore
 
 if ( empty($promotional_banner_request->errors) ) {
     $promotional_banner_request_body = $promotional_banner_request['body'];
@@ -141,48 +141,63 @@ if ( empty($promotional_banner_request->errors) ) {
             $promotional_banner_image = $promotional_banner_request_body_data['promotional_banner_image'];
             $promotional_banner_description = $promotional_banner_request_body_data['promotional_banner_description'];
             $promotional_banner_button_group = $promotional_banner_request_body_data['promotional_banner_button_group'];
-            $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
-            $banner_cookie = ( isset( $banner_cookie ) ? $banner_cookie : '' );
+            $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+            $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+            $flag = false;
             
-            if ( empty($banner_cookie) && 'yes' !== $banner_cookie ) {
-                ?>
-				<div class="cf-plugin-popup <?php 
-                echo  ( isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner' ) ;
-                ?>">
-							<?php 
+            if ( empty($banner_cookie_show) && empty($banner_cookie_visible_once) ) {
+                setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes', time() + 86400 * 7 ); // phpcs:ignore
+                setcookie( 'banner_show_once_' . $promotional_banner_cookie, 'yes' ); // phpcs:ignore
+                $flag = true;
+            }
+            
+            $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+            
+            if ( !empty($banner_cookie_show) || true === $flag ) {
+                $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+                $banner_cookie = ( isset( $banner_cookie ) ? $banner_cookie : '' );
                 
-                if ( !empty($promotional_banner_image) ) {
+                if ( empty($banner_cookie) && 'yes' !== $banner_cookie ) {
                     ?>
-							<img src="<?php 
-                    echo  esc_url( $promotional_banner_image ) ;
-                    ?>"/>
+								<div class="cf-plugin-popup <?php 
+                    echo  ( isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner' ) ;
+                    ?>">
+										<?php 
+                    
+                    if ( !empty($promotional_banner_image) ) {
+                        ?>
+												<img src="<?php 
+                        echo  esc_url( $promotional_banner_image ) ;
+                        ?>"/>
+											<?php 
+                    }
+                    
+                    ?>
+										<div class="cf-plugin-popup-meta">
+											<p>
+												<?php 
+                    echo  wp_kses_post( str_replace( array( '<p>', '</p>' ), '', $promotional_banner_description ) ) ;
+                    if ( !empty($promotional_banner_button_group) ) {
+                        foreach ( $promotional_banner_button_group as $promotional_banner_button_group_data ) {
+                            ?>
+														<a href="<?php 
+                            echo  esc_url( $promotional_banner_button_group_data['promotional_banner_button_link'] ) ;
+                            ?>" target="_blank"><?php 
+                            echo  esc_html( $promotional_banner_button_group_data['promotional_banner_button_text'] ) ;
+                            ?></a>
+														<?php 
+                        }
+                    }
+                    ?>
+										</p>
+										</div>
+										<a href="#." data-popup-name="<?php 
+                    echo  ( isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner' ) ;
+                    ?>" class="cf-pluginpop-close"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path id="Icon_material-close" data-name="Icon material-close" d="M17.5,8.507,16.493,7.5,12.5,11.493,8.507,7.5,7.5,8.507,11.493,12.5,7.5,16.493,8.507,17.5,12.5,13.507,16.493,17.5,17.5,16.493,13.507,12.5Z" transform="translate(-7.5 -7.5)" fill="#acacac"/></svg></a>
+									</div>
 								<?php 
                 }
-                
-                ?>
-						<div class="cf-plugin-popup-meta">
-							<p>
-							<?php 
-                echo  str_replace( array( '<p>', '</p>' ), '', $promotional_banner_description ) ;
-                if ( !empty($promotional_banner_button_group) ) {
-                    foreach ( $promotional_banner_button_group as $promotional_banner_button_group_data ) {
-                        ?>
-										<a href="<?php 
-                        echo  esc_url( $promotional_banner_button_group_data['promotional_banner_button_link'] ) ;
-                        ?>" target="_blank"><?php 
-                        echo  esc_html( $promotional_banner_button_group_data['promotional_banner_button_text'] ) ;
-                        ?></a>
-									<?php 
-                    }
-                }
-                ?>
-						</p>
-						</div>
-						<a href="#." data-popup-name="<?php 
-                echo  ( isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner' ) ;
-                ?>" class="cf-pluginpop-close"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path id="Icon_material-close" data-name="Icon material-close" d="M17.5,8.507,16.493,7.5,12.5,11.493,8.507,7.5,7.5,8.507,11.493,12.5,7.5,16.493,8.507,17.5,12.5,13.507,16.493,17.5,17.5,16.493,13.507,12.5Z" transform="translate(-7.5 -7.5)" fill="#acacac"/></svg></a>
-		</div>
-							<?php 
+            
             }
         
         }
@@ -275,6 +290,8 @@ if ( current_user_can( 'administrator' ) ) {
 						"><a href="/wp-admin/admin.php?page=editorial-comments&view=settings" class="cf-tab-item" data-id="cf-settings"><?php 
     esc_html_e( 'Settings', 'content-collaboration-inline-commenting' );
     ?></a></li>
+							<?php 
+    ?>
 							<?php 
     ?>
 						<?php 
@@ -378,9 +395,18 @@ if ( current_user_can( 'administrator' ) ) {
     ?>">
 								<div class="cf-content-box">
 									<div class="cf-cnt-box-header">
-										<h3><?php 
-    printf( '%s <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52538" data-name="Group 52538" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Publishing', 'content-collaboration-inline-commenting' ), esc_html__( 'Premium', 'content-collaboration-inline-commenting' ) );
-    ?></h3>
+										<h3>
+											<?php 
+    printf( '%s', esc_html__( 'Publishing', 'content-collaboration-inline-commenting' ) );
+    ?>
+											<?php 
+    ?>
+												<span class="cf_premium_star"><?php 
+    printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium', 'content-collaboration-inline-commenting' ) );
+    ?></span>
+											<?php 
+    ?>
+										</h3>
 									</div>
 									<?php 
     // Get permission form HTML.
@@ -406,14 +432,22 @@ if ( current_user_can( 'administrator' ) ) {
     ?>">
 								<div class="cf-content-box">
 									<div class="cf-cnt-box-header">
-										<h3><?php 
-    printf(
-        '%s <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52538" data-name="Group 52538" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s: %s',
-        esc_html__( 'Suggestion Mode', 'content-collaboration-inline-commenting' ),
-        esc_html__( 'Premium', 'content-collaboration-inline-commenting' ),
-        esc_html__( 'PRO', 'content-collaboration-inline-commenting' )
-    );
-    ?></h3>
+										<h3>
+											<?php 
+    printf( '%s', esc_html__( 'Suggestion Mode', 'content-collaboration-inline-commenting' ) );
+    ?>
+										<?php 
+    
+    if ( !cf_fs()->is__premium_only() || true === cf_fs()->is_plan( 'plus', true ) ) {
+        ?>
+												<span class="cf_premium_star"><?php 
+        printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium: Pro', 'content-collaboration-inline-commenting' ) );
+        ?></span>
+											<?php 
+    }
+    
+    ?>
+									</h3>
 									</div>
 									<?php 
     // Get permission form HTML.
@@ -435,9 +469,18 @@ if ( current_user_can( 'administrator' ) ) {
     ?>">
 								<div class="cf-content-box">
 									<div class="cf-cnt-box-header">
-										<h3><?php 
-    printf( '%s <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52538" data-name="Group 52538" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Manage Permissions', 'content-collaboration-inline-commenting' ), esc_html__( 'Premium', 'content-collaboration-inline-commenting' ) );
-    ?></h3>
+										<h3>
+											<?php 
+    printf( '%s', esc_html__( 'Manage Permissions', 'content-collaboration-inline-commenting' ) );
+    ?>
+											<?php 
+    ?>
+												<span class="cf_premium_star"><?php 
+    printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium', 'content-collaboration-inline-commenting' ) );
+    ?></span>
+											<?php 
+    ?>
+										</h3>
 									</div>
 									<?php 
     // Get permission form HTML.
@@ -460,15 +503,22 @@ if ( current_user_can( 'administrator' ) ) {
     ?>">
 								<div class="cf-content-box">
 									<div class="cf-cnt-box-header">
-										<h3><?php 
-    printf(
-        '%s <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52538" data-name="Group 52538" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s: %s (%s)',
-        esc_html__( 'Multilingual Options', 'content-collaboration-inline-commenting' ),
-        esc_html__( 'Premium', 'content-collaboration-inline-commenting' ),
-        esc_html__( 'VIP', 'content-collaboration-inline-commenting' ),
-        esc_html__( 'Coming Soon', 'content-collaboration-inline-commenting' )
-    );
-    ?></h3>
+										<h3>
+											<?php 
+    printf( '%s', esc_html__( 'Multilingual Options', 'content-collaboration-inline-commenting' ) );
+    ?>
+											<?php 
+    
+    if ( !cf_fs()->is__premium_only() || true === cf_fs()->is_plan( 'pro', true ) || true === cf_fs()->is_plan( 'plus', true ) ) {
+        ?>
+												<span class="cf_premium_star"><?php 
+        printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium: VIP', 'content-collaboration-inline-commenting' ) );
+        ?></span>
+											<?php 
+    }
+    
+    ?>
+										</h3>
 									</div>
 									<?php 
     // Get permission form HTML.
