@@ -24,61 +24,62 @@
  * Domain Path:       /languages
  */
 // If this file is called directly, abort.
-if ( !defined( 'WPINC' ) ) {
-    die;
+if ( ! defined( 'WPINC' ) ) {
+	die;
 }
-if ( !defined( 'ABSPATH' ) ) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-    return;
+	return;
 }
 
 if ( function_exists( 'cf_fs' ) ) {
-    cf_fs()->set_basename( false, __FILE__ );
+	cf_fs()->set_basename( false, __FILE__ );
 } else {
-    // DO NOT REMOVE THIS IF, IT IS ESSENTIAL FOR THE `function_exists` CALL ABOVE TO PROPERLY WORK.
-    
-    if ( !function_exists( 'cf_fs' ) ) {
-        // Create a helper function for easy SDK access.
-        function cf_fs()
-        {
-            global  $cf_fs ;
-            
-            if ( !isset( $cf_fs ) ) {
-                // Include Freemius SDK.
-                require_once dirname( __FILE__ ) . '/freemius/start.php';
-                $cf_fs = fs_dynamic_init( array(
-                    'id'             => '8961',
-                    'slug'           => 'commenting-feature',
-                    'type'           => 'plugin',
-                    'public_key'     => 'pk_6a91f1252c5c1715f64a8bc814685',
-                    'is_premium'     => false,
-                    'has_addons'     => false,
-                    'has_paid_plans' => true,
-                    'trial'          => array(
-                    'days'               => 14,
-                    'is_require_payment' => true,
-                ),
-                    'menu'           => array(
-                    'slug'       => 'commenting-feature',
-                    'first-path' => 'admin.php?page=editorial-comments',
-                    'support'    => false,
-                ),
-                    'is_live'        => true,
-                ) );
-            }
-            
-            return $cf_fs;
-        }
-        
-        // Init Freemius.
-        cf_fs();
-        // Signal that SDK was initiated.
-        do_action( 'cf_fs_loaded' );
-    }
-    
-    // ... Your plugin's main file logic ...
+	// DO NOT REMOVE THIS IF, IT IS ESSENTIAL FOR THE `function_exists` CALL ABOVE TO PROPERLY WORK.
+
+	if ( ! function_exists( 'cf_fs' ) ) {
+		// Create a helper function for easy SDK access.
+		function cf_fs() {
+			global  $cf_fs;
+
+			if ( ! isset( $cf_fs ) ) {
+				// Include Freemius SDK.
+				require_once dirname( __FILE__ ) . '/freemius/start.php';
+				$cf_fs = fs_dynamic_init(
+					array(
+						'id'             => '8961',
+						'slug'           => 'commenting-feature',
+						'type'           => 'plugin',
+						'public_key'     => 'pk_6a91f1252c5c1715f64a8bc814685',
+						'is_premium'     => false,
+						'has_addons'     => false,
+						'has_paid_plans' => true,
+						'trial'          => array(
+							'days'               => 14,
+							'is_require_payment' => true,
+						),
+						'menu'           => array(
+							'slug'       => 'commenting-feature',
+							'first-path' => 'admin.php?page=editorial-comments',
+							'support'    => false,
+						),
+						'is_live'        => true,
+					)
+				);
+			}
+
+			return $cf_fs;
+		}
+
+		// Init Freemius.
+		cf_fs();
+		// Signal that SDK was initiated.
+		do_action( 'cf_fs_loaded' );
+	}
+
+	// ... Your plugin's main file logic ...
 }
 
 // Plugin version.
@@ -88,16 +89,15 @@ define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
 define( 'COMMENTING_BLOCK_DIR', plugin_dir_path( __FILE__ ) );
 define( 'COMMENTING_BLOCK_BASE', plugin_basename( __FILE__ ) );
 define( 'COMMENTING_NONCE', 'BFaYbfonJ=n@R<8kId|nN8x #W[-S>1%Sazm%<' );
-define( 'CF_SLACK_CLIENT_ID', '3297732204756.3694963903943' );
-define( 'CF_SLACK_CLIENT_SECRET', '5732078dc8a8b25bd300e5cfa458ba21' );
+define( 'CF_SLACK_CLIENT_ID', 'XXXX' );
+define( 'CF_SLACK_CLIENT_SECRET', 'XXXX' );
 define( 'CF_PROMOTIONAL_BANNER_API_URL', 'https://www.multicollab.com/' );
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-commenting-block-activator.php
  */
-function cf_activate_commenting_block()
-{
-    require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-activator.php';
+function cf_activate_commenting_block() {
+	require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-activator.php';
     // phpcs:ignore
     Commenting_block_Activator::activate();
 }
@@ -106,9 +106,8 @@ function cf_activate_commenting_block()
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-commenting-block-deactivator.php
  */
-function cf_deactivate_commenting_block()
-{
-    require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-deactivator.php';
+function cf_deactivate_commenting_block() {
+	 require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-deactivator.php';
     // phpcs:ignore
     Commenting_block_Deactivator::deactivate();
 }
@@ -135,10 +134,9 @@ require COMMENTING_BLOCK_DIR . 'includes/commenting-block-functions.php';
  *
  * @since    1.0.0
  */
-function cf_run_commenting_block()
-{
-    $plugin = new Commenting_block();
-    $plugin->run();
+function cf_run_commenting_block() {
+	$plugin = new Commenting_block();
+	$plugin->run();
 }
 
 cf_run_commenting_block();
@@ -154,35 +152,33 @@ add_action( 'activated_plugin', array( 'Commenting_block', 'cf_redirect_on_activ
  * @since 2.0
  */
 add_filter(
-    'plugin_action_links_' . plugin_basename( __FILE__ ),
-    'cf_add_setting_links',
-    1000,
-    5
+	'plugin_action_links_' . plugin_basename( __FILE__ ),
+	'cf_add_setting_links',
+	1000,
+	5
 );
 add_filter(
-    'network_admin_plugin_action_links_' . plugin_basename( __FILE__ ),
-    'cf_add_setting_links',
-    1000,
-    5
+	'network_admin_plugin_action_links_' . plugin_basename( __FILE__ ),
+	'cf_add_setting_links',
+	1000,
+	5
 );
-function cf_add_setting_links( $actions )
-{
-    
-    if ( !empty($actions) ) {
-        if ( isset( $actions['upgrade'] ) ) {
-            unset( $actions['upgrade'] );
-        }
-        $settings = array(
-            'settings' => '<a href="admin.php?page=editorial-comments">' . __( 'Settings', 'General' ) . '</a>',
-        );
-        $site_link = array(
-            'Get Premium' => '<a href="' . cf_fs()->get_upgrade_url() . '" >' . __( 'Get premium', 'General' ) . '</a>',
-        );
-        $actions = array_merge( $settings, $actions );
-        $actions = array_merge( $site_link, $actions );
-    }
-    
-    return $actions;
+function cf_add_setting_links( $actions ) {
+	if ( ! empty( $actions ) ) {
+		if ( isset( $actions['upgrade'] ) ) {
+			unset( $actions['upgrade'] );
+		}
+		$settings  = array(
+			'settings' => '<a href="admin.php?page=editorial-comments">' . __( 'Settings', 'General' ) . '</a>',
+		);
+		$site_link = array(
+			'Get Premium' => '<a href="' . cf_fs()->get_upgrade_url() . '" >' . __( 'Get premium', 'General' ) . '</a>',
+		);
+		$actions   = array_merge( $settings, $actions );
+		$actions   = array_merge( $site_link, $actions );
+	}
+
+	return $actions;
 }
 
 // Not like register_uninstall_hook(), you do NOT have to use a static function.
