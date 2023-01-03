@@ -132,137 +132,6 @@ class Commenting_block_Functions {
 
 		$total_comments = 0;
 
-		// Add suggestions for dashboard.
-		if ( ! $ajax_call ) {
-			$suggestions_meta = get_post_meta( $post_id, '_sb_suggestion_history', true );
-			$suggestions_meta = json_decode( $suggestions_meta, true );
-
-			if ( is_array( $suggestions_meta ) ) {
-				foreach ( $suggestions_meta as $index => $suggestion ) {
-
-					$suggestion[0]['text'] = $this->translate_strings_format( $suggestion[0]['text'] );
-
-					$text = isset( $suggestion[0]['oldvalue'] ) ? $suggestion[0]['oldvalue'] : '';
-
-					$title = isset( $suggestion[0]['action'] ) ? wp_kses( '<strong>' . __( $suggestion[0]['action'], 'content-collaboration-inline-commenting' ) . '</strong> : ' . __( $suggestion[0]['text'], 'content-collaboration-inline-commenting' ), wp_kses_allowed_html( 'post' ) ) : '';
-					$mode  = ( isset( $suggestion[0]['action'] ) && strtolower( $suggestion[0]['action'] ) === 'delete' ) ? 'delete' : 'add';
-
-					// If resolved.
-					if ( isset( $suggestion[0]['status'] ) && isset( $suggestion[0]['status']['timestamp'] ) ) {
-						$timestamp      = $suggestion[0]['status']['timestamp'];
-						$resolve_action = $suggestion[0]['status']['action'];
-						$resolve_action = 'accept' === $resolve_action ? '<strong>' . __( 'Suggestion Accepted', 'content-collaboration-inline-commenting' ) . ' </strong>' : '<strong>' . __( 'Suggestion Rejected', 'content-collaboration-inline-commenting' ) . ' </strong>';
-
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_top' ]['status'] = $suggestion[0]['status']['action'];
-
-						$user_id = $suggestion[0]['status']['user'];
-						if ( ! array_key_exists( $user_id, $userData ) ) {
-							$user_info = get_userdata( $user_id );
-
-							$userData[ $user_id ]['username']   = $username = $user_info->display_name;
-							$userData[ $user_id ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-							$userData[ $user_id ]['userrole']   = $userrole = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
-						} else {
-							$username    = $userData[ $user_id ]['username'];
-							$profile_url = $userData[ $user_id ]['profileURL'];
-							$userrole    = $userData[ $user_id ]['userrole'];
-
-						}
-
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_top' ]['mode']              = $mode;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_top' ]['title']             = $title;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_top' ]['username']          = $username;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_top' ]['profileURL']        = $profile_url;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_top' ]['userrole']          = $userrole;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_top' ]['thread']            = $resolve_action;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_top' ]['commented_on_text'] = $text;
-					}
-
-					foreach ( $suggestion as $sg ) {
-						// If edited, add as a new item.
-						if ( isset( $sg['editedTime'] ) && 'deleted' !== $sg['status'] ) {
-
-							if ( 10 !== strlen( $sg['editedTime'] ) ) {
-								// Update $timestamp with edited time, to update side time value.
-								$d                = DateTime::createFromFormat(
-									'g:i a F j, Y',
-									$sg['editedTime'],
-									wp_timezone()
-								);
-								$edited_timestamp = $d ? $d->getTimestamp() : '';
-							} else {
-								$edited_timestamp = $sg['editedTime'];
-							}
-							if ( ! empty( $edited_timestamp ) ) {
-								$timestamp = $edited_timestamp;
-								if ( ! empty( $timestamp ) ) {
-									$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
-								}
-
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['status'] = 'edited';
-
-								$user_id = $sg['uid'];
-								if ( ! array_key_exists( $user_id, $userData ) ) {
-									$user_info = get_userdata( $user_id );
-
-									$userData[ $user_id ]['username']   = $username = $user_info->display_name;
-									$userData[ $user_id ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-									$userData[ $user_id ]['userrole']   = $userrole = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
-								} else {
-									$username    = $userData[ $user_id ]['username'];
-									$profile_url = $userData[ $user_id ]['profileURL'];
-									$userrole    = $userData[ $user_id ]['userrole'];
-								}
-
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['mode']              = $mode;
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['title']             = $title;
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['username']          = $username;
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['profileURL']        = $profile_url;
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['userrole']          = $userrole;
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['thread']            = $sg['text'];
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['commented_on_text'] = $text;
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['dtTime']            = $dtTime;
-								$prepareDataTable[ $timestamp ][ 'suggestion_' . $index . '_edited' ]['attachmentText']    = isset( $sg['attachmentText'] ) ? $sg['attachmentText'] : '';
-							}
-						}
-
-						$timestamp = isset( $sg['timestamp'] ) ? $sg['timestamp'] : '';
-						if ( ! empty( $timestamp ) ) {
-							$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
-						}
-						if ( isset( $sg['status'] ) && 'deleted' === $sg['status'] ) {
-							$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['status'] = 'deleted comment of';
-						} else {
-							$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['status'] = isset( $sg['action'] ) ? $sg['action'] : '';
-						}
-
-						$user_id = isset( $sg['uid'] ) ? $sg['uid'] : '';
-						if ( ! array_key_exists( $user_id, $userData ) ) {
-							$user_info = get_userdata( $user_id );
-
-							$userData[ $user_id ]['username']   = $username     = isset( $user_info->display_name ) ? $user_info->display_name : '';
-							$userData[ $user_id ]['profileURL'] = $profile_url  = isset( $user_info->user_email ) ? get_avatar_url( $user_info->user_email ) : '';
-							$userData[ $user_id ]['userrole']   = $userrole       = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
-						} else {
-							$username    = $userData[ $user_id ]['username'];
-							$profile_url = $userData[ $user_id ]['profileURL'];
-							$userrole    = $userData[ $user_id ]['userrole'];
-						}
-
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['mode']              = $mode;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['title']             = $title;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['username']          = $username;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['profileURL']        = $profile_url;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['userrole']          = $userrole;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['thread']            = ( isset( $sg['mode'] ) && strtolower( $sg['mode'] ) === 'reply' ) ? $sg['text'] : '';
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['commented_on_text'] = $text;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['dtTime']            = $dtTime;
-						$prepareDataTable[ $timestamp ][ 'suggestion_' . $index ]['attachmentText']    = isset( $sg['attachmentText'] ) ? $sg['attachmentText'] : '';
-					}
-				}
-			}
-		}
-
 		foreach ( $all_meta as $dataid => $v ) {
 
 			if ( strpos( $dataid, '_el' ) === 0 ) {
@@ -308,7 +177,6 @@ class Commenting_block_Functions {
 					$cstatus         = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
 					$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
 					$comment_status  = isset( $c['status'] ) ? $c['status'] : '';
-					$cattachmentText = isset( $c['attachmentText'] ) ? $c['attachmentText'] : '';
 					$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
 					if ( 'publish' === $comment_status && ! empty( $c['editedTime'] ) ) {
 						$cstatus = __( 'edited', 'content-collaboration-inline-commenting' );
@@ -350,7 +218,6 @@ class Commenting_block_Functions {
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $cstatus;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['attachmentText']    = $cattachmentText;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['blockType']         = $blockType;
 					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['resolved']          = $resolved;
 					$comment_count ++;
@@ -440,44 +307,7 @@ class Commenting_block_Functions {
 		}
 	}
 
-	/**
-	 * Display Translated String
-	 *
-	 * @param int $str
-	 *
-	 * @return string
-	 */
-	public function translate_strings_format( $str ) {
-		$translatedStringFormats = $str;
-		if ( strpos( $translatedStringFormats, 'Space (' ) !== false ) {
-			$splitString             = explode( ' ', $translatedStringFormats );
-			$translatedStringFormats = sprintf( '%s %s %s', __( $splitString[0], 'content-collaboration-inline-commenting' ), $splitString[1], __( $splitString[2], 'content-collaboration-inline-commenting' ) );
-		} elseif ( strpos( $translatedStringFormats, 'Remove Link with URL' ) !== false ) {
-			$splitString             = explode( 'Remove Link with URL ', $translatedStringFormats );
-			$translatedStringFormats = sprintf( '%s %s', __( 'Remove Link with URL', 'content-collaboration-inline-commenting' ), $splitString[1] );
-		} elseif ( strpos( $translatedStringFormats, 'with URL' ) !== false ) {
-			$splitString             = explode( 'with URL ', $translatedStringFormats );
-			$translatedStringFormats = sprintf( '%s %s', __( 'with URL', 'content-collaboration-inline-commenting' ), $splitString[1] );
-		} elseif ( strpos( $translatedStringFormats, 'Replace' ) !== false ) {
-			$splitString             = explode( ' ', $translatedStringFormats );
-			$translatedStringFormats = sprintf( '%s %s %s %s', __( $splitString[0], 'content-collaboration-inline-commenting' ), $splitString[1], __( $splitString[2], 'content-collaboration-inline-commenting' ), $splitString[3] );
-		} elseif ( strpos( $translatedStringFormats, 'Line Break (' ) !== false ) {
-			$splitString             = explode( ' ', $translatedStringFormats );
-			$concatBreakedString     = $splitString[0] . ' ' . $splitString[1];
-			$translatedStringFormats = sprintf( '%s %s %s', __( $concatBreakedString, 'content-collaboration-inline-commenting' ), $splitString[2], __( $splitString[3], 'content-collaboration-inline-commenting' ) );
-		} elseif ( strpos( $translatedStringFormats, 'Block Alignment' ) !== false ) {
-			$splitString             = explode( ' ', wp_strip_all_tags( $translatedStringFormats ) );
-			$concatBreakedString     = $splitString[0] . ' ' . $splitString[1];
-			$translatedStringFormats = sprintf( '%s <em>%s</em> %s <em>%s</em>', __( $concatBreakedString, 'content-collaboration-inline-commenting' ), __( $splitString[2], 'content-collaboration-inline-commenting' ), __( $splitString[3], 'content-collaboration-inline-commenting' ), __( $splitString[4], 'content-collaboration-inline-commenting' ) );
-		} elseif ( strpos( $translatedStringFormats, 'Change Heading' ) !== false ) {
-			$splitString             = explode( ' ', wp_strip_all_tags( $translatedStringFormats ) );
-			$concatBreakedString     = $splitString[0] . ' ' . $splitString[1];
-			$translatedStringFormats = sprintf( '%s <em> %s %s </em> %s <em> %s %s </em>', __( $concatBreakedString, 'content-collaboration-inline-commenting' ), __( $splitString[3], 'content-collaboration-inline-commenting' ), $splitString[4], __( $splitString[5], 'content-collaboration-inline-commenting' ), __( $splitString[7], 'content-collaboration-inline-commenting' ), $splitString[8] );
-		}
-		$str = $translatedStringFormats;
-		return $str;
-	}
-
+	
 	/**
 	 * Reorder Userrole According to Default WordPress Roles
 	 *

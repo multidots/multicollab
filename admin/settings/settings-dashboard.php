@@ -2,7 +2,7 @@
 	<div class="cf-board-overlap">
 		<div class="cf-board-prebenefits">
 			<?php
-			if ( cf_fs()->is_plan( 'plus', true ) ) {
+			if ( $cf_edd->is_plan( 'plus', true ) ) {
 				?>
 					<a href="https://www.multicollab.com/pricing/?utm_source=plugin_setting_header_free-user_upgrade_to_premium&utm_medium=header_free-user_upgrade_to_premium_link&utm_campaign=plugin_setting_free-user_upgrade_to_premium_link&utm_id=plugin_setting_header_link.++" target="_blank"><?php esc_html_e( 'Want to try Premium: PRO?', 'content-collaboration-inline-commenting' ); ?></a>
 				<?php
@@ -76,7 +76,7 @@
 					</div>
 				</div>
 
-				<?php if ( ! cf_fs()->is_plan( 'plus', true ) ) { ?>
+				<?php if ( ! $cf_edd->is_plan( 'plus', true ) ) { ?>
 				<div class="cf-board-overlapbox">
 					<h3><?php esc_html_e( 'Email Notification ', 'content-collaboration-inline-commenting' ); ?></h3>
 					<span><svg xmlns="http://www.w3.org/2000/svg" width="23.058" height="28.7" viewBox="0 0 23.058 28.7"><path id="Path_20" data-name="Path 20" d="M56.611,20a4.532,4.532,0,0,1-4.494-4.043H46.686A1.234,1.234,0,0,1,45.473,15a1.207,1.207,0,0,1,.627-1.336A4.011,4.011,0,0,0,47.211,12.1a19.8,19.8,0,0,0,1.3-7.8,8.171,8.171,0,0,1,4.535-7.287V-4.551A3.45,3.45,0,0,1,56.486-8h.25A3.45,3.45,0,0,1,60.18-4.551v1.569a8.176,8.176,0,0,1,4.535,7.251c0,.007,0,.021,0,.036a19.8,19.8,0,0,0,1.3,7.8,4.013,4.013,0,0,0,1.112,1.559A1.207,1.207,0,0,1,67.75,15a1.234,1.234,0,0,1-1.213.958H61.105A4.532,4.532,0,0,1,56.611,20Zm-2.024-4.043a2.079,2.079,0,0,0,4.047,0Zm9.4-2.442-.06-.116c-1.093-2.156-1.649-5.2-1.653-9.059,0-.006,0-.019,0-.033a5.665,5.665,0,1,0-11.33,0c0,3.873-.556,6.933-1.653,9.1l-.06.116ZM56.611-3.812a8.153,8.153,0,0,1,1.13.079v-.818a1.007,1.007,0,0,0-1-1.007h-.25a1.007,1.007,0,0,0-1,1.007v.817A8.162,8.162,0,0,1,56.611-3.812Z" transform="translate(-45.082 8.35)" fill="#fff" stroke="#4b1bce" stroke-width="0.7"/></svg></span>
@@ -118,7 +118,7 @@
 				} ?>
 			</div>
 			<div class="cf-board-overlap-row cf-board-overlap-feature">	
-				<?php if ( ! cf_fs()->is_plan( 'plus', true ) ) { ?>
+				<?php if ( ! $cf_edd->is_plan( 'plus', true ) ) { ?>
 				<div class="cf-board-overlapbox">
 					<h3><?php esc_html_e( 'Slack Integration', 'content-collaboration-inline-commenting' ); ?></h3>
 					<span><svg xmlns="http://www.w3.org/2000/svg" width="28.3" height="28.3" viewBox="0 0 28.3 28.3"><g id="Group_52514" data-name="Group 52514" transform="translate(-409.072 -122.695)"><path id="Path_23959" data-name="Path 23959" d="M431.849,125.178a3.041,3.041,0,0,1,3.039,3.038v17.256a3.043,3.043,0,0,1-3.039,3.04H414.595a3.043,3.043,0,0,1-3.04-3.04V128.216a3.042,3.042,0,0,1,3.04-3.038h17.254m0-2.333H414.595a5.372,5.372,0,0,0-5.373,5.371v17.256a5.373,5.373,0,0,0,5.373,5.373h17.254a5.373,5.373,0,0,0,5.373-5.373V128.216a5.372,5.372,0,0,0-5.373-5.371Z" transform="translate(0)" fill="#fff" stroke="#4b1bce" stroke-width="0.3"/><path id="Path_23960" data-name="Path 23960" d="M416.755,135.936a1.384,1.384,0,1,1-1.384-1.384h1.384Zm.7,0a1.384,1.384,0,0,1,2.769,0V139.4a1.384,1.384,0,0,1-2.769,0Zm1.385-5.558a1.384,1.384,0,1,1,1.384-1.384v1.384Zm0,.7a1.384,1.384,0,0,1,0,2.769H415.37a1.384,1.384,0,1,1,0-2.769Zm5.56,1.384a1.384,1.384,0,1,1,1.384,1.384H424.4v-1.384Zm-.7,0a1.384,1.384,0,1,1-2.767,0v-3.466a1.384,1.384,0,1,1,2.767,0v3.466Zm-1.383,5.56a1.384,1.384,0,1,1-1.384,1.384v-1.384Zm0-.7a1.384,1.384,0,1,1,0-2.769h3.466a1.384,1.384,0,1,1,0,2.769Z" transform="translate(2.647 2.647)" fill="#fff" stroke="#4b1bce" stroke-width="0.3"/></g></svg></span>
@@ -178,7 +178,7 @@
 					<span><svg xmlns="http://www.w3.org/2000/svg" width="27.189" height="29.04" viewBox="0 0 27.189 29.04"><g id="Group_52515" data-name="Group 52515" transform="translate(-160.969 -182.605)"><path id="Subtraction_86" data-name="Subtraction 86" d="M0,24.663V3.1A3.131,3.131,0,0,1,3.154,0H13.967V1.861H3.154A1.252,1.252,0,0,0,1.893,3.1V21.659l5.069-2.481H23.035A1.252,1.252,0,0,0,24.3,17.938V6.008h1.891v11.93a3.131,3.131,0,0,1-3.154,3.1H7.408L2.736,23.323,0,24.662Z" transform="translate(161.469 185.942)" fill="#fff" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"/><g id="Group_52517" data-name="Group 52517" transform="translate(167.509 182.605)"><g id="Group_1268" data-name="Group 1268" transform="translate(0 0)"><path id="Path_10443" data-name="Path 10443" d="M754.637,207.67v-5.237l14.914-14.911,5.235,5.235L759.874,207.67Zm1.964-4.423v2.46h2.46l9.621-9.621-2.461-2.461Zm11.011-11.011,2.458,2.461,1.94-1.94-2.459-2.461Z" transform="translate(-754.637 -187.523)" fill="#fff"/></g></g><path id="Path_199490" data-name="Path 199490" d="M3,0H8V2.04H1Z" transform="translate(172.984 200.79)" fill="#fff"/> </g></svg></span>
 					<p>
 						<?php
-						if ( ! cf_fs()->is_plan( 'plus', true ) ) {
+						if ( ! $cf_edd->is_plan( 'plus', true ) ) {
 							esc_html_e( 'User can add comments & suggestions using a floating button.', 'content-collaboration-inline-commenting' );
 						} else {
 							esc_html_e( 'User can add suggestions using a floating button.', 'content-collaboration-inline-commenting' );
@@ -194,7 +194,7 @@
 							<div class="wp-block-media-text__content">
 								<p>	
 								<?php
-								if ( ! cf_fs()->is_plan( 'plus', true ) ) {
+								if ( ! $cf_edd->is_plan( 'plus', true ) ) {
 									esc_html_e( 'User can add comments & suggestions using a floating button.We have provided two dedicated floating buttons.', 'content-collaboration-inline-commenting' );
 								} else {
 									esc_html_e( 'User can add suggestions using a floating button.We have provided two dedicated floating buttons.', 'content-collaboration-inline-commenting' );
@@ -206,7 +206,7 @@
 						</div>	
 					</div>
 				</div>
-				<?php if ( ! cf_fs()->is_plan( 'plus', true ) ) { ?>
+				<?php if ( ! $cf_edd->is_plan( 'plus', true ) ) { ?>
 				<div class="cf-board-overlapbox">
 					<h3><?php esc_html_e( 'Custom Permissions', 'content-collaboration-inline-commenting' ); ?></h3>
 					<span><svg xmlns="http://www.w3.org/2000/svg" width="30.381" height="28.8" viewBox="0 0 30.381 28.8"><g id="Group_1643" data-name="Group 1643" transform="translate(437.509 -289.024)"><path id="Path_12057" data-name="Path 12057" d="M-424.688,289.425q6.195,0,12.389,0a4.638,4.638,0,0,1,4.609,3.791,5.427,5.427,0,0,1,.09,1.05q.008,9.148,0,18.3a4.675,4.675,0,0,1-4.87,4.859c-8.2,0-11.754,0-19.953,0a4.644,4.644,0,0,1-4.66-3.775,5.315,5.315,0,0,1-.094-1.05q-.008-9.166,0-18.333a4.664,4.664,0,0,1,4.851-4.839Zm-.026,24.881h12.207a1.58,1.58,0,0,0,1.8-1.783q0-9.093,0-18.186a1.58,1.58,0,0,0-1.783-1.795h-19.77a1.584,1.584,0,0,0-1.8,1.818c0,6.038.015,12.076-.014,18.113a1.71,1.71,0,0,0,1.834,1.846C-428.185,314.284-428.772,314.306-424.715,314.306Z" transform="translate(0.068)" fill="#fff" stroke="#4b1bce" stroke-width="0.8"/><path id="Path_12748" data-name="Path 12748" d="M82.234,81.877l-6.971-7.762a1.08,1.08,0,0,1,0-1.411h0l1.267-1.411a.833.833,0,0,1,1.267,0l4.436,4.94,9.981-11.115a.833.833,0,0,1,1.267,0h0l1.267,1.411a1.08,1.08,0,0,1,0,1.411h0Z" transform="translate(-507.324 230.073)" fill="#fff" stroke="#4b1bce" stroke-linecap="round" stroke-width="1.2"/></g></svg></span>

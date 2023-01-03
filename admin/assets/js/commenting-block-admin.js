@@ -40,7 +40,81 @@
     });
     /* Trigger to add/remove class from block
        when block level sugggestions are created  */
-    
+    /* <fs_premium_only> */
+    $(document).on("onBlockLevelSuggestionUpdate", function () {
+
+        $(".wp-block").each(function () {
+
+
+            if ($(this).find('.wp-block').length === 0 && $(this).find('.alignupdate').length > 0) {
+                $(this).addClass('mdaligned');
+                //fix for 5.6
+                $(this).attr('data-sgalign', true);
+            } else {
+                $(this).removeClass('mdaligned');
+                //fix for 5.6
+                $(this).removeAttr('data-sgalign');
+            }
+
+            if ($(this).find('.wp-block').length === 0 && $(this).find('.headingupdate').length > 0) {
+                $(this).addClass('mdheading');
+                //fix for 5.6
+                $(this).attr('data-sgheading', true);
+            } else {
+                $(this).removeClass('mdheading');
+                //fix for 5.6
+                $(this).removeAttr('data-sgheading');
+            }
+
+            if ($(this).find('.wp-block').length === 0 && $(this).find('.blockremove').length > 0) {
+                $(this).addClass('mdremoved');
+                //fix for 5.6
+                $(this).attr('data-sgremove', true);
+            } else {
+                $(this).removeClass('mdremoved');
+                //fix for 5.6
+                $(this).removeAttr('data-sgremove');
+            }
+
+        });
+
+
+        //focus remove block or block alignment suggestion when block is focused
+        $(".wp-block.focus-visible").each(function () {
+
+            if (($(this).find('.blockremove').length > 0 || $(this).find('.alignupdate').length > 0)
+                && $('#md-span-comments .cls-board-outer.focus').length === 0) {
+                var $this = $(this);
+                setTimeout(function () {
+                    $('#md-span-comments .cls-board-outer').removeAttr('style');
+                    $('#md-span-comments .cls-board-outer').removeClass('focus');
+                    $('#md-span-comments .cls-board-outer').removeClass('is-open');
+                    let suggestionId;
+                    if ($this.find('.blockremove').length > 0) {
+                        suggestionId = $this.find('.blockremove').attr('id');
+                    } else if ($this.find('.alignupdate').length > 0) {
+                        suggestionId = $this.find('.alignupdate').attr('id');
+                    }
+                    $('#sg' + suggestionId).addClass('focus');
+                    $('#md-span-comments .cls-board-outer:not(.focus)').css('opacity', '0.4');
+                    $('#sg' + suggestionId).offset({ top: $this.offset().top });
+                    wp.data.dispatch('mdstore').setDataText(['sg', suggestionId].join());
+                }, 200);
+            }
+        });
+    });
+
+
+    // Trigger to remove onGoing class from suggestion board after
+    // text add or delete is finished
+    let timerID;
+    $(document).on("removeOngoingClass", function () {
+        clearTimeout(timerID);
+        timerID = setTimeout(() => {
+            $('#md-span-comments .cls-board-outer.sg-board').removeClass('onGoing');
+        }, 1000);
+    });
+    /* </fs_premium_only> */
 
     // Display Delete Overlay Box 
     $(document).on('click', '.js-resolve-comment', function () {
@@ -148,9 +222,11 @@
     // alert(  );
     // Stripping out unwanted <mdspan> tags from the content.
     $(window).on('load', function () {
+    
         var findMdSpan = 'mdspan';
         $(findMdSpan).each(function () {
             var datatext = $(this).attr('datatext');
+          
             if (undefined === datatext) {
                 $(this).replaceWith(DOMPurify.sanitize($(this).text())); // phpcs:ignore
             }
@@ -485,6 +561,105 @@
             });
         });
 
+        // Activate license.
+        $('#cf_license').on('submit', function (e) {
+            e.preventDefault();
+            
+            jQuery('.cf-license-notices').hide();
+            jQuery('.cf-license-notices').html('');
+            jQuery('.cf-license-sucess').hide();
+            jQuery('.cf-license-sucess').html('');
+            jQuery('#cf-license-activator-submit').attr( 'disabled' , "disabled" );
+
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_license_activation',
+                'formData': $(this).serialize()
+            };
+            $.post(ajaxurl, settingsData, function (response) { // eslint-disable-line
+               if( 'invalid' === response ) {
+                jQuery('.cf-license-notices').html('<div class="cf-notice notice notice-error is-dismissible"><p>The license failed to activate, due to a status of <code>invalid</code>.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                jQuery('.cf-license-notices').show();
+                jQuery('.license_check_status').hide();
+
+               } else if( 'deactivated' === response ){
+                
+                jQuery('#cf-license-activator').val('');
+
+                // jQuery('.cf-license-sucess').html('<span>License key is deactivated.</span>');
+                // jQuery('.cf-license-sucess').show();
+                window.location.href += '&view=license';
+                // Change button text.
+                edd_change_active_license_text();
+                
+               } else if( 'expired' === response ){
+
+                jQuery('#cf-license-activator').val('');
+
+                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>License key is expired please try with different key.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                jQuery('.cf-license-sucess').show();
+
+                // Change button text.
+                edd_change_active_license_text();
+
+               } else if( 'revoked' === response ){
+
+                jQuery('#cf-license-activator').val('');
+
+                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has been disabled.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                jQuery('.cf-license-sucess').show();
+
+                // Change button text.
+                edd_change_active_license_text();
+
+               } else if( 'missing' === response ){
+
+                jQuery('#cf-license-activator').val('');
+
+                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Invalid license.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                jQuery('.cf-license-sucess').show();
+
+                // Change button text.
+                edd_change_active_license_text();
+
+               } else if( 'no_activations_left' === response ){
+
+                jQuery('#cf-license-activator').val('');
+
+                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has reached its activation limit.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                jQuery('.cf-license-sucess').show();
+
+                // Change button text.
+                edd_change_active_license_text();
+
+               } else if( 'site_inactive' === response ){
+
+                jQuery('#cf-license-activator').val('');
+
+                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license is not active for this URL.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                jQuery('.cf-license-sucess').show();
+
+                // Change button text.
+                edd_change_active_license_text();
+
+               } else {
+
+                // jQuery('.cf-license-sucess').html('<span>License key is activated.</span>');
+                // jQuery('.cf-license-sucess').show();
+
+                jQuery('#cf-license-deactivate-submit').val('Deactivate License');
+                jQuery('#cf-license-deactivate-submit').attr('data-activate', 'Deactivate License');
+                jQuery('#cf_license_action').val('deactivate');
+                jQuery('.license_check_status').show();
+                window.location.href += '&view=license';
+
+               }
+
+               jQuery('#cf-license-activator-submit').removeAttr( 'disabled' );
+
+            });
+        });
+
 
         $(document).on('click', '.reset-filter', function () {
             $(this).parent().find('select').prop('selectedIndex', 0);
@@ -550,7 +725,14 @@
 
             $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
             _this.css('opacity', '1');
-            _this.offset({ top: topOfText });
+           
+            //To fixed fullscreen mode off board position Version 3.2
+            if(wp.data.select( 'core/edit-post' ).isFeatureActive('fullscreenMode')){
+                _this.offset({ top: topOfText });
+            }else{
+                _this.offset({ top: topOfText - 20 });
+            }
+
             scrollBoardToPosition(topOfText);
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
@@ -938,7 +1120,7 @@
                 cursorPos = getCaretPosition(el);
 
                 // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
-                if (  '@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true && '2' !== e.key ) { // Removed 'KeyG' === e.code conditions in first or conditions. @author: Rishi Shah.
+                if ('@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true && '2' !== e.key) { // Removed 'KeyG' === e.code consition in first or consitions. @author: Rishi Shah.
                     doingAjax = false;
                     var prevCharOfEmailSymbol;
                     mentioncounter++;
@@ -956,8 +1138,7 @@
                                 var words = preText.split(" ");
                                 var prevWords = (words[words.length - 1]);
                             }
-
-                            if ('@' === prevWords ) {
+                            if ('@' === prevWords) {
                                 showSuggestionFunc = showSuggestion(prevWords);
                             }
 
@@ -994,6 +1175,7 @@
                     mentioncounter = 0;
                 }
 
+                //console.log(e.key);
                 // Issue solved after backspace and last work @. @author: Rishi Shah.
                 if ('Backspace' === e.key) {
                     if (!$(createTextarea).text()) {
@@ -1009,9 +1191,12 @@
                         return false;
                     }
 
+                    // console.log( "Cdsjbvdhk" );
+
                     if (!keysToAvoid.find(checkKeys)) {
 
                         // Check for backspace.
+                        //console.log( e.key );
                         if ('Backspace' === e.key) {
                             //alert("single backspace");
                             let prevCharOfEmailSymbol = typedText.substr(-1, 1);
@@ -1266,18 +1451,6 @@
                 let thisUserEmail = $(this).find(".cf-user-list-item.active").attr('data-email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).attr('data-user-id');
                 const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                if (multicollab_fs.can_use_premium_code) {
-                    checkbox = `
-                    <div class="cf-assign-to">
-                    <div class="cf-assign-to-inner">
-                        <label for="${el}-cf-assign-to-user">
-                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                        </label>
-                        <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                    </div>
-                    <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
-                    </div>`;
-                } else {
                     checkbox = `
                     <div class="cf-assign-to">
                     <div class="cf-assign-to-inner">
@@ -1287,7 +1460,7 @@
                         <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
                     </div>
                     </div>`;
-                }
+                
                 if ('' !== el) {
                     if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
                         $(`#${el} ${checkBoxContainer}`).empty();
@@ -1319,19 +1492,7 @@
                 let thisUserEmail = $(this).data('email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).data('user-id');
                 const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                if (multicollab_fs.can_use_premium_code) {
-                    checkbox = `
-                <div class="cf-assign-to">
-                <div class="cf-assign-to-inner">
-                    <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                    </label>
-                    <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                </div>
-                <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
-                </div>`;
-                } else {
-                    checkbox = `
+                checkbox = `
                 <div class="cf-assign-to">
                 <div class="cf-assign-to-inner">
                     <label for="${el}-cf-assign-to-user">
@@ -1341,7 +1502,7 @@
                 </div>
                 </div>`;
 
-                }
+                
                 // Get the assigner id of the current board.
                 let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
                 if (thisUserId !== currentBoardAssingerID) {
@@ -1353,13 +1514,7 @@
                         }
                     }
                 }
-                //change assignee message when checkbox selected
-                if (multicollab_fs.can_use_premium_code) {
-                    $(document).on("click", '#' + el + '-cf-assign-to-user', function () {
-                        var checked = $('#' + el + ' .cf-assign-to-user').is(':checked');
-                        $('#' + el + ' .assignMessage').text(checked ? __('The Assigned person will be notified and responsible for marking as done.', 'content-collaboration-inline-commenting') : __('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting'));
-                    });
-                }
+
             });
 
             // On Assignable Email Click.
@@ -1376,17 +1531,6 @@
                     let thisDisplayName = $(this).data('display-name');
                     let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
                     const assigntoText = (currentBoardAssingerID) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                    if (multicollab_fs.can_use_premium_code) {
-                        checkbox = `
-                            <div class="cf-assign-to-inner">
-                                <label for="${el}-cf-assign-to-user">
-                                    <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                                </label>
-                                <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
-                            </div>    
-                            <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>  
-                        `;
-                    } else {
                         checkbox = `
                             <div class="cf-assign-to-inner">
                                 <label for="${el}-cf-assign-to-user">
@@ -1394,7 +1538,7 @@
                                 </label>
                                 <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
                             </div>`;
-                    }
+                    
 
                     let checkboxFragments = document.createRange().createContextualFragment(checkbox);
                     let appendToSelector = document.querySelector(appendTo);
@@ -1604,13 +1748,6 @@
             $(this).parents(".cf-cnt-box-body").find(".cf-slack-inner-integration-box").slideToggle();
         });
 
-        //Show hide notification Tooltip /@author Minal Diwan/@since VIP Plan
-        $(document).on('click', '.md-plugin-tooltip svg', function (e) {
-            e.preventDefault();
-            $('.cf_suggestion-tooltip-box').not($(e.target).parents('.md-plugin-tooltip').find('.cf_suggestion-tooltip-box')).hide();
-            $(e.target).parents('.md-plugin-tooltip').find('.cf_suggestion-tooltip-box').toggle();
-        });
-
 
     });
 
@@ -1683,156 +1820,7 @@
             }
         }
     });
-    if (multicollab_fs.can_use_premium_code) {
-        if (multicollab_fs.is_plan_pro || multicollab_fs.is_plan_plus || multicollab_fs.is_plan_vip) {
-            $(document).ready(function () {
-                var postType = $('.filter-allpagepost').val();
-                var postTYpeReport = $('.filter-allpagepost-report').val();
-                if (postType !== 'post' || postTYpeReport !== 'post') {
-                    $('.filter-allcategory').hide();
-                }
-            });
 
-            $(document).on('change', '.filter-allpagepost-report', function () {
-                if (this.value !== 'post') {
-                    $('.filter-allcategory').hide();
-                } else {
-                    $('.filter-allcategory').show();
-                }
-            });
-
-            $(document).on('change', '.filter-allpagepost', function () {
-                if (this.value !== 'post') {
-                    $('.filter-allcategory').hide();
-                } else {
-                    $('.filter-allcategory').show();
-                }
-            });
-
-            $(document).on('click', '.show_activity_details', function () {
-                let postID = $(this).attr('data-id');
-                $.ajax({
-                    url: ajaxurl, // eslint-disable-line
-                    type: 'post',
-                    data: {
-                        action: 'cf_get_activity_details',
-                        postID: postID,
-                    },
-                    success: function (result) {
-                        $("html, body").animate({ scrollTop: 200 });
-                        $('.board-items-main.list-view').fadeOut();
-                        $('.board-items-main.detail-view').fadeIn();
-                        $('#board-item-detail').fadeIn().html(result); //phpcs:ignore
-                        $('.bulkactions').hide();
-                    }
-                });
-            });
-
-            $(document).on('click', '.cf-tabs li:not(.cf_subscription_tab)', function () {
-                var dataId = jQuery('.cf-tab-active a').attr('data-id');
-                var queryString = window.location.search;
-                var urlParams = new URLSearchParams(queryString);
-                var current_url = urlParams.get('page');
-                var curruntUrl = location.protocol + '//' + location.host + location.pathname + '?page=' + current_url;
-
-                if ('cf-dashboard' === dataId) {
-                    window.location.href = curruntUrl + '&view=web-activity';
-                } else if ('cf-reports' === dataId) {
-                    window.location.href = curruntUrl + '&view=post-activity';
-                } else if ('cf-settings' === dataId) {
-                    window.location.href = curruntUrl + '&view=settings';
-                } else if ('cf-roles-slack-integration' === dataId) {
-                    window.location.href = curruntUrl + '&view=intigrations';
-                }
-            });
-
-        }
-        $(document).on('click', '#pro-migration-button', function () {
-            $('#migration-progress-bar span').attr('data-percentage', '0').css('width', '0%');
-            $('#migration-progress-bar').addClass('active').show();
-            initMigration(0);
-        });
-
-        function migratePostMC(postID) {
-
-            let suggestionsIncluded = false;
-            $.ajax({
-                url: ajaxurl, // eslint-disable-line
-                type: 'post',
-                data: {
-                    action: 'cf_migrate_to_pro',
-                    postID: postID,
-                    suggestionsIncluded: suggestionsIncluded,
-                },
-                success: function (result) {
-                    result = JSON.parse(result);
-                    if (0 === postID) {
-                        let pendingArray = '' !== result.pending ? result.pending.split(',') : [];
-                        if (0 !== pendingArray.length) {
-                            localStorage.setItem("pendingMigrationPosts", result.pending);
-
-                            $('#migration-progress-info').html('<p>Total ' + pendingArray.length + ' items need to be fixed.</p>'); //phpcs:ignore
-                            $('#migration-progress-info').append('<p><span id="pending">0</span> out of <span id="total">' + pendingArray.length + '</span> items migrated successfully!</p>'); //phpcs:ignore
-
-                            let nextID = pendingArray[0];
-                            migratePostMC(nextID);
-                        } else {
-                            $('#migration-progress-info').append('<p>Everything is upto date.</p>');
-                            $('#migration-progress-bar span').attr('data-percentage', 100).css('width', '100%');
-                            setTimeout(function () {
-                                $('#migration-progress-bar').removeClass('active');
-                            }, 4200)
-                        }
-                    } else {
-                        initMigration(result.migratedPost);
-                    }
-                }
-            });
-        }
-
-        function initMigration(removePostID) {
-
-            let pendingMigrationPosts = localStorage.getItem("pendingMigrationPosts");
-            let arrayPendingMigrationPosts = [];
-            if (null !== pendingMigrationPosts) {
-                arrayPendingMigrationPosts = pendingMigrationPosts.split(',');
-
-                if (0 !== removePostID) {
-                    arrayPendingMigrationPosts = $.grep(arrayPendingMigrationPosts, function (value) {
-                        return value != removePostID;
-                    });
-
-                    // If this is a second attempt on a fresh load.
-                    if (0 === $('#migration-progress-info span').length) {
-                        $('#migration-progress-info').html('<p>Total ' + arrayPendingMigrationPosts.length + ' items need to be fixed.</p>');//phpcs:ignore
-                        $('#migration-progress-info').append('<p><span id="pending">0</span> out of <span id="total">' + arrayPendingMigrationPosts.length + '</span> items migrated successfully!</p>'); //phpcs:ignore
-                    }
-                    let totalPosts = parseInt($('#migration-progress-info span#total').text());
-                    let completedPosts = totalPosts - arrayPendingMigrationPosts.length;
-                    $('#migration-progress-info span#pending').text(completedPosts);
-
-                    if (0 === arrayPendingMigrationPosts.length) {
-                        $('#migration-progress-info').append('<p>All posts migrated successfully.<p>');
-                        localStorage.removeItem('pendingMigrationPosts');
-                        $('#migration-progress-bar span').attr('data-percentage', 100).css('width', '100%');
-                        setTimeout(function () {
-                            $('#migration-progress-bar').removeClass('active');
-                        }, 4200)
-                        return;
-                    }
-
-                    let migratePercentage = completedPosts * 100 / totalPosts;
-                    migratePercentage = migratePercentage.toFixed(2);
-                    $('#migration-progress-bar span').attr('data-percentage', migratePercentage).css('width', migratePercentage + '%');
-
-                    pendingMigrationPosts = arrayPendingMigrationPosts.join(',');
-                    localStorage.setItem("pendingMigrationPosts", arrayPendingMigrationPosts);
-                }
-            }
-            let nextID = null === pendingMigrationPosts ? 0 : arrayPendingMigrationPosts[0];
-            migratePostMC(nextID);
-        }
-    }
     $(document).on('click', '#activity-go-back', function () {
         $('.board-items-main.list-view').fadeIn();
         $('.board-items-main.detail-view').fadeOut();
@@ -1876,6 +1864,14 @@
         // Add Testimonial Slider for Free Dashboard
         $('.pricing-testi-slider').bxSlider({
             adaptiveHeight: true
+        });
+        
+        
+        //Show hide notification Tooltip /@author Minal Diwan/@since VIP Plan
+        $(document).on('click', '.md-plugin-tooltip svg', function (e) {
+            e.preventDefault();
+            $('.cf_suggestion-tooltip-box').not($(e.target).parents('.md-plugin-tooltip').find('.cf_suggestion-tooltip-box')).hide();
+            $(e.target).parents('.md-plugin-tooltip').find('.cf_suggestion-tooltip-box').toggle();
         });
     });
 
@@ -2168,6 +2164,40 @@ function removeFloatingIcon() {
     }
 }
 
+function translateStringFormat(str) {
+    let translatedStringFormats = str;
+    let splitString, concatBreakedString, removedHTMLTag;
+    if (translatedStringFormats?.includes("Space (")) {
+        splitString = translatedStringFormats.split(" ");
+        translatedStringFormats = sprintf('%s %s %s', wp.i18n.__(splitString[0], 'content-collaboration-inline-commenting'), splitString[1], wp.i18n.__(splitString[2], 'content-collaboration-inline-commenting'));
+    } else if (translatedStringFormats?.includes("Remove Link with URL")) {
+        splitString = translatedStringFormats.split("Remove Link with URL ");
+        translatedStringFormats = sprintf('%s %s', wp.i18n.__('Remove Link with URL', 'content-collaboration-inline-commenting'), splitString[1]);
+    } else if (translatedStringFormats?.includes("with URL")) {
+        splitString = translatedStringFormats.split("with URL ");
+        translatedStringFormats = sprintf('%s %s', wp.i18n.__('with URL', 'content-collaboration-inline-commenting'), splitString[1]);
+    } else if (translatedStringFormats?.includes("Replace")) {
+        splitString = translatedStringFormats.split(" ");
+        translatedStringFormats = sprintf('%s %s %s %s', wp.i18n.__('Replace', 'content-collaboration-inline-commenting'), splitString[1], wp.i18n.__('to', 'content-collaboration-inline-commenting'), splitString[3]);
+    } else if (translatedStringFormats?.includes("Line Break (")) {
+        splitString = translatedStringFormats.split(" ");
+        concatBreakedString = splitString[0] + ' ' + splitString[1];
+        translatedStringFormats = sprintf('%s %s %s', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), splitString[2], wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'));
+    } else if (translatedStringFormats?.includes("Block Alignment")) {
+        removedHTMLTag = translatedStringFormats.replace(/<[^>]*>/g, '');
+        splitString = removedHTMLTag.split(" ");
+        concatBreakedString = splitString[0] + ' ' + splitString[1];
+        translatedStringFormats = sprintf('%s <em>%s</em> %s <em>%s</em>', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[2], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[4], 'content-collaboration-inline-commenting'));
+    } else if (translatedStringFormats?.includes("Change Heading")) {
+        removedHTMLTag = translatedStringFormats.replace(/<[^>]*>/g, '');
+        splitString = removedHTMLTag.split(" ");
+        concatBreakedString = splitString[0] + ' ' + splitString[1];
+        translatedStringFormats = sprintf('%s <em> %s %s </em> %s <em> %s %s </em>', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'), splitString[4], wp.i18n.__(splitString[5], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[7], 'content-collaboration-inline-commenting'), splitString[8]);
+    }
+    str = translatedStringFormats;
+    return str;
+}
+
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
@@ -2260,39 +2290,7 @@ function validateCommentReplyText(newText) {
     return newText;
 }
 
-function translateStringFormat(str) {
-    let translatedStringFormats = str;
-    let splitString, concatBreakedString, removedHTMLTag;
-    if (translatedStringFormats.includes("Space (")) {
-        splitString = translatedStringFormats.split(" ");
-        translatedStringFormats = sprintf('%s %s %s', wp.i18n.__(splitString[0], 'content-collaboration-inline-commenting'), splitString[1], wp.i18n.__(splitString[2], 'content-collaboration-inline-commenting'));
-    } else if (translatedStringFormats.includes("Remove Link with URL")) {
-        splitString = translatedStringFormats.split("Remove Link with URL ");
-        translatedStringFormats = sprintf('%s %s', wp.i18n.__('Remove Link with URL', 'content-collaboration-inline-commenting'), splitString[1]);
-    } else if (translatedStringFormats.includes("with URL")) {
-        splitString = translatedStringFormats.split("with URL ");
-        translatedStringFormats = sprintf('%s %s', wp.i18n.__('with URL', 'content-collaboration-inline-commenting'), splitString[1]);
-    } else if (translatedStringFormats.includes("Replace")) {
-        splitString = translatedStringFormats.split(" ");
-        translatedStringFormats = sprintf('%s %s %s %s', wp.i18n.__('Replace', 'content-collaboration-inline-commenting'), splitString[1], wp.i18n.__('to', 'content-collaboration-inline-commenting'), splitString[3]);
-    } else if (translatedStringFormats.includes("Line Break (")) {
-        splitString = translatedStringFormats.split(" ");
-        concatBreakedString = splitString[0] + ' ' + splitString[1];
-        translatedStringFormats = sprintf('%s %s %s', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), splitString[2], wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'));
-    } else if (translatedStringFormats.includes("Block Alignment")) {
-        removedHTMLTag = translatedStringFormats.replace(/<[^>]*>/g, '');
-        splitString = removedHTMLTag.split(" ");
-        concatBreakedString = splitString[0] + ' ' + splitString[1];
-        translatedStringFormats = sprintf('%s <em>%s</em> %s <em>%s</em>', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[2], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[4], 'content-collaboration-inline-commenting'));
-    } else if (translatedStringFormats.includes("Change Heading")) {
-        removedHTMLTag = translatedStringFormats.replace(/<[^>]*>/g, '');
-        splitString = removedHTMLTag.split(" ");
-        concatBreakedString = splitString[0] + ' ' + splitString[1];
-        translatedStringFormats = sprintf('%s <em> %s %s </em> %s <em> %s %s </em>', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'), splitString[4], wp.i18n.__(splitString[5], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[7], 'content-collaboration-inline-commenting'), splitString[8]);
-    }
-    str = translatedStringFormats;
-    return str;
-}
+
 
 // display ... if multiple user exists.
 function userroleDisplay(myStr) {
@@ -2436,138 +2434,13 @@ function cf_removeAllNotices() {
     if (undefined !== notices) {
         notices.forEach(function (data) {
             wp.data.dispatch('core/notices').removeNotice(data.id);
+            console.log(data.id);
         })
     }
 
 }
 jQuery(document).ready(function () {
     if ('1' !== showinfoboard.showinfoboard) { showInfoBoardonNewComments(); }
-   
-    setTimeout(function () {
-        var publishBtn = document.querySelector(".editor-post-publish-button__button");
-        if (publishBtn) {
-            publishBtn.addEventListener('click', publishBtnClick);
-        }
-    }, 1000);
-    function publishBtnClick(e) {
-        openBoards = jQuery('.cls-board-outer').length;
-        if (0 !== openBoards) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            e.stopPropagation();
-            prePostChecks(e);
-        }
-    }
-    function prePostChecks(e) {
-        e.stopPropagation()
-        e.preventDefault()
-        openBoards = jQuery('.cls-board-outer').length;
-        let locked = false;
-        if ('remind' === multicollab_cf_alert.cf_give_alert_message && 0 !== openBoards) {
-            if (!confirm(wp.i18n.__('There are a few pending suggestions or comments in this post. Do you still want to publish the post?', 'content-collaboration-inline-commenting'))) {
-                if (!locked) {
-                    locked = true;
-                    wp.data.dispatch('core/editor').lockPostSaving('title-lock');
-                    setTimeout(function () {
-                        wp.data.dispatch('core/editor').unlockPostSaving('title-lock');
-                    }, 3000);
-                }
-
-            } else {
-
-                locked = false;
-                wp.data.dispatch('core/editor').unlockPostSaving('title-lock');
-                wp.data.dispatch("core/editor").editPost({
-                    status: "publish",
-                });
-                wp.data.dispatch('core/editor').savePost();
-            }
-        } else if ('stop' === multicollab_cf_alert.cf_give_alert_message && 0 !== openBoards) {
-            alert(wp.i18n.__("You can't publish this post before resolving all suggestions or comments. Please review and resolve all open suggestions and comments before moving forward.", "content-collaboration-inline-commenting"));
-            wp.data.dispatch('core/editor').lockPostSaving('title-lock');
-
-            setTimeout(function () {
-                wp.data.dispatch('core/editor').unlockPostSaving('title-lock');
-            }, 3000);
-        } else {
-            wp.data.dispatch('core/editor').unlockPostSaving('title-lock');
-            wp.data.dispatch("core/editor").editPost({
-                status: "publish",
-            });
-            wp.data.dispatch('core/editor').savePost();
-        }
-
-    }
-
-    document.addEventListener('keydown', function (e) {
-        var status = wp.data.select('core/editor').getEditedPostAttribute('status');
-        if('stop' === multicollab_cf_alert.cf_give_alert_message || 'remind' === multicollab_cf_alert.cf_give_alert_message){
-            if ('publish' === status && wp.keycodes.isKeyboardEvent.primary(e, 's')) {
-
-                e.stopImmediatePropagation()
-                prePostChecks(e)
-           
-        }
-        }
-    }, true);
-
-
-
-
-});
-jQuery(document).ready(function () {
-    function freemiusCheckout(planId, licenses) {
-        // Pricing  version
-        let handler;
-        handler = FS.Checkout.configure({
-            plugin_id: '8961',
-            plan_id: planId,
-            public_key: 'pk_6a91f1252c5c1715f64a8bc814685',
-            image: 'https://www.multicollab.com/wp-content/uploads/sites/5/2020/12/commenting-logo.svg'
-        });
-
-        handler.open({
-            name: 'Multicollab',
-            licenses: licenses,
-            // You can consume the response for after purchase logic.
-            purchaseCompleted: function (response) {
-                // The logic here will be executed immediately after the purchase confirmation.                                // alert(response.user.email);
-            },
-            success: function (response) {
-                // The logic here will be executed after the customer closes the checkout, after a successful purchase.                                // alert(response.user.email);
-            }
-        });
-        e.preventDefault();
-
-    }
-
-    jQuery('.free-btn a').on('click', function (e) {
-        e.preventDefault();
-        freemiusCheckout('15022', '');
-    });
-    jQuery('.plus-btn a').on('click', function (e) {
-        e.preventDefault();
-        let licenses = jQuery('#licenses').val();
-        freemiusCheckout('15023', licenses);
-    });
-    jQuery('.pro-btn a').on('click', function (e) {
-        e.preventDefault();
-        let licenses = jQuery('#licenses').val();
-        freemiusCheckout('15024', licenses);
-    });
-    jQuery('.vip-btn a').on('click', function (e) {
-        e.preventDefault();
-        let licenses = jQuery('#licenses').val();
-        freemiusCheckout('17708', licenses);
-    });
-
-    // Disable all input for disabled class for free version. @author: Rishi Shah.
-    jQuery(".cf_disabled_input input").attr('disabled', 'disabled');
-
-    jQuery('.md-plugin-tooltip, .cf_premium_star').on("click", function (event) {
-        event.preventDefault()
-    });
-
 });
 
 

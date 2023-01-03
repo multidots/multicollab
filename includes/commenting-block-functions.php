@@ -113,3 +113,23 @@ function gc_reassigning_deleted_user($id, $reassign)
     }
 }
 add_action('delete_user', 'gc_reassigning_deleted_user', 10, 3);
+
+/**
+ * Get user's IP address.
+ *
+ * @return void
+ */
+function get_visitor_ip_address() {
+
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    }
+    else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
+    else {
+        return $_SERVER['REMOTE_ADDR'];
+    }
+
+
+}
