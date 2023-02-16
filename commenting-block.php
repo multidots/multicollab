@@ -14,7 +14,7 @@
  * @wordpress-plugin
  * Plugin Name:       Multicollab
  * Description:       A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress.
- * Version:           3.2
+ * Version:           3.3
  * Author:            Multidots
  * Author URI:        https://www.multidots.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 }
 
 // Plugin version.
-define( 'COMMENTING_BLOCK_VERSION', '3.2' );
+define( 'COMMENTING_BLOCK_VERSION', '3.3' );
 
 // Define constants.
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
@@ -44,9 +44,9 @@ define( 'COMMENTING_BLOCK_BASE', plugin_basename( __FILE__ ) );
 define( 'COMMENTING_NONCE', 'BFaYbfonJ=n@R<8kId|nN8x #W[-S>1%Sazm%<' );
 define( 'CF_PROMOTIONAL_BANNER_API_URL', 'https://www.multicollab.com/' );
 define( 'CF_STORE_URL', 'https://www.multicollab.com/' );
-define( 'EDD_PLAN_PLUS', 3792 );
-define( 'EDD_PLAN_PRO', 3793 );
-define( 'EDD_PLAN_VIP', 3791 );
+define( 'EDD_PLAN_PLUS', 2823 );
+define( 'EDD_PLAN_PRO', 2817 );
+define( 'EDD_PLAN_VIP', 3172 );
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-commenting-block-activator.php

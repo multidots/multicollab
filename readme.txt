@@ -1,4 +1,4 @@
-=== Multicollab - power up your editorial workflow and collaboration with direct commenting and tagging! ===
+=== Multicollab - Google Doc-Style Editorial Collaboration for WordPress ===
 Plugin Name: Multicollab - Google Doc-Style Editorial Collaboration for WordPress
 Plugin URI: https://plugins.svn.wordpress.org/commenting-feature
 Author: Multidots
@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 5.9
 Tested up to: 6.1.1
-Stable tag: 3.2
+Stable tag: 3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,6 +178,9 @@ Similar to Google Docs, deleting all the text highlighted on which comments are 
 Have you had a look at our documentation? <a href="https://bit.ly/3FqfRRD" target="_blank">We’ve covered a lot of common questions in our repository available freely here</a>. If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as fast as we can!
 
 == Changelog ==
+
+= 3.3 - 16.02.2023 =
+* [Enhancement] Maintenance Release.
 
 = 3.2 - 03.01.2023 =
 * [New] Onboarding Tour when activating the plugin.
