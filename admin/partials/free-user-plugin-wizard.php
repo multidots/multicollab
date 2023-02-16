@@ -18,7 +18,7 @@
 										</div>
 									</div>
 								</div>
-								<ul class="list-inline pull-right">
+								<ul class="list-inline">
 									<li><button type="button" id="wizard_validate_token" class="btn btn-primary next-step"><?php echo esc_html__( 'Continue', 'content-collaboration-inline-commenting' ); ?><svg xmlns="http://www.w3.org/2000/svg" width="20" height="11.877" viewBox="0 0 20 11.877"><g id="Group_481" data-name="Group 481" transform="translate(0 -17.112)"><path id="Path_10268" data-name="Path 10268" d="M19.062,230.9H.937a.937.937,0,0,1,0-1.875H19.062a.937.937,0,0,1,0,1.875Z" transform="translate(0 -206.909)" fill="#fff"/><path id="Path_10269" data-name="Path 10269" d="M224.637,155.643a.938.938,0,0,1-.663-1.6l4.337-4.337-4.337-4.337a.938.938,0,0,1,1.326-1.326l5,5a.938.938,0,0,1,0,1.326l-5,5A.93.93,0,0,1,224.637,155.643Z" transform="translate(-210.575 -126.655)" fill="#fff"/></g></svg></button></li>
 								</ul>
 							</div>
@@ -38,7 +38,7 @@
 										</div>
 									</div>
 								</div>
-								<ul class="list-inline pull-right">
+								<ul class="list-inline">
 									<li><button type="button" id="wizard_language_select" class="btn btn-primary next-step"><?php echo esc_html__( 'Continue', 'content-collaboration-inline-commenting' ); ?><svg xmlns="http://www.w3.org/2000/svg" width="20" height="11.877" viewBox="0 0 20 11.877"><g id="Group_481" data-name="Group 481" transform="translate(0 -17.112)"><path id="Path_10268" data-name="Path 10268" d="M19.062,230.9H.937a.937.937,0,0,1,0-1.875H19.062a.937.937,0,0,1,0,1.875Z" transform="translate(0 -206.909)" fill="#fff"/><path id="Path_10269" data-name="Path 10269" d="M224.637,155.643a.938.938,0,0,1-.663-1.6l4.337-4.337-4.337-4.337a.938.938,0,0,1,1.326-1.326l5,5a.938.938,0,0,1,0,1.326l-5,5A.93.93,0,0,1,224.637,155.643Z" transform="translate(-210.575 -126.655)" fill="#fff"/></g></svg></button></li>
 								</ul>
 							</div>
@@ -50,12 +50,32 @@
 										<div class="col-md-12 cta-contents">
 											<h2 class="cta-title"><?php echo esc_html__( 'Quick Tour 🗺️', 'content-collaboration-inline-commenting' ); ?></h2>
 											<div class="select_event_categories_tags">
-												<iframe src="https://www.youtube.com/embed/Hu9I3g1hprU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+												<?php
+													$rest_api_url        = CF_STORE_URL . 'wp-json/cf-onboarding-quick-tour-videos/v2/cf-onboarding-quick-tour-videos?' . wp_rand();
+													$free_video_api_call = wp_remote_get( $rest_api_url );
+													$free_video_api_data = $free_video_api_call['body'];
+													$free_video_api_data = json_decode( $free_video_api_data, true );
+
+												if ( ! empty( $free_video_api_data['free_plugin_video'] ) ) {
+													$free_video_data = $free_video_api_data['free_plugin_video'];
+													if ( 'media' === $free_video_data['video_option'] ) {
+														?>
+															<video controls>
+																<source src="<?php echo esc_attr( $free_video_data['video_url'] ); ?>" type="video/mp4">
+															</video>
+															<?php
+													} else {
+														?>
+																<iframe src="https://www.youtube.com/embed/<?php echo esc_attr( $free_video_data['video_url'] ); ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+															<?php
+													}
+												}
+												?>
 											</div>
 										</div>
 									</div>
 								</div>
-								<ul class="list-inline pull-right">
+								<ul class="list-inline">
 									<li><button type="button" id="wizard_select_cat_tag" class="btn btn-primary btn-info-full next-step"><?php echo esc_html__( 'Continue', 'content-collaboration-inline-commenting' ); ?><svg xmlns="http://www.w3.org/2000/svg" width="20" height="11.877" viewBox="0 0 20 11.877"><g id="Group_481" data-name="Group 481" transform="translate(0 -17.112)"><path id="Path_10268" data-name="Path 10268" d="M19.062,230.9H.937a.937.937,0,0,1,0-1.875H19.062a.937.937,0,0,1,0,1.875Z" transform="translate(0 -206.909)" fill="#fff"/><path id="Path_10269" data-name="Path 10269" d="M224.637,155.643a.938.938,0,0,1-.663-1.6l4.337-4.337-4.337-4.337a.938.938,0,0,1,1.326-1.326l5,5a.938.938,0,0,1,0,1.326l-5,5A.93.93,0,0,1,224.637,155.643Z" transform="translate(-210.575 -126.655)" fill="#fff"/></g></svg></button></li>
 								</ul>
 							</div>
@@ -99,7 +119,7 @@
 									$country_name = $get_country_name_data['country'];
 								}
 								?>
-								<ul class="list-inline pull-right">
+								<ul class="list-inline">
 									<input type="hidden" class="cf_country_name" value="<?php esc_attr_e( $country_name, 'content-collaboration-inline-commenting' ); ?>">
 									<input type="hidden" class="cf_browser_name_version" value="">
 									<li><button type="button" id="wizard_sync_button" class="btn btn-primary next-step"><?php echo esc_html__( 'Done', 'content-collaboration-inline-commenting' ); ?></button></li>

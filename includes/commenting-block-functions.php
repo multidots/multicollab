@@ -121,15 +121,16 @@ add_action('delete_user', 'gc_reassigning_deleted_user', 10, 3);
  */
 function get_visitor_ip_address() {
 
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        return $_SERVER['HTTP_CLIENT_IP'];
-    }
-    else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        return $_SERVER['HTTP_X_FORWARDED_FOR'];
-    }
-    else {
-        return $_SERVER['REMOTE_ADDR'];
-    }
+    $HTTP_CLIENT_IP       = filter_input( INPUT_SERVER, 'HTTP_CLIENT_IP', FILTER_SANITIZE_STRING );
+    $HTTP_X_FORWARDED_FOR = filter_input( INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_SANITIZE_STRING );
+    $REMOTE_ADDR          = filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING );
 
+    if ( ! empty( $HTTP_CLIENT_IP ) ) {
+        return $HTTP_CLIENT_IP;
+    } elseif ( ! empty( $HTTP_X_FORWARDED_FOR ) ) {
+        return $HTTP_X_FORWARDED_FOR;
+    } else {
+        return $REMOTE_ADDR;
+    }
 
 }

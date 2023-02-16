@@ -2,7 +2,7 @@
  * Main function to be called for required JS actions.
  */
 
-(function ($) {
+ (function ($) {
     'use strict';
     const { __ } = wp.i18n;
     /**
@@ -268,7 +268,7 @@
         // Solved overlap issue for adding comment on suggestion. @author: Rishi Shah.
         $('.cls-board-outer').removeClass( 'focus onGoing' );
         $(this).parent().closest('.cls-board-outer').addClass('focus onGoing');
-        
+
         // commented for (save button activated when mention user available at last and press arrow keys) /@author Meet Mehta /@since VIP Plan
         //$('.js-cf-edit-comment a.js-mentioned').css('white-space', 'pre-wrap');
         $('.btn-wrapper').css('display', 'block');
@@ -298,7 +298,25 @@
     //comment below line to resolved copy url board hilight issue.
     //$('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
     // On Document Ready Event.
-    $(document).ready(function () {        
+    $(document).ready(function () {
+        
+       // Editor layout width changes sidebar multicollab btn click @author: Minal Diwan @since-3.3
+       $(document).on('click', '.interface-pinned-items .components-button', function () {
+            setTimeout(function(){
+                var ediLayot = document.querySelector(".editor-styles-wrapper");
+                var cmntLayout = document.querySelector("#md-comments-suggestions-parent");
+                var ediLayotWidth = ediLayot?.offsetWidth;
+                var cmntLyotWidth = cmntLayout?.offsetWidth;
+                var calcLyotWidth = ediLayotWidth - cmntLyotWidth;
+                var editSidebarchck = document.querySelector(".edit-post-layout");
+                if (editSidebarchck.classList.contains('is-sidebar-opened')){
+                    document.querySelector(".is-root-container.block-editor-block-list__layout").style.width = calcLyotWidth + "px";
+                }   else {
+                    document.querySelector(".is-root-container.block-editor-block-list__layout").style.width = calcLyotWidth + "px";
+                }
+            },100);   
+        });
+
         // Add loader on setting page loading. @author: Rishi @since-3.0
         $(".cf_settings_loader").delay(100).fadeOut("slow");
         $('body').css('overflow-y', 'unset');
@@ -356,9 +374,9 @@
         // Dashboard features popup /@Minal Diwan Version 3.0
         $(document).on('click', '.cf-board-overlap-feature .cf-board-overlapbox', function () {
             //  e.preventDefault();
-              $('.cf-board-overlapboxhover').not($(this).find('.cf-board-overlapboxhover')).hide();
-              $(this).find('.cf-board-overlapboxhover').toggle();
-          });
+            $('.cf-board-overlapboxhover').not($(this).find('.cf-board-overlapboxhover')).hide();
+            $(this).find('.cf-board-overlapboxhover').toggle();
+        });
 
 
         // Save Settings.
@@ -445,11 +463,11 @@
         });
 
         $('.cf-specific-post-categories-multiple').select2({
-            placeholder: "Please select a category"
+            placeholder: __('Please select a category', 'content-collaboration-inline-commenting')
         });
 
         $('.cf-specific-post-type-multiple').select2({
-            placeholder: "Please select a post type"
+            placeholder: __('Please select a post type', 'content-collaboration-inline-commenting')
         });
 
         // Save Suggestion Mode.
@@ -578,82 +596,82 @@
             };
             $.post(ajaxurl, settingsData, function (response) { // eslint-disable-line
                if( 'invalid' === response ) {
-                jQuery('.cf-license-notices').html('<div class="cf-notice notice notice-error is-dismissible"><p>The license failed to activate, due to a status of <code>invalid</code>.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                jQuery('.cf-license-notices').show();
-                jQuery('.license_check_status').hide();
+                    jQuery('.cf-license-notices').html('<div class="cf-notice notice notice-error is-dismissible"><p>The license failed to activate, due to a status of <code>invalid</code>.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                    jQuery('.cf-license-notices').show();
+                    jQuery('.license_check_status').hide();
 
                } else if( 'deactivated' === response ){
-                
-                jQuery('#cf-license-activator').val('');
 
-                // jQuery('.cf-license-sucess').html('<span>License key is deactivated.</span>');
-                // jQuery('.cf-license-sucess').show();
-                window.location.href += '&view=license';
+                    jQuery('#cf-license-activator').val('');
+
+                    // jQuery('.cf-license-sucess').html('<span>License key is deactivated.</span>');
+                    // jQuery('.cf-license-sucess').show();
+                    window.location.href += '&view=license';
                 // Change button text.
                 edd_change_active_license_text();
-                
+
                } else if( 'expired' === response ){
 
-                jQuery('#cf-license-activator').val('');
+                    jQuery('#cf-license-activator').val('');
 
-                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>License key is expired please try with different key.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                jQuery('.cf-license-sucess').show();
+                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>License key is expired please try with different key.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                    jQuery('.cf-license-sucess').show();
 
                 // Change button text.
                 edd_change_active_license_text();
 
                } else if( 'revoked' === response ){
 
-                jQuery('#cf-license-activator').val('');
+                    jQuery('#cf-license-activator').val('');
 
-                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has been disabled.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                jQuery('.cf-license-sucess').show();
+                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has been disabled.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                    jQuery('.cf-license-sucess').show();
 
                 // Change button text.
                 edd_change_active_license_text();
 
                } else if( 'missing' === response ){
 
-                jQuery('#cf-license-activator').val('');
+                    jQuery('#cf-license-activator').val('');
 
-                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Invalid license.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                jQuery('.cf-license-sucess').show();
+                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Invalid license.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                    jQuery('.cf-license-sucess').show();
 
                 // Change button text.
                 edd_change_active_license_text();
 
                } else if( 'no_activations_left' === response ){
 
-                jQuery('#cf-license-activator').val('');
+                    jQuery('#cf-license-activator').val('');
 
-                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has reached its activation limit.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                jQuery('.cf-license-sucess').show();
+                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has reached its activation limit.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                    jQuery('.cf-license-sucess').show();
 
                 // Change button text.
                 edd_change_active_license_text();
 
                } else if( 'site_inactive' === response ){
 
-                jQuery('#cf-license-activator').val('');
+                    jQuery('#cf-license-activator').val('');
 
-                jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license is not active for this URL.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                jQuery('.cf-license-sucess').show();
+                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license is not active for this URL.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
+                    jQuery('.cf-license-sucess').show();
 
                 // Change button text.
                 edd_change_active_license_text();
 
-               } else {
+                } else {
 
-                // jQuery('.cf-license-sucess').html('<span>License key is activated.</span>');
-                // jQuery('.cf-license-sucess').show();
+                    // jQuery('.cf-license-sucess').html('<span>License key is activated.</span>');
+                    // jQuery('.cf-license-sucess').show();
 
-                jQuery('#cf-license-deactivate-submit').val('Deactivate License');
-                jQuery('#cf-license-deactivate-submit').attr('data-activate', 'Deactivate License');
-                jQuery('#cf_license_action').val('deactivate');
-                jQuery('.license_check_status').show();
-                window.location.href += '&view=license';
+                    jQuery('#cf-license-deactivate-submit').val('Deactivate License');
+                    jQuery('#cf-license-deactivate-submit').attr('data-activate', 'Deactivate License');
+                    jQuery('#cf_license_action').val('deactivate');
+                    jQuery('.license_check_status').show();
+                    window.location.href += '&view=license';
 
-               }
+                }
 
                jQuery('#cf-license-activator-submit').removeAttr( 'disabled' );
 
@@ -725,14 +743,14 @@
 
             $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
             _this.css('opacity', '1');
-           
+
             //To fixed fullscreen mode off board position Version 3.2
             if(wp.data.select( 'core/edit-post' ).isFeatureActive('fullscreenMode')){
                 _this.offset({ top: topOfText });
             }else{
                 _this.offset({ top: topOfText - 20 });
             }
-
+            
             scrollBoardToPosition(topOfText);
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
@@ -776,38 +794,40 @@
 
         // Email List Template Function.
         var emailList = function (appendTo, data) {
-            var listItem = '';
-            if (data.length > 0) {
-                data.forEach(function (user, listIndex) {
-                    if (listIndex == 0) {
-                        listItem += `
-                        <li class="cf-user-list-item active" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
-                            <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
-                            <div class="cf-user-info">
-                                <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
-                            </div>
-                        </li>`;
-                    } else {
-                        listItem += `
-                        <li class="cf-user-list-item" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
-                            <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
-                            <div class="cf-user-info">
-                                <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
-                            </div>
-                        </li>`;
-                    }
-                })
-                var emailList = `
-                    <div class="cf-mentioned-user-popup">
-                        <ul class="cf-system-user-email-list" role="listbox" tabindex="0">
-                            ${listItem}
-                        </ul>
-                    </div>
-                `;
-                emailList = DOMPurify.sanitize(emailList);
+            setTimeout(function () {
+                var listItem = '';
+                if (data.length > 0) {
+                    data.forEach(function (user, listIndex) {
+                        if (listIndex == 0) {
+                            listItem += `
+                            <li class="cf-user-list-item active" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
+                                <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
+                                <div class="cf-user-info">
+                                    <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
+                                </div>
+                            </li>`;
+                        } else {
+                            listItem += `
+                            <li class="cf-user-list-item" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
+                                <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
+                                <div class="cf-user-info">
+                                    <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
+                                </div>
+                            </li>`;
+                        }
+                    })
+                    var emailList = `
+                        <div class="cf-mentioned-user-popup">
+                            <ul class="cf-system-user-email-list" role="listbox" tabindex="0">
+                                ${listItem}
+                            </ul>
+                        </div>
+                    `;
+                    emailList = DOMPurify.sanitize(emailList);
 
-                $(emailList).insertAfter(appendTo); // phpcs:ignore
-            }
+                    $(emailList).insertAfter(appendTo); // phpcs:ignore
+                }
+            }, 100);
         }
 
 
@@ -1001,9 +1021,10 @@
              * Triggering textarea keyup event.
              * ========================================
              */
-            $(document.body).on('keyup', createTextarea, function (e) {
+            $(document.body).on('keyup keypress', createTextarea, function (e) {
 
                 var _self = $(createTextarea);
+                var that = this;
                 typedText = _self.html();
 
                 // Clearing out any junk left when clearing the textarea.
@@ -1119,8 +1140,24 @@
                 var el = $(createTextarea).get(0);
                 cursorPos = getCaretPosition(el);
 
-                // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard
-                if ('@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true && '2' !== e.key) { // Removed 'KeyG' === e.code consition in first or consitions. @author: Rishi Shah.
+                // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard.
+
+                // var charCode = (e.which) ? e.which : e.keyCode;
+                // if (String.fromCharCode(charCode).match(/[^0-9]/g)){
+                //     return false;
+                // }
+
+
+                var keynum;
+                if(window.event) { // IE                  
+                    keynum = e.keyCode;
+                } else if(e.which){ // Netscape/Firefox/Opera                 
+                    keynum = e.which;
+                }
+
+                if ( '@' === String.fromCharCode(keynum) || '@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true && '2' !== e.key) { // Removed 'KeyG' === e.code consition in first or consitions. @author: Rishi Shah.
+                    doingAjax = true;
+                    // Fetch all email list.
                     doingAjax = false;
                     var prevCharOfEmailSymbol;
                     mentioncounter++;
@@ -1138,16 +1175,52 @@
                                 var words = preText.split(" ");
                                 var prevWords = (words[words.length - 1]);
                             }
-                            if ('@' === prevWords) {
+                            if ('@' === prevWords || ('keypress' === e.type && '@' === String.fromCharCode(keynum))  ) {
+                                prevWords = '@';
                                 showSuggestionFunc = showSuggestion(prevWords);
                             }
 
                         }
                     }
                     if (showSuggestionFunc && mentioncounter <= 1 && !doingAjax) {
-                        doingAjax = true;
-                        // Fetch all email list.
-                        isEmail = true;
+                        if('keypress' === e.type || 'keyup' === e.type ){
+                            mentioncounter = 0;
+                        }
+                        if( 'keypress' === e.type && true === $(createTextarea).is(':focus') ){
+                            isEmail = true;           
+                         
+                            $.ajax({
+                                url: ajaxurl, // eslint-disable-line
+                                type: 'post',
+                                data: {
+                                    action: 'cf_get_user_email_list',
+                                    postID: currentPostID,
+                                    nonce: adminLocalizer.nonce, // eslint-disable-line
+                                },
+                                beforeSend: function () { },
+                                success: function (res) {
+                                    $(appendIn).remove(); // Remove previous DOM.
+                                    $(assignablePopup).remove(); // Remove previous DOM.
+                                    var data = JSON.parse(res);
+                                    emailList(createTextarea, data);
+                                    mentioncounter = 0;  // Issue solved for add 2 mentions continues without space. @author: Rishi Shah.
+                                }
+                            })
+                        }
+                    } else {
+                        $(appendIn).remove();
+                        $(assignablePopup).remove();
+                    }
+                }
+
+                if ( 'keypress' !== e.type && 'Backspace' === e.key && (typedText && typedText.length > 0)) {
+                    let currentTextAt = typedText.substr(-1, 1);
+                    var sel = document.getSelection();
+                    var selNodeChar = sel?.baseNode?.data?.charAt(sel.anchorOffset-1) || sel?.anchorNode?.data?.charAt(sel.anchorOffset-1);
+
+                    if ('@' === currentTextAt || '@' === typedText.charAt(cursorPos-1) || '@' === selNodeChar ) {
+                        isEmail = true;           
+
                         $.ajax({
                             url: ajaxurl, // eslint-disable-line
                             type: 'post',
@@ -1165,9 +1238,6 @@
                                 mentioncounter = 0;  // Issue solved for add 2 mentions continues without space. @author: Rishi Shah.
                             }
                         })
-                    } else {
-                        $(appendIn).remove();
-                        $(assignablePopup).remove();
                     }
                 }
 
@@ -1197,24 +1267,26 @@
 
                         // Check for backspace.
                         //console.log( e.key );
-                        if ('Backspace' === e.key) {
-                            //alert("single backspace");
-                            let prevCharOfEmailSymbol = typedText.substr(-1, 1);
-                            //trackedStr = '';
-                            //console.log(prevCharOfEmailSymbol);
-                            if ('@' === prevCharOfEmailSymbol) {
+                        if('keypress' !== e.type){
+                            if ('Backspace' === e.key) {
+                                //alert("single backspace");
+                                let prevCharOfEmailSymbol = typedText.substr(-1, 1);
                                 //trackedStr = '';
-                                trackedStr = '@'; // Issue solved after backspace and last work @. @author: Rishi Shah.
+                                //console.log(prevCharOfEmailSymbol);
+                                if ('@' === prevCharOfEmailSymbol) {
+                                    //trackedStr = '';
+                                    trackedStr = '@'; // Issue solved after backspace and last work @. @author: Rishi Shah.
+                                } else {
+                                    trackedStr = trackedStr.slice(0, -1);
+                                }
+                            } else if (50 === e.which) {
+                                if ('@' !== trackedStr) {
+                                    trackedStr += '@';
+                                }
                             } else {
-                                trackedStr = trackedStr.slice(0, -1);
-                            }
-                        } else if (50 === e.which) {
-                            if ('@' !== trackedStr) {
-                                trackedStr += '@';
-                            }
-                        } else {
-                            if (50 !== e.which) {
-                                trackedStr += e.key;
+                                if (50 !== e.which) {
+                                    trackedStr += e.key;
+                                }
                             }
                         }
 
@@ -1250,7 +1322,7 @@
                         if (checkEmailSymbol && cursorPos != 0) {
                             var refinedCachedusersList = [];
                             let niddle = trackedStr.substr(1);
-                            if ('' !== niddle && niddle.length > 3) {
+                            if ('' !== niddle && niddle.length > 2) {
                                 // Sending Ajax Call to get the matched email list(s).
                                 $.ajax({
                                     url: ajaxurl, // eslint-disable-line
@@ -1492,7 +1564,7 @@
                 let thisUserEmail = $(this).data('email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).data('user-id');
                 const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                checkbox = `
+                    checkbox = `
                 <div class="cf-assign-to">
                 <div class="cf-assign-to-inner">
                     <label for="${el}-cf-assign-to-user">
@@ -2151,7 +2223,7 @@ function scrollBoardToPosition(topOfText) {
 
     topOfText = topOfText + jQuery(scrollTopClass).scrollTop();
 
-    jQuery(scrollTopClass).animate({
+    jQuery(scrollTopClass).stop(true).animate({
         scrollTop: topOfText - 320
     }, 1000);
 }
@@ -2434,7 +2506,6 @@ function cf_removeAllNotices() {
     if (undefined !== notices) {
         notices.forEach(function (data) {
             wp.data.dispatch('core/notices').removeNotice(data.id);
-            console.log(data.id);
         })
     }
 
