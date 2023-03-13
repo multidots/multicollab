@@ -69,7 +69,7 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 	 */
 	public function get_activities( $data ) {
 
-		$auth_token      = $data->get_header( 'X-WP-Nonce' ) ?? '';
+		$auth_token = $data->get_header( 'X-WP-Nonce' ) ?? '';
 
 		if ( ! wp_verify_nonce( $auth_token, 'wp_rest' ) ) {
 			$response = new WP_Error(
@@ -126,8 +126,9 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 
 			foreach ( $comments['comments'] as $timestamp => $comment ) {
 
-				$user_info = get_userdata( isset( $comment['userData'] ) ? $comment['userData'] : '' );
-				if ( 'draft' !== isset( $comment['status'] ) && 'permanent_draft' !== isset( $comment['status'] ) ) {
+				$user_info      = get_userdata( isset( $comment['userData'] ) ? $comment['userData'] : '' );
+				$comment_status = isset( $comment['status'] ) ? $comment['status'] : '';
+				if ( 'draft' !== $comment_status && 'permanent_draft' !== $comment_status ) {
 					$cmnts[] = array(
 						'id'              => $timestamp,
 						'status'          => isset( $comment['status'] ) ? $comment['status'] : '',
