@@ -300,8 +300,8 @@
     // On Document Ready Event.
     $(document).ready(function () {
         
-       // Editor layout width changes sidebar multicollab btn click @author: Minal Diwan @since-3.3
-       $(document).on('click', '.interface-pinned-items .components-button', function () {
+        // Editor layout width changes sidebar multicollab btn click @author: Minal Diwan @since-3.3
+        $(document).on('click', '.interface-pinned-items .components-button,.edit-post-header-toolbar__inserter-toggle', function (e) {
             setTimeout(function(){
                 var ediLayot = document.querySelector(".editor-styles-wrapper");
                 var cmntLayout = document.querySelector("#md-comments-suggestions-parent");
@@ -309,13 +309,37 @@
                 var cmntLyotWidth = cmntLayout?.offsetWidth;
                 var calcLyotWidth = ediLayotWidth - cmntLyotWidth;
                 var editSidebarchck = document.querySelector(".edit-post-layout");
-                if (editSidebarchck.classList.contains('is-sidebar-opened')){
+                var blockinsertchck = document.querySelector(".interface-interface-skeleton__body");
+                const firstChild = blockinsertchck?.firstElementChild;
+                const elid = $('#md-span-comments').find('.cls-board-outer.focus').attr('id');
+                let topOfText;
+                function mdboardOffset() {
+                    setTimeout(function(){
+                        if ($('#md-span-comments').find('.cls-board-outer').hasClass('focus')) {
+                            if (elid && elid.match(/^el/m) !== null) {
+                                topOfText = $('[datatext="' + elid + '"]').offset().top;
+                            } else {
+                                let sid = $('#' + elid).attr('data-sid');
+                                topOfText = $('[id="' + sid + '"]').offset()?.top;
+                                if(!topOfText){
+                                    topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
+                                }
+                            }
+                            $('#md-span-comments').find('.cls-board-outer.focus').offset({ top: topOfText });
+                            scrollBoardToPosition(topOfText);
+                        }
+                    },800);
+                }
+                if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild){
+                    mdboardOffset();
                     document.querySelector(".is-root-container.block-editor-block-list__layout").style.width = calcLyotWidth + "px";
                 }   else {
+                    mdboardOffset();
                     document.querySelector(".is-root-container.block-editor-block-list__layout").style.width = calcLyotWidth + "px";
                 }
-            },100);   
+            },100);
         });
+
 
         // Add loader on setting page loading. @author: Rishi @since-3.0
         $(".cf_settings_loader").delay(100).fadeOut("slow");
@@ -727,10 +751,13 @@
             $('#md-span-comments .comment-delete-overlay').removeClass('show');
             $('#md-span-comments .comment-resolve .resolve-cb').prop("checked", false);
             $('#md-span-comments .cls-board-outer .buttons-wrapper').removeClass('active');
+            $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+
             $('.btn-wrapper').css('display', 'none');
             removeFloatingIcon();
-            _this.addClass('focus');
+            _this.addClass('focus'); 
             _this.addClass('is-open');
+            _this.css('opacity', '1'); 
 
             const selectedText = _this.attr('id');
             let topOfText;
@@ -741,17 +768,11 @@
                 topOfText = $('[id="' + sid + '"]').offset().top;
             }
 
-            $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
-            _this.css('opacity', '1');
-
-            //To fixed fullscreen mode off board position Version 3.2
-            if(wp.data.select( 'core/edit-post' ).isFeatureActive('fullscreenMode')){
-                _this.offset({ top: topOfText });
-            }else{
-                _this.offset({ top: topOfText - 20 });
-            }
+            setTimeout(function(){
+                scrollBoardToPosition(topOfText);
+                _this.offset({ top: topOfText });                    
+            },800);
             
-            scrollBoardToPosition(topOfText);
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
 
@@ -792,6 +813,45 @@
             $(this).parent().addClass('hovered');
         });
 
+        //Set board top offset from activity center @author: Minal Diwan @since-3.4
+        $(document).on('click', '.user-commented-on,.cf-activity-centre .user-action a', function (e) {
+            var elID = e.target.dataset.elid;
+            if( elID ){
+                elID = elID.replace('cf-', '');
+                $(`#${elID}`).trigger('click');
+                setTimeout(function(){
+                    let topOfText;
+                    if (elID.match(/^el/m) !== null) {
+                        topOfText = $('[datatext="' + elID + '"]').offset().top;
+                    } else {
+                        let sid = $('#' + elID).attr('data-sid');
+                        topOfText = $('[id="' + sid + '"]').offset()?.top;
+                        if(!topOfText){
+                            topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
+                        }
+                        $('#' + sid).addClass('sg-format-class');
+
+                    }
+                    $('#md-span-comments .cls-board-outer').removeAttr('style');
+                    $('#md-span-comments .cls-board-outer').removeClass('focus');
+                    $('#md-span-comments .cls-board-outer').removeClass('is-open');
+                    $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+                
+                    $('#' + elID + '.cls-board-outer').addClass('focus');
+                    $('#' + elID + '.cls-board-outer').addClass('is-open');
+                    $('#' + elID + '.cls-board-outer').css('opacity', '1');
+
+                                
+                    scrollBoardToPosition(topOfText);
+
+                    $('#' + elID + '.cls-board-outer').offset({ top: topOfText });
+
+                },800);
+            }
+        });
+
+
+        
         // Email List Template Function.
         var emailList = function (appendTo, data) {
             setTimeout(function () {
@@ -1926,18 +1986,7 @@
         }
     });
 
-    // $(document).on('click', '.cf-tabs-main .cf-tabs .cf-tab-item', function () {
-    //     let getTabID = $(this).attr('data-id');
-    //     $(this).parent().addClass('cf-tab-active').siblings().removeClass('cf-tab-active');
-    //     $('#' + getTabID).addClass('cf-tab-active').show().siblings().removeClass('cf-tab-active').hide();
-    // });
-
     $(document).ready(function () {
-        // Add Testimonial Slider for Free Dashboard
-        $('.pricing-testi-slider').bxSlider({
-            adaptiveHeight: true
-        });
-        
         
         //Show hide notification Tooltip /@author Minal Diwan/@since VIP Plan
         $(document).on('click', '.md-plugin-tooltip svg', function (e) {

@@ -803,7 +803,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			wp_enqueue_script( 'cf-mark', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-dom-purify', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'font-awesome-free', 'https://kit.fontawesome.com/cfc6818450.js' );
-			wp_enqueue_script( 'cf-testimonial-slider', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/jquery.bxslider.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'wp-i18n', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false );
 
 			// Add wizard JS.
@@ -812,7 +811,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			// Enque de-active pro plugin JS.
 			if ( current_user_can( 'activate_plugins' ) ) {
 				wp_enqueue_script( 'wp-deactivation-message', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/comenting-block-deactive-free.js', array( 'jquery' ), wp_rand(), false );
-				wp_localize_script( 'wp-deactivation-message', 'multicollab_plugin_path', COMMENTING_BLOCK_BASE );
+				wp_localize_script( 'wp-deactivation-message', 'multicollab_plugin_path', array( COMMENTING_BLOCK_BASE ) );
 			}
 			wp_enqueue_script(
 				'content-collaboration-inline-commenting',
@@ -821,7 +820,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					'jquery',
 					'cf-mark',
 					'cf-dom-purify',
-					'cf-testimonial-slider',
 					'wp-blocks',
 					'wp-i18n',
 					'wp-element',
@@ -1595,7 +1593,18 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		// Fetch out all user's email.
 		$email_list   = array();
-		$system_users = $users->get_results();
+		
+		/**
+		 * Set transient to imporve @ get users names.
+		 *
+		 * @author: Rishi Shah
+		 * @version 3.4
+		 */
+		$system_users = get_transient( 'cf_system_users' );
+		if( false === $system_users ) {
+			$system_users = $users->get_results();
+			set_transient( 'cf_system_users', $system_users, 30 * MINUTE_IN_SECONDS );
+		}
 		foreach ( $system_users as $user ) {
 			$needToSortArray = $this->cf_get_reorder_user_role( $user->roles );
 			$user->roles     = $needToSortArray;

@@ -4,11 +4,11 @@
 			<?php
 			if ( $cf_edd->is_plan( 'plus', true ) ) {
 				?>
-					<a href="https://www.multicollab.com/pricing/?utm_source=plugin_setting_header_free-user_upgrade_to_premium&utm_medium=header_free-user_upgrade_to_premium_link&utm_campaign=plugin_setting_free-user_upgrade_to_premium_link&utm_id=plugin_setting_header_link.++" target="_blank"><?php esc_html_e( 'Want to try Premium: PRO?', 'content-collaboration-inline-commenting' ); ?></a>
+					<h1><?php esc_html_e( 'Want to try Premium: PRO?', 'content-collaboration-inline-commenting' ); ?></h1>
 				<?php
 			} else {
 				?>
-					<a href="https://www.multicollab.com/pricing/?utm_source=plugin_setting_header_free-user_upgrade_to_premium&utm_medium=header_free-user_upgrade_to_premium_link&utm_campaign=plugin_setting_free-user_upgrade_to_premium_link&utm_id=plugin_setting_header_link.++" target="_blank"><?php esc_html_e( 'Want to try Premium?', 'content-collaboration-inline-commenting' ); ?></a>
+					<h1><?php esc_html_e( 'Want to try Premium?', 'content-collaboration-inline-commenting' ); ?></h1>
 				<?php
 			}
 			?>
@@ -48,7 +48,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/comment-media-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/comment-media-img.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>You can comment on any text or media within your posts to help your team better navigate issues within the given content.</p>
@@ -67,7 +67,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/suggestion-mode-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/suggestion-mode-img.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>Track your content creation process by using Suggestion Mode. You and your team can easily navigate through your workflows together and check assignments off your to-do lists with this feature.</p><ul><li>Any edits to posts or pages are highlighted to accept, reject and collaborate as needed when combined with mentions and notifications.</li><li>Teams can easily track WordPress text that has been modified, deleted, or added throughout your editorial workflow.</li></ul>
@@ -87,7 +87,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/email-notifi-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/email-notifi-img.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>With enabled email notifications, you don’t have to sit around and wonder if your team members got that message you sent out. All you have to do is make your edits, assign your comments, and let the plugin do the rest.</p><ul><li>Instant email notifications make collaborations with your team easier and foster intra-group connectivity.</li><li>Your team can quickly review and easily click notifications to respond directly in WordPress.</li></ul>							</div>
@@ -106,7 +106,7 @@
 							<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 							<div class="cf-board-overlap-wrapper">
 								<figure class="wp-block-media-text__media">
-									<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/slack-inte-img.svg' ); ?>"/>
+									<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/slack-inte-img.png' ); ?>"/>
 								</figure>
 								<div class="wp-block-media-text__content">
 									<p>If you and your team use Slack to communicate internally, you can <strong>receive important Multicollab notifications</strong> in the Slack channel of your choice.</p><ul><li>Instant Slack notifications make team collaboration more accessible and allow collaborators to stay in the loop.</li><li>You will get real-time updates for mentions, replies, and other comment activities in your Slack channel. This allows you to fit Multicollab in a place you know your team will be checking all day.</li></ul>						
@@ -129,7 +129,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/slack-inte-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/slack-inte-img.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>If you and your team use Slack to communicate internally, you can <strong>receive important Multicollab notifications</strong> in the Slack channel of your choice.</p><ul><li>Instant Slack notifications make team collaboration more accessible and allow collaborators to stay in the loop.</li><li>You will get real-time updates for mentions, replies, and other comment activities in your Slack channel. This allows you to fit Multicollab in a place you know your team will be checking all day.</li></ul>						
@@ -148,7 +148,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/attach-doc-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/attach-doc-img.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>If a picture is worth a thousand words, then is a video worth a thousand pictures? The <strong><em>Attach Document</em></strong> feature allows you to share additional references and context to your comment.</p><ul><li>Collaborators can attach images or documents to their comments and replies.</li><li>The Attach Document feature opens up a possibility for you to express your thoughts with screenshots, screencasts, audio messages, etc.</li></ul>						</div>	
@@ -165,7 +165,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/adv-report-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/Reports-and-Activity.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>When you’re dealing with as much content as you are on a daily basis, the basics aren’t enough. With our Advanced Dashboard functionality, you can get better insight into your editorial workflow with transparent data points and an intuitive reporting feature. You’ll never be left in the dark about your content’s progress again.</p><ul><li><strong>The Activity Timeline</strong>&nbsp;monitors collaboration and tracks progress across all pages and posts with easy filtering to view by user, content categories, and time stamps.</li><li>Discover what your team needs with&nbsp;<strong>Quick Snapshot Reporting</strong>&nbsp;for the latest comment activities on each page and post.</li></ul>						
@@ -189,7 +189,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/quick-comment-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/quick-comment-img.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>	
@@ -217,7 +217,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/custom-perm-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/custom-perm-img.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>
@@ -239,7 +239,7 @@
 						<a href="#." class="cf-board-overlappop"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path id="Icon_material-close" data-name="Icon material-close" d="M27.5,9.514,25.486,7.5,17.5,15.486,9.514,7.5,7.5,9.514,15.486,17.5,7.5,25.486,9.514,27.5,17.5,19.514,25.486,27.5,27.5,25.486,19.514,17.5Z" transform="translate(-7.5 -7.5)" fill="#fff"/></svg></a>
 						<div class="cf-board-overlap-wrapper">
 							<figure class="wp-block-media-text__media">
-								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/multilan-img.svg' ); ?>"/>
+								<img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/multilan-img.png' ); ?>"/>
 							</figure>
 							<div class="wp-block-media-text__content">
 								<p>	<?php esc_html_e( 'Support multiple languages like [English, German, Chinese, Hindi, Spanish, French, and Bengali].', 'content-collaboration-inline-commenting' ); ?></p>
@@ -251,7 +251,6 @@
 			</div>
 			<div class="cf-board-overlap-row" style="justify-content:center;">
 				<a href="https://www.multicollab.com/pricing/?utm_source=plugin_setting_header_free-user_upgrade_to_premium&utm_medium=header_free-user_upgrade_to_premium_link&utm_campaign=plugin_setting_free-user_upgrade_to_premium_link&utm_id=plugin_setting_header_link.++" target="_blank" class="cf-board-premi-btn"><?php esc_html_e( 'Upgrade to Premium', 'content-collaboration-inline-commenting' ); ?><svg id="Group_52548" data-name="Group 52548" xmlns="http://www.w3.org/2000/svg" width="27.263" height="24.368" viewBox="0 0 27.263 24.368"><path id="Path_199491" data-name="Path 199491" d="M333.833,428.628a1.091,1.091,0,0,1-1.092,1.092H316.758a1.092,1.092,0,1,1,0-2.183h15.984a1.091,1.091,0,0,1,1.091,1.092Z" transform="translate(-311.117 -405.352)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M312.276,284.423h0a1.089,1.089,0,0,0-1.213-.056l-6.684,4.047-4.341-7.668a1.093,1.093,0,0,0-1.9,0l-4.341,7.668-6.684-4.047a1.091,1.091,0,0,0-1.623,1.2l3.366,13.365a1.091,1.091,0,0,0,1.058.825h18.349a1.09,1.09,0,0,0,1.058-.825l3.365-13.365A1.088,1.088,0,0,0,312.276,284.423Zm-4.864,13.151H290.764l-2.509-9.964,5.373,3.253a1.092,1.092,0,0,0,1.515-.4l3.944-6.969,3.945,6.968a1.092,1.092,0,0,0,1.515.4l5.373-3.253Z" transform="translate(-285.455 -280.192)" fill="#d0a823"/></svg></a>
-				<a href="https://www.multicollab.com/pricing/?is_trial_period=yes" target="_blank" class="cf-board-free-btn"><?php esc_html_e( 'Try Premium for 14 Days', 'content-collaboration-inline-commenting' ); ?></a>
 			</div>
 		</div>
 	</div>

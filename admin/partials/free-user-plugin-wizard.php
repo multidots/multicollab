@@ -61,7 +61,7 @@
 													if ( 'media' === $free_video_data['video_option'] ) {
 														?>
 															<video controls>
-																<source src="<?php echo esc_attr( $free_video_data['video_url'] ); ?>" type="video/mp4">
+																<source src="<?php echo esc_url( $free_video_data['video_url'] ); ?>" type="video/mp4">
 															</video>
 															<?php
 													} else {

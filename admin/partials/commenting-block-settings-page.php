@@ -182,12 +182,12 @@ $cf_edd = new CF_EDD();
 						echo esc_html( 'FREE' );
 					?>
 				</span>
-				<a class="cf-plan-version" href="<?php echo esc_url( 'https://www.multicollab.com/blog/release-notes/?utm_source=plugin_setting_header_release-notes&utm_medium=header_release-notes_link&utm_campaign=plugin_setting_release-notes_link&utm_id=plugin_setting_header_link' ); ?>" target="_blank">v <?php echo esc_html( COMMENTING_BLOCK_VERSION ); ?></a>
+				<a class="cf-plan-version" href="<?php echo esc_url( 'https://www.multicollab.com/change-log' ); ?>" target="_blank">v <?php echo esc_html( COMMENTING_BLOCK_VERSION ); ?></a>
 			</div>
 			<div class="cf-plugin-version">
 				<a href="https://docs.multicollab.com/?utm_source=plugin_setting_header_helpdoc_link&utm_medium=header_helpdoc_link&utm_campaign=plugin_setting_header_link&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Help', 'content-collaboration-inline-commenting' ); ?></a> | 
 				<a href="https://www.multicollab.com/contact/?utm_source=plugin_setting_header_link_contact&utm_medium=header_link_contact&utm_campaign=plugin_setting_header_link_contact&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Contact', 'content-collaboration-inline-commenting' ); ?></a> | 
-				<a href="https://feedback.multicollab.com/feedback/add?utm_source=plugin_setting_header_link_add_feedback&utm_medium=header_link_add_feedback&utm_campaign=plugin_setting_header_link&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Feedback', 'content-collaboration-inline-commenting' ); ?></a>
+				<a href="https://feedback.multicollab.com/feedback/add?utm_source=plugin_setting_header_link_add_feedback&utm_medium=header_link_add_feedback&utm_campaign=plugin_setting_header_link&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Suggest', 'content-collaboration-inline-commenting' ); ?></a>
 				<a class="pricing-block-button__link" href="<?php echo esc_url( 'https://www.multicollab.com/pricing/?utm_source=plugin_setting_header_free-user_upgrade_to_premium&utm_medium=header_free-user_upgrade_to_premium_link&utm_campaign=plugin_setting_free-user_upgrade_to_premium_link&utm_id=plugin_setting_header_link.++' ); ?>" target="_blank"><?php esc_html_e( 'Upgrade', 'content-collaboration-inline-commenting' ); ?></a>
 			</div>
 		</div>
