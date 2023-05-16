@@ -7,9 +7,6 @@
  *,
  * :after,
  * :before {box-sizing: inherit;}
- @font-face{font-family:'dm_sansmedium';src:url('../fonts/DMSans/dmsans-medium-webfont.woff2') format('woff2'),url('../fonts/DMSans/dmsans-medium-webfont.woff') format('woff');font-weight:500;font-style:normal;}
- @font-face{font-family:'dm_sansregular';src:url('../fonts/DMSans/dmsans-regular-webfont.woff2') format('woff2'),url('../fonts/DMSans/dmsans-regular-webfont.woff') format('woff');font-weight:normal;font-style:normal;}
- @font-face{font-family:'dm_sansbold';src:url('../fonts/DMSans/dmsans-bold-webfont.woff2') format('woff2'),url('../fonts/DMSans/dmsans-bold-webfont.woff') format('woff');font-weight:normal;font-style:normal;}
  .commentOn .components-panel__header.interface-complementary-area-header{z-index:9;}
  .tooltip .tooltiptext{width:300px;background-color:black;color:#fff;text-align:center;border-radius:6px;padding:5px 0;position:absolute;z-index:1}
  .tooltip:hover .tooltiptext{visibility:visible}
@@ -105,10 +102,10 @@
  body.commentOn .rich-text:focus mdspan[data-rich-text-format-boundary="true"],.commentOn .rich-text:focus .mdmodified mdspan em[data-rich-text-format-boundary="true"],.commentOn .mdspan-comment.is-focused{background-color:#fcef45}
  .comment-header .buttons-holder .buttons-wrapper button:hover{background-color:#edf2f9}
  body:not(.commentOn) .editor-styles-wrapper .block-editor-writing-flow,
- body:not(.commentOn) .editor-styles-wrapper.block-editor-writing-flow > .block-editor-block-list__layout{max-width:95%;}
+ body:not(.commentOn) .editor-styles-wrapper.block-editor-writing-flow > .block-editor-block-list__layout{max-width:94%;}
  #md-comments-suggestions-parent{position:absolute;top:80px;right:0;-webkit-transition:all 0.5s;-o-transition:all 0.5s;transition:all 0.5s;/*z-index:1*/;height:100%;height:calc(100% - 100px);overflow:auto;width:350px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;overflow-x:hidden;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:reverse;-ms-flex-direction:row-reverse;flex-direction:row-reverse;justify-content: space-between;margin-right: 20px;}
- body:not(.commentOn) #md-comments-suggestions-parent{max-width:5%;}
- #md-comments-suggestions-parent div#md-span-comments{height:100%;overflow:auto;padding:20px 10px 10px 15px;overflow-x:hidden;width:88%}
+ body:not(.commentOn) #md-comments-suggestions-parent{max-width:4%;}
+ #md-comments-suggestions-parent div#md-span-comments:not(:empty){height:100%;overflow:auto;padding:20px 10px 10px 15px;overflow-x:hidden;width:88%}
  body.commentOn div#md-comments-suggestions-parent{z-index:9}
  div#md-suggestion-comments{height:100%;overflow:auto;padding:10px 10px 10px 42px;overflow-x:hidden}
  div#md-suggestion-comments::-webkit-scrollbar-track,
@@ -162,10 +159,10 @@
  .commentOn .editor-styles-wrapper.block-editor-writing-flow > .block-editor-block-list__layout{float:left;margin:0 auto;max-width:100%;-webkit-transition:all 0.5s ease-out;-o-transition:all 0.5s ease-out;transition:all 0.5s ease-out;padding-bottom:106px}
  .commentOn .is-sidebar-opened .cls-board-outer.focus{margin-top:0;}
  .commentOn .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block{-webkit-transition:all 0.5s ease-out;-o-transition:all 0.5s ease-out;transition:all 0.5s ease-out;}
- .commentOn .is-sidebar-opened .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block{float: left;width:calc(100% - 325px);padding-left: 15px;}
  .commentOn .editor-styles-wrapper .block-editor-writing-flow::after,
  .commentOn  .editor-styles-wrapper.block-editor-writing-flow::after{content:'';clear:both;display:block}
  .commentOn .editor-styles-wrapper .wp-block{-webkit-transition:all 0.5s ease-out;-o-transition:all 0.5s ease-out;transition:all 0.5s ease-out}
+ .commentOn .editor-styles-wrapper .wp-block.block-list-appender,.commentOn .editor-styles-wrapper .wp-block-navigation .wp-block{width:auto}
  .hide-me{height:0;padding:0!important;margin:0!important;display:block;overflow:hidden;outline:none!important;-webkit-box-shadow:none!important;box-shadow:none!important}
  .comment-header .comment-actions{display:-webkit-box;display:-ms-flexbox;display:flex;margin-bottom:15px;position:relative}
  .board.fresh-board .comment-header .comment-details{align-items:center;}
@@ -801,10 +798,9 @@ body.hide-sg .wp-block .mdadded,
 body.hide-sg .wp-block .mdmodified{color:currentColor}
 .commentOn .wp-block ins.mdadded:not([data-rich-text-format-boundary="true"]) > span.has-inline-color:not([data-rich-text-format-boundary="true"]){color: #188651!important;text-decoration:none;}
 body.hide-sg .wp-block ins.mdadded:not([data-rich-text-format-boundary="true"]) > span.has-inline-color:not([data-rich-text-format-boundary="true"]){color:currentColor !important;}
-.commentOn ins[data-rich-text-format-boundary],
-.commentOn del[data-rich-text-format-boundary],
-.commentOn ins *[data-rich-text-format-boundary],
-.commentOn del *[data-rich-text-format-boundary]{background-color:transparent;border-top:2px solid #188651;border-bottom:2px solid #188651}
+.commentOn .mdadded.sg-format-class,
+.commentOn .mdmodified.sg-format-class,
+.commentOn .mdremoved.sg-format-class{background-color:transparent;border-top:2px solid #188651;border-bottom:2px solid #188651}
  body.hide-sg ins[data-rich-text-format-boundary],
  body.hide-sg del[data-rich-text-format-boundary],
  body.hide-sg ins *[data-rich-text-format-boundary],
@@ -814,7 +810,7 @@ body.hide-sg .wp-block ins.mdadded:not([data-rich-text-format-boundary="true"]) 
 .commentOn .rich-text:focus ins *[data-rich-text-format-boundary],
 .commentOn .rich-text:focus del *[data-rich-text-format-boundary]{background-color: transparent;}
 .commentOn .rich-text .mdmodified mark[data-rich-text-format-boundary]{color:currentColor}
-.commentOn .wp-block .mdadded[data-rich-text-format-boundary] img,.commentOn .wp-block img.mdmodified{border-top: 2px solid #188651;border-bottom:2px solid #188651;}
+.commentOn .wp-block .mdadded.sg-format-class img,.commentOn .wp-block img.mdmodified{border-top: 2px solid #188651;border-bottom:2px solid #188651;}
 .commentOn .wp-block .mdadded:has(img),.commentOn .wp-block .mdremoved:has(img){border:none;}
 .commentOn .wp-block .mdremoved img{border-top:2px solid #EA1010;border-bottom:2px solid #EA1010;}
 .commentOn .rich-text .mdmodified mark:not([data-rich-text-format-boundary]){color:#188651 !important}
@@ -989,31 +985,6 @@ body:not(.hide-sg) .wp-block[data-sgheading=true] .mdadded{border: none;}
  .cf-plugin-settings .cf-pricing-dashboard .cf-card p{font-size:16px;}
  .cf-plugin-settings .cf-pricing-dashboard .cf-card .cf-card-header,.cf-plugin-settings .cf-pricing-dashboard .cf-card .cf-card-body{padding:0;}
  
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-section{font-family:'NeoSans',sans-serif!important;margin:0 auto}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols{max-width:100%;width: 33.33%;padding:60px 40px;margin:0!important;text-align:center;background-color:#fff;border: 1px solid rgb(205 204 204 / 46%)}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-mid-grid-cols{margin: 0 25px !important;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols .wp-block-image{height:50px;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-block-columns{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack: center;-ms-flex-pack: center;justify-content: center;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-inner h2#h-pricing-plans{margin-bottom:5px;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-inner h3#h-simple-and-transparent-no-contracts-or-hidden-fees{font-size:24px;line-height:50px;text-align:center;margin-bottom:40px;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols h2.pricing-title{color: #000;line-height: 60px;position: relative;margin-bottom: 40px;padding-bottom: 30px;font-size: 34px;}.cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols h5{font-size:24px;font-weight:600;color:#000000;margin:0 0;font-family:'NeoSans',sans-serif;text-decoration:line-through;text-decoration-color:#E24444;text-decoration-thickness:2px;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols h2{font-size: 34px;line-height: 52px;color: #4a1bcc;font-style: normal;font-weight: 700;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols h2:not(.pricing-title) strong{font-weight: 500;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols h3 strong{font-size:34px;font-weight:500;color:#4b1cce;line-height:normal;font-family:'NeoSans',sans-serif;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols h3{font-size:18px;font-weight:500;color:#4A1BCC;line-height:normal;margin:25px 0;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols p{font-size:18px;font-weight:400;font-family:'dm_sansregular';margin: 0 !important;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols .pricing-block-button{width:100%;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols .pricing-block-button .pricing-block-button__link{font-family: 'dm_sansmedium';font-size: 20px;font-weight:500; line-height:26px; transition:all .3s; color:#fff; background-color:#4B1CCE; border:2px solid #4B1CCE; border-radius:30px 30px 0; padding:15px 32px; display: block; -webkit-border-radius:30px 30px 0; -moz-border-radius:30px 30px 0; -ms-border-radius:30px 30px 0; -o-border-radius:30px 30px 0;text-decoration: none; }
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols .pricing-block-button .pricing-block-button__link:hover{background-color:transparent;color:#4b1cce;border:2px solid #4b1cce;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols ul{margin-bottom:0;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols ul li{font-family:'dm_sansregular';color:#000;padding-bottom:30px;margin-bottom: 0;line-height:normal;position:relative;list-style:none;text-align:left;padding-left:37px;font-size: 18px;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols ul li img{position:absolute;top:2px;left:0;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols ul li:last-child{border-bottom:none;padding-bottom:0;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols .contact-enterprise-text{margin-top:40px;font-size:16px;color:#707070;text-decoration: underline;text-align:center;display: block;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols .pricing-block-button{margin:40px 0;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols h2.pricing-title::before{content:"";position:absolute;bottom:0;right:0;height:1px;width:100%;background-color:#707070;opacity:.40;}
- .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols h2.pricing-title::after{content:"";position:absolute;bottom:0px;left:50%;transform:translateX(-50%);height:2px;width:80px;background-color:#4b1cce;}
- 
  /* Dashboard Slack Integration  */
  .cf-slack-settings label{line-height:1.3em;font-size:14px;font-weight:500;width:20%;display:inline-block;}
  .cf-slack-settings .cf_slack_webhook {width: 55%;} 
@@ -1069,37 +1040,6 @@ body:not(.hide-sg) .wp-block[data-sgheading=true] .mdadded{border: none;}
 span.cf-license-activator-input{position:relative;display:inline-block;max-width:28%;width:100%;}
 span.cf-license-activator-input .dashicons.dashicons-yes-alt{position:absolute;top:50%;right:6px;transform:translateY(-50%);font-size:21px;color:#00a32a;}
 span.cf-license-activator-input input#cf-license-activator{width:100%;}
-
- /* No-risk */
- .no-risk-money-back-section{width:100%;margin:0 auto;}
- .no-risk-section-inner{border-radius:0;padding:40px;background-color:#f7f9fa;display:flex;align-items:center;}
- .no-risk-section-inner h2{font-size:28px;font-weight:600;color:#000000;margin:0 0 15px;line-height:normal;font-family:'NeoSans',sans-serif;}
- .no-risk-section-inner p{font-size:18px;font-weight:normal;color:#2C2A31;line-height:30px;font-family:'NeoSans',sans-serif;margin-bottom:0;}
- .cf-content-simple{width:1200px;margin:0 auto;max-width:100%;}
- .no-risk-block-column:first-child figure{margin: 0 40px 0 0;}
- 
- /* pricing slider */
- .pricing-testimonial-section{padding:50px 0 70px;}
- .pricing-testimonial-section .bx-wrapper{-moz-box-shadow:none;-webkit-box-shadow:none;box-shadow:none;position:relative;padding:0;*zoom:1;-ms-touch-action:pan-y;touch-action:pan-y;}
- .pricing-testimonial-section .bx-wrapper .bx-pager.bx-default-pager a{width:16px;height:16px;margin:0 10px;border-radius:30px;background:#fff;border:3px solid rgb(50 75 87 / 50%);text-indent:-9999px;display:block;outline:0;box-shadow:none;transition:.3s all linear;}
- .pricing-testimonial-section .bx-wrapper .bx-pager.bx-default-pager a:hover,.pricing-testimonial-section .bx-wrapper .bx-pager.bx-default-pager a.active,.pricing-testimonial-section .bx-wrapper .bx-pager.bx-default-pager a:focus{background:#4B1CCE;border:3px solid #4B1CCE;}
- .pricing-testimonial-section .bx-controls-direction{display:none;}
- .pricing-testimonial-section .bx-wrapper .bx-pager{text-align:left; position:absolute;font-size:.85em;font-family:Arial;font-weight:700;color:#666;padding-top:60px;}
- .pricing-testimonial-section .bx-wrapper .bx-pager-item{font-size:0;line-height:0;display:inline-block;vertical-align:bottom;}
- .pricing-testimonial-inner{max-width:960px;margin:0 auto;}
- .pricing-testimonial-inner h2{font-size:40px;line-height:1.5;font-weight:600;margin-bottom:0;margin-top:35px;font-family:'NeoSans',sans-serif;}
- .pricing-testi-slider ul li{display:inline-block;line-height:normal;}
- .pricing-testi-slider ul li i{color:#4B1CCE;font-size:16px;margin-right:2px;}
- .pricing-testi-slider h4{color:#000000;font-size:20px;font-weight:600;line-height:normal;font-family:'NeoSans',sans-serif;margin:12px 0 20px;}
- .pricing-testi-slider p{font-size:20px;font-weight:400;color:#2C2A31;line-height: 36px;margin-bottom:0;font-family:'NeoSans',sans-serif;}
- .pricing-testi-meta{display:flex;align-items:center;margin-top:16px;}
- .pricing-testi-meta img{width:50px;height:50px;border-radius:50%;}
- .pricing-testi-content{margin-left:30px;}
- .pricing-testi-content h5{margin-bottom:2px;font-size:20px;font-weight:600;line-height:25px;font-family:'NeoSans',sans-serif;margin-top:0;color:#000;}
- .pricing-testi-content p{font-size:16px;line-height:17px;margin-top:4px;}
- .pricing-testimonial-columns{display:flex;box-sizing:border-box;flex-wrap:wrap;}
- .pricing-testimonial-columns .pricing-testimonial-column{flex-grow:1;min-width:0;word-break:break-word;overflow-wrap:break-word;}
- .pricing-testimonial-columns .pricing-testimonial-column:last-child{margin:0 0 1em;flex:65%;}
  
  /* notification css */
  #md-span-status{background-color:#def3ff;} 
@@ -1187,6 +1127,7 @@ span.cf-license-activator-input input#cf-license-activator{width:100%;}
 .cf-tabs-main .cf-dashboard-text{font-size:18px;font-weight:500;color:#2271B1;}
 .cf-board-prebenefits{text-align:center;position: relative;}
 .cf-board-prebenefits a{text-align:center;display:inline-block;text-decoration:none;color:#000000;font-size:18px;font-weight:500;border:2px solid #2271B1;border-radius:6px;padding:9px 14px;}
+.cf-board-prebenefits h1{text-align: center;display: inline-block;text-decoration: none;color: #4b1bce;font-size: 34px;font-weight: 700;line-height: 38px;margin-top: 0;margin-bottom: 10px;}
 .cf-board-prebenefits h3{font-size:18px;margin:0;font-weight:700;margin:30px 0;}
 .cf-board-prebenefits h3 svg{margin-left:5px;}
 .cf-board-overlap-row{display:flex;flex-direction:row;flex-wrap:wrap;gap:20px;justify-content:center;}
@@ -1284,6 +1225,11 @@ body.cf_fullscreen.wp-toolbar{padding: 0;}
 .interface-complementary-area .components-panel__header .cf-multicollab-svgicon::before{content:"";position:absolute;top:0;left:0;width:102px;height:27px;background-image:url('../images/multicollab-black-logo.svg');}
 
  /* Responsive Media */
+ @media (max-width:1560px){
+  .commentOn .is-sidebar-opened .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block{float: left;width:calc(100% - 325px);padding-bottom:24px;}
+  .commentOn:not(.is-fullscreen-mode) .is-sidebar-opened .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block {float: none;margin-left: 0 !important;}
+}
+
 @media (max-width:1400px){
    .cf-tabs-main .cf-tab-inner{min-height:auto}
    .cf-plugin-settings .cf-right{width:320px;padding:0 10px}
@@ -1326,13 +1272,12 @@ body.cf_fullscreen.wp-toolbar{padding: 0;}
 
     /* responsive layout */
     .responsive-layout .block-editor-writing-flow{width:100%}
-    .commentOn .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block,
-    body:not(.hide-sg) .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block{margin-left:0 !important;float:none}
+    body:not(.hide-sg) .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block{float:none;width: calc(100% - 255px);}
+    .commentOn .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block{max-width:50%;margin-left: 0!important;margin-right: 0!important;}
     .commentOn .is-sidebar-opened .editor-styles-wrapper.block-editor-writing-flow .edit-post-visual-editor__post-title-wrapper .wp-block{float:none;width: calc(100% - 255px);}
     .commentOn .commentIcon.wp-block-media-text{display: block}
   
    .cf-plugin-settings .cf-pricing-dashboard .cf-video{display: block}
-   .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-section{padding-right: 0}
    .cf-plugin-settings .cf-pricing-dashboard .cf-card{margin: 30px auto 0;}
  
    /* Slack Integration */
@@ -1489,9 +1434,6 @@ body.cf_fullscreen.wp-toolbar{padding: 0;}
    .cf-sidebar-settings{width:50%}
    .cf-assign-to input[type=checkbox]{position:absolute;top:5px}
    .cf-assign-to label i{padding-left:25px}
-   .cf-plugin-settings .cf-pricing-dashboard .pricing-block-columns{display: block}
-   .cf-plugin-settings .cf-pricing-dashboard .pricing-grid-cols{padding: 50px 35.5px}
-   .cf-plugin-settings .cf-pricing-dashboard .pricing-mid-grid-cols {margin-left: 0 !important;margin-top: 32px !important}
    .md-board-notice{margin-right: 47px;}
  }
  @media (max-width:785px){
@@ -1527,6 +1469,7 @@ body.cf_fullscreen.wp-toolbar{padding: 0;}
   .cf-board-overlap-row .cf-board-overlapbox{flex-basis:0;margin-bottom:20px;}
   a.cf-board-premi-btn{margin-top:0 !important;}
   .cf_disabled_input .cf-submit-button-settings p.submit{display:block;}
+  .cf-board-prebenefits h1{font-size: 28px;margin-bottom: 0;}
   .cf_disabled_input .cf-board-premi-btn,
 .cf_disabled_input .cf-board-free-btn{margin-bottom:0!important;margin-left:0!important;margin-top:6px!important;}
   a.cf-board-premi-btn svg{height:16px;top:2px;}

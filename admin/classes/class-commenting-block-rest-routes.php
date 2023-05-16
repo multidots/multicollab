@@ -131,7 +131,7 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 				if ( 'draft' !== $comment_status && 'permanent_draft' !== $comment_status ) {
 					$cmnts[] = array(
 						'id'              => $timestamp,
-						'status'          => isset( $comment['status'] ) ? $comment['status'] : '',
+						'status'          => isset( $comment_status ) ? $comment_status : '',
 						'created_at'      => isset( $comment['created_at'] ) ? $comment['created_at'] : '',
 						'timestamp'       => gmdate( $time_format . ' ' . $date_format, intval( $timestamp ) ),
 						'editedTime'      => isset( $comment['editedTime'] ) ? $comment['editedTime'] : '',
