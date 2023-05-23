@@ -114,20 +114,22 @@
  #md-comments-suggestions-parent div#md-span-comments::-webkit-scrollbar{width:5px;background-color:#f1f1f1}
  div#md-suggestion-comments::-webkit-scrollbar-thumb,
  #md-comments-suggestions-parent div#md-span-comments::-webkit-scrollbar-thumb{border-radius:0;-webkit-box-shadow:inset 0 0 6px rgba(0,0,0,0.3);box-shadow:inset 0 0 6px rgba(0,0,0,0.3);background-color:#bdcad1}
- .character-map-popover .components-popover__content{max-height:350px}
- #md-span-comments.comments-loader::before{content:'Loading comments...';font-size:10px}
- div.charMap--container{margin:2px;font-size:18px}
- .charMap--container ul.charMap--filter{float:right;margin-right:5px;font-size:14px}
- .charMap--container ul.charMap--filter input{padding:3px}
- ul.charMap--category{background-color:white}
- .charMap--category.active li{margin-bottom:0}
- .charMap--category-menu li{display:inline-block;margin-bottom:0;border-bottom:none;font-size:14px}
- .charMap--category-menu .charMap--category-menu-item.active,
- .charMap--category li a:hover{background:#0085ba}
- .charMap--container .charMap--category-menu button:hover{background:inherit;cursor:pointer}
- .charMap--category-menu .charMap--category-menu-item.active a{color:#fff}
- .charMap--container .charMap--container .charMap--categories{margin:5px}
- .charMap--categories li a{color:#111}
+   /* Resolving "Insert Special Characters" plugin input box overlap issue */
+   .commentOn #md-span-comments .character-map-popover .components-popover__content{max-height:350px}
+   .commentOn #md-span-comments div.charMap--container{margin:2px;font-size:18px} 
+   .commentOn #md-span-comments .charMap--container ul.charMap--filter{float:right;margin-right:5px;font-size:14px}
+   .commentOn #md-span-comments .charMap--container ul.charMap--filter input{padding:3px}
+   .commentOn #md-span-comments ul.charMap--category{background-color:white}
+   .commentOn #md-span-comments .charMap--category.active li{margin-bottom:0}
+   .commentOn #md-span-comments .charMap--category-menu li{display:inline-block;margin-bottom:0;border-bottom:none;font-size:14px}
+   .commentOn #md-span-comments .charMap--category-menu .charMap--category-menu-item.active,
+   .commentOn #md-span-comments .charMap--category li a:hover{background:#0085ba}
+   .commentOn #md-span-comments .charMap--container .charMap--category-menu button:hover{background:inherit;cursor:pointer}
+   .commentOn #md-span-comments .charMap--category-menu .charMap--category-menu-item.active a{color:#fff}
+   .commentOn #md-span-comments .charMap--container .charMap--container .charMap--categories{margin:5px}
+   .commentOn #md-span-comments .charMap--categories li a{color:#111} 
+   body:not(.mobile) #md-span-comments .character-map-popover .components-popover__content:not(.is-mobile){min-width:550px}
+    /* Resolving "Insert Special Characters" plugin input box overlap issue */
  body:not(.mobile) .character-map-popover .components-popover__content:not(.is-mobile){min-width:550px}
  button.btn-comment.btn-accept:hover{-webkit-box-shadow:none;box-shadow:none;background-color:rgba(0,0,0,0.06);background-image:none;cursor:pointer;border-radius:2px;border-width:1px;border-color:transparent!important}
  button.btn-comment.btn-accept{-webkit-box-shadow:none;box-shadow:none;background-color:#fff;background-image:none;cursor:pointer;border-radius:2px;border-width:1px;border-color:transparent!important;min-width:24px;vertical-align:middle;margin:0 8px 0 0;line-height:1}
