@@ -370,4 +370,37 @@ class Commenting_block_Functions {
 
 	}
 
+	/**
+	 * Return all general setting value.
+	 *
+	 * @return array
+	 */
+	public function cf_get_general_settings() {
+
+
+		$cf_gen_hide_multicollab_comment 				= get_option( 'cf_hide_editorial_column' );
+		$cf_gen_hide_save_draft_comment  				= get_option( 'cf_show_infoboard' );
+
+		$cf_plugin_general_setting = array(
+			'cf_gen_hide_multicollab_comment' 				 => $cf_gen_hide_multicollab_comment,
+			'cf_gen_hide_save_draft_comment' 				 => $cf_gen_hide_save_draft_comment,
+			'cf_gen_hide_floating_icons' 					 => '',
+			'cf_admin_notification' 						 => '',
+			'cf_publishing_option' 							 => '',
+			'cf_suggestion_mode_option_name' 				 => '',
+			'cf_specific_post_types_values' 				 => '',
+			'cf_specific_post_categories_values' 			 => '',
+			'cf_slack_default_channel' 						 => '',
+			'cf_slack_notification_add_comment' 			 => '',
+			'cf_slack_notification_add_suggestion' 			 => '',
+			'cf_slack_notification_resolve_comment' 		 => '',
+			'cf_slack_notification_accept_reject_suggestion' => '',
+			'cf_multilingual_language' 						 => '',
+			'cf_permissions_options' 						 => '',
+		);
+
+		return $cf_plugin_general_setting;
+
+	}
+
 }
