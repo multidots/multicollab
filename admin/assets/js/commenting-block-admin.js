@@ -27,10 +27,21 @@
         }
     });
 
+    // To remove blank suggestions board after changing block. // @author - Mayank @since3.4
+    $(document).on('click', '.cls-board-outer', function (event) {
+        const suggestion_id = $(this).attr('data-sid') || ''; 
+        if(suggestion_id){
+            let element = document.querySelector(`[suggestion_id="${suggestion_id}"]`) || document.querySelector(`[id="${suggestion_id}"]`);
+            if(!element){
+                $(this).remove();
+            }
+        }
+    });
+
     /** last suggestion reply button tooltip */
     $(document).on('mouseover', '.shareCommentContainer .btn', function () {
         var boxHeight = jQuery(this).parents(".cls-board-outer").outerHeight() + 30;
-        var parentHeight = jQuery("#md-comments-suggestions-parent").outerHeight() - boxHeight - 50;
+        var parentHeight = jQuery("#cf-comments-suggestions__parent").outerHeight() - boxHeight - 50;
         var boxPosition = jQuery(this).parents(".cls-board-outer").css('top');
         if (parentHeight < parseInt(boxPosition) - boxHeight + 30) {
             var currentTop = jQuery(this).parents(".cls-board-outer").css('top');
@@ -42,11 +53,11 @@
        when block level sugggestions are created  */
     /* <fs_premium_only> */
     $(document).on("onBlockLevelSuggestionUpdate", function () {
-
+        const checkHTMLNodes = [ 'UL', 'FIGURE', 'BLOCKQUOTE', 'DIV', 'NAV' ];
         $(".wp-block").each(function () {
 
 
-            if ($(this).find('.wp-block').length === 0 && $(this).find('.alignupdate').length > 0) {
+            if (($(this).find('.wp-block').length === 0 || $(this).find('.wp-block').length === 2) && $(this).find('.alignupdate').length > 0 || $(this).find('.textalignupdate').length > 0) { // To resolve the border issue #495. @author - Mayank / since 3.5
                 $(this).addClass('mdaligned');
                 //fix for 5.6
                 $(this).attr('data-sgalign', true);
@@ -54,6 +65,63 @@
                 $(this).removeClass('mdaligned');
                 //fix for 5.6
                 $(this).removeAttr('data-sgalign');
+            }
+
+            if (($(this).find('.wp-block').length === 0 || $(this).find('.wp-block').length === 2 || $(this).find('.wp-block').length === 1) && $(this).find('.lockupdate').length > 0) { // To resolve the border issue #495. @author - Mayank / since 3.5
+                $(this).addClass('mdformatblockClass');
+            } else {
+                $(this).removeClass('mdformatblockClass');
+            }
+
+            if ( !$(this).hasClass('blockAdded') && $(this).attr('data-block') ) { // To solve the custom Block add suggestion problem @Author Mayank
+                const blockDetail = wp.data.select( 'core/editor' ).getBlock( $(this).attr('data-block') );
+                if(blockDetail){
+                    const blockClasses = blockDetail?.attributes?.className;
+                    if ( blockClasses && blockClasses.includes( 'blockAdded' ) ) {
+                        $(this).addClass(blockClasses);
+                    }
+                }               
+            
+            }
+
+            // Code optimized for user id @author - Mayank / since 3.5
+            let user_id = '';
+            if($(this).hasClass('blockAdded') || $(this).hasClass('blockremove')){
+                const $spanElement = $(this);
+                // Loop through the classes on the span element
+                $spanElement.each(function() {
+                    const classes = $(this).attr('class').split(' ');
+                    $.each(classes, function(i, className) {
+                    // Check if the class matches the user_id or unique_id pattern
+                    if (className.match(/^user_id-\d+$/)) {
+                        // This is a user_id class, get the random number and save it to a variable
+                        user_id = className.split('-')[1] ?? '';
+                    }
+                    });
+                });
+            }
+
+            if ($(this).find('.wp-block').length === 0 && $(this).hasClass('blockAdded')) {
+                 
+                if(user_id){
+                    $(this).attr('data-uid', user_id);
+                }
+                
+                //fix for 5.6
+                $(this).attr('data-sgblockAdded', true);
+                
+            } else if($(this).find('.wp-block').length > 0 && checkHTMLNodes.includes($(this).first().prop("nodeName")) && $(this).hasClass('blockAdded')){
+
+                if(user_id){
+                    $(this).attr('data-uid', user_id);
+                }
+                
+                //fix for 5.6
+                $(this).attr('data-sgblockAdded', true);
+                
+            } else {
+                //fix for 5.6
+                $(this).removeAttr('data-sgblockAdded');
             }
 
             if ($(this).find('.wp-block').length === 0 && $(this).find('.headingupdate').length > 0) {
@@ -66,8 +134,31 @@
                 $(this).removeAttr('data-sgheading');
             }
 
-            if ($(this).find('.wp-block').length === 0 && $(this).find('.blockremove').length > 0) {
+            if ( !$(this).hasClass('blockremove') && $(this).attr('data-block') ) { // To solve the custom Block remove suggestion problem @Author Mayank
+                const blockDetail = wp.data.select( 'core/editor' ).getBlock( $(this).attr('data-block') );
+                if(blockDetail){
+                    const blockClasses = blockDetail?.attributes?.className;
+                    if ( blockClasses && blockClasses.includes( 'blockremove' ) ) {
+                        $(this).addClass(blockClasses);
+                    }
+                }               
+            
+            }
+
+            if ($(this).find('.wp-block').length === 0 && $(this).hasClass('blockremove')) {
+                if(user_id){
+                    $(this).attr('data-uid', user_id);
+                }
                 $(this).addClass('mdremoved');
+                $(this).addClass('mdBlockremoved');
+                //fix for 5.6
+                $(this).attr('data-sgremove', true);
+            } else if ($(this).find('.wp-block').length > 0 && checkHTMLNodes.includes($(this).first().prop("nodeName")) && $(this).hasClass('blockremove')) {
+                if(user_id){
+                    $(this).attr('data-uid', user_id);
+                }
+                $(this).addClass('mdremoved');
+                $(this).addClass('mdBlockremoved');
                 //fix for 5.6
                 $(this).attr('data-sgremove', true);
             } else {
@@ -83,12 +174,12 @@
         $(".wp-block.focus-visible").each(function () {
 
             if (($(this).find('.blockremove').length > 0 || $(this).find('.alignupdate').length > 0)
-                && $('#md-span-comments .cls-board-outer.focus').length === 0) {
+                && $('#cf-span__comments .cls-board-outer.focus').length === 0) {
                 var $this = $(this);
                 setTimeout(function () {
-                    $('#md-span-comments .cls-board-outer').removeAttr('style');
-                    $('#md-span-comments .cls-board-outer').removeClass('focus');
-                    $('#md-span-comments .cls-board-outer').removeClass('is-open');
+                    $('#cf-span__comments .cls-board-outer').removeAttr('style');
+                    $('#cf-span__comments .cls-board-outer').removeClass('focus');
+                    $('#cf-span__comments .cls-board-outer').removeClass('is-open');
                     let suggestionId;
                     if ($this.find('.blockremove').length > 0) {
                         suggestionId = $this.find('.blockremove').attr('id');
@@ -96,7 +187,7 @@
                         suggestionId = $this.find('.alignupdate').attr('id');
                     }
                     $('#sg' + suggestionId).addClass('focus');
-                    $('#md-span-comments .cls-board-outer:not(.focus)').css('opacity', '0.4');
+                    $('#cf-span__comments .cls-board-outer:not(.focus)').css('opacity', '0.4');
                     $('#sg' + suggestionId).offset({ top: $this.offset().top });
                     wp.data.dispatch('mdstore').setDataText(['sg', suggestionId].join());
                 }, 200);
@@ -111,7 +202,7 @@
     $(document).on("removeOngoingClass", function () {
         clearTimeout(timerID);
         timerID = setTimeout(() => {
-            $('#md-span-comments .cls-board-outer.sg-board').removeClass('onGoing');
+            $('#cf-span__comments .cls-board-outer.sg-board').removeClass('onGoing');
         }, 1000);
     });
     /* </fs_premium_only> */
@@ -167,8 +258,8 @@
 
     /* Hide/Show comments on board trigger   */
     $(document).on("showHideComments", function () {
-        if (!$("#md-span-comments").is(':empty')) {
-            $("#md-span-comments .cls-board-outer:not(.focus)").each(function () {
+        if (!$("#cf-span__comments").is(':empty')) {
+            $("#cf-span__comments .cls-board-outer:not(.focus)").each(function () {
                 let commentCount = parseInt($(this).find('.boardTop .commentContainer').length);
 
                 if (commentCount > getCommentsLimit() && !$(this).hasClass('focus')) {
@@ -185,7 +276,7 @@
     });
 
     // show all comment on button click
-    $(document).on("click", "#md-span-comments .cls-board-outer .show-all-comments", function () {
+    $(document).on("click", "#cf-span__comments .cls-board-outer .show-all-comments", function () {
         $(this).parents(".boardTop").find(".commentContainer").show();
     });
     // show all comment on button click
@@ -203,17 +294,17 @@
     /* editor layout update action trigger for commentOn class  */
     $(document).on("editorLayoutUpdate", function () {
 
-        if ($("#md-span-comments").is(':empty') ||
+        if ($("#cf-span__comments").is(':empty') ||
             ($('body').hasClass('hide-sg') && $('body').hasClass('hide-comments'))
         ) {
             $('body').removeClass("commentOn");
         } else {
 
-            if ((!$('body').hasClass('hide-sg') && $("#md-span-comments .sg-board").length > 0) ||
-                (!$('body').hasClass('hide-comments') && $("#md-span-comments .cm-board").length > 0)) {
+            if ((!$('body').hasClass('hide-sg') && $("#cf-span__comments .sg-board").length > 0) ||
+                (!$('body').hasClass('hide-comments') && $("#cf-span__comments .cm-board").length > 0)) {
                 $('body').addClass("commentOn");
-            } else if (($('body').hasClass('hide-comments') && !$('body').hasClass('hide-sg') && $("#md-span-comments .sg-board").length === 0) ||
-                ($('body').hasClass('hide-sg') && !$('body').hasClass('hide-comments') && $("#md-span-comments .cm-board").length === 0)) {
+            } else if (($('body').hasClass('hide-comments') && !$('body').hasClass('hide-sg') && $("#cf-span__comments .sg-board").length === 0) ||
+                ($('body').hasClass('hide-sg') && !$('body').hasClass('hide-comments') && $("#cf-span__comments .cm-board").length === 0)) {
                 $('body').removeClass("commentOn");
             }
         }
@@ -304,30 +395,120 @@
         $(document).on('click', '.interface-pinned-items .components-button,.edit-post-header-toolbar__inserter-toggle', function (e) {
             setTimeout(function(){
                 var ediLayot = document.querySelector(".editor-styles-wrapper");
-                var cmntLayout = document.querySelector("#md-comments-suggestions-parent");
+                var cmntLayout = document.querySelector("#cf-comments-suggestions__parent");
                 var ediLayotWidth = ediLayot?.offsetWidth;
                 var cmntLyotWidth = cmntLayout?.offsetWidth;
                 var calcLyotWidth = ediLayotWidth - cmntLyotWidth;
                 var editSidebarchck = document.querySelector(".edit-post-layout");
                 var blockinsertchck = document.querySelector(".interface-interface-skeleton__body");
                 const firstChild = blockinsertchck?.firstElementChild;
-                const elid = $('#md-span-comments').find('.cls-board-outer.focus').attr('id');
+                const elid = $('#cf-span__comments').find('.cls-board-outer.focus').attr('id');
                 let topOfText;
                 function mdboardOffset() {
                     setTimeout(function(){
-                        if ($('#md-span-comments').find('.cls-board-outer').hasClass('focus')) {
-                            if (elid && elid.match(/^el/m) !== null) {
-                                topOfText = $('[datatext="' + elid + '"]').offset().top;
-                            } else {
-                                let sid = $('#' + elid).attr('data-sid');
-                                topOfText = $('[id="' + sid + '"]').offset()?.top;
-                                if(!topOfText){
-                                    topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
+                        var totalOpenBoardsIds = document.querySelectorAll('.cls-board-outer.is-open');
+                        if( totalOpenBoardsIds.length >= 2 ) {
+
+                            let topOfTextSingleBoardSuggestion;
+                            let topOfTextSingleBoardComment;
+                            let SuggestionBoardOuterHeight;
+                            let singleBoardIdSuggestion;
+                            let singleBoardIdComment;
+                            let combineBoardId;
+                            let counter = 0;
+                            let FirstsingleBoardIdSuggestion;
+                            let FirstSuggestionBoardOuterHeight;
+
+                            for (var i = 0; i < totalOpenBoardsIds.length; ++i) {
+                                var singleBoardId = totalOpenBoardsIds[i].id;
+                                if(undefined !== singleBoardId ){
+                                    if (singleBoardId.match(/^el/m) === null) {
+                                        topOfTextSingleBoardSuggestion = $('#' + singleBoardId + '').offset().top;
+                                        singleBoardIdSuggestion = 'sg' + singleBoardId;
+                                        if( counter === 0 ) {
+                                            FirstsingleBoardIdSuggestion = 'sg' + singleBoardId;
+                                        }
+                                        combineBoardId = 'sg' + singleBoardId;
+                                        counter++;
+                                    } else {
+                                        topOfTextSingleBoardComment = $('[datatext="' + singleBoardId + '"]').offset().top;
+                                        singleBoardIdComment = singleBoardId;
+                                        combineBoardId = singleBoardId;
+                                    }
                                 }
+                                if( FirstsingleBoardIdSuggestion ) {
+                                    FirstSuggestionBoardOuterHeight = document.querySelector('#' + FirstsingleBoardIdSuggestion)?.offsetHeight;
+                                }
+                                $('#' + combineBoardId).css('opacity', '1');
+                                $('#' + combineBoardId).addClass('is-open');
+                                $('#' + combineBoardId).addClass('focus onGoing'); 
+
                             }
-                            $('#md-span-comments').find('.cls-board-outer.focus').offset({ top: topOfText });
-                            scrollBoardToPosition(topOfText);
+
+                            if (document.querySelector('#' + singleBoardIdSuggestion) ) {
+                                SuggestionBoardOuterHeight = document.querySelector('#' + singleBoardIdSuggestion).offsetHeight;
+                                $('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
+                                
+                                // Add floating board adjustment for multi-suggestion. @author: Rishi Shah @since: 3.4
+                                if( 2 === counter && FirstsingleBoardIdSuggestion ) {
+                                    $('#' + FirstsingleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
+                                    $('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion + FirstSuggestionBoardOuterHeight + 20 });    
+                                }
+                                if( false === $( '#' + singleBoardIdComment + ', .board' ).hasClass('fresh-board') ) {
+                                    if( 2 === counter && FirstsingleBoardIdSuggestion ) {
+                                        $('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + FirstSuggestionBoardOuterHeight + 40 });
+                                    } else {
+                                        $('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + 20 });
+                                    }
+                                } else {
+                                    $('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion });
+                                }
+                                // Adding sg-format-class class on selected text. @author: Minal Diwan @since: 3.4
+                                //$('#' + singleBoardId).addClass('sg-format-class');
+                                var underlineAllAttr = document.querySelectorAll('[data-rich-text-format-boundary="true"]');
+                                if( underlineAllAttr ) {
+                                    for (var singleElement = 0; singleElement < underlineAllAttr.length; ++singleElement) {
+                                        if( underlineAllAttr[singleElement].classList.contains('mdadded') || underlineAllAttr[singleElement].classList.contains('mdremoved') ) {
+                                            if( singleBoardId !== underlineAllAttr[singleElement].id ) {
+                                                jQuery( '#' + underlineAllAttr[singleElement].id ).attr('data-rich-text-format-boundary', false);
+                                            } else {
+                                                jQuery( '#' + underlineAllAttr[singleElement].id ).attr('data-rich-text-format-boundary', true);
+                                            }
+                                        } else if( underlineAllAttr[singleElement].parentNode.classList.contains('mdmodified') ) {
+                                            if( singleBoardId !== underlineAllAttr[singleElement].parentNode.id ) {
+                                                jQuery( '#' + underlineAllAttr[singleElement].parentNode.id ).children().attr('data-rich-text-format-boundary', false);
+                                            } else {
+                                                jQuery( '#' + underlineAllAttr[singleElement].parentNode.id ).children().attr('data-rich-text-format-boundary', true);
+                                            }
+                                        } else if( underlineAllAttr[singleElement].classList.contains('mdspan-comment') ) {
+                                            var suggestionId = underlineAllAttr[singleElement].getAttribute('datatext');
+                                            if( singleBoardId !== suggestionId ) {
+                                                jQuery('[datatext="'+suggestionId+'"]').attr('data-rich-text-format-boundary', false);
+                                            } else {
+                                                jQuery('[datatext="'+suggestionId+'"]').attr('data-rich-text-format-boundary', true);
+                                            }
+                                            
+                                        }
+                                    }
+                                }
+                                scrollBoardToPosition(topOfTextSingleBoardSuggestion);
+                            }
+                        } else {
+                             if ($('#cf-span__comments').find('.cls-board-outer').hasClass('focus')) {
+                                if (elid && elid.match(/^el/m) !== null) {
+                                    topOfText = $('[datatext="' + elid + '"]').offset().top;
+                                } else {
+                                    let sid = $('#' + elid).attr('data-sid');
+                                    topOfText = $('[id="' + sid + '"]').offset()?.top;
+                                    if(!topOfText){
+                                        topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
+                                    }
+                                }
+                                $('#cf-span__comments').find('.cls-board-outer.focus').offset({ top: topOfText });
+                                scrollBoardToPosition(topOfText);
+                            }
                         }
+
                     },800);
                 }
                 if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild){
@@ -339,7 +520,6 @@
                 }
             },100);
         });
-
 
         // Add loader on setting page loading. @author: Rishi @since-3.0
         $(".cf_settings_loader").delay(100).fadeOut("slow");
@@ -354,11 +534,11 @@
             if ($('.cls-board-outer').hasClass('locked')) {
 
                 // Reset Comments Float. This will reset the positions of all comments.
-                $('#md-span-comments .cls-board-outer').css('opacity', '1');
-                $('#md-span-comments .cls-board-outer').removeClass('focus');
-                $('#md-span-comments .cls-board-outer').removeClass('is-open');
-                $('#md-span-comments .cls-board-outer').removeAttr('style');
-                $('#md-span-comments .cls-board-outer .buttons-wrapper').removeClass('active');
+                $('#cf-span__comments .cls-board-outer').css('opacity', '1');
+                $('#cf-span__comments .cls-board-outer').removeClass('focus');
+                $('#cf-span__comments .cls-board-outer').removeClass('is-open');
+                $('#cf-span__comments .cls-board-outer').removeAttr('style');
+                $('#cf-span__comments .cls-board-outer .buttons-wrapper').removeClass('active');
 
                 if (e.target.localName === 'mdspan') {
                     const dataid = $(e.target).attr('datatext');
@@ -386,14 +566,6 @@
             $('.cf-tab-inner').hide();
             $('#' + tabID).show();
         });
-
-        //Hide free guide notification popup
-        $(document).on('click', '.cf-pluginpop-close', function () {
-            var popupName = $(this).attr('data-popup-name');
-            setCookie( 'banner_' + popupName, "yes", 60 * 24 * 7);
-            $('.' + popupName).hide();
-        });
-
 
         // Dashboard features popup /@Minal Diwan Version 3.0
         $(document).on('click', '.cf-board-overlap-feature .cf-board-overlapbox', function () {
@@ -736,7 +908,7 @@
 
         // Focus comment popup on click.
 
-        $(document).on('click', '#md-span-comments .cls-board-outer:not(.focus)', function (e) {
+        $(document).on('click', '#cf-span__comments .cls-board-outer:not(.focus)', function (e) {
             closeMulticollabSidebar();
             // Exclude focus on specific elements.
             var target = $(e.target);
@@ -745,13 +917,13 @@
             }
             const _this = $(this);
             // Reset Comments Float.
-            $('#md-span-comments .cls-board-outer').removeAttr('style');
-            $('#md-span-comments .cls-board-outer').removeClass('focus');
-            $('#md-span-comments .cls-board-outer').removeClass('is-open');
-            $('#md-span-comments .comment-delete-overlay').removeClass('show');
-            $('#md-span-comments .comment-resolve .resolve-cb').prop("checked", false);
-            $('#md-span-comments .cls-board-outer .buttons-wrapper').removeClass('active');
-            $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+            $('#cf-span__comments .cls-board-outer').removeAttr('style');
+            $('#cf-span__comments .cls-board-outer').removeClass('focus');
+            $('#cf-span__comments .cls-board-outer').removeClass('is-open');
+            $('#cf-span__comments .comment-delete-overlay').removeClass('show');
+            $('#cf-span__comments .comment-resolve .resolve-cb').prop("checked", false);
+            $('#cf-span__comments .cls-board-outer .buttons-wrapper').removeClass('active');
+            $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
 
             $('.btn-wrapper').css('display', 'none');
             removeFloatingIcon();
@@ -763,9 +935,18 @@
             let topOfText;
             if (selectedText.match(/^el/m) !== null) {
                 topOfText = $('[datatext="' + selectedText + '"]').offset().top;
+                if($('[datatext="' + selectedText + '"]').hasClass('cf-icon-wholeblock__comment')){ // To support block suggetion and whole block comment @author - Mayank / since 3.5
+                    $('[datatext="' + selectedText + '"]').addClass('focus');
+                }
             } else {
                 let sid = $('#' + selectedText).attr('data-sid');
-                topOfText = $('[id="' + sid + '"]').offset().top;
+                topOfText = $('[id="' + sid + '"]').offset()?.top;
+                if(!topOfText){ // To support block suggetion and whole block comment @author - Mayank / since 3.5
+                    topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
+                    $('[data-suggestion_id="' + sid + '"]').addClass('focus');
+                }
+                $('#' + sid).addClass('sg-format-class');
+
             }
 
             setTimeout(function(){
@@ -832,10 +1013,10 @@
                         $('#' + sid).addClass('sg-format-class');
 
                     }
-                    $('#md-span-comments .cls-board-outer').removeAttr('style');
-                    $('#md-span-comments .cls-board-outer').removeClass('focus');
-                    $('#md-span-comments .cls-board-outer').removeClass('is-open');
-                    $('#md-span-comments .cls-board-outer').css('opacity', '0.4');
+                    $('#cf-span__comments .cls-board-outer').removeAttr('style');
+                    $('#cf-span__comments .cls-board-outer').removeClass('focus');
+                    $('#cf-span__comments .cls-board-outer').removeClass('is-open');
+                    $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
                 
                     $('#' + elID + '.cls-board-outer').addClass('focus');
                     $('#' + elID + '.cls-board-outer').addClass('is-open');
@@ -1824,7 +2005,7 @@
             if ($(this).hasClass('active')) {
                 $(this).toggleClass("active").parents(".commentContainer").siblings().find(".buttons-wrapper").removeClass("active");
             } else {
-                $('#md-span-comments .cls-board-outer .buttons-wrapper').removeClass('active');
+                $('#cf-span__comments .cls-board-outer .buttons-wrapper').removeClass('active');
                 $(this).toggleClass("active");
             }
 
@@ -2278,7 +2459,7 @@ function scrollBoardToPosition(topOfText) {
 }
 
 function removeFloatingIcon() {
-    var floatingNode = document.getElementsByClassName('md-floating-wrapper');
+    var floatingNode = document.getElementsByClassName('cf-floating__wrapper');
 
     if (floatingNode.length > 0) {
         jQuery(floatingNode).remove()
@@ -2446,11 +2627,11 @@ function getPostSaveStatus() {
 
 function appendInfoBoardDiv() {
     var pinboardNode = document.createElement('div');
-    pinboardNode.setAttribute("id", 'md-span-status');
-    pinboardNode.setAttribute("class", 'md-board-notice');
+    pinboardNode.setAttribute("id", 'cf-span__status');
+    pinboardNode.setAttribute("class", 'cf-board__notice');
     pinboardNode.setAttribute('style', 'display:none');
     pinboardNode.innerHTML = sprintf('%s <span>x</span> %s <br> %s <strong>%s</strong> %s', wp.i18n.__('You have', 'content-collaboration-inline-commenting'), wp.i18n.__('unsaved comments.', 'content-collaboration-inline-commenting'), wp.i18n.__('Click', 'content-collaboration-inline-commenting'), wp.i18n.__("'Save Draft'", 'content-collaboration-inline-commenting'), wp.i18n.__('to save.', 'content-collaboration-inline-commenting'));
-    var parentNodeRef = document.getElementById('md-comments-suggestions-parent');
+    var parentNodeRef = document.getElementById('cf-comments-suggestions__parent');
     if (null !== parentNodeRef) {
         parentNodeRef.appendChild(pinboardNode);
     }
@@ -2461,10 +2642,10 @@ function showInfoBoardonNewComments() {
 
     wp.data.subscribe(function () {
 
-        let pinboard = document.getElementById("md-span-status");
+        let pinboard = document.getElementById("cf-span__status");
         if (null === pinboard) {
             appendInfoBoardDiv();
-            pinboard = document.getElementById("md-span-status");
+            pinboard = document.getElementById("cf-span__status");
         }
 
         setTimeout(function () {
@@ -2498,11 +2679,11 @@ function showInfoBoardonNewComments() {
 
 function appendNoticeBoardDiv() {
     var noticeboardNode = document.createElement('div');
-    noticeboardNode.setAttribute("id", 'md-board-notice');
-    noticeboardNode.setAttribute("class", 'md-board-notice');
+    noticeboardNode.setAttribute("id", 'cf-board__notice');
+    noticeboardNode.setAttribute("class", 'cf-board__notice');
     noticeboardNode.setAttribute('style', 'display:none');
     noticeboardNode.innerHTML = 'default notice here';
-    var parentNodeRef = document.getElementById('md-comments-suggestions-parent');
+    var parentNodeRef = document.getElementById('cf-comments-suggestions__parent');
     if (null !== parentNodeRef) {
         parentNodeRef.appendChild(noticeboardNode);
     }
@@ -2512,10 +2693,10 @@ function showNoticeBoardonNewComments() {
     appendNoticeBoardDiv();
     wp.data.subscribe(function () {
 
-        let noticeboard = document.getElementById("md-board-notice");
+        let noticeboard = document.getElementById("cf-board__notice");
         if (null === noticeboard) {
             appendNoticeBoardDiv();
-            noticeboard = document.getElementById("md-board-notice");
+            noticeboard = document.getElementById("cf-board__notice");
         }
         setTimeout(function () {
             if( noticeboard !== null ) {
@@ -2576,13 +2757,13 @@ function displaySuggestionBoards() {
 }
 function createCommentNode() {
     var parentNode = document.createElement('div');
-    parentNode.setAttribute("id", 'md-comments-suggestions-parent');
+    parentNode.setAttribute("id", 'cf-comments-suggestions__parent');
     var referenceNode = document.querySelector('.block-editor-writing-flow');
     if (null !== referenceNode) {
         referenceNode.appendChild(parentNode);
         var commentNode = document.createElement('div');
-        commentNode.setAttribute("id", 'md-span-comments');
-        var parentNodeRef = document.getElementById('md-comments-suggestions-parent');
+        commentNode.setAttribute("id", 'cf-span__comments');
+        var parentNodeRef = document.getElementById('cf-comments-suggestions__parent');
         parentNodeRef.appendChild(commentNode);
     }
 }

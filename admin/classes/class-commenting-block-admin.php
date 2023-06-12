@@ -61,6 +61,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * @since    1.0.0
 	 */
 	public function __construct( $plugin_name, $version ) {
+		global $pagenow;
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 
@@ -106,7 +107,47 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		add_action( 'wp_ajax_cf_free_plugin_wizard_submit', array( $this, 'cf_free_plugin_wizard_submit' ) );
 
+		add_action( 'cf_free_plugin_usage_data', array( $this, 'cf_free_plugin_usage_data_callback_function' ) );
+
 		add_filter( 'admin_body_class', array( $this, 'cf_admin_classes' ) );
+
+		$allow_pages = array('edit.php', 'post-new.php', 'post.php');
+		if( in_array( $pagenow, $allow_pages ) ){
+			add_action( 'admin_notices', array( $this, 'cf_display_promotional_banner_page_post' ) );
+		}
+
+		add_filter( 'cron_schedules', array( $this, 'cf_free_cron_job_recurrence' ) );
+	}
+
+	/**
+	 * Adds a custom cron schedule for every month.
+	 *
+	 * @param array $schedules An array of non-default cron schedules.
+	 * @return array Filtered array of non-default cron schedules.
+	 */
+	function cf_free_cron_job_recurrence( $schedules ) {
+		$schedules['cf_free_monthly'] = array(
+			'display' => __( 'Once monthly', 'content-collaboration-inline-commenting' ),
+			'interval' => 2635200,
+		);
+		return $schedules;
+	}
+
+	/**
+	 * Display promotional banner on  post/page.
+	 * 
+	 * @author Nirav Soni
+	 *
+	 */
+	public function cf_display_promotional_banner_page_post() {
+
+			$promotional_banner  = cf_dpb_promotional_banner();
+			
+			if( !empty($promotional_banner) ){
+				echo $promotional_banner; // phpcs:ignore WordPress.Security.EscapeOutput
+			}	
+
+		
 	}
 
 	/**
@@ -152,6 +193,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			$gutenberg_version = esc_html( 'Default', 'content-collaboration-inline-commenting' );
 		}
 
+		update_option( 'cf_opt_in', $opt_in );
+
 		// Get multicollab plan details.
 		$cf_edd = new CF_EDD();
 		if ( $cf_edd->is__premium_only() ) {
@@ -192,8 +235,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			'Webserver Name and Version' => $webserver_name_version,
 			'Operating System'           => sprintf( '%s %s %s', php_uname( 's' ), php_uname( 'r' ), php_uname( 'm' ) ),
 			'Country'                    => $country,
-			'WordPress user count'       => $user_count['total_users'],
 		);
+
 
 		$data_insert_array = array(
 			'user_name'         => $current_user->display_name,
@@ -202,11 +245,139 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			'opt_in'            => $opt_in,
 			'plan_name'         => $multicollab_plan,
 			'PLUGIN_USAGE_DATA' => wp_json_encode( $plugin_usage_data ),
+			'website_url'         => esc_url( get_home_url() ),
 		);
 
 		$feedback_api_url = CF_STORE_URL . '/wp-json/edd-add-free-user-contact/v2/edd-add-free-user-contact';
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
-		$response         = wp_remote_get( $query_url );
+		$response         = wp_remote_get( $query_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+
+		if ( ! wp_next_scheduled( 'cf_free_plugin_usage_data' ) ) {
+			wp_schedule_event( current_time( 'timestamp' ), 'cf_free_monthly', 'cf_free_plugin_usage_data' );
+		}
+
+		wp_die();
+	}
+
+	/**
+	 * Send Wizard Opt-in details to sendinblue every monthly.
+	 *
+	 * @return void
+	 */
+	public function cf_free_plugin_usage_data_callback_function() {
+
+		global $wp_version;
+
+		// Get Gutenberg Version.
+		$plugins = get_option( 'active_plugins' );
+		if ( in_array( 'gutenberg/gutenberg.php', $plugins ) ) {
+			$get_plugin_data   = get_plugin_data( WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
+			$gutenberg_version = esc_html( $get_plugin_data['Version'] );
+		} else {
+			$gutenberg_version = esc_html( 'Default', 'content-collaboration-inline-commenting' );
+		}
+
+		// Get multicollab plan details.
+		$cf_edd = new CF_EDD();
+		if ( $cf_edd->is__premium_only() ) {
+			if ( $cf_edd->can_use_premium_code() ) {
+				$multicollab_plan = esc_html( strtoupper( $cf_edd->get_plan_name() ) );
+			} else {
+				$multicollab_plan = esc_html( 'FREE', 'content-collaboration-inline-commenting' );
+			}
+		} else {
+			$multicollab_plan = esc_html( 'FREE', 'content-collaboration-inline-commenting' );
+		}
+
+		// get WP version.
+		$my_theme = wp_get_theme();
+
+		$user_count = count_users();
+		$cf_custom_posts_args = array(
+	       'public'   => true,
+	       '_builtin' => false,
+	    );
+
+	    $cf_custom_posts_output = 'names';
+	    $cf_custom_posts_operator = 'and';
+
+	    $cf_custom_post_types = get_post_types( $cf_custom_posts_args, $cf_custom_posts_output, $cf_custom_posts_operator ); 
+	    $cf_default_post_types = array( 'post' => 'post', 'page' => 'page' );
+	    $cf_all_post_types = array_merge( $cf_default_post_types, $cf_custom_post_types );
+
+		$all_posts_id = get_posts( array(
+		  	'post_type' => $cf_all_post_types,
+		  	'post_status' => 'any',
+		  	'numberposts' => -1,
+		  	'fields' => 'ids',
+		) );
+
+		$posts_counts = count($all_posts_id);
+		$comments_counts = 0;
+
+		if($all_posts_id) {
+
+			foreach( $all_posts_id as $id ){
+
+				$comments_count_data = $this->cf_get_comment_counts( $id );
+				$comments_counts+= $comments_count_data['total_counts'];
+
+			}
+
+		}
+		// average post count 
+		$avg_post_count = ( $comments_counts / $posts_counts );
+
+		// number of users - exclude subscriber user
+		$total_user  = $user_count['total_users'];
+		if( isset($user_count['avail_roles']['subscriber']) ){
+				$subscribers = $user_count['avail_roles']['subscriber'];
+		}else{
+			$subscribers = 0;
+		}
+		$no_of_users = ($total_user - $subscribers);
+
+		// commennt of current month
+		$comments_of_month = gmdate('F');
+
+		// commennt of current year
+		$comments_of_year = gmdate('Y');
+		
+		$general_setting = $this->cf_get_general_settings();
+		$plugin_advance_data = array(
+			'general_setting' 	=> $general_setting,
+			'comment_count' 	=> $comments_counts,
+			'post_count' 		=> $posts_counts,
+			'avg_post_count' 	=> $avg_post_count,
+			'no_of_users' 		=> $no_of_users,
+			'comments_of_month' => $comments_of_month,
+			'comments_of_year'  => $comments_of_year,
+		);
+
+		$cf_opt_in = get_option( 'cf_opt_in' );
+
+		$plugin_basic_data = array(
+			'wordpress_version'   => $wp_version,
+			'gutenberg_version'   => $gutenberg_version,
+			'php_version'         => phpversion(),
+			'multicollab_version' => COMMENTING_BLOCK_VERSION,
+			'multicollab_plan'    => $multicollab_plan,
+			'language'            => get_bloginfo( 'language' ),
+			'theme'               => $my_theme->get( 'Name' ),
+		);
+
+		$data_insert_array = array(
+			'website_url'             => esc_url( get_home_url() ),
+			'plugin_basic_data'	      => wp_json_encode($plugin_basic_data),
+			'plugin_advance_data'	  => wp_json_encode($plugin_advance_data),
+			'opt_in'                  => $cf_opt_in,
+		);
+
+		$feedback_api_url = CF_STORE_URL . '/wp-json/edd-add-free-user-contact/v2/edd-add-free-user-contact?' . wp_rand();
+		$query_url        = $feedback_api_url . '&' . http_build_query( $data_insert_array );
+		
+		$response = wp_remote_get( $query_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+		
 		wp_die();
 	}
 
@@ -963,6 +1134,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		wp_enqueue_script( 'cf-select2-js', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/select2.min.js', array( 'jquery' ), wp_rand(), true );
 
+		wp_enqueue_script( $this->plugin_name . '-general', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin-general.js', array(), wp_rand(), false );
+ 
 	}
 
 	/**
@@ -1086,6 +1259,31 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				'timestamp'    => $timestamp,
 				'assignedTo'   => $assigned_to,
 				'assignedText' => $assigned_text,
+				'arr'          => $arr,
+			)
+		);
+
+		wp_die();
+	}
+
+	/**
+	 * Add ajax function to filter HTML tags from add/edit suggestion.
+	 * Replace content with filter HTML(without HTML tags) which we get from AJAX response. Github issue: #491.
+	 *
+	 * @author: Rishi Shah
+	 * @since: 3.5
+	 *
+	 * @return void
+	 */
+	public function cf_suggestion_text_filter() {
+
+		$newText   	=  isset( $_POST['newText'] ) ? wp_kses_post( $_POST['newText'] ) : ''; // phpcs:ignore.
+		$newText = html_entity_decode( $newText );
+		$newText = $this->cf_secure_content( $newText );
+
+		echo wp_json_encode(
+			array(
+				'arr' => $newText,
 			)
 		);
 
@@ -1165,9 +1363,17 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			// create new meta if meta key doesn't exists
 			add_post_meta( $current_post_id, 'th' . $metaId, $edited_comment['editedTimestamp'] );
 		}
-				update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
+		
+		update_post_meta( $current_post_id, '_current_drafts', $current_drafts );
 		update_post_meta( $current_post_id, 'mc_updated', $edited_timestamp );
+
+		echo wp_json_encode(
+			array(
+				'arr' => $edited_comment,
+			)
+		);
 		wp_die();
+
 	}
 	/**
 	 * Delete Comment function.
@@ -1592,8 +1798,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		);
 
 		// Fetch out all user's email.
-		$email_list   = array();
-		
+		$email_list = array();
+
 		/**
 		 * Set transient to imporve @ get users names.
 		 *
@@ -1601,7 +1807,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		 * @version 3.4
 		 */
 		$system_users = get_transient( 'cf_system_users' );
-		if( false === $system_users ) {
+		if ( false === $system_users ) {
 			$system_users = $users->get_results();
 			set_transient( 'cf_system_users', $system_users, 30 * MINUTE_IN_SECONDS );
 		}
@@ -1803,7 +2009,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		$feedback_api_url = CF_STORE_URL . '/wp-json/cf-free-user-feedback/v2/cf-free-user-feedback';
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
-		$response         = wp_remote_get( $query_url );
+		$response         = wp_remote_get( $query_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 
 		if ( 'success' === $response['body'] ) {
 			deactivate_plugins( COMMENTING_BLOCK_BASE );

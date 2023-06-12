@@ -52,7 +52,7 @@
 											<div class="select_event_categories_tags">
 												<?php
 													$rest_api_url        = CF_STORE_URL . 'wp-json/cf-onboarding-quick-tour-videos/v2/cf-onboarding-quick-tour-videos?' . wp_rand();
-													$free_video_api_call = wp_remote_get( $rest_api_url );
+													$free_video_api_call = wp_remote_get( $rest_api_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 													$free_video_api_data = $free_video_api_call['body'];
 													$free_video_api_data = json_decode( $free_video_api_data, true );
 
@@ -108,7 +108,7 @@
 								if ( 'localhost' === gethostbyaddr( $remote_attr ) ) {
 									$vis_ip = '150.129.206.240';
 								}
-													$get_country_name = wp_remote_get( 'http://ip-api.com/json/' . $vis_ip );
+													$get_country_name = wp_remote_get( 'http://ip-api.com/json/' . $vis_ip ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 													$country_name     = '';
 								if ( ! empty( $get_country_name ) ) {
 									$get_country_name_data = $get_country_name['body'];
