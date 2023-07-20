@@ -103,11 +103,11 @@ msgstr "গ্রহণ"
 msgid "Accepted Suggestions"
 msgstr "গৃহীত প্রস্তাবনা"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:46
+#: admin/partials/commenting-block-settings-page.php:46
 msgid "Activity Snapshot"
 msgstr "কার্যকলাপ স্ন্যাপশট"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:45
+#: admin/partials/commenting-block-settings-page.php:45
 msgid "Activity Timeline"
 msgstr "কার্যকলাপ সময়রেখা"
 
@@ -180,15 +180,15 @@ msgstr "সকল পেজ/পোস্ট"
 msgid "All categories"
 msgstr "সব ধরনের"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:148
+#: admin/partials/commenting-block-settings-page.php:148
 msgid "Add Comment"
 msgstr "মন্তব্য যোগ করুন"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:155
+#: admin/partials/commenting-block-settings-page.php:155
 msgid "Add Suggestion"
 msgstr "সাজেশন যোগ করুন"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:156
+#: admin/partials/commenting-block-settings-page.php:156
 msgid "Accept/Reject Suggestion"
 msgstr "প্রস্তাবনা গ্রহণ/প্রত্যাখ্যান করুন"
 
@@ -428,11 +428,11 @@ msgstr "লাইসেন্স নিষ্ক্রিয় করুন"
 msgid "Discard Comment"
 msgstr "মন্তব্য বাতিল করুন"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:150
+#: admin/partials/commenting-block-settings-page.php:150
 msgid "Disable Comments"
 msgstr "মন্তব্য নিষ্ক্রিয়"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:157
+#: admin/partials/commenting-block-settings-page.php:157
 msgid "Disable Suggestion"
 msgstr "প্রস্তাবনা অক্ষম করুন"
 
@@ -679,7 +679,7 @@ msgstr "দ্বারা শেষ সম্পাদিত"
 msgid "left"
 msgstr "বাম"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:76
+#: admin/partials/commenting-block-settings-page.php:76
 msgid "Latest Activity"
 msgstr "সর্বশেষ কার্যকলাপ"
 
@@ -755,7 +755,7 @@ msgstr "অনুমতি পরিচালনা করুন"
 msgid "Multicollab is Default to the"
 msgstr "Multicollab ডিফল্ট হয়"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:110
+#: admin/partials/commenting-block-settings-page.php:110
 msgid "Migration Setting"
 msgstr "মাইগ্রেশন সেটিং"
 
@@ -828,7 +828,7 @@ msgid "Notify"
 msgstr "অবহিত"
 
 #: admin/classes/class-commenting-block-activities.php:280
-#: admin/partials/commenting-block-settings-page__premium_only.php:63
+#: admin/partials/commenting-block-settings-page.php:63
 msgid "No activities found."
 msgstr "কোন কার্যক্রম পাওয়া যায়নি।"
 
@@ -895,7 +895,7 @@ msgstr "মন্তব্য করতে ব্লক/ছবি নির্�
 msgid "Please select a block, text or media to comment on."
 msgstr "মন্তব্য করতে পাঠ্য নির্বাচন করুন."
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:419
+#: admin/partials/commenting-block-settings-page.php:419
 msgid "Please select a channel"
 msgstr "একটি চ্যানেল নির্বাচন করুন"
 
@@ -927,7 +927,7 @@ msgstr "সংরক্ষণ করার জন্য কোনো বিক�
 msgid "Post Comment"
 msgstr "মন্তব্য প্রকাশ করুন"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:34
+#: admin/partials/commenting-block-settings-page.php:34
 msgid "Permissions"
 msgstr "অনুমতি"
 
@@ -1111,11 +1111,11 @@ msgstr "ব্অনুস্মারক লক এডিটরে।"
 msgid "Remind"
 msgstr "মনে করিয়ে দিন"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:147
+#: admin/partials/commenting-block-settings-page.php:147
 msgid "Roles"
 msgstr "ভূমিকা"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:149
+#: admin/partials/commenting-block-settings-page.php:149
 msgid "Resolve Comment"
 msgstr "মন্তব্য সমাধান"
 
@@ -1489,7 +1489,7 @@ msgid "VIP Support"
 msgstr "ভিআইপি সমর্থন"
 
 #: admin/partials/commenting-block-settings-page.php:22
-#: admin/partials/commenting-block-settings-page__premium_only.php:23
+#: admin/partials/commenting-block-settings-page.php:23
 msgid "Version 3.0.1"
 msgstr "সংস্করণ 3.0.1"
 

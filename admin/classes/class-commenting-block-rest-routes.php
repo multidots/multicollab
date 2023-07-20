@@ -69,24 +69,11 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 	 */
 	public function get_activities( $data ) {
 
-		$auth_token = $data->get_header( 'X-WP-Nonce' ) ?? '';
-
-		if ( ! wp_verify_nonce( $auth_token, 'wp_rest' ) ) {
-			$response = new WP_Error(
-				'rest_forbidden',
-				__( 'Sorry, you are not allowed to access it.' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-
-			return rest_ensure_response( $response );
-		}
-
         $current_post_id =intval($data->get_param('postID'));  //phpcs:ignore
 		$date_format     = get_option( 'date_format' );
 		$time_format     = get_option( 'time_format' );
 		$timestamp       = current_time( 'timestamp' );
 		$cf_options      = get_option( 'cf_permissions' );
-		$cf_edd          = new CF_EDD();
 
 		// Modify Query
 		global $wpdb;
@@ -193,32 +180,15 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 					'lastUsersUrl'      => $lasteditedUsersUrl,
 					'type'              => 'el',
 				);
-				if ( $cf_edd->is__premium_only() ) {
-					if ( ( $cf_edd->is_plan( 'pro', true ) || $cf_edd->is_plan( 'plus', true ) || $cf_edd->is_plan( 'vip', true ) ) && '1' !== $hide_comment ) {
-						$threads = $threads;
-					} else {
-						$threads = array();
-					}
-				} else {
+				
+				if ( '1' !== $hide_comment ) {
 					$threads = $threads;
+				} else {
+					$threads = array();
 				}
 			}
 		}
 
-		if ( $cf_edd->is__premium_only() ) {
-			if ( $cf_edd->is_plan( 'pro', true ) || $cf_edd->is_plan( 'vip', true ) ) {
-
-				if ( '1' !== $hide_suggestion ) {
-					$suggestions = $this->get_suggestion_activities__premium_only( $current_post_id );
-				}
-
-				if ( empty( $threads ) && ! empty( $suggestions ) ) {
-					$threads = $suggestions;
-				} elseif ( ! empty( $suggestions ) && ! empty( $threads ) ) {
-					$threads = array_merge( $suggestions, $threads );
-				}
-			}
-		}
 
 		if ( ! metadata_exists( 'post', $current_post_id, '_autodraft_ids' ) ) {
 			// create new meta if meta key doesn't exists
@@ -233,143 +203,6 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 		return rest_ensure_response( $response );
 	}
 
-	 /**
-	  * Return suggestion activities array
-	  *
-	  * @param array $data
-	  * @return array
-	  */
-	public function get_suggestion_activities__premium_only( $postId ) {
-		$current_post_id = intval( $postId );
-		$date_format     = get_option( 'date_format' );
-		$time_format     = get_option( 'time_format' );
-		$timestamp       = current_time( 'timestamp' );
-
-		$suggestionHistory = get_post_meta( $current_post_id, '_sb_suggestion_history', true );
-		if ( $suggestionHistory === '' ) {
-			return;
-		}
-
-		$suggestionHistory = json_decode( $suggestionHistory );
-
-		$threads = array();
-		if ( ! empty( $suggestionHistory ) ) {
-			foreach ( $suggestionHistory as $Id => $suggestion ) {
-				$cmnts = array();
-				$elID  = 'sg' . $Id;
-
-				// passing the last activity parameters in thread for displaying in activity center last activity.
-				// $lastpostid = $row['post_id'];
-				$editedLastUser = get_post_meta( $current_post_id, 'last_user_edited', true );
-				$lasteditedtime = get_the_modified_time( 'U', $current_post_id );
-				$usr_login_name = get_user_by( 'login', $editedLastUser );
-				if ( ( get_user_by( 'login', $editedLastUser ) ) !== false ) {
-					$lasteditedUsersID = isset( $usr_login_name ) ? (int) $usr_login_name->ID : 0;
-				} else {
-					$lasteditedUsersID = null;
-				}
-				$lasteditedUsersUrl = get_avatar_url( $lasteditedUsersID );
-
-				$suggeestionDetail = $suggestion[0];
-				$suggeestionDetail = (array) $suggeestionDetail;
-
-				$user_info = get_userdata( $suggeestionDetail['uid'] );
-				$timestamp = $suggeestionDetail['timestamp'];
-				$cmnts[]   = array(
-					'id'        => $timestamp,
-					'status'    => 'publish',
-					'timestamp' => isset( $suggeestionDetail['timestamp'] ) ? $suggeestionDetail['timestamp'] : '',
-					'mode'      => $suggeestionDetail['action'],
-					'userData'  => array(
-						'id'        => isset( $user_info->ID ) ? intval( $user_info->ID ) : 0,
-						'username'  => isset( $user_info->display_name ) ? $user_info->display_name : '',
-						'avatarUrl' => get_avatar_url( isset( $user_info->user_email ) ? $user_info->user_email : '' ),
-						'userRole'  => isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '',
-					),
-					'thread'    => '',
-				);
-
-				$comments = $suggestion;
-				unset( $comments[0] );
-				if ( ! empty( $comments ) ) {
-
-					foreach ( $comments as $comment ) {
-						$comment   = (array) $comment;
-						$user_info = get_userdata( $comment['uid'] );
-						$timestamp = $comment['timestamp'];
-
-						if ( isset( $comment['status'] ) && 'draft' !== $comment['status'] && 'permanent_draft' !== $comment['status'] ) {
-							if ( isset( $comment['editedTime'] ) ) {
-								$comment['editedTime'] = gmdate( $time_format . ' ' . $date_format, $comment['editedTime'] );
-							} else {
-								$comment['editedTime'] = '';
-							}
-
-							$cmnts[] = array(
-								'id'             => $timestamp,
-								'status'         => $comment['status'],
-								'timestamp'      => gmdate( $time_format . ' ' . $date_format, $comment['timestamp'] ),
-								'editedTime'     => $comment['editedTime'],
-								'userData'       => array(
-									'id'        => isset( $user_info->ID ) ? intval( $user_info->ID ) : 0,
-									'username'  => isset( $user_info->display_name ) ? $user_info->display_name : '',
-									'avatarUrl' => get_avatar_url( isset( $user_info->user_email ) ? $user_info->user_email : '' ),
-									'userRole'  => isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '',
-								),
-								'thread'         => isset( $comment['text'] ) ? $comment['text'] : '',
-								'attachmentText' => isset( $comment['attachmentText'] ) ? $comment['attachmentText'] : '',
-							);
-						}
-					}
-				}
-
-				$resolved_by = array();
-				if ( isset( $suggeestionDetail['status'] ) && ! empty( $suggeestionDetail['status'] ) ) {
-
-						$resolved_user = get_userdata( $suggeestionDetail['status']->user );
-						$resolved_by   = array(
-							'action'              => $suggeestionDetail['status']->action,
-							'username'            => $resolved_user->display_name,
-							'avatarUrl'           => get_avatar_url( $resolved_user->user_email ),
-							'sgResolvedTimestamp' => $suggeestionDetail['status']->timestamp,
-						);
-				}
-
-				$suggeestionDetail['text'] = $this->translate_strings_format( $suggeestionDetail['text'] );
-
-				// Get post default author name.
-				$author_id         = get_post_field( 'post_author', $postId );
-				$defaultAuthor     = get_the_author_meta( 'display_name', $author_id );
-				$defaultAuthorLink = get_avatar_url( get_the_author_meta( 'user_email', $author_id ) );
-				$Defaultusers      = get_userdata( $author_id );
-
-				if ( ! empty( $cmnts ) ) {
-					$threads[] = array(
-						'elID'              => $elID,
-						'activities'        => $cmnts,
-						'selectedText'      => $suggeestionDetail['text'],
-						'resolved'          => isset( $suggeestionDetail['status'] ) ? 'true' : 'false',
-						'resolvedTimestamp' => isset( $suggeestionDetail['status']->timestamp ) ? $suggeestionDetail['status']->timestamp : '',
-						'resolvedBy'        => $resolved_by,
-						'updatedAt'         => isset( $suggeestionDetail['updated_at'] ) ? $suggeestionDetail['updated_at'] : '',
-						'blockType'         => '',
-						'type'              => 'sg',
-						'assignedTo'        => '',
-						'defaultAuthor'     => $defaultAuthor,
-						'defaultAuthorLink' => $defaultAuthorLink,
-						'defaultUserRole'   => $Defaultusers->roles[0],
-						'action'            => $suggeestionDetail['action'],
-						'mode'              => $suggeestionDetail['mode'],
-						'lastUser'          => $editedLastUser,
-						'lastEditedTime'    => $lasteditedtime,
-						'lastUsersUrl'      => $lasteditedUsersUrl,
-					);
-				}
-			}
-		}
-
-		return $threads;
-	}
 
 	// custom rest end point to get userdata by user id
 	public function getuserdata( $data ) {

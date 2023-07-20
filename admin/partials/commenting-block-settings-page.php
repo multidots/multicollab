@@ -22,7 +22,6 @@ $cf_web_activity_url                            = add_query_arg( 'view', 'web-ac
 $cf_post_activity_url                           = add_query_arg( 'view', 'post-activity', $cf_page_url );
 $view           = ( null === $view ) ? 'web-activity' : $view;
 $cf_permissions = get_option( 'cf_permissions' );
-$cf_edd = new CF_EDD();
 ?>
 <div class="cf-plugin-settings">
 <div class="cf_settings_loader"></div>
@@ -53,7 +52,7 @@ $cf_edd = new CF_EDD();
 				<a href="https://docs.multicollab.com/?utm_source=plugin_setting_header_helpdoc_link&utm_medium=header_helpdoc_link&utm_campaign=plugin_setting_header_link&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Help', 'content-collaboration-inline-commenting' ); ?></a> | 
 				<a href="https://www.multicollab.com/contact/?utm_source=plugin_setting_header_link_contact&utm_medium=header_link_contact&utm_campaign=plugin_setting_header_link_contact&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Contact', 'content-collaboration-inline-commenting' ); ?></a> | 
 				<a href="https://feedback.multicollab.com/feedback/add?utm_source=plugin_setting_header_link_add_feedback&utm_medium=header_link_add_feedback&utm_campaign=plugin_setting_header_link&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Suggest', 'content-collaboration-inline-commenting' ); ?></a>
-				<a class="pricing-block-button__link" href="<?php echo esc_url( 'https://www.multicollab.com/pricing/?utm_source=plugin_setting_header_free-user_upgrade_to_premium&utm_medium=header_free-user_upgrade_to_premium_link&utm_campaign=plugin_setting_free-user_upgrade_to_premium_link&utm_id=plugin_setting_header_link.++' ); ?>" target="_blank"><?php esc_html_e( 'Upgrade', 'content-collaboration-inline-commenting' ); ?></a>
+				<a class="pricing-block-button__link" href="<?php echo esc_url( 'https://www.multicollab.com/upgrade-to-premium/' ); ?>" target="_blank"><?php esc_html_e( 'Upgrade', 'content-collaboration-inline-commenting' ); ?></a>
 			</div>
 		</div>
 	
@@ -81,7 +80,14 @@ $cf_edd = new CF_EDD();
 								echo esc_html( 'cf-tab-active' ); }
 							?>
 						"><a href="<?php echo esc_url( home_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=settings" class="cf-tab-item" data-id="cf-settings"><?php esc_html_e( 'Settings', 'content-collaboration-inline-commenting' ); ?></a></li>
+						<li class="
+							<?php
+							if ( ! empty( $tab_number ) || 'intigrations' === $view ) {
+								echo esc_html( 'cf-tab-active' ); }
+							?>
+						"><a href="<?php echo esc_url( home_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=intigrations" class="cf-tab-item" data-id="cf-roles-slack-integration"><?php esc_html_e( 'Integrations', 'content-collaboration-inline-commenting' ); ?></a></li>
 						<?php endif; ?>
+
 					</ul>
 					<div class="cf-tabs-content">
 						<div id="cf-dashboard" class="cf-tab-inner 
@@ -91,6 +97,7 @@ $cf_edd = new CF_EDD();
 							?>
 						">
 							<?php
+								$this->cf_get_activities();
 								require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-dashboard.php'; // Removed phpcs:ignore by Rishi Shah.
 							
 							?>
@@ -103,7 +110,9 @@ $cf_edd = new CF_EDD();
 							?>
 						">
 							<?php
-								require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-report.php'; // Removed phpcs:ignore by Rishi Shah.
+						
+							$this->cf_get_activities();
+							require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-report.php'; // Removed phpcs:ignore by Rishi Shah.
 							?>
 						</div>
 						<?php endif; ?>
@@ -131,40 +140,27 @@ $cf_edd = new CF_EDD();
 									<p class="submit"><a href="javascrpit:void(0)" id="pro-migration-button" class="button button-primary">Migrate</a></p>
 								</div>
 							</div>
-							<?php
-							$disabled_class = '';
-							if ( ! $cf_edd->is__premium_only() ) {
-								
-								$disabled_class = 'cf_disabled_input';
-							}
-							?>
 							<?php // Floating Icons/@author Rishi Shah/@since EDD - 3.0.1 ?>
-							<div class="cf-content-box <?php echo esc_html( $disabled_class ); ?>">
+							<div class="cf-content-box">
 								<div class="cf-cnt-box-header">
-									<h3><?php printf( '%s - <a href="https://docs.multicollab.com/activate-email-notifications" target="_blank"> %s </a>', esc_html__( 'Email Notification', 'content-collaboration-inline-commenting' ), esc_html__( 'Guide to Setup Email Notifications', 'content-collaboration-inline-commenting' ) ); ?></h3>
+									<h3><?php printf( '%s - <a href="https://docs.multicollab.com/settings/email-notifications" target="_blank"> %s </a>', esc_html__( 'Email Notification', 'content-collaboration-inline-commenting' ), esc_html__( 'Guide to Setup Email Notifications', 'content-collaboration-inline-commenting' ) ); ?></h3>
 								</div>
 								<?php
 									// Get general settings form HTML.
 									require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-email-notification.php';
 								?>
 							</div>
-							<?php
-							$disabled_class = '';
-							if ( ! $cf_edd->is__premium_only() ) {
-								
-								$disabled_class = 'cf_disabled_input';
-							}
+							<?php	
+							$disabled_class = 'cf_disabled_input';
 							?>
 							<div class="cf-suggestion-box <?php echo esc_html( $disabled_class ); ?>">
 								<div class="cf-content-box">
 									<div class="cf-cnt-box-header">
 										<h3>
 											<?php printf( '%s', esc_html__( 'Publishing', 'content-collaboration-inline-commenting' ) ); ?>
-											<?php
-											if ( ! $cf_edd->is__premium_only() ) {
-												?>
-												<span class="cf_premium_star"><?php printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium', 'content-collaboration-inline-commenting' ) ); ?></span>
-											<?php } ?>
+											
+											<a href="https://www.multicollab.com/upgrade-to-premium/" target="_blank" class="cf_premium_star"><?php printf( esc_html__( 'Upgrade to Premium', 'content-collaboration-inline-commenting' ) . ' <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg>' ); ?></a>
+											
 										</h3>
 									</div>
 									<?php
@@ -174,26 +170,15 @@ $cf_edd = new CF_EDD();
 								</div>
 							</div>
 							<?php // Suggestion Mode/@author Rishi Shah/@since EDD - 3.0.1 ?>
-							<?php
-						
-							$disabled_class = '';
-							if ( ! $cf_edd->is__premium_only() || true === $cf_edd->is_plan( 'plus', true ) ) {
-							
-								$disabled_class = 'cf_disabled_input';
-							}
-							?>
+							<?php $disabled_class = 'cf_disabled_input'; ?>
 							<div class="cf-suggestion-box <?php echo esc_html( $disabled_class ); ?>">
 								<div class="cf-content-box">
 									<div class="cf-cnt-box-header">
 										<h3>
 											<?php printf( '%s', esc_html__( 'Suggestion Mode', 'content-collaboration-inline-commenting' ) ); ?>
-										<?php
-										if ( ! $cf_edd->is__premium_only() || true === $cf_edd->is_plan( 'plus', true ) ) {
-											?>
-												<span class="cf_premium_star"><?php printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium: Pro', 'content-collaboration-inline-commenting' ) ); ?></span>
-											<?php
-										}
-										?>
+										
+											<a href="https://www.multicollab.com/upgrade-to-premium/" target="_blank" class="cf_premium_star"><?php printf( esc_html__( 'Upgrade to Premium', 'content-collaboration-inline-commenting' ) . '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg>' ); ?></a>
+											
 									</h3>
 									</div>
 									<?php
@@ -204,23 +189,15 @@ $cf_edd = new CF_EDD();
 							</div>
 
 							<?php // Manage Permissions/@author Rishi Shah/@since EDD - 3.0.1 ?>
-							<?php
-							$disabled_class = '';
-							if ( ! $cf_edd->is__premium_only() ) {
-							
-								$disabled_class = 'cf_disabled_input';
-							}
-							?>
+							<?php $disabled_class = 'cf_disabled_input'; ?>
 							<div class="cf-suggestion-box <?php echo esc_html( $disabled_class ); ?>">
 								<div class="cf-content-box">
 									<div class="cf-cnt-box-header">
 										<h3>
 											<?php printf( '%s', esc_html__( 'Manage Permissions', 'content-collaboration-inline-commenting' ) ); ?>
-											<?php
-											if ( ! $cf_edd->is__premium_only() ) {
-												?>
-												<span class="cf_premium_star"><?php printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium', 'content-collaboration-inline-commenting' ) ); ?></span>
-											<?php } ?>
+											
+												<a href="https://www.multicollab.com/upgrade-to-premium/" target="_blank" class="cf_premium_star"><?php printf( esc_html__( 'Upgrade to Premium', 'content-collaboration-inline-commenting' ) . '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg>' ); ?></a>
+											
 										</h3>
 									</div>
 									<?php
@@ -229,26 +206,15 @@ $cf_edd = new CF_EDD();
 									?>
 								</div>
 							</div>
-							<?php
-							
-							$disabled_class = '';
-							if ( ! $cf_edd->is__premium_only() || true === $cf_edd->is_plan( 'pro', true ) || true === $cf_edd->is_plan( 'plus', true ) ) {
-								
-								$disabled_class = 'cf_disabled_input';
-							}
-							?>
+							<?php $disabled_class = 'cf_disabled_input'; ?>
 							<div class="cf-content-language-box <?php echo esc_html( $disabled_class ); ?>">
 								<div class="cf-content-box">
 									<div class="cf-cnt-box-header">
 										<h3>
 											<?php printf( '%s', esc_html__( 'Multilingual Options', 'content-collaboration-inline-commenting' ) ); ?>
-											<?php
-											if ( ! $cf_edd->is__premium_only() || true === $cf_edd->is_plan( 'pro', true ) || true === $cf_edd->is_plan( 'plus', true ) ) {
-												?>
-												<span class="cf_premium_star"><?php printf( '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg> %s', esc_html__( 'Premium: VIP', 'content-collaboration-inline-commenting' ) ); ?></span>
-												<?php
-											}
-											?>
+											
+											<a href="https://www.multicollab.com/upgrade-to-premium/" target="_blank" class="cf_premium_star"><?php printf( esc_html__( 'Upgrade to Premium', 'content-collaboration-inline-commenting' ) . '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg>' ); ?></a>
+												
 										</h3>
 									</div>
 									<?php
@@ -258,6 +224,26 @@ $cf_edd = new CF_EDD();
 								</div>
 							</div>
 						</div>
+						<?php endif; ?>
+
+						<?php if ( current_user_can( 'administrator' ) ) : ?>
+							<div id="cf-roles-slack-integration" class="cf-tab-inner 
+							<?php
+							if ( ! empty( $tab_number ) || 'intigrations' === $view ) {
+								echo esc_html( 'cf-tab-active' ); }
+							?>
+							">
+								<div class="cf-content-box">
+									<div class="cf-cnt-box-header">
+										<h3><?php esc_html_e( 'Slack', 'content-collaboration-inline-commenting' ); ?>
+										
+										<a href="https://www.multicollab.com/upgrade-to-premium/" target="_blank" class="cf_premium_star"><?php printf( esc_html__( 'Upgrade to Premium', 'content-collaboration-inline-commenting' ) . '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg>' ); ?></a>
+											
+										</h3>
+										<img style="width:100%;" alt="Slack-integrations" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/slackIntegration.png' ); ?>"/>
+									</div>
+								</div>
+							</div>
 						<?php endif; ?>
 					</div>
 				</div>

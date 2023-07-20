@@ -131,6 +131,22 @@ if( ! class_exists('Commenting_block') ) :
 			 */
 	        require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-rest-routes.php'; // phpcs:ignore
 
+	        /**
+			 * This class is responsible for defining user role and capabilities.
+			 * Kept outside of is_premium functionality because from here we are restricting user to access the dashboard from the free build.
+			 */
+			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-user-and-role.php'; // phpcs:ignore
+
+	        /**
+			 * This class is responsible for defining all custom rest route endpoints.
+			 */
+			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-guest-user-functions.php'; // phpcs:ignore
+
+			/**
+			 * This class is responsible for defining all custom rest route endpoints.
+			 */
+			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-guest-email-template.php'; // phpcs:ignore
+
 			/**
 			 * The class responsible for defining all actions that occur in the public-facing
 			 * side of the site.
@@ -191,9 +207,9 @@ if( ! class_exists('Commenting_block') ) :
 			$this->loader->add_action( 'wp_ajax_cf_save_suggestions_mode', $plugin_admin, 'cf_save_suggestions_mode' );
 			$this->loader->add_action( 'wp_ajax_cf_get_user_email_list', $plugin_admin, 'cf_get_user_email_list' );
 			$this->loader->add_action( 'wp_ajax_cf_get_matched_user_email_list', $plugin_admin, 'cf_get_matched_user_email_list' );
-			$this->loader->add_action( 'wp_ajax_cf_get_activities', $plugin_admin, 'cf_get_activities__premium_only' );
-			$this->loader->add_action( 'wp_ajax_cf_get_activity_details', $plugin_admin, 'cf_get_activity_details__premium_only' );
-			$this->loader->add_action( 'wp_ajax_cf_migrate_to_pro', $plugin_admin, 'cf_migrate_to_pro__premium_only' );
+			$this->loader->add_action( 'wp_ajax_cf_get_activities', $plugin_admin, 'cf_get_activities' );
+			$this->loader->add_action( 'wp_ajax_cf_get_activity_details', $plugin_admin, 'cf_get_activity_details' );
+			$this->loader->add_action( 'wp_ajax_cf_migrate_to_pro', $plugin_admin, 'cf_migrate_to_pro' );
 			$this->loader->add_action( 'wp_ajax_cf_get_assignable_user_list', $plugin_admin, 'cf_get_assignable_user_list' );
 			$this->loader->add_action( 'rest_api_init', $plugin_admin, 'cf_rest_api' );
 			$this->loader->add_action( 'wp_ajax_cf_update_meta', $plugin_admin, 'cf_update_meta' );
@@ -203,8 +219,8 @@ if( ! class_exists('Commenting_block') ) :
 			// Replace content with filter HTML(without HTML tags) which we get from AJAX response. Github issue: #491. @author: Rishi Shah @since: 3.5
 			$this->loader->add_action( 'wp_ajax_cf_suggestion_text_filter', $plugin_admin, 'cf_suggestion_text_filter' );
 
-			$this->loader->add_action( 'init', $plugin_admin, 'sg_register_post_meta_field__premium_only' );
-			$this->loader->add_action( 'wp_ajax_sg_update_suggestion_history', $plugin_admin, 'sg_update_suggestion_history__premium_only' );
+			$this->loader->add_action( 'init', $plugin_admin, 'sg_register_post_meta_field' );
+			$this->loader->add_action( 'wp_ajax_sg_update_suggestion_history', $plugin_admin, 'sg_update_suggestion_history' );
 
 		}
 

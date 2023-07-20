@@ -103,11 +103,11 @@ msgstr "annehmen"
 msgid "Accepted Suggestions"
 msgstr "Akzeptierte Vorschläge"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:46
+#: admin/partials/commenting-block-settings-page.php:46
 msgid "Activity Snapshot"
 msgstr "Aktivitäts-Snapshot"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:45
+#: admin/partials/commenting-block-settings-page.php:45
 msgid "Activity Timeline"
 msgstr "Aktivitätszeitachse"
 
@@ -180,15 +180,15 @@ msgstr "Alle Seiten/Beiträge"
 msgid "All categories"
 msgstr "Alle Kategorien"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:148
+#: admin/partials/commenting-block-settings-page.php:148
 msgid "Add Comment"
 msgstr "Einen Kommentar hinzufügen"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:155
+#: admin/partials/commenting-block-settings-page.php:155
 msgid "Add Suggestion"
 msgstr "Vorschlag hinzufügen"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:156
+#: admin/partials/commenting-block-settings-page.php:156
 msgid "Accept/Reject Suggestion"
 msgstr "Vorschlag annehmen/ablehnen"
 
@@ -423,11 +423,11 @@ msgstr "Lizenz deaktivieren"
 msgid "Discard Comment"
 msgstr "Kommentar verwerfen"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:150
+#: admin/partials/commenting-block-settings-page.php:150
 msgid "Disable Comments"
 msgstr "Kommentare deaktivieren"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:157
+#: admin/partials/commenting-block-settings-page.php:157
 msgid "Disable Suggestion"
 msgstr "Vorschlag deaktivieren"
 
@@ -678,7 +678,7 @@ msgstr "Zuletzt bearbeitet von"
 msgid "left"
 msgstr "links"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:76
+#: admin/partials/commenting-block-settings-page.php:76
 msgid "Latest Activity"
 msgstr "Letzte Aktivität"
 
@@ -754,7 +754,7 @@ msgstr "Berechtigungen verwalten"
 msgid "Multicollab is Default to the"
 msgstr "Multicollab ist die Standardeinstellung"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:110
+#: admin/partials/commenting-block-settings-page.php:110
 msgid "Migration Setting"
 msgstr "Migrationseinstellung"
 
@@ -827,7 +827,7 @@ msgid "Notify"
 msgstr "Benachrichtigen"
 
 #: admin/classes/class-commenting-block-activities.php:280
-#: admin/partials/commenting-block-settings-page__premium_only.php:63
+#: admin/partials/commenting-block-settings-page.php:63
 msgid "No activities found."
 msgstr "Keine Aktivitäten gefunden."
 
@@ -894,7 +894,7 @@ msgstr "Bitte wählen Sie den Block/das Bild zum Kommentieren aus."
 msgid "Please select a block, text or media to comment on."
 msgstr "Bitte Text zum Kommentieren auswählen."
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:419
+#: admin/partials/commenting-block-settings-page.php:419
 msgid "Please select a channel"
 msgstr "Bitte wählen Sie einen Kanal aus"
 
@@ -926,7 +926,7 @@ msgstr "Bitte wählen Sie eine Option zum Speichern!"
 msgid "Post Comment"
 msgstr "Kommentar hinzufügen"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:34
+#: admin/partials/commenting-block-settings-page.php:34
 msgid "Permissions"
 msgstr "Berechtigungen"
 
@@ -1110,11 +1110,11 @@ msgstr "Erinnerung im Blockeditor."
 msgid "Remind"
 msgstr "Erinnern"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:147
+#: admin/partials/commenting-block-settings-page.php:147
 msgid "Roles"
 msgstr "Rollen"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:149
+#: admin/partials/commenting-block-settings-page.php:149
 msgid "Resolve Comment"
 msgstr "Kommentar lösen"
 
@@ -1489,7 +1489,7 @@ msgid "VIP Support"
 msgstr "VIP-Support"
 
 #: admin/partials/commenting-block-settings-page.php:22
-#: admin/partials/commenting-block-settings-page__premium_only.php:23
+#: admin/partials/commenting-block-settings-page.php:23
 msgid "Version 3.0.1"
 msgstr "Version 3.0.1"
 
