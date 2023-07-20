@@ -107,11 +107,11 @@ msgstr "添加"
 msgid "Accepted Suggestions"
 msgstr "接受的建议"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:46
+#: admin/partials/commenting-block-settings-page.php:46
 msgid "Activity Snapshot"
 msgstr "活动快照"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:45
+#: admin/partials/commenting-block-settings-page.php:45
 msgid "Activity Timeline"
 msgstr "活动时间表"
 
@@ -180,15 +180,15 @@ msgstr "所有页面/帖子"
 msgid "All categories"
 msgstr "所有类别"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:148
+#: admin/partials/commenting-block-settings-page.php:148
 msgid "Add Comment"
 msgstr "添加评论"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:155
+#: admin/partials/commenting-block-settings-page.php:155
 msgid "Add Suggestion"
 msgstr "添加建议"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:156
+#: admin/partials/commenting-block-settings-page.php:156
 msgid "Accept/Reject Suggestion"
 msgstr "接受/拒绝建议"
 
@@ -427,11 +427,11 @@ msgstr "停用许可证"
 msgid "Discard Comment"
 msgstr "放弃评论"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:150
+#: admin/partials/commenting-block-settings-page.php:150
 msgid "Disable Comments"
 msgstr "禁用评论"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:157
+#: admin/partials/commenting-block-settings-page.php:157
 msgid "Disable Suggestion"
 msgstr "禁用建议"
 
@@ -676,7 +676,7 @@ msgstr "最后编辑者"
 msgid "left"
 msgstr "左"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:76
+#: admin/partials/commenting-block-settings-page.php:76
 msgid "Latest Activity"
 msgstr "最新活动"
 
@@ -752,7 +752,7 @@ msgstr "管理权限"
 msgid "Multicollab is Default to the"
 msgstr "Multicollab 默认为"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:110
+#: admin/partials/commenting-block-settings-page.php:110
 msgid "Migration Setting"
 msgstr "迁移设置"
 
@@ -825,7 +825,7 @@ msgid "Notify"
 msgstr "通知"
 
 #: admin/classes/class-commenting-block-activities.php:280
-#: admin/partials/commenting-block-settings-page__premium_only.php:63
+#: admin/partials/commenting-block-settings-page.php:63
 msgid "No activities found."
 msgstr "未找到任何活动。"
 
@@ -892,7 +892,7 @@ msgstr "请选择要评论的块/图像。"
 msgid "Please select a block, text or media to comment on."
 msgstr "请选择要评论的文字。"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:419
+#: admin/partials/commenting-block-settings-page.php:419
 msgid "Please select a channel"
 msgstr "请选择一个频道"
 
@@ -924,7 +924,7 @@ msgstr "请选择任何选项进行保存！"
 msgid "Post Comment"
 msgstr "发表评论"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:34
+#: admin/partials/commenting-block-settings-page.php:34
 msgid "Permissions"
 msgstr "权限"
 
@@ -1108,11 +1108,11 @@ msgstr "块编辑器中的提醒。"
 msgid "Remind"
 msgstr "提醒"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:147
+#: admin/partials/commenting-block-settings-page.php:147
 msgid "Roles"
 msgstr "角色"
 
-#: admin/partials/commenting-block-settings-page__premium_only.php:149
+#: admin/partials/commenting-block-settings-page.php:149
 msgid "Resolve Comment"
 msgstr "解决评论"
 
@@ -1481,7 +1481,7 @@ msgid "VIP Support"
 msgstr "贵宾支持"
 
 #: admin/partials/commenting-block-settings-page.php:22
-#: admin/partials/commenting-block-settings-page__premium_only.php:23
+#: admin/partials/commenting-block-settings-page.php:23
 msgid "Version 3.0.1"
 msgstr "版本 3.0.1"
 

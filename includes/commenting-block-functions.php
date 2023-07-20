@@ -180,7 +180,6 @@ if (!function_exists('cf_dpb_promotional_banner')) {
             } else {
                 $promotional_banner_request = wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
             }
-            $cf_edd = new CF_EDD();
             
             ob_start();
             if ( empty( $promotional_banner_request->errors ) ) {
@@ -209,16 +208,7 @@ if (!function_exists('cf_dpb_promotional_banner')) {
 
                             if ( ! empty( $promotional_banner_target_audience ) ) {
 
-                                $currunt_plan_name = '';
-                                if ( $cf_edd->is__premium_only() ) {
-                                    if ( $cf_edd->can_use_premium_code() ) {
-                                        $currunt_plan_name = esc_html( $cf_edd->get_plan_name() );
-                                    } else {
-                                        $currunt_plan_name = esc_html( 'FREE' );
-                                    }
-                                } else {
-                                    $currunt_plan_name = esc_html( 'FREE' );
-                                }
+                                $currunt_plan_name = esc_html( 'FREE' );
 
                                 $display_banner_flag = false;
                                 if ( 'all_customers' === $promotional_banner_target_audience['value'] ) {

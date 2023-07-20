@@ -307,6 +307,44 @@ class Commenting_block_Functions {
 		}
 	}
 
+	/**
+	 * Display Translated String
+	 *
+	 * @param int $str
+	 *
+	 * @return string
+	 */
+	public function translate_strings_format( $str ) {
+		$translatedStringFormats = $str;
+		if ( strpos( $translatedStringFormats, 'Space (' ) !== false ) {
+			$splitString             = explode( ' ', $translatedStringFormats );
+			$translatedStringFormats = sprintf( '%s %s %s', __( $splitString[0], 'content-collaboration-inline-commenting' ), isset( $splitString[1] ) ? $splitString[1] : '', __( isset( $splitString[2] ) ? $splitString[2] : '', 'content-collaboration-inline-commenting' ) );
+		} elseif ( strpos( $translatedStringFormats, 'Remove Link with URL' ) !== false ) {
+			$splitString             = explode( 'Remove Link with URL ', $translatedStringFormats );
+			$translatedStringFormats = sprintf( '%s %s', __( 'Remove Link with URL', 'content-collaboration-inline-commenting' ), isset( $splitString[1] ) ? $splitString[1] : '' );
+		} elseif ( strpos( $translatedStringFormats, 'with URL' ) !== false ) {
+			$splitString             = explode( 'with URL ', $translatedStringFormats );
+			$translatedStringFormats = sprintf( '%s %s', __( 'with URL', 'content-collaboration-inline-commenting' ), isset( $splitString[1] ) ? $splitString[1] : '' );
+		} elseif ( strpos( $translatedStringFormats, 'Replace' ) !== false ) {
+			$splitString             = explode( ' ', $translatedStringFormats );
+			$translatedStringFormats = sprintf( '%s %s %s %s', __( $splitString[0], 'content-collaboration-inline-commenting' ), isset( $splitString[1] ) ? $splitString[1] : '', __( isset( $splitString[2] ) ? $splitString[2] : '', 'content-collaboration-inline-commenting' ), isset( $splitString[3] ) ? $splitString[3] : '' );
+		} elseif ( strpos( $translatedStringFormats, 'Line Break (' ) !== false ) {
+			$splitString             = explode( ' ', $translatedStringFormats );
+			$concatBreakedString     = $splitString[0] . ' ' . $splitString[1];
+			$translatedStringFormats = sprintf( '%s %s %s', __( $concatBreakedString, 'content-collaboration-inline-commenting' ), isset( $splitString[2] ) ? $splitString[2] : '', __( isset( $splitString[3] ) ? $splitString[3] : '', 'content-collaboration-inline-commenting' ) );
+		} elseif ( strpos( $translatedStringFormats, 'Block Alignment' ) !== false ) {
+			$splitString             = explode( ' ', wp_strip_all_tags( $translatedStringFormats ) );
+			$concatBreakedString     = $splitString[0] . ' ' . $splitString[1];
+			$translatedStringFormats = sprintf( '%s <em>%s</em> %s <em>%s</em>', __( $concatBreakedString, 'content-collaboration-inline-commenting' ), __( isset( $splitString[2] ) ? $splitString[2] : '', 'content-collaboration-inline-commenting' ), __( isset( $splitString[3] ) ? $splitString[3] : '', 'content-collaboration-inline-commenting' ), __( isset( $splitString[4] ) ? $splitString[4] : '', 'content-collaboration-inline-commenting' ) );
+		} elseif ( strpos( $translatedStringFormats, 'Change Heading' ) !== false ) {
+			$splitString             = explode( ' ', wp_strip_all_tags( $translatedStringFormats ) );
+			$concatBreakedString     = $splitString[0] . ' ' . $splitString[1];
+			$translatedStringFormats = sprintf( '%s <em> %s %s </em> %s <em> %s %s </em>', __( $concatBreakedString, 'content-collaboration-inline-commenting' ), __( isset( $splitString[3] ) ? $splitString[3] : '', 'content-collaboration-inline-commenting' ), isset( $splitString[4] ) ? $splitString[4] : '', __( isset( $splitString[5] ) ? $splitString[5] : '', 'content-collaboration-inline-commenting' ), __( isset( $splitString[7] ) ? $splitString[7] : '', 'content-collaboration-inline-commenting' ), isset( $splitString[3] ) ? $splitString[3] : '' );
+		}
+		$str = $translatedStringFormats;
+		return $str;
+	}
+
 	
 	/**
 	 * Reorder Userrole According to Default WordPress Roles

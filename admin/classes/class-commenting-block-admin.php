@@ -112,11 +112,14 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		add_filter( 'admin_body_class', array( $this, 'cf_admin_classes' ) );
 
 		$allow_pages = array('edit.php', 'post-new.php', 'post.php');
-		if( in_array( $pagenow, $allow_pages ) ){
+		if( in_array( $pagenow, $allow_pages, true ) ){
 			add_action( 'admin_notices', array( $this, 'cf_display_promotional_banner_page_post' ) );
 		}
 
 		add_filter( 'cron_schedules', array( $this, 'cf_free_cron_job_recurrence' ) );
+
+		//User authentication function while redirect guest.
+		add_filter( 'authenticate', array( $this, 'cf_guest_auto_login' ), 10, 3 );
 	}
 
 	/**
@@ -186,7 +189,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		// Get Gutenberg Version.
 		$plugins = get_option( 'active_plugins' );
-		if ( in_array( 'gutenberg/gutenberg.php', $plugins ) ) {
+		if ( in_array( 'gutenberg/gutenberg.php', $plugins, true ) ) {
 			$get_plugin_data   = get_plugin_data( WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
 			$gutenberg_version = esc_html( $get_plugin_data['Version'] );
 		} else {
@@ -196,16 +199,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		update_option( 'cf_opt_in', $opt_in );
 
 		// Get multicollab plan details.
-		$cf_edd = new CF_EDD();
-		if ( $cf_edd->is__premium_only() ) {
-			if ( $cf_edd->can_use_premium_code() ) {
-				$multicollab_plan = esc_html( strtoupper( $cf_edd->get_plan_name() ) );
-			} else {
-				$multicollab_plan = esc_html( 'FREE', 'content-collaboration-inline-commenting' );
-			}
-		} else {
-			$multicollab_plan = esc_html( 'FREE', 'content-collaboration-inline-commenting' );
-		}
+	
+		$multicollab_plan = esc_html( 'FREE', 'content-collaboration-inline-commenting' );
+		
 
 		// Get Webserver Name and Version.
 		$server_software        = filter_input( INPUT_SERVER, 'SERVER_SOFTWARE', FILTER_SANITIZE_STRING );
@@ -270,7 +266,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		// Get Gutenberg Version.
 		$plugins = get_option( 'active_plugins' );
-		if ( in_array( 'gutenberg/gutenberg.php', $plugins ) ) {
+		if ( in_array( 'gutenberg/gutenberg.php', $plugins, true ) ) {
 			$get_plugin_data   = get_plugin_data( WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
 			$gutenberg_version = esc_html( $get_plugin_data['Version'] );
 		} else {
@@ -278,16 +274,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		}
 
 		// Get multicollab plan details.
-		$cf_edd = new CF_EDD();
-		if ( $cf_edd->is__premium_only() ) {
-			if ( $cf_edd->can_use_premium_code() ) {
-				$multicollab_plan = esc_html( strtoupper( $cf_edd->get_plan_name() ) );
-			} else {
-				$multicollab_plan = esc_html( 'FREE', 'content-collaboration-inline-commenting' );
-			}
-		} else {
-			$multicollab_plan = esc_html( 'FREE', 'content-collaboration-inline-commenting' );
-		}
+		
+		$multicollab_plan = esc_html( 'FREE', 'content-collaboration-inline-commenting' );
 
 		// get WP version.
 		$my_theme = wp_get_theme();
@@ -389,75 +377,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	public function cf_free_admin_edit_post_feedback_form() {
 		global $pagenow;
 
-		if ( 'plugins.php' === $pagenow ) {
-			?>
-			<div class="cf_plugin_deacmodal cf_plugin_freedeacmodal" tabindex="-1" role="dialog" id="cf_plugin_deacmodal">
-				<div class="modal-dialog" role="document">
-					<div class="modal-header">
-						<h3 class="modal-title">QUICK FEEDBACK </h3>
-					</div>
-					<div class="modal-body">
-						<p>If you have a moment, please let us know why you are deactivating:</p>
-						<div class="cf_deactivate_form">
-							<label>
-								<input type="radio" name="fs_deactive_free_plugin" value="The plugin didn't work.">
-								<span>The plugin didn't work.</span>
-							</label>
-							<label>
-								<input type="radio" name="fs_deactive_free_plugin" value="Not happy with user experience.">
-								<span>Not happy with user experience.</span>
-							</label>
-							<label>
-								<input type="radio" name="fs_deactive_free_plugin" value="Missing a few important features.">
-								<span>Missing a few important features.</span>
-							</label>
-							<input type="text" class="fs_feedback_message_1 feedback_message" placeholder="Please share important missing features of the Plugin." disabled>
-						</div>
-						<div class="cf_deactivate_form">
-							<label>
-								<input type="radio" name="fs_deactive_free_plugin" value="I am a WordPress expert and exploring it for my client.">
-								<span>I am a WordPress expert and exploring it for my client.</span>
-							</label>
-							<label>
-								<input type="radio" name="fs_deactive_free_plugin" value="I found a better plugin.">
-								<span>I found a better plugin.</span>
-							</label>
-							<input type="text" class="fs_feedback_message_2 feedback_message" placeholder="What's the plugin's name?" disabled>
-						</div>
-						<div class="cf_deactivate_form">
-							<label>
-								<input type="radio" name="fs_deactive_free_plugin" value="I no longer need the plugin.">
-								<span>I no longer need the plugin.</span>
-							</label>
-							<label>
-								<input type="radio" name="fs_deactive_free_plugin" value="It's a temporary deactivation - I'm troubleshooting an issue.">
-								<span>It's a temporary deactivation - I'm troubleshooting an issue.</span>
-							</label>
-							<label>
-								<input type="radio" name="fs_deactive_free_plugin" value="Something else.">
-								<span>Something else.</span>
-							</label>
-							<input type="text" class="fs_feedback_message_3 feedback_message" placeholder="Something else." disabled>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<div class="snooze_option_section" style="display:none">
-							<input type="checkbox" class="snooze_option_checkbox" id="snooze_option_checkbox">
-							<label for="snooze_option_checkbox">Snooze this panel during troubleshooting.</label>
 
-							<select class="snooze_option_period" style="display:none">
-								<option value="<?php echo esc_attr( 60 ); ?>">1 Hour</option>
-								<option value="<?php echo esc_attr( 60 * 24 ); ?>">24 Hour</option>
-								<option value="<?php echo esc_attr( 60 * 24 * 7 ); ?>">7 Days</option>
-								<option value="<?php echo esc_attr( 60 * 24 * 30 ); ?>">30 Days</option>
-							</select>
-						</div>
-						<button type="button" class="btn btn-primary" data-dismiss="modal">Submit &amp; Deactivate</button>
-						<button type="button" class="btn btn-secondary btn-cancel">Cancel</button>
-					</div>
-				</div>
-			</div>
-			<?php
+		if ( 'plugins.php' === $pagenow ) {
+			require_once COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-admin-deactive-free.php'; // phpcs:ignore
 		}
 	}
 
@@ -556,7 +478,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		if ( empty( $cf_hide_editorial_column ) ) {
 			if ( ( in_array( trim( $post_type ), $all_post_type, true ) ) || ( in_array( trim( $type ), $all_post_type, true ) ) ) {
 				if ( ( isset( $post_type ) || isset( $type ) ) && ( $post_type !== 'product' || $type !== 'product' ) ) {
-					$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ) . '" width=17/>' . __( 'Editorial Comments', 'content-collaboration-inline-commenting' );
+					$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ) . '" width=17/>' . __( 'Multicollab', 'content-collaboration-inline-commenting' );
 				}
 			}
 		}
@@ -635,7 +557,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	/**
 	 * Get the latest comment activities.
 	 */
-	public function cf_get_activities__premium_only() {
+	public function cf_get_activities() {
 		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-activities.php'; // Removed phpcs:ignore by Rishi Shah.
 
 		$this->cf_activities_object = new Commenting_Block_Activities();
@@ -645,7 +567,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	/**
 	 * Get activities code.
 	 */
-	public function cf_get_activity_details__premium_only() {
+	public function cf_get_activity_details() {
 		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-activities.php'; // Removed phpcs:ignore by Rishi Shah.
 
 		$this->cf_activities_object = new Commenting_Block_Activities();
@@ -655,7 +577,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	/**
 	 * Get activities code.
 	 */
-	public function cf_migrate_to_pro__premium_only() {
+	public function cf_migrate_to_pro() {
 		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-activities.php'; // Removed phpcs:ignore by Rishi Shah.
 
 		$this->cf_activities_object = new Commenting_Block_Activities();
@@ -665,7 +587,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	/**
 	 * Get permissions code.
 	 */
-	public function cf_get_pp_roles__premium_only() {
+	public function cf_get_pp_roles() {
 		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-permissions.php'; // Removed phpcs:ignore by Rishi Shah.
 		$this->cf_pp_roles_object = new Commenting_Block_Permissions();
 		$this->default_permission = $this->cf_pp_roles_object->cf_default_permissions();
@@ -738,15 +660,24 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	public function cf_post_status_changes( $post_ID, $post ) {
 		$metas     = get_post_meta( $post_ID );
 		$p_content = is_object( $post ) ? $post->post_content : $post;
+		$p_link     = get_edit_post_link( $post_ID );
+		$p_title    = get_the_title( $post_ID ); // Removed phpcs:ignore by Rishi Shah.
+		$site_title = get_bloginfo( 'name' ); // Removed phpcs:ignore by Rishi Shah.
+		$html       = '';
+
 		// Get current user details.
 		$curr_user                 = wp_get_current_user();
 		$user_id                   = $curr_user->ID;
+		$current_user_email        = $curr_user->user_email;
 		$current_user_display_name = $curr_user->display_name;
 
 		// Publish drafts from the '_current_drafts' stack.
 		$current_drafts    = isset( $metas['_current_drafts'][0] ) ? $metas['_current_drafts'][0] : array();
 		$current_drafts    = maybe_unserialize( $current_drafts );
 		$current_timestamp = current_time( 'timestamp' );
+		
+		// Initiate Email Class Object.
+		$this->cf_initiate_email_class();
 
 		// Publish Deleted Comments. (i.e. finally delete them.)
 		if ( isset( $current_drafts['deleted'] ) && 0 !== count( $current_drafts['deleted'] ) ) {
@@ -846,6 +777,18 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		// Mark Resolved Threads.
 		if ( isset( $current_drafts['resolved'] ) && 0 !== count( $current_drafts['resolved'] ) ) {
 			$resolved_drafts = $current_drafts['resolved'];
+			$html           .= '<div class="comment-box comment-resolved" style="background:#fff;width:70%;    font-family: Roboto,sans-serif;padding-top:40px;">';
+			$html           .= '<div class="comment-box-header" style="margin-bottom:30px;border:1px solid #eee;border-radius:20px;padding:30px;">';
+			$html           .= '<p style="margin:0;padding-bottom:20px;font-size:18px;"><a href="mailto:' . esc_attr( $current_user_email ) . '" class="" style="  padding: 8px 25px;font-size: 18px;background-color: #4B1BCE; border-radius: 8px;color: #fff;text-decoration: none; text-transform: capitalize; margin-right:6px;">' . esc_html( $current_user_display_name ) . '</a> ' . __( 'has resolved the following thread.', 'content-collaboration-inline-commenting' ) . '</p>';
+			if ( ! empty( $p_title ) ) {
+				$html .= '<h2 class="comment-page-title" style="font-size:20px;margin:0;"><a href="' . esc_url( $p_link ) . '" style="color:#4B1BCE;text-decoration:underline;font-size:20px;">' . esc_html( $p_title ) . '</a></h2></div>';
+			}
+			$html .= '<div class="comment-box-body" style="border:1px solid #eee;border-radius:20px;padding:30px;">';
+			$html .= '<h3 class="head-with-icon" style="margin:0;padding-bottom:30px;font-family:Roboto,sans-serif;font-weight:500;font-size:26px;color:#000;">';
+			$html .= '<span class="icon-resolved" style="padding-right:10px;vertical-align:middle;">';
+			$html .= '<img src="' . esc_url( COMMENTING_BLOCK_URL . 'admin/assets/images/icon-check-fill.png' ) . '" alt="Resolved" />';
+			$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
+			$html .= '</h3>';
 
 			foreach ( $resolved_drafts as $el ) {
 				$prev_state                       = $metas[ $el ][0];
@@ -883,6 +826,29 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					update_post_meta( $post_ID, $el, $prev_state );
 				}
 				update_post_meta( $post_ID, 'th' . $el, $current_timestamp );
+				
+				// Send Email.
+				$elid              = str_replace( '_', '', $el );
+				$comments          = get_post_meta( $post_ID, $el, true );
+				$commented_on_text = $comments['commentedOnText'];
+				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
+				$blockType         = isset( $comments['blockType'] ) ? $comments['blockType'] : '';
+				$link              = $p_link . '&current_url=' . $elid;
+				// Notify users about the resolved thread.
+				$this->email_class->cf_email_resolved_thread(
+					array(
+						'html'                      => $html,
+						'post_title'                => $p_title,
+						'site_title'                => $site_title,
+						'current_user_email'        => $current_user_email,
+						'current_user_display_name' => $current_user_display_name,
+						'commented_on_text'         => $commented_on_text,
+						'list_of_comments'          => $list_of_comments,
+						'block_type'                => $blockType,
+						'post_edit_link'            => $link,
+					)
+				);
+				
 			}
 		}
 		if ( isset( $current_drafts ) && ! empty( $current_drafts ) ) {
@@ -910,6 +876,54 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				update_post_meta( $post_ID, $key, $comment );
 			}
 		}
+
+		// Sending Emails to newly mentioned users.
+		if ( isset( $current_drafts['comments'] ) && 0 !== count( $current_drafts['comments'] ) ) {
+			$new_drafts = $current_drafts['comments'];
+
+			foreach ( $new_drafts as $el => $drafts ) {
+				$comments          = get_post_meta( $post_ID, $el, true );
+				$commented_on_text = $comments['commentedOnText'];
+				$assigned_to       = isset( $comments['assigned_to'] ) ? $comments['assigned_to'] : '';
+				$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
+				$blockType         = isset( $comments['blockType'] ) ? $comments['blockType'] : '';
+				$link              = $p_link . '&current_url=' . $elid;
+
+				$prev_state   = $metas[ $el ][0];
+				$prev_state   = maybe_unserialize( $prev_state );
+				$new_comments = array();
+				foreach ( $drafts as $d ) {
+					$prev_state['comments'][ $d ]['status'] = 'publish';
+					$new_comments[]                         = $d;
+				}
+
+				// Send email to the commented recipients.
+				$this->email_class->cf_email_new_comments(
+					array(
+						'post_ID'                   => $post_ID,
+						'elid'                      => $elid,
+						'post_title'                => $p_title,
+						'post_edit_link'            => $link,
+						'site_title'                => $site_title,
+						'commented_on_text'         => $commented_on_text,
+						'list_of_comments'          => $list_of_comments,
+						'current_user_email'        => $current_user_email,
+						'current_user_display_name' => $current_user_display_name,
+						'new_comments'              => $new_comments,
+						'assign_to'                 => $assigned_to,
+						'block_type'                => $blockType,
+					)
+				);
+			}
+		}
+	}
+
+	/**
+	 * Include the Email template class and initiate the object.
+	 */
+	private function cf_initiate_email_class() {
+		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-email-templates.php'; // Removed phpcs:ignore by Rishi Shah.
+		$this->email_class = new Commenting_Block_Email_Templates();
 	}
 
 	/**
@@ -968,7 +982,21 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		 */
 
 		$screen = get_current_screen();
-		if ( $screen->is_block_editor || 'toplevel_page_editorial-comments' === $screen->base || 'site-editor' !== $screen->base ) {
+
+		// Enque de-active pro plugin JS.
+		if( 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
+			wp_enqueue_script( 'wp-deactivation-message', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/comenting-block-deactive-free.js', array( 'jquery' ), wp_rand(), false );
+			wp_localize_script(
+				'wp-deactivation-message',
+				'multicollab_plugin_path',
+				array(
+					'plugin_path' => COMMENTING_BLOCK_BASE,
+					'nonce'       =>  wp_create_nonce( 'multicollab_plugin_path' ),
+				)
+			);
+		}
+		
+		if(($screen->is_block_editor  && 'site-editor' !== $screen->base && 'widgets' !== $screen->base) || ('toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base) ) {	
 			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false );
 			wp_enqueue_script( 'es5-js', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/commenting-broser-details.js', array( 'jquery' ), wp_rand(), false );
 			wp_enqueue_script( 'cf-mark', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false );
@@ -979,11 +1007,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			// Add wizard JS.
 			wp_enqueue_script( 'commenting-block-wizard-js', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-wizard.js', array( 'jquery' ), wp_rand(), false );
 
-			// Enque de-active pro plugin JS.
-			if ( current_user_can( 'activate_plugins' ) ) {
-				wp_enqueue_script( 'wp-deactivation-message', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/comenting-block-deactive-free.js', array( 'jquery' ), wp_rand(), false );
-				wp_localize_script( 'wp-deactivation-message', 'multicollab_plugin_path', array( COMMENTING_BLOCK_BASE ) );
-			}
 			wp_enqueue_script(
 				'content-collaboration-inline-commenting',
 				trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/block.build.min.js',
@@ -1076,11 +1099,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			$cf_edd     = new CF_EDD();
 			$cf_fs_data = array(
 				'current_plan'         => $cf_edd->get_plan_name(),
-				'can_use_premium_code' => $cf_edd->can_use_premium_code(),
-				'is_plan_plus'         => $cf_edd->is_plan( 'plus', true ),
-				'is_plan_pro'          => $cf_edd->is_plan( 'pro', true ),
-				'is_plan_vip'          => $cf_edd->is_plan( 'vip', true ),
-
 			);
 
 			wp_localize_script( $this->plugin_name, 'multicollab_fs', $cf_fs_data );
@@ -1104,24 +1122,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 					wp_enqueue_script( 'jquery-ui-draggable' );
 					wp_enqueue_script( 'jquery-ui-droppable' );
-						wp_enqueue_script(
-							'cf-activity-centre',
-							trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/activityCentre.build.min.js',
-							array(
-								'content-collaboration-inline-commenting',
-								'wp-plugins',
-								'wp-editor',
-								'wp-edit-post',
-								'wp-i18n',
-								'wp-element',
-								'wp-components',
-								'wp-data',
-							),
-							wp_rand(),
-							true
-						);
+					wp_enqueue_script( 'cf-block-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/activityCentre.build.min.js', array(), wp_rand(), true );
 					wp_localize_script(
-						'cf-activity-centre',
+						'cf-block-script',
 						'activityLocalizer',
 						array(
 							'nonce'         => wp_create_nonce( 'wp_rest' ),
@@ -1129,7 +1132,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 							'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
 							'currentUserID' => get_current_user_id(),
 						)
-					);
+					);	
 		}
 
 		wp_enqueue_script( 'cf-select2-js', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/select2.min.js', array( 'jquery' ), wp_rand(), true );
@@ -1213,7 +1216,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		if ( isset( $superCareerData['comments'] ) && 0 !== count( $superCareerData['comments'] ) ) {
 
-			$superCareerData['comments'][ $timestamp ] = $arr;
+			$superCareerData['comments'][ $timestamp ] = isset( $arr ) ? $arr : '';
 			$superCareerData['updated_at']             = $timestamp;
 			if ( $assign_to > 0 ) {
 				$superCareerData['assigned_to']         = $assign_to;
@@ -1588,7 +1591,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		update_post_meta( $current_post_id, '_autodraft_ids', $autoDraft_ids );
 		wp_die();
 	}
-	public function register_post_meta_autodraft_id__premium_only() {
+	public function register_post_meta_autodraft_id() {
 		register_post_meta(
 			'',
 			'_autodraft_ids',
@@ -1615,7 +1618,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * Register post meta field for suggestion history and suggestion mode enable.
 	 */
 
-	public function sg_register_post_meta_field__premium_only() {
+	public function sg_register_post_meta_field() {
 		register_post_meta(
 			'',
 			'_sb_is_suggestion_mode',
@@ -1666,7 +1669,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	/**
 	 * ajax call to update suggestion history post meta
 	 */
-	public function sg_update_suggestion_history__premium_only() {
+	public function sg_update_suggestion_history() {
 
 		/* Check for nonce verification.*/
 		check_ajax_referer( COMMENTING_NONCE, 'nonce' );
@@ -2017,6 +2020,84 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		}
 
 		wp_die();
+	}
+
+	/**
+	 * User authentication function while redirect guest.
+	 *
+	 * @param object|array $user - contains user details.
+	 * @param string       $username_  - contains user name
+	 * @param string       $password   - user's password.
+	 * @return mixed
+	 */
+	public function cf_guest_auto_login( $user, $username_, $password ) {
+
+		$user_id  = filter_input( INPUT_GET, 'user_id', FILTER_SANITIZE_NUMBER_INT );
+		$username = filter_input( INPUT_GET, 'username', FILTER_SANITIZE_SPECIAL_CHARS );
+		$post_id  = filter_input( INPUT_GET, 'post_id', FILTER_SANITIZE_NUMBER_INT );
+		$token    = filter_input( INPUT_GET, 'token', FILTER_SANITIZE_SPECIAL_CHARS );
+
+		$guest_token = get_user_meta( (int) $user_id, 'multicollab_guest_token', true );
+		$guest_token = ( ! is_array( $guest_token ) ) ? (array) $guest_token : $guest_token;
+
+		if ( ! empty( $user_id ) && ! empty( $username ) && ( ! in_array( $token, $guest_token, true ) ) ) {
+			$error_redirect = site_url( 'landing-page', 'login' );
+			$error_string   = 'Token miss match';
+			$error_redirect = add_query_arg(
+				array(
+					'message' => $error_string,
+				),
+				$error_redirect
+			);
+
+			wp_safe_redirect( $error_redirect, 302, 'Multicollab-token-message' );
+			exit;
+		}
+
+		$multicollab_guest_token_timestamp = get_user_meta( $user_id, 'multicollab_guest_token_timestamp', true );
+
+		if ( ! empty( $multicollab_guest_token_timestamp ) ) {
+			if ( isset( $multicollab_guest_token_timestamp[ $token ] ) && ! empty( $multicollab_guest_token_timestamp[ $token ] ) ) {
+				if ( $multicollab_guest_token_timestamp[ $token ][0] <= strtotime( '-48 hours' ) && '' === $multicollab_guest_token_timestamp[ $token ][1] ) { // Check if timestamp is more than 48 hours and user not visited.
+
+					// LINK is expired.
+					wp_die( esc_html__( 'Link is Expired.', 'content-collaboration-inline-commenting' ) );
+
+				} elseif ( $multicollab_guest_token_timestamp[ $token ][0] >= strtotime( '-48 hours' ) && '' === $multicollab_guest_token_timestamp[ $token ][1] ) { // If timestamp is less than 48 hours and user not visited.
+
+					// Update value of visited link.
+					$multicollab_guest_token_timestamp[ $token ][1] = 'Visited';
+					update_user_meta( $user_id, 'multicollab_guest_token_timestamp', $multicollab_guest_token_timestamp );
+				} else {
+				}
+			}
+		}
+
+		if ( $user_id && $username ) {
+			wp_set_current_user( $user_id, $username );
+			wp_set_auth_cookie( $user_id );
+			$user_data = new WP_User( $user_id );
+			do_action( 'wp_login', $username, $user_data );
+
+			// redirect to login URL.
+			$editor_url = site_url( 'wp-admin/post.php', 'post-editor' );
+
+			$editor_url = add_query_arg(
+				array(
+					'post'   => $post_id,
+					'action' => 'edit',
+				),
+				$editor_url
+			);
+
+			wp_safe_redirect( $editor_url, 302, 'Multicollab-editor-redirect' );
+			exit;
+		}
+		if ( ! empty( $user_data ) ) {
+			return $user_data;
+		} else {
+			return $user;
+		}
 	}
 
 }

@@ -2,7 +2,7 @@
  * Main function to be called for required JS actions.
  */
 
- (function ($) {
+(function ($) {
     'use strict';
     const { __ } = wp.i18n;
     /**
@@ -29,10 +29,11 @@
 
     // To remove blank suggestions board after changing block. // @author - Mayank @since3.4
     $(document).on('click', '.cls-board-outer', function (event) {
-        const suggestion_id = $(this).attr('data-sid') || ''; 
-        if(suggestion_id){
-            let element = document.querySelector(`[suggestion_id="${suggestion_id}"]`) || document.querySelector(`[id="${suggestion_id}"]`);
-            if(!element){
+        const suggestion_id = $(this).attr('data-sid') || '';
+        if (suggestion_id) {
+            let sgAlignsElements = document.querySelector(`[lock_sg_id="${suggestion_id}"]`) || document.querySelector(`[textAlign_sg_id="${suggestion_id}"]`) || document.querySelector(`[align_sg_id="${suggestion_id}"]`); // For the block level align, lock suggestions @author - Mayank / since 3.6
+            let element = document.querySelector(`[suggestion_id="${suggestion_id}"]`) || document.querySelector(`[id="${suggestion_id}"]`) || sgAlignsElements;
+            if (!element) {
                 $(this).remove();
             }
         }
@@ -53,7 +54,7 @@
        when block level sugggestions are created  */
     /* <fs_premium_only> */
     $(document).on("onBlockLevelSuggestionUpdate", function () {
-        const checkHTMLNodes = [ 'UL', 'FIGURE', 'BLOCKQUOTE', 'DIV', 'NAV' ];
+        const checkHTMLNodes = ['UL', 'FIGURE', 'BLOCKQUOTE', 'DIV', 'NAV'];
         $(".wp-block").each(function () {
 
 
@@ -73,52 +74,52 @@
                 $(this).removeClass('mdformatblockClass');
             }
 
-            if ( !$(this).hasClass('blockAdded') && $(this).attr('data-block') ) { // To solve the custom Block add suggestion problem @Author Mayank
-                const blockDetail = wp.data.select( 'core/editor' ).getBlock( $(this).attr('data-block') );
-                if(blockDetail){
+            if (!$(this).hasClass('blockAdded') && $(this).attr('data-block')) { // To solve the custom Block add suggestion problem @Author Mayank
+                const blockDetail = wp.data.select('core/editor').getBlock($(this).attr('data-block'));
+                if (blockDetail) {
                     const blockClasses = blockDetail?.attributes?.className;
-                    if ( blockClasses && blockClasses.includes( 'blockAdded' ) ) {
+                    if (blockClasses && blockClasses.includes('blockAdded')) {
                         $(this).addClass(blockClasses);
                     }
-                }               
-            
+                }
+
             }
 
             // Code optimized for user id @author - Mayank / since 3.5
             let user_id = '';
-            if($(this).hasClass('blockAdded') || $(this).hasClass('blockremove')){
+            if ($(this).hasClass('blockAdded') || $(this).hasClass('blockremove')) {
                 const $spanElement = $(this);
                 // Loop through the classes on the span element
-                $spanElement.each(function() {
+                $spanElement.each(function () {
                     const classes = $(this).attr('class').split(' ');
-                    $.each(classes, function(i, className) {
-                    // Check if the class matches the user_id or unique_id pattern
-                    if (className.match(/^user_id-\d+$/)) {
-                        // This is a user_id class, get the random number and save it to a variable
-                        user_id = className.split('-')[1] ?? '';
-                    }
+                    $.each(classes, function (i, className) {
+                        // Check if the class matches the user_id or unique_id pattern
+                        if (className.match(/^user_id-\d+$/)) {
+                            // This is a user_id class, get the random number and save it to a variable
+                            user_id = className.split('-')[1] ?? '';
+                        }
                     });
                 });
             }
 
             if ($(this).find('.wp-block').length === 0 && $(this).hasClass('blockAdded')) {
-                 
-                if(user_id){
-                    $(this).attr('data-uid', user_id);
-                }
-                
-                //fix for 5.6
-                $(this).attr('data-sgblockAdded', true);
-                
-            } else if($(this).find('.wp-block').length > 0 && checkHTMLNodes.includes($(this).first().prop("nodeName")) && $(this).hasClass('blockAdded')){
 
-                if(user_id){
+                if (user_id) {
                     $(this).attr('data-uid', user_id);
                 }
-                
+
                 //fix for 5.6
                 $(this).attr('data-sgblockAdded', true);
-                
+
+            } else if ($(this).find('.wp-block').length > 0 && checkHTMLNodes.includes($(this).first().prop("nodeName")) && $(this).hasClass('blockAdded')) {
+
+                if (user_id) {
+                    $(this).attr('data-uid', user_id);
+                }
+
+                //fix for 5.6
+                $(this).attr('data-sgblockAdded', true);
+
             } else {
                 //fix for 5.6
                 $(this).removeAttr('data-sgblockAdded');
@@ -134,19 +135,19 @@
                 $(this).removeAttr('data-sgheading');
             }
 
-            if ( !$(this).hasClass('blockremove') && $(this).attr('data-block') ) { // To solve the custom Block remove suggestion problem @Author Mayank
-                const blockDetail = wp.data.select( 'core/editor' ).getBlock( $(this).attr('data-block') );
-                if(blockDetail){
+            if (!$(this).hasClass('blockremove') && $(this).attr('data-block')) { // To solve the custom Block remove suggestion problem @Author Mayank
+                const blockDetail = wp.data.select('core/editor').getBlock($(this).attr('data-block'));
+                if (blockDetail) {
                     const blockClasses = blockDetail?.attributes?.className;
-                    if ( blockClasses && blockClasses.includes( 'blockremove' ) ) {
+                    if (blockClasses && blockClasses.includes('blockremove')) {
                         $(this).addClass(blockClasses);
                     }
-                }               
-            
+                }
+
             }
 
             if ($(this).find('.wp-block').length === 0 && $(this).hasClass('blockremove')) {
-                if(user_id){
+                if (user_id) {
                     $(this).attr('data-uid', user_id);
                 }
                 $(this).addClass('mdremoved');
@@ -154,7 +155,7 @@
                 //fix for 5.6
                 $(this).attr('data-sgremove', true);
             } else if ($(this).find('.wp-block').length > 0 && checkHTMLNodes.includes($(this).first().prop("nodeName")) && $(this).hasClass('blockremove')) {
-                if(user_id){
+                if (user_id) {
                     $(this).attr('data-uid', user_id);
                 }
                 $(this).addClass('mdremoved');
@@ -291,6 +292,16 @@
         $(this).parents(".user-data-row").find(".show-all-comments").hide();
     });
 
+    function addBorderToAlignmentBlock(block) {  // Resolved #633 issue @author - Mayank
+        var children = block.querySelectorAll('*');
+        for (var i = 0; i < children.length; i++) {
+          if (children[i].classList.contains('alignupdate') || children[i].classList.contains('textalignupdate') || children[i].classList.contains('lockupdate') || children[i].classList.contains('headingupdate')) {
+            block.style.border = '2px solid #188651';
+            break;
+          }
+        }
+    }
+
     /* editor layout update action trigger for commentOn class  */
     $(document).on("editorLayoutUpdate", function () {
 
@@ -308,16 +319,26 @@
                 $('body').removeClass("commentOn");
             }
         }
+        // Resolved #633 issue @author - Mayank
+        var browser = (function (agent) {
+            switch (true) {
+                case agent.indexOf("firefox") > -1: return "firefox";
+                default: return "other";
+            }
+        })(window.navigator.userAgent.toLowerCase());
+        if ('firefox' === browser) {
+            document.querySelectorAll('.wp-block').forEach(addBorderToAlignmentBlock);  // Resolved #633 issue @author - Mayank
+        }
     });
 
     // alert(  );
     // Stripping out unwanted <mdspan> tags from the content.
     $(window).on('load', function () {
-    
+
         var findMdSpan = 'mdspan';
         $(findMdSpan).each(function () {
             var datatext = $(this).attr('datatext');
-          
+
             if (undefined === datatext) {
                 $(this).replaceWith(DOMPurify.sanitize($(this).text())); // phpcs:ignore
             }
@@ -357,7 +378,7 @@
         $('.cf-share-comment').addClass('comment-focus');
 
         // Solved overlap issue for adding comment on suggestion. @author: Rishi Shah.
-        $('.cls-board-outer').removeClass( 'focus onGoing' );
+        $('.cls-board-outer').removeClass('focus onGoing');
         $(this).parent().closest('.cls-board-outer').addClass('focus onGoing');
 
         // commented for (save button activated when mention user available at last and press arrow keys) /@author Meet Mehta /@since VIP Plan
@@ -369,7 +390,7 @@
         //var focusParentElement = $(this).parent().parent().parent().parent().attr('id');
         var focusParentElement = $(this).closest('.cls-board-outer').attr('id');
         $('#' + focusParentElement).css('opacity', '1');
-        $('#' + focusParentElement).css('z-index', '999999');
+        //$('#' + focusParentElement).css('z-index', '999999');
         $(".cls-board-outer:not(#" + focusParentElement + ")").css('top', '0');
 
     })
@@ -380,7 +401,7 @@
 
     $(document).on('click', '.cf-sidebar-settings', function () {
         if ($('body').hasClass('commentOn')) {
-            $('.comment-toggle .components-form-toggle').removeClass('is-checked');
+            // $('.comment-toggle .components-form-toggle').removeClass('is-checked'); // commented this to resolve comment toggle issue.
             //$('.comment-toggle .components-base-control__help').html('All comments will show on the content area.');
         }
     })
@@ -390,10 +411,10 @@
     //$('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
     // On Document Ready Event.
     $(document).ready(function () {
-        
+
         // Editor layout width changes sidebar multicollab btn click @author: Minal Diwan @since-3.3
         $(document).on('click', '.interface-pinned-items .components-button,.edit-post-header-toolbar__inserter-toggle', function (e) {
-            setTimeout(function(){
+            setTimeout(function () {
                 var ediLayot = document.querySelector(".editor-styles-wrapper");
                 var cmntLayout = document.querySelector("#cf-comments-suggestions__parent");
                 var ediLayotWidth = ediLayot?.offsetWidth;
@@ -405,9 +426,9 @@
                 const elid = $('#cf-span__comments').find('.cls-board-outer.focus').attr('id');
                 let topOfText;
                 function mdboardOffset() {
-                    setTimeout(function(){
+                    setTimeout(function () {
                         var totalOpenBoardsIds = document.querySelectorAll('.cls-board-outer.is-open');
-                        if( totalOpenBoardsIds.length >= 2 ) {
+                        if (totalOpenBoardsIds.length >= 2) {
 
                             let topOfTextSingleBoardSuggestion;
                             let topOfTextSingleBoardComment;
@@ -421,11 +442,11 @@
 
                             for (var i = 0; i < totalOpenBoardsIds.length; ++i) {
                                 var singleBoardId = totalOpenBoardsIds[i].id;
-                                if(undefined !== singleBoardId ){
+                                if (undefined !== singleBoardId) {
                                     if (singleBoardId.match(/^el/m) === null) {
                                         topOfTextSingleBoardSuggestion = $('#' + singleBoardId + '').offset().top;
                                         singleBoardIdSuggestion = 'sg' + singleBoardId;
-                                        if( counter === 0 ) {
+                                        if (counter === 0) {
                                             FirstsingleBoardIdSuggestion = 'sg' + singleBoardId;
                                         }
                                         combineBoardId = 'sg' + singleBoardId;
@@ -436,26 +457,26 @@
                                         combineBoardId = singleBoardId;
                                     }
                                 }
-                                if( FirstsingleBoardIdSuggestion ) {
+                                if (FirstsingleBoardIdSuggestion) {
                                     FirstSuggestionBoardOuterHeight = document.querySelector('#' + FirstsingleBoardIdSuggestion)?.offsetHeight;
                                 }
                                 $('#' + combineBoardId).css('opacity', '1');
                                 $('#' + combineBoardId).addClass('is-open');
-                                $('#' + combineBoardId).addClass('focus onGoing'); 
+                                $('#' + combineBoardId).addClass('focus onGoing');
 
                             }
 
-                            if (document.querySelector('#' + singleBoardIdSuggestion) ) {
+                            if (document.querySelector('#' + singleBoardIdSuggestion)) {
                                 SuggestionBoardOuterHeight = document.querySelector('#' + singleBoardIdSuggestion).offsetHeight;
                                 $('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
-                                
+
                                 // Add floating board adjustment for multi-suggestion. @author: Rishi Shah @since: 3.4
-                                if( 2 === counter && FirstsingleBoardIdSuggestion ) {
+                                if (2 === counter && FirstsingleBoardIdSuggestion) {
                                     $('#' + FirstsingleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
-                                    $('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion + FirstSuggestionBoardOuterHeight + 20 });    
+                                    $('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion + FirstSuggestionBoardOuterHeight + 20 });
                                 }
-                                if( false === $( '#' + singleBoardIdComment + ', .board' ).hasClass('fresh-board') ) {
-                                    if( 2 === counter && FirstsingleBoardIdSuggestion ) {
+                                if (false === $('#' + singleBoardIdComment + ', .board').hasClass('fresh-board')) {
+                                    if (2 === counter && FirstsingleBoardIdSuggestion) {
                                         $('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + FirstSuggestionBoardOuterHeight + 40 });
                                     } else {
                                         $('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + 20 });
@@ -466,41 +487,41 @@
                                 // Adding sg-format-class class on selected text. @author: Minal Diwan @since: 3.4
                                 //$('#' + singleBoardId).addClass('sg-format-class');
                                 var underlineAllAttr = document.querySelectorAll('[data-rich-text-format-boundary="true"]');
-                                if( underlineAllAttr ) {
+                                if (underlineAllAttr) {
                                     for (var singleElement = 0; singleElement < underlineAllAttr.length; ++singleElement) {
-                                        if( underlineAllAttr[singleElement].classList.contains('mdadded') || underlineAllAttr[singleElement].classList.contains('mdremoved') ) {
-                                            if( singleBoardId !== underlineAllAttr[singleElement].id ) {
-                                                jQuery( '#' + underlineAllAttr[singleElement].id ).attr('data-rich-text-format-boundary', false);
+                                        if (underlineAllAttr[singleElement].classList.contains('mdadded') || underlineAllAttr[singleElement].classList.contains('mdremoved')) {
+                                            if (singleBoardId !== underlineAllAttr[singleElement].id) {
+                                                jQuery('#' + underlineAllAttr[singleElement].id).attr('data-rich-text-format-boundary', false);
                                             } else {
-                                                jQuery( '#' + underlineAllAttr[singleElement].id ).attr('data-rich-text-format-boundary', true);
+                                                jQuery('#' + underlineAllAttr[singleElement].id).attr('data-rich-text-format-boundary', true);
                                             }
-                                        } else if( underlineAllAttr[singleElement].parentNode.classList.contains('mdmodified') ) {
-                                            if( singleBoardId !== underlineAllAttr[singleElement].parentNode.id ) {
-                                                jQuery( '#' + underlineAllAttr[singleElement].parentNode.id ).children().attr('data-rich-text-format-boundary', false);
+                                        } else if (underlineAllAttr[singleElement].parentNode.classList.contains('mdmodified')) {
+                                            if (singleBoardId !== underlineAllAttr[singleElement].parentNode.id) {
+                                                jQuery('#' + underlineAllAttr[singleElement].parentNode.id).children().attr('data-rich-text-format-boundary', false);
                                             } else {
-                                                jQuery( '#' + underlineAllAttr[singleElement].parentNode.id ).children().attr('data-rich-text-format-boundary', true);
+                                                jQuery('#' + underlineAllAttr[singleElement].parentNode.id).children().attr('data-rich-text-format-boundary', true);
                                             }
-                                        } else if( underlineAllAttr[singleElement].classList.contains('mdspan-comment') ) {
+                                        } else if (underlineAllAttr[singleElement].classList.contains('mdspan-comment')) {
                                             var suggestionId = underlineAllAttr[singleElement].getAttribute('datatext');
-                                            if( singleBoardId !== suggestionId ) {
-                                                jQuery('[datatext="'+suggestionId+'"]').attr('data-rich-text-format-boundary', false);
+                                            if (singleBoardId !== suggestionId) {
+                                                jQuery('[datatext="' + suggestionId + '"]').attr('data-rich-text-format-boundary', false);
                                             } else {
-                                                jQuery('[datatext="'+suggestionId+'"]').attr('data-rich-text-format-boundary', true);
+                                                jQuery('[datatext="' + suggestionId + '"]').attr('data-rich-text-format-boundary', true);
                                             }
-                                            
+
                                         }
                                     }
                                 }
                                 scrollBoardToPosition(topOfTextSingleBoardSuggestion);
                             }
                         } else {
-                             if ($('#cf-span__comments').find('.cls-board-outer').hasClass('focus')) {
+                            if ($('#cf-span__comments').find('.cls-board-outer').hasClass('focus')) {
                                 if (elid && elid.match(/^el/m) !== null) {
                                     topOfText = $('[datatext="' + elid + '"]').offset().top;
                                 } else {
                                     let sid = $('#' + elid).attr('data-sid');
                                     topOfText = $('[id="' + sid + '"]').offset()?.top;
-                                    if(!topOfText){
+                                    if (!topOfText) {
                                         topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
                                     }
                                 }
@@ -509,16 +530,16 @@
                             }
                         }
 
-                    },800);
+                    }, 800);
                 }
-                if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild){
+                if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild) {
                     mdboardOffset();
                     document.querySelector(".is-root-container.block-editor-block-list__layout").style.width = calcLyotWidth + "px";
-                }   else {
+                } else {
                     mdboardOffset();
                     document.querySelector(".is-root-container.block-editor-block-list__layout").style.width = calcLyotWidth + "px";
                 }
-            },100);
+            }, 100);
         });
 
         // Add loader on setting page loading. @author: Rishi @since-3.0
@@ -575,7 +596,7 @@
         });
 
 
-        // Save Settings.
+        // Save General Settings.
         $('#cf_settings').on('submit', function (e) {
             e.preventDefault();
             $(this).find('[type="submit"]').addClass('loading');
@@ -701,23 +722,6 @@
             $('input.cf_suggestion_stop_publish_options').not(this).prop('checked', false);
         });
 
-        // Save Publishing Settings.
-        $('#cf_suggestion_settings').on('submit', function (e) {
-            e.preventDefault();
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_save_suggestions',
-                'formData': $(this).serialize()
-            };
-            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
-                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                $('#cf_settings .cf-success').slideDown(300);
-                setTimeout(function () {
-                    $('#cf_settings .cf-success').slideUp(300);
-                }, 3000);
-            });
-        });
-
         // Save Settings for slack intigration.
         $('#cf_slack_intigration').on('submit', function (e) {
             e.preventDefault();
@@ -778,12 +782,12 @@
         // Activate license.
         $('#cf_license').on('submit', function (e) {
             e.preventDefault();
-            
+
             jQuery('.cf-license-notices').hide();
             jQuery('.cf-license-notices').html('');
             jQuery('.cf-license-sucess').hide();
             jQuery('.cf-license-sucess').html('');
-            jQuery('#cf-license-activator-submit').attr( 'disabled' , "disabled" );
+            jQuery('#cf-license-activator-submit').attr('disabled', "disabled");
 
             $(this).find('[type="submit"]').addClass('loading');
             const settingsData = {
@@ -791,70 +795,70 @@
                 'formData': $(this).serialize()
             };
             $.post(ajaxurl, settingsData, function (response) { // eslint-disable-line
-               if( 'invalid' === response ) {
+                if ('invalid' === response) {
                     jQuery('.cf-license-notices').html('<div class="cf-notice notice notice-error is-dismissible"><p>The license failed to activate, due to a status of <code>invalid</code>.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
                     jQuery('.cf-license-notices').show();
                     jQuery('.license_check_status').hide();
 
-               } else if( 'deactivated' === response ){
+                } else if ('deactivated' === response) {
 
                     jQuery('#cf-license-activator').val('');
 
                     // jQuery('.cf-license-sucess').html('<span>License key is deactivated.</span>');
                     // jQuery('.cf-license-sucess').show();
                     window.location.href += '&view=license';
-                // Change button text.
-                edd_change_active_license_text();
+                    // Change button text.
+                    edd_change_active_license_text();
 
-               } else if( 'expired' === response ){
+                } else if ('expired' === response) {
 
                     jQuery('#cf-license-activator').val('');
 
                     jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>License key is expired please try with different key.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
                     jQuery('.cf-license-sucess').show();
 
-                // Change button text.
-                edd_change_active_license_text();
+                    // Change button text.
+                    edd_change_active_license_text();
 
-               } else if( 'revoked' === response ){
+                } else if ('revoked' === response) {
 
                     jQuery('#cf-license-activator').val('');
 
                     jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has been disabled.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
                     jQuery('.cf-license-sucess').show();
 
-                // Change button text.
-                edd_change_active_license_text();
+                    // Change button text.
+                    edd_change_active_license_text();
 
-               } else if( 'missing' === response ){
+                } else if ('missing' === response) {
 
                     jQuery('#cf-license-activator').val('');
 
                     jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Invalid license.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
                     jQuery('.cf-license-sucess').show();
 
-                // Change button text.
-                edd_change_active_license_text();
+                    // Change button text.
+                    edd_change_active_license_text();
 
-               } else if( 'no_activations_left' === response ){
+                } else if ('no_activations_left' === response) {
 
                     jQuery('#cf-license-activator').val('');
 
                     jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has reached its activation limit.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
                     jQuery('.cf-license-sucess').show();
 
-                // Change button text.
-                edd_change_active_license_text();
+                    // Change button text.
+                    edd_change_active_license_text();
 
-               } else if( 'site_inactive' === response ){
+                } else if ('site_inactive' === response) {
 
                     jQuery('#cf-license-activator').val('');
 
                     jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license is not active for this URL.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
                     jQuery('.cf-license-sucess').show();
 
-                // Change button text.
-                edd_change_active_license_text();
+                    // Change button text.
+                    edd_change_active_license_text();
 
                 } else {
 
@@ -869,7 +873,7 @@
 
                 }
 
-               jQuery('#cf-license-activator-submit').removeAttr( 'disabled' );
+                jQuery('#cf-license-activator-submit').removeAttr('disabled');
 
             });
         });
@@ -927,21 +931,21 @@
 
             $('.btn-wrapper').css('display', 'none');
             removeFloatingIcon();
-            _this.addClass('focus'); 
+            _this.addClass('focus');
             _this.addClass('is-open');
-            _this.css('opacity', '1'); 
+            _this.css('opacity', '1');
 
             const selectedText = _this.attr('id');
             let topOfText;
             if (selectedText.match(/^el/m) !== null) {
                 topOfText = $('[datatext="' + selectedText + '"]').offset().top;
-                if($('[datatext="' + selectedText + '"]').hasClass('cf-icon-wholeblock__comment')){ // To support block suggetion and whole block comment @author - Mayank / since 3.5
+                if ($('[datatext="' + selectedText + '"]').hasClass('cf-icon-wholeblock__comment')) { // To support block suggetion and whole block comment @author - Mayank / since 3.5
                     $('[datatext="' + selectedText + '"]').addClass('focus');
                 }
             } else {
                 let sid = $('#' + selectedText).attr('data-sid');
                 topOfText = $('[id="' + sid + '"]').offset()?.top;
-                if(!topOfText){ // To support block suggetion and whole block comment @author - Mayank / since 3.5
+                if (!topOfText) { // To support block suggetion and whole block comment @author - Mayank / since 3.5
                     topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
                     $('[data-suggestion_id="' + sid + '"]').addClass('focus');
                 }
@@ -949,11 +953,11 @@
 
             }
 
-            setTimeout(function(){
+            setTimeout(function () {
                 scrollBoardToPosition(topOfText);
-                _this.offset({ top: topOfText });                    
-            },800);
-            
+                _this.offset({ top: topOfText });
+            }, 800);
+
             $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
             $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
 
@@ -997,17 +1001,17 @@
         //Set board top offset from activity center @author: Minal Diwan @since-3.4
         $(document).on('click', '.user-commented-on,.cf-activity-centre .user-action a', function (e) {
             var elID = e.target.dataset.elid;
-            if( elID ){
+            if (elID) {
                 elID = elID.replace('cf-', '');
                 $(`#${elID}`).trigger('click');
-                setTimeout(function(){
+                setTimeout(function () {
                     let topOfText;
                     if (elID.match(/^el/m) !== null) {
                         topOfText = $('[datatext="' + elID + '"]').offset().top;
                     } else {
                         let sid = $('#' + elID).attr('data-sid');
                         topOfText = $('[id="' + sid + '"]').offset()?.top;
-                        if(!topOfText){
+                        if (!topOfText) {
                             topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
                         }
                         $('#' + sid).addClass('sg-format-class');
@@ -1017,22 +1021,22 @@
                     $('#cf-span__comments .cls-board-outer').removeClass('focus');
                     $('#cf-span__comments .cls-board-outer').removeClass('is-open');
                     $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
-                
+
                     $('#' + elID + '.cls-board-outer').addClass('focus');
                     $('#' + elID + '.cls-board-outer').addClass('is-open');
                     $('#' + elID + '.cls-board-outer').css('opacity', '1');
 
-                                
+
                     scrollBoardToPosition(topOfText);
 
                     $('#' + elID + '.cls-board-outer').offset({ top: topOfText });
 
-                },800);
+                }, 800);
             }
         });
 
 
-        
+
         // Email List Template Function.
         var emailList = function (appendTo, data) {
             setTimeout(function () {
@@ -1390,13 +1394,13 @@
 
 
                 var keynum;
-                if(window.event) { // IE                  
+                if (window.event) { // IE                  
                     keynum = e.keyCode;
-                } else if(e.which){ // Netscape/Firefox/Opera                 
+                } else if (e.which) { // Netscape/Firefox/Opera                 
                     keynum = e.which;
                 }
 
-                if ( '@' === String.fromCharCode(keynum) || '@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true && '2' !== e.key) { // Removed 'KeyG' === e.code consition in first or consitions. @author: Rishi Shah.
+                if ('@' === String.fromCharCode(keynum) || '@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true && '2' !== e.key) { // Removed 'KeyG' === e.code consition in first or consitions. @author: Rishi Shah.
                     doingAjax = true;
                     // Fetch all email list.
                     doingAjax = false;
@@ -1416,7 +1420,7 @@
                                 var words = preText.split(" ");
                                 var prevWords = (words[words.length - 1]);
                             }
-                            if ('@' === prevWords || ('keypress' === e.type && '@' === String.fromCharCode(keynum))  ) {
+                            if ('@' === prevWords || ('keypress' === e.type && '@' === String.fromCharCode(keynum))) {
                                 prevWords = '@';
                                 showSuggestionFunc = showSuggestion(prevWords);
                             }
@@ -1424,12 +1428,12 @@
                         }
                     }
                     if (showSuggestionFunc && mentioncounter <= 1 && !doingAjax) {
-                        if('keypress' === e.type || 'keyup' === e.type ){
+                        if ('keypress' === e.type || 'keyup' === e.type) {
                             mentioncounter = 0;
                         }
-                        if( 'keypress' === e.type && true === $(createTextarea).is(':focus') ){
-                            isEmail = true;           
-                         
+                        if ('keypress' === e.type && true === $(createTextarea).is(':focus')) {
+                            isEmail = true;
+
                             $.ajax({
                                 url: ajaxurl, // eslint-disable-line
                                 type: 'post',
@@ -1454,13 +1458,13 @@
                     }
                 }
 
-                if ( 'keypress' !== e.type && 'Backspace' === e.key && (typedText && typedText.length > 0)) {
+                if ('keypress' !== e.type && 'Backspace' === e.key && (typedText && typedText.length > 0)) {
                     let currentTextAt = typedText.substr(-1, 1);
                     var sel = document.getSelection();
-                    var selNodeChar = sel?.baseNode?.data?.charAt(sel.anchorOffset-1) || sel?.anchorNode?.data?.charAt(sel.anchorOffset-1);
+                    var selNodeChar = sel?.baseNode?.data?.charAt(sel.anchorOffset - 1) || sel?.anchorNode?.data?.charAt(sel.anchorOffset - 1);
 
-                    if ('@' === currentTextAt || '@' === typedText.charAt(cursorPos-1) || '@' === selNodeChar ) {
-                        isEmail = true;           
+                    if ('@' === currentTextAt || '@' === typedText.charAt(cursorPos - 1) || '@' === selNodeChar) {
+                        isEmail = true;
 
                         $.ajax({
                             url: ajaxurl, // eslint-disable-line
@@ -1508,7 +1512,7 @@
 
                         // Check for backspace.
                         //console.log( e.key );
-                        if('keypress' !== e.type){
+                        if ('keypress' !== e.type) {
                             if ('Backspace' === e.key) {
                                 //alert("single backspace");
                                 let prevCharOfEmailSymbol = typedText.substr(-1, 1);
@@ -1764,16 +1768,18 @@
                 let thisUserEmail = $(this).find(".cf-user-list-item.active").attr('data-email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).attr('data-user-id');
                 const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                    checkbox = `
-                    <div class="cf-assign-to">
-                    <div class="cf-assign-to-inner">
-                        <label for="${el}-cf-assign-to-user">
-                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                        </label>
-                        <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                    </div>
-                    </div>`;
                 
+                checkbox = `
+                <div class="cf-assign-to">
+                <div class="cf-assign-to-inner">
+                    <label for="${el}-cf-assign-to-user">
+                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
+                    </label>
+                    <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+                </div>
+                <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
+                </div>`;
+
                 if ('' !== el) {
                     if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
                         $(`#${el} ${checkBoxContainer}`).empty();
@@ -1805,29 +1811,30 @@
                 let thisUserEmail = $(this).data('email');
                 let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).data('user-id');
                 const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                    checkbox = `
-                <div class="cf-assign-to">
-                <div class="cf-assign-to-inner">
-                    <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${assigntoText} ${thisDisplayName}</i>
-                    </label>
-                    <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                </div>
-                </div>`;
-
                 
-                // Get the assigner id of the current board.
-                let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
-                if (thisUserId !== currentBoardAssingerID) {
-                    if ('' !== el) {
-                        if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
-                            $(`#${el} ${checkBoxContainer}`).empty();
-                            checkbox = DOMPurify.sanitize(checkbox);
-                            $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
-                        }
-                    }
+                let assignToElement = $(`#${el} ${checkBoxContainer}`);
+                if (assignToElement.length === 0) {
+                    checkbox = `
+                    <div class="cf-assign-to">
+                    <div class="cf-assign-to-inner">
+                        <label for="${el}-cf-assign-to-user">
+                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
+                        </label>
+                        <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+                    </div>
+                    <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
+                    </div>`;
+                    checkbox = DOMPurify.sanitize(checkbox);
+                    $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
                 }
-
+                
+                //change assignee message when checkbox selected
+                
+                $(document).on("click", '#' + el + '-cf-assign-to-user', function () {
+                    var checked = $('#' + el + ' .cf-assign-to-user').is(':checked');
+                    $('#' + el + ' .assignMessage').text(checked ? __('The Assigned person will be notified and responsible for marking as done.', 'content-collaboration-inline-commenting') : __('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting'));
+                });
+                
             });
 
             // On Assignable Email Click.
@@ -1844,15 +1851,17 @@
                     let thisDisplayName = $(this).data('display-name');
                     let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
                     const assigntoText = (currentBoardAssingerID) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                        checkbox = `
-                            <div class="cf-assign-to-inner">
-                                <label for="${el}-cf-assign-to-user">
-                                    <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                                </label>
-                                <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
-                            </div>`;
                     
-
+                    checkbox = `
+                        <div class="cf-assign-to-inner">
+                            <label for="${el}-cf-assign-to-user">
+                                <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
+                            </label>
+                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
+                        </div>    
+                        <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>  
+                    `;
+                   
                     let checkboxFragments = document.createRange().createContextualFragment(checkbox);
                     let appendToSelector = document.querySelector(appendTo);
                     appendToSelector.innerHTML = '';
@@ -2134,6 +2143,43 @@
         }
     });
 
+    $(document).on('click', '.show_activity_details', function () {
+        let postID = $(this).attr('data-id');
+        $.ajax({
+            url: ajaxurl, // eslint-disable-line
+            type: 'post',
+            data: {
+                action: 'cf_get_activity_details',
+                postID: postID,
+            },
+            success: function (result) {
+                $("html, body").animate({ scrollTop: 200 });
+                $('.board-items-main.list-view').fadeOut();
+                $('.board-items-main.detail-view').fadeIn();
+                $('#board-item-detail').fadeIn().html(result); //phpcs:ignore
+                $('.bulkactions').hide();
+            }
+        });
+    });
+
+    $(document).on('click', '.cf-tabs li:not(.cf_subscription_tab)', function () {
+        var dataId = jQuery('.cf-tab-active a').attr('data-id');
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var current_url = urlParams.get('page');
+        var curruntUrl = location.protocol + '//' + location.host + location.pathname + '?page=' + current_url;
+
+        if ('cf-dashboard' === dataId) {
+            window.location.href = curruntUrl + '&view=web-activity';
+        } else if ('cf-reports' === dataId) {
+            window.location.href = curruntUrl + '&view=post-activity';
+        } else if ('cf-settings' === dataId) {
+            window.location.href = curruntUrl + '&view=settings';
+        } else if ('cf-roles-slack-integration' === dataId) {
+            window.location.href = curruntUrl + '&view=intigrations';
+        }
+    });
+
     $(document).on('click', '#activity-go-back', function () {
         $('.board-items-main.list-view').fadeIn();
         $('.board-items-main.detail-view').fadeOut();
@@ -2168,7 +2214,7 @@
     });
 
     $(document).ready(function () {
-        
+
         //Show hide notification Tooltip /@author Minal Diwan/@since VIP Plan
         $(document).on('click', '.md-plugin-tooltip svg', function (e) {
             e.preventDefault();
@@ -2509,6 +2555,7 @@ function filterTextBeforeSave(newText) {
     if (isSafari || isChrome) {
         newText = newText.replace(/<div>/igm, ' <br> ');
         newText = newText.replace(/<\/div>/igm, '');
+        newText = newText.replace(/<\/?span[^>]*>/g, ''); // Resolved #512 multiline comment bug @author - Mayank / since 3.6
     }
     var link;
     // Adding anchor tag around the linkable text.
@@ -2699,7 +2746,7 @@ function showNoticeBoardonNewComments() {
             noticeboard = document.getElementById("cf-board__notice");
         }
         setTimeout(function () {
-            if( noticeboard !== null ) {
+            if (noticeboard !== null) {
                 // if( noticeboard.innerHTML === "" ){
                 //     noticeboard.setAttribute('style','display:none');
                 // } else {

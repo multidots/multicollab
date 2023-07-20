@@ -25,7 +25,7 @@ if( ! class_exists('CF_EDD') ) :
 			$license_options = get_option( 'cf_activated_license_details' );
 			$license_data    = maybe_unserialize( $license_options );
 			if ( ! empty( $license_data ) ) {
-				return strtolower($license_data->item_name);
+				return strtolower( $license_data->item_name );
 			} else {
 				return false;
 			}
@@ -83,16 +83,39 @@ if( ! class_exists('CF_EDD') ) :
 		public function is_premium() {
 
 			$license_options = get_option( 'cf_activated_license_details' );
-			
-			$license_data    = maybe_unserialize( $license_options );
+
+			$license_data = maybe_unserialize( $license_options );
 			if ( ! empty( $license_data ) ) {
-				if ( 'valid' === $license_data->license_status && ( EDD_PLAN_PLUS === $license_data->item_id || EDD_PLAN_PRO === $license_data->item_id || EDD_PLAN_VIP === $license_data->item_id ) ) {
+				if ( 'valid' === $license_data->license_status && ( EDD_PLAN_PRO == $license_data->item_id ) ) {
 					return true;
 				} else {
 					return false;
 				}
 			} else {
 				return false;
+			}
+
+		}
+
+
+		/**
+		 * Return true if plan is valid and free.
+		 *
+		 * @return boolean
+		 */
+		public function is_free() {
+
+			$license_options = get_option( 'cf_activated_license_details' );
+
+			$license_data = maybe_unserialize( $license_options );
+			if ( ! empty( $license_data ) ) {
+				if ( 'valid' === $license_data->license_status && ( EDD_PLAN_PRO == $license_data->item_id ) ) {
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				return true;
 			}
 
 		}
@@ -121,9 +144,9 @@ if( ! class_exists('CF_EDD') ) :
 			$license_options = get_option( 'cf_activated_license_details' );
 			$license_data    = maybe_unserialize( $license_options );
 
-			$license_data    = maybe_unserialize( $license_options );
+			$license_data = maybe_unserialize( $license_options );
 			if ( ! empty( $license_data ) ) {
-				if ( 'valid' === $license_data->license_status && ( EDD_PLAN_PLUS === $license_data->item_id || EDD_PLAN_PRO === $license_data->item_id || EDD_PLAN_VIP === $license_data->item_id ) ) {
+				if ( 'valid' === $license_data->license_status && ( EDD_PLAN_PRO == $license_data->item_id ) ) {
 					return true;
 				} else {
 					return false;
@@ -137,9 +160,9 @@ if( ! class_exists('CF_EDD') ) :
 			$license_options = get_option( 'cf_activated_license_details' );
 			$license_data    = maybe_unserialize( $license_options );
 
-			$license_data    = maybe_unserialize( $license_options );
+			$license_data = maybe_unserialize( $license_options );
 			if ( ! empty( $license_data ) ) {
-				if ( 'valid' === $license_data->license_status && ( EDD_PLAN_PLUS === $license_data->item_id || EDD_PLAN_PRO === $license_data->item_id || EDD_PLAN_VIP === $license_data->item_id ) ) {
+				if ( 'valid' === $license_data->license_status && ( EDD_PLAN_PRO == $license_data->item_id ) ) {
 					return true;
 				} else {
 					return false;

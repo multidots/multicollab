@@ -1,8 +1,8 @@
 var $ = jQuery;
 $(document).ready(function () {
 
-    $(document).on('click', '[data-plugin="' + multicollab_plugin_path + '"] a', function () {
-        var snooze_free_deactivate_popup = getCookie("snooze_free_deactivate_popup");
+    $(document).on('click', '[data-plugin="' + multicollab_plugin_path.plugin_path + '"] a', function () {
+        var snooze_free_deactivate_popup = getCookieDeactive("snooze_free_deactivate_popup");
         if( 'yes' !== snooze_free_deactivate_popup ) {
             jQuery('#cf_plugin_deacmodal').addClass('cf_plugin_deacmodal cf_plugin_freedeacmodal cf_visible');
             return false;
@@ -95,3 +95,25 @@ $(document).ready(function () {
     });
 
 });
+
+function getCookieDeactive(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+//set cookies
+function setCookie(name, value, minutes) {
+    var expires = "";
+    if (minutes) {
+        var date = new Date();
+        date.setTime(date.getTime() + (minutes * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
