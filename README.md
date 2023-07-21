@@ -1,4 +1,4 @@
-# Multicollab — Google Doc-Style Editorial Collaboration for WordPress
+# Multicollab — Google Docs-Style Editorial Collaboration for WordPress
 
 <p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://user-images.githubusercontent.com/82029773/196437606-feb8a469-0588-4d4e-8f43-f4b31098b0c7.jpg" alt="Commenting Demo"></a></p>
 
