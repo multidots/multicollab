@@ -175,7 +175,7 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 					'lastUser'          => $editedLastUser,
 					'defaultAuthor'     => $defaultAuthor,
 					'defaultAuthorLink' => $defaultAuthorLink,
-					'defaultUserRole'   => $Defaultusers->roles[0],
+					'defaultUserRole'   => $Defaultusers->roles[0] ?? '',
 					'lastEditedTime'    => $lasteditedtime,
 					'lastUsersUrl'      => $lasteditedUsersUrl,
 					'type'              => 'el',
