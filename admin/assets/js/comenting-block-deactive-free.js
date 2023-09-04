@@ -1,7 +1,7 @@
 var $ = jQuery;
 $(document).ready(function () {
 
-    $(document).on('click', '[data-plugin="' + multicollab_plugin_path.plugin_path + '"] a', function () {
+    $(document).on('click', '[data-plugin="' + multicollab_plugin_path.plugin_path + '"] .deactivate a', function () {
         var snooze_free_deactivate_popup = getCookieDeactive("snooze_free_deactivate_popup");
         if( 'yes' !== snooze_free_deactivate_popup ) {
             jQuery('#cf_plugin_deacmodal').addClass('cf_plugin_deacmodal cf_plugin_freedeacmodal cf_visible');
