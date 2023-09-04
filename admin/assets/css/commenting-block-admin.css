@@ -1278,7 +1278,7 @@ body.cf_fullscreen.wp-toolbar{padding: 0;}
 .email-field-guest .select2-container--default .select2-selection .select2-selection__choice .userList-user{height:20px;}
 .email-field-guest .select2-container--default .select2-selection .select2-selection__choice{background-color:transparent;position:relative;padding-left:0;border-color:#DADCE0;padding:4px 18px 4px 8px;cursor:pointer;border-radius:50px;line-height:normal;margin-bottom:0;float:none}
 .email-field-guest .select2-container--default .select2-selection .select2-selection__choice:last-child{margin-bottom: 2px;}
-.email-field-guest .select2-container--default .select2-selection .select2-selection__choice__remove{position: absolute;right:0;width:13px;margin-right:8px;top:6px;cursor:pointer;border:none;background-color:transparent !important;}
+.email-field-guest .select2-container--default .select2-selection .select2-selection__choice__remove{position: absolute;right:0;left:inherit;width:13px;margin-right:8px;top:6px;cursor:pointer;border:none;background-color:transparent !important;}
 .email-field-guest .select2-container--default .select2-selection .select2-selection__choice__display{height:auto;display:block;padding:0;}
 .email-field-guest .select2-container--default .select2-selection .select2-selection__rendered{white-space: normal;outline:none;}
 .email-field-guest .select2-container .select2-search--inline{float:none;}
@@ -1337,9 +1337,9 @@ ul li{color:#000000!important;font-size:16px;line-height:21px;padding:14px 38px!
 .guest-collaborator > svg:hover{outline-color:#F5F5F5;fill:inherit;}
 .guest-collaborator .cf_suggestion-tooltip-box{left:auto;right:5px;margin-top:55px;width:54%;z-index:9999999;text-align:left;}
 .modal-open .select2-container--open .guestsecondOption-Email {width:324px !important;}
-.components-modal__header{display: none !important;}
-.components-modal__content:before{margin: 0 !important;}
-.components-modal__frame.components-guide .components-modal__header{display:flex !important;}
+.cf_invitation_modal .components-modal__header{display: none;}
+.cf_invitation_modal .components-modal__content:before{margin: 0;}
+.cf_invitation_modal.components-guide .components-modal__header{display:flex;}
 .modal-open .select2-container{z-index:999999;}
 .selected-email-field .select2-container--default .select2-selection .select2-selection__rendered{padding:0;display:inline;}
 .selected-email-field .select2-container--default .select2-selection ul li{display:inline-block;}
