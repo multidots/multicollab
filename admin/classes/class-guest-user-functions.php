@@ -712,7 +712,7 @@ class Guest_user_functions {
 					} else { // For commentor.
 
 					}
-				} else if ( in_array( 'guest', (array) $user->roles ) ) {  // if user is guest then need to redirect
+				} elseif ( in_array( 'guest', (array) $user->roles, true ) || ( isset( $guest_role[$post_id] ) && 'coeditor' === $guest_role[$post_id] ) ) {  // if user is guest then need to redirect
 					wp_die( 'You are not allowed to access this page.' );
 				}
 			} else {

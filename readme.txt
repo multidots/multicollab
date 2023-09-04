@@ -6,8 +6,8 @@ Author URI: https://www.multicollab.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 6.0
-Tested up to: 6.2.2
-Stable tag: 3.5
+Tested up to: 6.3
+Stable tag: 3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,6 +204,10 @@ Have you had a look at our documentation?
 If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as fast as we can!
 
 == Changelog ==
+
+= 3.7 - 04.09.2023 =
+* [Enhancement] Improvement in Guest collaboration user experience.
+* [Enhancement] Compatible with WordPress 6.3.
 
 = 3.6 - 20.07.2023 =
 * [New] Email Notifications — Get an email notification for mentions, replies, and other activities.
