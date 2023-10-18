@@ -1,5 +1,5 @@
 <div class="cf-cnt-box-body">
-	<p><?php printf( '%s <b>%s</b> %s', esc_html__( 'Multicollab is Default to the', 'content-collaboration-inline-commenting' ), esc_html__( 'English', 'content-collaboration-inline-commenting' ), esc_html__( 'language. But compatible with these languages and will sync with your selected language for the WordPress Admin area.', 'content-collaboration-inline-commenting' ) ); ?></p>
+<p><?php printf( '%s', esc_html__( 'Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages.', 'content-collaboration-inline-commenting' ) ); ?></p>
 	<?php
 	$lang          = get_bloginfo( 'language' );
 	$supported_lan = array(

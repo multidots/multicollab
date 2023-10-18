@@ -882,7 +882,7 @@ msgstr "或开始 14 天免费试用"
 
 #: admin/assets/js/dist/suggestion-comment.js:79
 msgid "Please edit your comment."
-msgstr "请在保存前编辑文本！"
+msgstr "请在保存前编辑文本."
 
 #: admin/assets/js/src/nonTextblock.js:75
 msgid "Please select block/image to comment on."
@@ -902,7 +902,7 @@ msgstr "请选择一个频道"
 #: admin/assets/js/dist/block.build.min.js:60412 
 #: admin/assets/js/dist/block.build.min.js:60657
 msgid "Please add some comment. "
-msgstr "请写评论分享！"
+msgstr "请写评论分享."
 
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
@@ -1191,10 +1191,6 @@ msgstr "已接受建议"
 #: admin/partials/commenting-block-settings-page.php:376
 msgid "Super Admin"
 msgstr "超级管理员"
-
-#: admin/partials/commenting-block-settings-page.php:247
-msgid "section on the Multicollab website"
-msgstr "Multicollab 网站上的部分"
 
 #: admin/assets/js/src/activityCentre.js:814 
 #: admin/partials/commenting-block-website-activity.php:87
@@ -1607,3 +1603,91 @@ msgstr "上午"
 #:
 msgid "AM"
 msgstr "上午"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages."
+msgstr "Multicollab 默认为英语，与所选的 WordPress 管理语言同步，并支持其他语言。"
+
+#: admin/partials/commenting-block-settings-page.php:162
+msgid "Upgrade to Premium"
+msgstr "升级至高级版"
+
+#: admin/settings/settings-general.php:15
+msgid "隐藏"
+msgstr ""
+
+#: admin/settings/settings-general.php:15
+msgid "Comments Column"
+msgstr "评论栏"
+
+#: admin/settings/settings-general.php:15
+msgid "on the Post Lists."
+msgstr "在帖子列表上。"
+
+#: admin/settings/settings-general.php:33
+msgid "reminder."
+msgstr "提醒。"
+
+#: admin/settings/settings-general.php:33
+msgid "Floating Comment"
+msgstr "浮动评论"
+
+#: admin/settings/settings-general.php:33
+msgid "toolbar."
+msgstr "工具栏。"
+
+#: admin/settings/settings-publishing.php:14
+msgid "authors of pending comments before publishing while still"
+msgstr "发表前未决评论的作者仍在"
+
+#: admin/settings/settings-publishing.php:14
+msgid "allowing publish the post."
+msgstr "允许发布帖子。"
+
+#: admin/settings/settings-publishing.php:33
+msgid "authors from publishing posts with pending comments."
+msgstr "作者发布带有待处理评论的帖子。"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "Enable Suggestions for"
+msgstr "启用建议"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "all pages/posts"
+msgstr "所有页面/帖子"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "(Not Recommended)."
+msgstr "（不建议）。"
+
+#: admin/settings/settings-suggestion-mode.php:36
+msgid "selected categories."
+msgstr "选定的类别。"
+
+#: admin/settings/settings-suggestion-mode.php:86
+msgid "custom post types."
+msgstr "自定义帖子类型。"
+
+#: admin/partials/commenting-block-settings-page.php:195
+msgid "Real-time Editing "
+msgstr "实时编辑"
+
+#: admin/partials/commenting-block-settings-page.php:196
+msgid "Beta"
+msgstr "贝塔"
+
+#: admin/partials/commenting-block-settings-page.php:197
+msgid "Guide to Setup WebSocket"
+msgstr "WebSocket 设置指南"
+
+#: admin/settings/settings-realtime-mode.php:38
+msgid "Your WebSocket URL: "
+msgstr "您的 WebSocket 网址："
+
+#: admin/settings/settings-realtime-mode.php:53
+msgid "Enter WebSocket URL"
+msgstr "输入 WebSocket URL"
+
+#: admin/settings/settings-realtime-mode.php:19
+msgid "Use Multicollab's complementary WebSocket service."
+msgstr "使用 Multicollab 的补充 WebSocket 服务。"

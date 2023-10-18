@@ -884,7 +884,7 @@ msgstr "oder starten Sie die 14-tägige kostenlose Testversion"
 
 #: admin/assets/js/dist/suggestion-comment.js:79
 msgid "Please edit your comment."
-msgstr "Bitte bearbeiten Sie den Text vor dem Speichern!"
+msgstr "Bitte bearbeiten Sie den Text vor dem Speichern."
 
 #: admin/assets/js/src/nonTextblock.js:75
 msgid "Please select block/image to comment on."
@@ -904,7 +904,7 @@ msgstr "Bitte wählen Sie einen Kanal aus"
 #: admin/assets/js/dist/block.build.min.js:60412 
 #: admin/assets/js/dist/block.build.min.js:60657
 msgid "Please add some comment. "
-msgstr "Bitte schreiben Sie einen Kommentar zum Teilen!"
+msgstr "Bitte schreiben Sie einen Kommentar zum Teilen."
 
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
@@ -1197,10 +1197,6 @@ msgstr "Vorschlag angenommen"
 #: admin/partials/commenting-block-settings-page.php:376
 msgid "Super Admin"
 msgstr "höchster Vorgesetzter"
-
-#: admin/partials/commenting-block-settings-page.php:247
-msgid "section on the Multicollab website"
-msgstr "Abschnitt auf der Multicollab-Website"
 
 #: admin/assets/js/src/activityCentre.js:814 
 #: admin/partials/commenting-block-website-activity.php:87
@@ -1620,3 +1616,91 @@ msgstr "am"
 #:
 msgid "AM"
 msgstr "AM"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages."
+msgstr "Multicollab ist standardmäßig auf Englisch eingestellt, synchronisiert sich mit der gewählten WordPress-Admin-Sprache und unterstützt andere Sprachen."
+
+#: admin/partials/commenting-block-settings-page.php:162
+msgid "Upgrade to Premium"
+msgstr "Auf Premium upgraden"
+
+#: admin/settings/settings-general.php:15
+msgid "Hide"
+msgstr "Verstecken"
+
+#: admin/settings/settings-general.php:15
+msgid "Comments Column"
+msgstr "Kommentarspalte"
+
+#: admin/settings/settings-general.php:15
+msgid "on the Post Lists."
+msgstr "auf den Beitragslisten."
+
+#: admin/settings/settings-general.php:33
+msgid "reminder."
+msgstr "Erinnerung."
+
+#: admin/settings/settings-general.php:33
+msgid "Floating Comment"
+msgstr "Schwebender Kommentar"
+
+#: admin/settings/settings-general.php:33
+msgid "toolbar."
+msgstr "Symbolleiste."
+
+#: admin/settings/settings-publishing.php:14
+msgid "authors of pending comments before publishing while still"
+msgstr "Autoren von ausstehenden Kommentaren vor der Veröffentlichung noch im Voraus"
+
+#: admin/settings/settings-publishing.php:14
+msgid "allowing publish the post."
+msgstr "Ermöglichen, den Beitrag zu veröffentlichen."
+
+#: admin/settings/settings-publishing.php:33
+msgid "authors from publishing posts with pending comments."
+msgstr "Autoren von der Veröffentlichung von Beiträgen mit ausstehenden Kommentaren abhalten."
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "Enable Suggestions for"
+msgstr "Aktivieren Sie Vorschläge für"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "all pages/posts"
+msgstr "alle Seiten/Beiträge"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "(Not Recommended)."
+msgstr "(Nicht empfohlen)."
+
+#: admin/settings/settings-suggestion-mode.php:36
+msgid "selected categories."
+msgstr "ausgewählte Kategorien."
+
+#: admin/settings/settings-suggestion-mode.php:86
+msgid "custom post types."
+msgstr "benutzerdefinierte Beitragstypen."
+
+#: admin/partials/commenting-block-settings-page.php:195
+msgid "Real-time Editing "
+msgstr "Bearbeitung in Echtzeit"
+
+#: admin/partials/commenting-block-settings-page.php:196
+msgid "Beta"
+msgstr "Beta"
+
+#: admin/partials/commenting-block-settings-page.php:197
+msgid "Guide to Setup WebSocket"
+msgstr "Anleitung zum Einrichten von WebSocket"
+
+#: admin/settings/settings-realtime-mode.php:38
+msgid "Your WebSocket URL:"
+msgstr "Ihre WebSocket-URL:"
+
+#: admin/settings/settings-realtime-mode.php:53
+msgid "Enter WebSocket URL"
+msgstr "Geben Sie die WebSocket-URL ein"
+
+#: admin/settings/settings-realtime-mode.php:19
+msgid "Use Multicollab's complementary WebSocket service."
+msgstr "Nutzen Sie den ergänzenden WebSocket-Dienst von Multicollab."

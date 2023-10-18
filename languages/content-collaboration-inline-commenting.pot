@@ -1188,10 +1188,6 @@ msgstr ""
 msgid "Super Admin"
 msgstr ""
 
-#: admin/partials/commenting-block-settings-page.php:247
-msgid "section on the Multicollab website"
-msgstr ""
-
 #: admin/assets/js/src/activityCentre.js:814
 #: admin/assets/partials/commenting-block-website-activity.php:234
 msgid "Suggestion Rejected"
@@ -1599,4 +1595,93 @@ msgstr ""
 
 #:
 msgid "AM"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages."
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:162
+msgid "Upgrade to Premium"
+msgstr ""
+
+#: admin/settings/settings-general.php:15
+msgid "Hide"
+msgstr ""
+
+#: admin/settings/settings-general.php:15
+msgid "Comments Column"
+msgstr ""
+
+#: admin/settings/settings-general.php:15
+msgid "on the Post Lists."
+msgstr ""
+
+#: admin/settings/settings-general.php:33
+msgid "reminder."
+msgstr ""
+
+#: admin/settings/settings-general.php:33
+msgid "Floating Comment"
+msgstr ""
+
+#: admin/settings/settings-general.php:33
+msgid "toolbar."
+msgstr ""
+
+#: admin/settings/settings-publishing.php:14
+msgid "authors of pending comments before publishing while still"
+msgstr ""
+
+#: admin/settings/settings-publishing.php:14
+msgid "allowing publish the post."
+msgstr ""
+
+#: admin/settings/settings-publishing.php:33
+msgid "authors from publishing posts with pending comments."
+msgstr ""
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "Enable Suggestions for"
+msgstr ""
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "all pages/posts"
+msgstr ""
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "(Not Recommended)."
+msgstr ""
+
+#: admin/settings/settings-suggestion-mode.php:36
+msgid "selected categories."
+msgstr ""
+
+
+#: admin/settings/settings-suggestion-mode.php:86
+msgid "custom post types."
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:195
+msgid "Real-time Editing "
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:196
+msgid "Beta"
+msgstr ""
+
+#: admin/partials/commenting-block-settings-page.php:197
+msgid "Guide to Setup WebSocket"
+msgstr ""
+
+#: admin/settings/settings-realtime-mode.php:38
+msgid "Your WebSocket URL: "
+msgstr ""
+
+#: admin/settings/settings-realtime-mode.php:53
+msgid "Enter WebSocket URL"
+msgstr ""
+
+#: admin/settings/settings-realtime-mode.php:19
+msgid "Use Multicollab's complementary WebSocket service."
 msgstr ""

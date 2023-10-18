@@ -885,7 +885,7 @@ msgstr "ou commencez un essai gratuit de 14 jours"
 
 #: admin/assets/js/dist/suggestion-comment.js:79
 msgid "Please edit your comment."
-msgstr "Veuillez modifier le texte avant d'enregistrer !"
+msgstr "Veuillez modifier le texte avant d'enregistrer."
 
 #: admin/assets/js/src/nonTextblock.js:75
 msgid "Please select block/image to comment on."
@@ -905,7 +905,7 @@ msgstr "Veuillez sélectionner une chaîne"
 #: admin/assets/js/dist/block.build.min.js:60412 
 #: admin/assets/js/dist/block.build.min.js:60657
 msgid "Please add some comment. "
-msgstr "S'il vous plaît écrivez un commentaire à partager!"
+msgstr "S'il vous plaît écrivez un commentaire à partager."
 
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
@@ -1220,9 +1220,6 @@ msgstr "Suggestion acceptée"
 msgid "Super Admin"
 msgstr "Super administrateur"
 
-#: admin/partials/commenting-block-settings-page.php:247
-msgid "section on the Multicollab website"
-msgstr "rubrique sur le site Multicollab"
 
 #: admin/assets/js/src/activityCentre.js:814 
 #: admin/partials/commenting-block-website-activity.php:87
@@ -1618,3 +1615,92 @@ msgstr "un m"
 #:
 msgid "AM"
 msgstr "UN M"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages."
+msgstr "Multicollab utilise par défaut l'anglais, se synchronise avec la langue d'administration WordPress choisie et prend en charge d'autres langues."
+
+#: admin/partials/commenting-block-settings-page.php:162
+msgid "Upgrade to Premium"
+msgstr "Passer à la version premium"
+
+#: admin/settings/settings-general.php:15
+msgid "Hide"
+msgstr "Cacher"
+
+#: admin/settings/settings-general.php:15
+msgid "Comments Column"
+msgstr "Colonne des commentaires"
+
+#: admin/settings/settings-general.php:15
+msgid "on the Post Lists."
+msgstr "sur les listes de messages."
+
+#: admin/settings/settings-general.php:33
+msgid "reminder."
+msgstr "rappel."
+
+#: admin/settings/settings-general.php:33
+msgid "Floating Comment"
+msgstr "Commentaire flottant"
+
+#: admin/settings/settings-general.php:33
+msgid "toolbar."
+msgstr "barre d'outils."
+
+#: admin/settings/settings-publishing.php:14
+msgid "authors of pending comments before publishing while still"
+msgstr "auteurs des commentaires en attente avant de les publier alors qu'ils sont encore"
+
+#: admin/settings/settings-publishing.php:14
+msgid "allowing publish the post."
+msgstr "permettant de publier le message."
+
+#: admin/settings/settings-publishing.php:33
+msgid "authors from publishing posts with pending comments."
+msgstr "les auteurs de publier des articles avec des commentaires en attente."
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "Enable Suggestions for"
+msgstr "Activer les suggestions pour"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "all pages/posts"
+msgstr "toutes les pages/articles"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "(Not Recommended)."
+msgstr "(Non recommandé)."
+
+
+#: admin/settings/settings-suggestion-mode.php:36
+msgid "selected categories."
+msgstr "catégories sélectionnées."
+
+#: admin/settings/settings-suggestion-mode.php:86
+msgid "custom post types."
+msgstr "types de messages personnalisés."
+
+#: admin/partials/commenting-block-settings-page.php:195
+msgid "Real-time Editing "
+msgstr "Édition en temps réel"
+
+#: admin/partials/commenting-block-settings-page.php:196
+msgid "Beta"
+msgstr "Bêta"
+
+#: admin/partials/commenting-block-settings-page.php:197
+msgid "Guide to Setup WebSocket"
+msgstr "Guide de configuration de WebSocket"
+
+#: admin/settings/settings-realtime-mode.php:38
+msgid "Your WebSocket URL: "
+msgstr "Votre URL WebSocket :"
+
+#: admin/settings/settings-realtime-mode.php:53
+msgid "Enter WebSocket URL"
+msgstr "Entrez l'URL WebSocket"
+
+#: admin/settings/settings-realtime-mode.php:19
+msgid "Use Multicollab's complementary WebSocket service."
+msgstr "Utilisez le service WebSocket complémentaire de Multicollab."

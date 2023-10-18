@@ -906,7 +906,7 @@ msgstr "कृपया खरीदारी के ठीक बाद ईम�
 
 #: admin/assets/js/dist/suggestion-comment.js:79
 msgid "Please edit your comment."
-msgstr "कृपया सहेजने से पहले टेक्स्ट संपादित करें!"
+msgstr "कृपया सहेजने से पहले टेक्स्ट संपादित करें."
 
 #: admin/assets/js/src/nonTextblock.js:75
 msgid "Please select block/image to comment on."
@@ -926,7 +926,7 @@ msgstr "कृपया एक चैनल चुनें"
 #: admin/assets/js/dist/block.build.min.js:60412
 #: admin/assets/js/dist/block.build.min.js:60657
 msgid "Please add some comment. "
-msgstr "कृपया साझा करने के लिए एक टिप्पणी लिखें!"
+msgstr "कृपया साझा करने के लिए एक टिप्पणी लिखें."
 
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
@@ -1271,10 +1271,6 @@ msgstr "सुझाव स्वीकृत"
 #: admin/partials/commenting-block-settings-page.php:376
 msgid "Super Admin"
 msgstr "सुपर एडमिन"
-
-#: admin/partials/commenting-block-settings-page.php:247
-msgid "section on the Multicollab website"
-msgstr "अनुभाग Multicollab वेबसाइट पर"
 
 #: admin/partials/commenting-block-settings-page.php:57
 msgid "Suggestion Mode (Track Changes)"
@@ -1653,3 +1649,93 @@ msgstr "पूर्वाह्न"
 #:
 msgid "AM"
 msgstr "पूर्वाह्न"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages."
+msgstr "मल्टीकोलैब अंग्रेजी में डिफ़ॉल्ट है, चुनी गई वर्डप्रेस एडमिन भाषा के साथ सिंक होता है, और अन्य भाषाओं का समर्थन करता है।"
+
+#: admin/partials/commenting-block-settings-page.php:162
+msgid "Upgrade to Premium"
+msgstr "प्रीमियम में अपग्रेड करें"
+
+#: admin/settings/settings-general.php:15
+msgid "Hide"
+msgstr "छिपाना"
+
+#: admin/settings/settings-general.php:15
+msgid "Comments Column"
+msgstr "टिप्पणियाँ कॉलम"
+
+#: admin/settings/settings-general.php:15
+msgid "on the Post Lists."
+msgstr "पोस्ट सूचियों पर।"
+
+#: admin/settings/settings-general.php:33
+msgid "reminder."
+msgstr "अनुस्मारक।"
+
+#: admin/settings/settings-general.php:33
+msgid "Floating Comment"
+msgstr "फ़्लोटिंग टिप्पणी"
+
+#: admin/settings/settings-general.php:33
+msgid "toolbar."
+msgstr "टूलबार।"
+
+#: admin/settings/settings-publishing.php:14
+msgid "authors of pending comments before publishing while still"
+msgstr "अभी भी प्रकाशन से पहले लंबित टिप्पणियों के लेखक"
+
+#: admin/settings/settings-publishing.php:14
+msgid "allowing publish the post."
+msgstr "पोस्ट प्रकाशित करने की अनुमति."
+
+#: admin/settings/settings-publishing.php:33
+msgid "authors from publishing posts with pending comments."
+msgstr "लंबित टिप्पणियों के साथ पोस्ट प्रकाशित करने वाले लेखक।"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "Enable Suggestions for"
+msgstr "के लिए सुझाव सक्षम करें"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "all pages/posts"
+msgstr "सभी पेज/पोस्ट"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "(Not Recommended)."
+msgstr "(सिफारिश नहीं की गई)।"
+
+
+#: admin/settings/settings-suggestion-mode.php:36
+msgid "selected categories."
+msgstr "चयनित श्रेणियां।"
+
+
+#: admin/settings/settings-suggestion-mode.php:86
+msgid "custom post types."
+msgstr "कस्टम पोस्ट प्रकार।"
+
+#: admin/partials/commenting-block-settings-page.php:195
+msgid "Real-time Editing "
+msgstr "वास्तविक समय संपादन"
+
+#: admin/partials/commenting-block-settings-page.php:196
+msgid "Beta"
+msgstr "बीटा"
+
+#: admin/partials/commenting-block-settings-page.php:197
+msgid "Guide to Setup WebSocket"
+msgstr "वेबसॉकेट सेटअप करने के लिए गाइड"
+
+#: admin/settings/settings-realtime-mode.php:38
+msgid "Your WebSocket URL:"
+msgstr "आपका वेबसॉकेट यूआरएल:"
+
+#: admin/settings/settings-realtime-mode.php:53
+msgid "Enter WebSocket URL"
+msgstr "वेबसॉकेट यूआरएल दर्ज करें"
+
+#: admin/settings/settings-realtime-mode.php:19
+msgid "Use Multicollab's complementary WebSocket service."
+msgstr "मल्टीकोलैब की पूरक वेबसॉकेट सेवा का उपयोग करें।"

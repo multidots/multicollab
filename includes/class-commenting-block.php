@@ -31,7 +31,7 @@ if ( ! defined( 'WPINC' ) ) {
  *
  * @author     multidots
  */
-if( ! class_exists('Commenting_block') ) :
+if ( ! class_exists( 'Commenting_block' ) ) :
 	class Commenting_block {
 
 
@@ -131,13 +131,13 @@ if( ! class_exists('Commenting_block') ) :
 			 */
 	        require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-rest-routes.php'; // phpcs:ignore
 
-	        /**
+			/**
 			 * This class is responsible for defining user role and capabilities.
 			 * Kept outside of is_premium functionality because from here we are restricting user to access the dashboard from the free build.
 			 */
 			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-user-and-role.php'; // phpcs:ignore
 
-	        /**
+			/**
 			 * This class is responsible for defining all custom rest route endpoints.
 			 */
 			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-guest-user-functions.php'; // phpcs:ignore
@@ -159,6 +159,10 @@ if( ! class_exists('Commenting_block') ) :
 
 			$this->loader = new Commenting_block_Loader();
 
+			/**
+			 *  Include all the multiedit related class files.
+			 */
+			require_once(COMMENTING_BLOCK_DIR . 'admin/classes/realtime/class-realtime.php');
 		}
 
 		/**
@@ -203,6 +207,7 @@ if( ! class_exists('Commenting_block') ) :
 			$this->loader->add_action( 'wp_ajax_cf_slack_intigration_revoke', $plugin_admin, 'cf_slack_intigration_revoke' );
 			$this->loader->add_action( 'wp_ajax_cf_save_permissions', $plugin_admin, 'cf_save_permissions' );
 			$this->loader->add_action( 'wp_ajax_cf_save_suggestions', $plugin_admin, 'cf_save_suggestions' );
+			$this->loader->add_action( 'wp_ajax_cf_save_multiedit_settings', $plugin_admin, 'cf_save_multiedit_settings' );
 			$this->loader->add_action( 'wp_ajax_cf_save_email_notification', $plugin_admin, 'cf_save_email_notification' );
 			$this->loader->add_action( 'wp_ajax_cf_save_suggestions_mode', $plugin_admin, 'cf_save_suggestions_mode' );
 			$this->loader->add_action( 'wp_ajax_cf_get_user_email_list', $plugin_admin, 'cf_get_user_email_list' );
@@ -215,6 +220,7 @@ if( ! class_exists('Commenting_block') ) :
 			$this->loader->add_action( 'wp_ajax_cf_update_meta', $plugin_admin, 'cf_update_meta' );
 			$this->loader->add_action( 'wp_ajax_cf_license_activation', $plugin_admin, 'cf_license_activation' );
 			$this->loader->add_action( 'wp_ajax_cf_deactive_plugin_free', $plugin_admin, 'cf_deactive_plugin_free' );
+			$this->loader->add_action( 'wp_ajax_realtime_collaborators_update_ajax', $plugin_admin, 'realtime_collaborators_update_ajax_function' );
 
 			// Replace content with filter HTML(without HTML tags) which we get from AJAX response. Github issue: #491. @author: Rishi Shah @since: 3.5
 			$this->loader->add_action( 'wp_ajax_cf_suggestion_text_filter', $plugin_admin, 'cf_suggestion_text_filter' );
@@ -286,17 +292,17 @@ if( ! class_exists('Commenting_block') ) :
 		 */
 		public static function cf_redirect_on_activate( $plugin = false ) {
 			if ( COMMENTING_BLOCK_BASE === $plugin ) {
-				
+
 				// Delete setting options.
 				delete_option( 'cf_hide_floating_icons' );
 				delete_option( 'cf_admin_notif' );
 				delete_option( 'cf_give_alert_message' );
 				delete_option( 'cf_suggestion_mode_option_name' );
-				
+
 				wp_redirect(
 					add_query_arg(
 						array(
-							'page'      => 'multicollab_setup_wizard',
+							'page' => 'multicollab_setup_wizard',
 						),
 						admin_url( 'admin.php' )
 					)

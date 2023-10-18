@@ -361,20 +361,13 @@ class Commenting_block_Functions {
 		}
 		$available_roles = $wp_roles->get_names();
 		$order           = array_keys( $available_roles );
-				
-		// Add code to reolve VIP error. @author Rishi Shah @since 3.6.1
-		if( is_array( $needToSortArray ) && ! empty( $needToSortArray ) ) {
-			uksort(
-				$needToSortArray,
-				function( $key1, $key2 ) use ( $order, $needToSortArray ) {
-					return ( array_search( $needToSortArray[ $key1 ], $order, true ) > array_search( $needToSortArray[ $key2 ], $order, true ) );
-				}
-			);
-			return $needToSortArray;
-		} else {
-			return $needToSortArray;
-		}
-		
+		uksort(
+			$needToSortArray,
+			function( $key1, $key2 ) use ( $order, $needToSortArray ) {
+				return ( array_search( $needToSortArray[ $key1 ], $order, true ) > array_search( $needToSortArray[ $key2 ], $order, true ) );
+			}
+		);
+		return $needToSortArray;
 	}
 
 	/**

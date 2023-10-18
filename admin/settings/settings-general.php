@@ -12,7 +12,7 @@
 			</div>
 			<label for="cf_hide_editorial_column">
 				<span class="cf_suggestion_optionlabel">
-					<?php printf( '%s <b>%s</b> %s', esc_html__( 'Hide the', 'content-collaboration-inline-commenting' ), esc_html__( 'Multicollab Comments', 'content-collaboration-inline-commenting' ), esc_html__( 'column on the Post Lists.', 'content-collaboration-inline-commenting' ) ); ?>
+				<?php printf( '%s <b>%s</b> %s', esc_html__( 'Hide', 'content-collaboration-inline-commenting' ), esc_html__( 'Comments Column', 'content-collaboration-inline-commenting' ), esc_html__( 'on the Post Lists.', 'content-collaboration-inline-commenting' ) ); ?>
 					<span class="md-plugin-tooltip">
 						<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2c-4.8 0-8.8 3.9-8.8 8.8 0 4.8 3.9 8.8 8.8 8.8 4.8 0 8.8-3.9 8.8-8.8 0-4.8-4-8.8-8.8-8.8zm0 16c-4 0-7.2-3.3-7.2-7.2C4.8 8 8 4.8 12 4.8s7.2 3.3 7.2 7.2c0 4-3.2 7.2-7.2 7.2zM11 17h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
 							<div class="cf_suggestion-tooltip-box">
@@ -30,7 +30,7 @@
 			</div>
 			<label for="cf_show_infoboard">
 				<span class="cf_suggestion_optionlabel">
-					<?php printf( '%s <b>%s</b> %s', esc_html__( 'Hide the', 'content-collaboration-inline-commenting' ), esc_html__( 'Save Draft Comment', 'content-collaboration-inline-commenting' ), esc_html__( 'reminder in Block Editor.', 'content-collaboration-inline-commenting' ) ); ?>
+				<?php printf( '%s <b>%s</b> %s', esc_html__( 'Hide', 'content-collaboration-inline-commenting' ), esc_html__( 'Save Draft Comment', 'content-collaboration-inline-commenting' ), esc_html__( 'reminder.', 'content-collaboration-inline-commenting' ) ); ?>
 					<span class="md-plugin-tooltip">
 						<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2c-4.8 0-8.8 3.9-8.8 8.8 0 4.8 3.9 8.8 8.8 8.8 4.8 0 8.8-3.9 8.8-8.8 0-4.8-4-8.8-8.8-8.8zm0 16c-4 0-7.2-3.3-7.2-7.2C4.8 8 8 4.8 12 4.8s7.2 3.3 7.2 7.2c0 4-3.2 7.2-7.2 7.2zM11 17h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
 							<div class="cf_suggestion-tooltip-box">
@@ -50,7 +50,7 @@
 			</div>
 			<label for="cf_hide_floating_icons">
 				<span class="cf_suggestion_optionlabel">
-					<?php printf( '%s <b>%s</b> %s', esc_html__( 'Hide the', 'content-collaboration-inline-commenting' ), esc_html__( 'Floating Comment Toolbar', 'content-collaboration-inline-commenting' ), esc_html__( 'in Block Editor.', 'content-collaboration-inline-commenting' ) ); ?>
+				<?php printf( '%s <b>%s</b> %s', esc_html__( 'Hide', 'content-collaboration-inline-commenting' ), esc_html__( 'Floating Comment', 'content-collaboration-inline-commenting' ), esc_html__( 'toolbar.', 'content-collaboration-inline-commenting' ) ); ?>
 					<span class="md-plugin-tooltip">
 						<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2c-4.8 0-8.8 3.9-8.8 8.8 0 4.8 3.9 8.8 8.8 8.8 4.8 0 8.8-3.9 8.8-8.8 0-4.8-4-8.8-8.8-8.8zm0 16c-4 0-7.2-3.3-7.2-7.2C4.8 8 8 4.8 12 4.8s7.2 3.3 7.2 7.2c0 4-3.2 7.2-7.2 7.2zM11 17h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
 							<div class="cf_suggestion-tooltip-box">
