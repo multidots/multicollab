@@ -11,7 +11,7 @@
 					<span class="cf-check"></span>
 				</div>
 				<label for="cf_give_alert_message">
-					<span class="cf_suggestion_optionlabel"><?php printf( '<b>%s</b> - %s <b>%s</b>', esc_html__( 'Remind', 'content-collaboration-inline-commenting' ), esc_html__( 'When an author tries to Publish a post with pending comments or suggestions, alert and remind them about it, but they can', 'content-collaboration-inline-commenting' ), esc_html__( 'publish the post.', 'content-collaboration-inline-commenting' ) ); ?>
+					<span class="cf_suggestion_optionlabel"><?php printf( '<b>%s</b> %s <b>%s</b>', esc_html__( 'Remind', 'content-collaboration-inline-commenting' ), esc_html__( 'authors of pending comments before publishing while still', 'content-collaboration-inline-commenting' ), esc_html__( 'allowing publish the post.', 'content-collaboration-inline-commenting' ) ); ?>
 						<span class="md-plugin-tooltip">
 							<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2c-4.8 0-8.8 3.9-8.8 8.8 0 4.8 3.9 8.8 8.8 8.8 4.8 0 8.8-3.9 8.8-8.8 0-4.8-4-8.8-8.8-8.8zm0 16c-4 0-7.2-3.3-7.2-7.2C4.8 8 8 4.8 12 4.8s7.2 3.3 7.2 7.2c0 4-3.2 7.2-7.2 7.2zM11 17h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
 								<div class="cf_suggestion-tooltip-box">
@@ -30,7 +30,7 @@
 				</div>
 				<label for="cf_stop_publishing">
 					<span class="cf_suggestion_optionlabel">
-						<?php printf( '<b>%s</b> - %s <b>%s</b>', esc_html__( 'Stop', 'content-collaboration-inline-commenting' ), esc_html__( 'When an author tries to publish a post with pending comments or suggestions, remind them about it and', 'content-collaboration-inline-commenting' ), esc_html__( 'stop them from publishing it.', 'content-collaboration-inline-commenting' ) ); ?> 
+					<?php printf( '<b>%s</b> %s', esc_html__( 'Stop', 'content-collaboration-inline-commenting' ), esc_html__( 'authors from publishing posts with pending comments.', 'content-collaboration-inline-commenting' ) ); ?>
 						<span class="md-plugin-tooltip">
 							<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2c-4.8 0-8.8 3.9-8.8 8.8 0 4.8 3.9 8.8 8.8 8.8 4.8 0 8.8-3.9 8.8-8.8 0-4.8-4-8.8-8.8-8.8zm0 16c-4 0-7.2-3.3-7.2-7.2C4.8 8 8 4.8 12 4.8s7.2 3.3 7.2 7.2c0 4-3.2 7.2-7.2 7.2zM11 17h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
 								<div class="cf_suggestion-tooltip-box">

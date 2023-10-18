@@ -38,6 +38,14 @@ class Guest_Email_Template {
 		if ( ! $guest_cap_role ) {
 			$guest_cap_role = 'View';
 		}
+		$user_role = $guest_cap_role;
+		if ( 'View' === $user_role || 'view' === $user_role ) {
+			$user_role = 'Reviewer';
+		} else if ( 'Comment' === $user_role || 'comment' === $user_role ) {
+			$user_role = 'Commentor';
+		} else if ( 'Edit' === $user_role || 'edit' === $user_role ) {
+			$user_role = 'Coeditor';
+		}
 		if ( ! $post_image ) {
 			$post_image = trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/images/invit-defult-postimg.png';
 		}
@@ -72,7 +80,7 @@ class Guest_Email_Template {
 										<tr>
 											<th>
 												<h2 style="font-size:26px;font-weight:normal;line-height:normal;color:#3C4043;text-align:left;padding:25px 28px 29px;margin:0;">
-													<?php echo esc_html__( $inviter_name.' has invited you.', 'content-collaboration-inline-commenting' ); ?>
+													<?php echo esc_html__( $inviter_name.' invited you to collaborate', 'content-collaboration-inline-commenting' ); ?>
 												</h2>
 											</th>
 										</tr>
@@ -89,14 +97,17 @@ class Guest_Email_Template {
 										<?php echo wp_kses_post( __( $user_message, 'content-collaboration-inline-commenting' ) ); ?>
 										<tr>
 											<th style="padding: 0 24px;">
-												<div style="border: 1px solid #DADCE0;width: 340px;border-radius: 8px;padding: 25px 20px 29px;">
-													<span style="font-size:14px;line-height:16px;font-weight:400;color:#3C4043;display: flex;align-items: center;text-align:left;margin-bottom:11px;"><img width="15" height="15" src ="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/collaboration-doc.png' ); ?>"/><a style ="margin-left: 5px;text-decoration: none;font-size: 16px;font-size: 14px;line-height: 16px;color: #3C4043;font-family: \'Google\', sans-serif;" href="<?php echo esc_url( $post_link ); ?>" target="_blank"><?php echo esc_html__($post_title, 'content-collaboration-inline-commenting') ?></a></span>
-													<div style="border:1px solid #DADCE0;border-radius:8px;padding:24px 50px 0px;margin-bottom: 20px;">
-														<span style="font-family:\'Google\', sans-serif;color:#3C4043;font-size:11px;line-height:18px;font-weight:400;margin-bottom:10px;display:inline-block;"><?php echo esc_html__('Workflow - Guest Collaborator ('.$guest_cap_role.' Only)', 'content-collaboration-inline-commenting'); ?></span>
-														<img src="<?php echo esc_url( $post_image ); ?>" style="width:130px;margin-bottom:-5px;" />
-													</div>
-													<span style="font-size:13px;line-height:18px;font-weight:400;color:#3C4043;display: flex;align-items: center;text-align:left;"><img width="15" height="15" src ="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/website.png' ); ?>"><a style ="margin-left: 5px;font-size: 16px;font-size: 14px;line-height: 16px;color: #3C4043;font-family: \'Google\', sans-serif;" href="<?php echo esc_url(get_home_url()); ?>"><?php echo esc_url(get_home_url()); ?></a></span>
-												</div>
+												<div style="display:flex;align-items:center;font-size:15px;line-height:21px;font-weight:400;text-align:left;color:#202124;margin-bottom:20px;"><strong style="white-space: break-spaces;"><?php echo esc_html__('Website: ', 'content-collaboration-inline-commenting'); ?></strong><a href="<?php echo esc_url(get_home_url()); ?>" style="color:#4B1BCE"><?php echo esc_html(get_bloginfo( 'name' )); ?></a></div>
+											</th>
+										</tr>
+										<tr>
+											<th style="padding: 0 24px;">
+											<div style="display:flex;align-items:center;font-size:15px;line-height:21px;font-weight:400;text-align:left;color:#202124;margin-bottom:20px;"><strong style="white-space: break-spaces;"><?php echo esc_html__('Post: ', 'content-collaboration-inline-commenting'); ?></strong><a href="<?php echo esc_url( $post_link ); ?>" style="color:#4B1BCE"><?php echo esc_html(html_entity_decode( $post_title )); ?></a></div>
+											</th>
+										</tr>
+										<tr>
+											<th style="padding: 0 24px;">
+											<div style="display:flex;align-items:center;font-size:15px;line-height:21px;font-weight:400;text-align:left;color:#202124;margin-bottom:20px;"><strong style="white-space: break-spaces;"><?php echo esc_html__('Your role: ', 'content-collaboration-inline-commenting'); ?></strong><?php echo esc_html__($user_role); ?></div>
 											</th>
 										</tr>
 									</tbody>
@@ -137,7 +148,7 @@ class Guest_Email_Template {
 			'From: ' . $inviter_name . ' <' . $inviter_email . '>',
 		);
 
-		$subject = 'Invite to collaborate with you on ' . html_entity_decode( $post_title );
+		$subject = 'You are invited to collaborate: ' . get_bloginfo( 'name' ) . ' -> ' .html_entity_decode( $post_title );
 
 		$client_mail = wp_mail( $email, wp_specialchars_decode( $subject ), $message, $headers ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
 

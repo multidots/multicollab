@@ -4,31 +4,33 @@
  */
 
 // Get settings.
-$view                                  = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_STRING );
-$tab_number                            = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-$activated                             = filter_input( INPUT_GET, 'activated', FILTER_SANITIZE_STRING );
-$cf_admin_notif                        = get_option( 'cf_admin_notif' );
-$cf_show_infoboard                     = get_option( 'cf_show_infoboard' );
-$cf_hide_editorial_column              = get_option( 'cf_hide_editorial_column' );
+$view                     = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_STRING );
+$tab_number               = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+$activated                = filter_input( INPUT_GET, 'activated', FILTER_SANITIZE_STRING );
+$cf_admin_notif           = get_option( 'cf_admin_notif' );
+$cf_show_infoboard        = get_option( 'cf_show_infoboard' );
+$cf_hide_editorial_column = get_option( 'cf_hide_editorial_column' );
 
-$cf_give_alert_message                 = get_option( 'cf_give_alert_message' );
-$cf_suggestion_mode_option_name        = get_option( 'cf_suggestion_mode_option_name' );
-$cf_specific_post_types_values         = get_option( 'cf_specific_post_types_values' );
-$cf_specific_post_categories_values    = get_option( 'cf_specific_post_categories_values' );
-$cf_hide_floating_icons                = get_option( 'cf_hide_floating_icons' );
+$cf_give_alert_message                          = get_option( 'cf_give_alert_message' );
+$cf_suggestion_mode_option_name                 = get_option( 'cf_suggestion_mode_option_name' );
+$cf_specific_post_types_values                  = get_option( 'cf_specific_post_types_values' );
+$cf_specific_post_categories_values             = get_option( 'cf_specific_post_categories_values' );
+$cf_hide_floating_icons                         = get_option( 'cf_hide_floating_icons' );
 $cf_slack_notification_accept_reject_suggestion = get_option( 'cf_slack_notification_accept_reject_suggestion' );
 $cf_page_url                                    = menu_page_url( 'editorial-comments', false );
 $cf_web_activity_url                            = add_query_arg( 'view', 'web-activity', $cf_page_url );
 $cf_post_activity_url                           = add_query_arg( 'view', 'post-activity', $cf_page_url );
-$view           = ( null === $view ) ? 'web-activity' : $view;
-$cf_permissions = get_option( 'cf_permissions' );
+$view                   = ( null === $view ) ? 'web-activity' : $view;
+$cf_permissions         = get_option( 'cf_permissions' );
+$cf_multiedit_websocket = get_option( 'cf_multiedit_websocket' );
+$cf_websocket_options   = get_option( 'cf_websocket_options' );
 ?>
 <div class="cf-plugin-settings">
 <div class="cf_settings_loader"></div>
 			<?php
 			// Display Promotional Banner.
-			$promotional_banner  = cf_dpb_promotional_banner('setting');
-			if( !empty($promotional_banner) ){
+			$promotional_banner = cf_dpb_promotional_banner( 'setting' );
+			if ( ! empty( $promotional_banner ) ) {
 				echo $promotional_banner; // phpcs:ignore WordPress.Security.EscapeOutput
 			}
 			?>
@@ -49,10 +51,9 @@ $cf_permissions = get_option( 'cf_permissions' );
 				<a class="cf-plan-version" href="<?php echo esc_url( 'https://www.multicollab.com/change-log' ); ?>" target="_blank">v <?php echo esc_html( COMMENTING_BLOCK_VERSION ); ?></a>
 			</div>
 			<div class="cf-plugin-version">
-				<a href="https://docs.multicollab.com/?utm_source=plugin_setting_header_helpdoc_link&utm_medium=header_helpdoc_link&utm_campaign=plugin_setting_header_link&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Help', 'content-collaboration-inline-commenting' ); ?></a> | 
-				<a href="https://www.multicollab.com/contact/?utm_source=plugin_setting_header_link_contact&utm_medium=header_link_contact&utm_campaign=plugin_setting_header_link_contact&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Contact', 'content-collaboration-inline-commenting' ); ?></a> | 
-				<a href="https://feedback.multicollab.com/feedback/add?utm_source=plugin_setting_header_link_add_feedback&utm_medium=header_link_add_feedback&utm_campaign=plugin_setting_header_link&utm_id=plugin_setting_header_link" target="_blank"><?php esc_html_e( 'Suggest', 'content-collaboration-inline-commenting' ); ?></a>
-				<a class="pricing-block-button__link" href="<?php echo esc_url( 'https://www.multicollab.com/upgrade-to-premium/' ); ?>" target="_blank"><?php esc_html_e( 'Upgrade', 'content-collaboration-inline-commenting' ); ?></a>
+				<a href="<?php echo esc_url( 'https://www.multicollab.com/contact/?utm_source=plugin_setting_header_link_contact&utm_medium=header_link_contact&utm_campaign=plugin_setting_header_link_contact&utm_id=plugin_setting_header_link' ); ?>" target="_blank"><?php esc_html_e( 'Contact', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a> | 
+				<a href="<?php echo esc_url( CF_STORE_URL ) . 'my-account/'; ?>" target="_blank"><?php esc_html_e( 'My Account', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a>
+				<a class="pricing-block-button__link" href="<?php echo esc_url( 'https://www.multicollab.com/upgrade-to-premium/' ); ?>" target="_blank"><?php esc_html_e( 'Upgrade', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow-white.svg' ); ?>" alt="external-link"></a>
 			</div>
 		</div>
 	
@@ -99,7 +100,7 @@ $cf_permissions = get_option( 'cf_permissions' );
 							<?php
 								$this->cf_get_activities();
 								require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-dashboard.php'; // Removed phpcs:ignore by Rishi Shah.
-							
+
 							?>
 						</div>
 						<?php if ( current_user_can( 'administrator' ) ) : ?>
@@ -110,7 +111,7 @@ $cf_permissions = get_option( 'cf_permissions' );
 							?>
 						">
 							<?php
-						
+
 							$this->cf_get_activities();
 							require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-report.php'; // Removed phpcs:ignore by Rishi Shah.
 							?>
@@ -143,14 +144,14 @@ $cf_permissions = get_option( 'cf_permissions' );
 							<?php // Floating Icons/@author Rishi Shah/@since EDD - 3.0.1 ?>
 							<div class="cf-content-box">
 								<div class="cf-cnt-box-header">
-									<h3><?php printf( '%s - <a href="https://docs.multicollab.com/settings/email-notifications" target="_blank"> %s </a>', esc_html__( 'Email Notification', 'content-collaboration-inline-commenting' ), esc_html__( 'Guide to Setup Email Notifications', 'content-collaboration-inline-commenting' ) ); ?></h3>
+									<h3><?php printf( '%s - <a href="https://docs.multicollab.com/settings/email-notifications" target="_blank"> %s  <img class="cf-external-link-icon" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ) . '" alt="external-link"></a>', esc_html__( 'Email Notification', 'content-collaboration-inline-commenting' ), esc_html__( 'Guide to Setup Email Notifications', 'content-collaboration-inline-commenting' ) ); ?></h3>
 								</div>
 								<?php
 									// Get general settings form HTML.
 									require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-email-notification.php';
 								?>
 							</div>
-							<?php	
+							<?php
 							$disabled_class = 'cf_disabled_input';
 							?>
 							<div class="cf-suggestion-box <?php echo esc_html( $disabled_class ); ?>">
@@ -188,7 +189,22 @@ $cf_permissions = get_option( 'cf_permissions' );
 								</div>
 							</div>
 
-							<?php // Manage Permissions/@author Rishi Shah/@since EDD - 3.0.1 ?>
+							<div class="cf-suggestion-box" id="real-time-settings">
+								<div class="cf-content-box">
+									<div class="cf-cnt-box-header">
+										<h3>
+											<?php printf( '%s', esc_html__( 'Real-time Editing ', 'content-collaboration-inline-commenting' ) ); ?>
+											(<i><?php printf( esc_html__( 'Beta', 'content-collaboration-inline-commenting' ) ); ?></i>)
+										</h3>
+									</div>
+									<?php
+										// Get permission form HTML.
+										require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-realtime-mode.php';
+									?>
+								</div>
+							</div>
+
+							<?php // Manage Permissions/@author Rishi Shah/@since EDD - 3.0.1. ?>
 							<?php $disabled_class = 'cf_disabled_input'; ?>
 							<div class="cf-suggestion-box <?php echo esc_html( $disabled_class ); ?>">
 								<div class="cf-content-box">
@@ -230,7 +246,8 @@ $cf_permissions = get_option( 'cf_permissions' );
 							<div id="cf-roles-slack-integration" class="cf-tab-inner 
 							<?php
 							if ( ! empty( $tab_number ) || 'intigrations' === $view ) {
-								echo esc_html( 'cf-tab-active' ); }
+								echo esc_html( 'cf-tab-active' );
+							}
 							?>
 							">
 								<div class="cf-content-box">

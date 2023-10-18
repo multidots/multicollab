@@ -265,7 +265,7 @@ class Commenting_Block_Email_Templates {
 
 			$comment_icon_html = '';
 			$html             .= "
-            <div class='comment-box new-comment' style='background:#fff;width:90%;max-width:1024px;font-family:Arial,serif;padding-top:40px;'>
+            <div class='comment-box new-comment' style='background:#fff;width:90%;font-family:Arial,serif;padding-top:40px;padding-right:20px;padding-bottom:20px;'>
                 <div class='comment-box-header' style='margin-bottom:30px;border:1px solid #E2E4E7;border-radius:20px;padding:30px;'>
                     {$post_title_html}
                 </div>
@@ -285,7 +285,7 @@ class Commenting_Block_Email_Templates {
 			';
 
 			$mentioned_html .= "
-            <div class='comment-box new-comment' style='background:#fff;width:90%;max-width:1024px;font-family:Arial,serif;padding-top:40px;'>
+            <div class='comment-box new-comment' style='background:#fff;width:90%;font-family:Arial,serif;padding-top:40px;padding-right:20px;padding-bottom:20px;'>
                 <div class='comment-box-header' style='margin-bottom:30px;border:1px solid #E2E4E7;border-radius:20px;padding:30px;'>
                     <p style='font-size:18px;color:#000;line-height:normal;margin:0;margin-bottom:20px'><span class='commenter-name'  style='padding: 9.5px 30px;
                     font-size: 18px;  background-color: #4B1BCE; border-radius: 8px; color: #fff; text-decoration: none; text-transform: capitalize;margin-right: 10px;font-weight: 700;

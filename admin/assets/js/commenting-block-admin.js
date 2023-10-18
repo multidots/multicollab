@@ -645,6 +645,20 @@
             }
         });
 
+        // On change event for real-time mode options.
+        $(document).on('change', 'input.cf_websocket_options', function () {
+
+            //Uncheck other options.
+            $('input.cf_websocket_options').not(this).prop('checked', false);
+
+            var val = $('input.cf_websocket_options:checked').val();
+            if( 'cf_websocket_custom' === val ) {
+                jQuery('#cf_multiedit_websocket').prop("disabled", false);
+            } else {
+                jQuery('#cf_multiedit_websocket').prop("disabled", true);
+            }
+        });
+
         // Save Publishing Settings.
         $('#cf_suggestion_settings').on('submit', function (e) {
             e.preventDefault();
@@ -900,6 +914,23 @@
             });
         });
 
+        // Save Real-Time Co-editing settings.
+        $('#cf_multiedit_mode').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('[type="submit"]').addClass('loading');
+            const settingsData = {
+                'action': 'cf_save_multiedit_settings',
+                'formData': $(this).serialize(),
+            };
+            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
+                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
+                $('#cf_multiedit_mode .cf-success').slideDown(300);
+                setTimeout(function () {
+                    $('#cf_multiedit_mode .cf-success').slideUp(300);
+                }, 3000);
+            });
+        });
+
         // Save show_avatar option in a localstorage.
         const data = {
             'action': 'cf_store_in_localstorage'
@@ -928,14 +959,25 @@
             $('#cf-span__comments .comment-resolve .resolve-cb').prop("checked", false);
             $('#cf-span__comments .cls-board-outer .buttons-wrapper').removeClass('active');
             $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
+            let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
+            if(true !== realTimeMode){
+                $('.btn-wrapper').css('display', 'none');
+            }
 
-            $('.btn-wrapper').css('display', 'none');
+            const selectedText = _this.attr('id');
+            const currentUser = wp.data.select('core').getCurrentUser()?.id;
+            if(realTimeMode){
+               var hide = commentLock(selectedText, currentUser);
+               if(hide){
+                return;
+               }
+            }
             removeFloatingIcon();
             _this.addClass('focus');
             _this.addClass('is-open');
             _this.css('opacity', '1');
 
-            const selectedText = _this.attr('id');
+            
             let topOfText;
             if (selectedText.match(/^el/m) !== null) {
                 topOfText = $('[datatext="' + selectedText + '"]').offset().top;
@@ -1022,6 +1064,15 @@
                     $('#cf-span__comments .cls-board-outer').removeClass('is-open');
                     $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
 
+                    let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
+                    const currentUser = wp.data.select('core').getCurrentUser()?.id;
+                    if(realTimeMode){
+                       var hide = commentLock(elID, currentUser);
+                       if(hide){
+                        return;
+                       }
+                    }
+
                     $('#' + elID + '.cls-board-outer').addClass('focus');
                     $('#' + elID + '.cls-board-outer').addClass('is-open');
                     $('#' + elID + '.cls-board-outer').css('opacity', '1');
@@ -1034,8 +1085,43 @@
                 }, 800);
             }
         });
-
-
+        
+        // Function for comment Lock
+        var commentLock = function (selectedText, currentUser) {
+            document.querySelector('.comment-lock')?.remove();
+            const activeUsers = wp.data.select("multiedit/block-collab/add-block-selections").getState();
+            var hide = false;
+            
+            for (let i = 0; i < activeUsers.length; i++) {
+                const comment = activeUsers[i];
+                if (comment.commentId === selectedText && comment.userId !== currentUser) {
+                    const commentInnerContainer = document.querySelector('#' + selectedText + ' .commentInnerContainer');
+                    const commentHeader = commentInnerContainer.querySelector('.comment-header');
+                    const commentLock = document.createElement('div');
+                    commentLock.setAttribute("class", "comment-lock");
+                    commentLock.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 18 18"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M16.25 16.25v-6.5a1.5 1.5 0 0 0-1.5-1.5h-9.5a1.5 1.5 0 0 0-1.5 1.5v6.5a1 1 0 0 0 1 1h10.5a1 1 0 0 0 1-1Zm-10-8V6a3.75 3.75 0 1 1 7.5 0v2.25"></path></svg>';
+                    commentInnerContainer.style.pointerEvents = 'none';
+                    commentInnerContainer.insertBefore(commentLock, commentHeader);
+                    var noticeMsg = __(
+                    `${comment.username} is adding comment to same thread, please try after some time.`,
+                    "content-collaboration-inline-commenting"
+                    );
+                    document.getElementById("cf-board__notice").innerHTML = noticeMsg;
+                    document
+                    .getElementById("cf-board__notice")
+                    .setAttribute("style", "display:block");
+                    setTimeout(function () {
+                    document
+                        .getElementById("cf-board__notice")
+                        .setAttribute("style", "display:none");
+                    document.getElementById("cf-board__notice").innerHTML = "";
+                    }, 3000);
+                    hide = true;
+                    
+                }
+            }
+            return hide;
+        } 
 
         // Email List Template Function.
         var emailList = function (appendTo, data) {
@@ -1209,7 +1295,8 @@
                 assignablePopup = `${currentBoardID} .cf-assignable-list-popup`;
                 editLink = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
                 mood = 'create';
-                if ('create' === mood) {
+                // Issue no. 579 solved At mention functionality. @author: Nirav Soni.
+                if ('create' === mood && '' === createTextarea) {
                     createTextarea = `${currentBoardID} .js-cf-share-comment`;
                 }
             });
@@ -2849,3 +2936,50 @@ function readCookie(name) {
     }
     return null;
 }
+
+function fetchBoardsCommonCode() {
+    let selectedNontextblock = [];
+      let selectedDataText;
+  
+      // ====== FOR Add block suggestion functionality. @author Mayank Jain since 3.4
+      $(".wp-block").each(function () {
+        let uniqueId;
+        if ( $(this).hasClass("blockAdded") ) {
+            uniqueId = $(this).attr("suggestion_id");
+        } else if( $(this).hasClass("blockremove") ) {
+            uniqueId = $(this).attr("suggestion_id");
+        } else if ($(this).attr("align_sg_id") !== undefined) {
+            uniqueId = $(this).attr("align_sg_id");
+        } else if ($(this).attr("textAlign_sg_id") !== undefined) {
+            uniqueId = $(this).attr("textAlign_sg_id");
+        } else if ($(this).attr("lock_sg_id") !== undefined) {
+            uniqueId = $(this).attr("lock_sg_id");
+        }
+        selectedNontextblock.push(uniqueId);
+      });
+  
+      $(
+        ".commentIcon, .wp-block mdspan,.cf-onwhole-block__comment, .wp-block .mdadded, .wp-block .mdmodified, .wp-block .mdremoved"
+      ).each(function () {
+        if (
+          $(this).hasClass("mdadded") ||
+          $(this).hasClass("mdremoved") ||
+          $(this).hasClass("mdmodified")
+        ) {
+          selectedDataText = $(this).attr("id");
+          if (
+            $(this).has("suggestion_id") &&
+            $(this).hasClass("cf-onwhole-block__comment")
+          ) {
+            selectedDataText = $(this).attr("datatext");
+          }
+        } else {
+          selectedDataText = $(this).attr("datatext");
+        }
+        selectedNontextblock.push(selectedDataText);
+      });
+  
+      return selectedNontextblock;
+  
+  }
+  

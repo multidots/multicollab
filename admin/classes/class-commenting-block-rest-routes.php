@@ -106,6 +106,11 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 				$lasteditedUsersID = isset( $usr_login_name ) ? (int) $usr_login_name->ID : 0;
 			} else {
 				$lasteditedUsersID = null;
+				$checkLastEditedUser = $wpdb->get_row($wpdb->prepare("SELECT ID FROM $wpdb->users WHERE display_name = %s", $editedLastUser)); //phpcs:ignore
+				if(!empty($checkLastEditedUser)){
+					$lasteditedUsersID = $checkLastEditedUser->ID;
+					$usr_login_name = get_user_by( 'ID', $lasteditedUsersID );
+				}
 			}
 			$lasteditedUsersUrl = get_avatar_url( $lasteditedUsersID );
 			$elID               = str_replace( '_', '', $row['meta_key'] );
@@ -114,6 +119,12 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 			foreach ( $comments['comments'] as $timestamp => $comment ) {
 
 				$user_info      = get_userdata( isset( $comment['userData'] ) ? $comment['userData'] : '' );
+
+				// Add break if $user_info->roles is giving null value.
+				if( empty( $user_info->roles ) ) {
+					break;
+				}
+
 				$comment_status = isset( $comment['status'] ) ? $comment['status'] : '';
 				if ( 'draft' !== $comment_status && 'permanent_draft' !== $comment_status ) {
 					$cmnts[] = array(
@@ -175,7 +186,7 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 					'lastUser'          => $editedLastUser,
 					'defaultAuthor'     => $defaultAuthor,
 					'defaultAuthorLink' => $defaultAuthorLink,
-					'defaultUserRole'   => $Defaultusers->roles[0] ?? '',
+					'defaultUserRole'   => $Defaultusers->roles[0],
 					'lastEditedTime'    => $lasteditedtime,
 					'lastUsersUrl'      => $lasteditedUsersUrl,
 					'type'              => 'el',

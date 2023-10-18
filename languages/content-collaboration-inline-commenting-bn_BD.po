@@ -885,7 +885,7 @@ msgstr "অথবা 14-দিনের বিনামূল্যে ট্র
 
 #: admin/assets/js/dist/suggestion-comment.js:79
 msgid "Please edit your comment."
-msgstr "সংরক্ষণ করার আগে পাঠ্য সম্পাদনা করুন!"
+msgstr "সংরক্ষণ করার আগে পাঠ্য সম্পাদনা করুন."
 
 #: admin/assets/js/src/nonTextblock.js:75
 msgid "Please select block/image to comment on."
@@ -905,11 +905,11 @@ msgstr "একটি চ্যানেল নির্বাচন করুন
 #: admin/assets/js/dist/block.build.min.js:60412 
 #: admin/assets/js/dist/block.build.min.js:60657
 msgid "Please add some comment. "
-msgstr "শেয়ার করার জন্য একটি মন্তব্য লিখুন!"
+msgstr "শেয়ার করার জন্য একটি মন্তব্য লিখুন"
 
 #: admin/partials/commenting-block-settings-page.php:70
 msgid "Plugin Developer"
-msgstr "প্লাগিন বিকাশকারী"
+msgstr "প্লাগিন বিকাশকারী."
 
 #: admin/settings/settings-suggestion-mode.php:53
 msgid "Please select a category"
@@ -1215,10 +1215,6 @@ msgstr "প্রস্তাবনা গৃহীত"
 #: admin/partials/commenting-block-settings-page.php:376
 msgid "Super Admin"
 msgstr "সুপার অ্যাডমিন"
-
-#: admin/partials/commenting-block-settings-page.php:247
-msgid "section on the Multicollab website"
-msgstr "Multicollab ওয়েবসাইটে বিভাগ"
 
 #: admin/assets/js/src/activityCentre.js:814 
 #: admin/partials/commenting-block-website-activity.php:87
@@ -1619,3 +1615,91 @@ msgstr "পিএম"
 #:
 msgid "pm"
 msgstr "পিএম"
+
+#: admin/partials/commenting-block-settings-page.php:553
+msgid "Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages."
+msgstr "মাল্টিকল্যাব ইংরেজিতে ডিফল্ট, নির্বাচিত ওয়ার্ডপ্রেস অ্যাডমিন ভাষার সাথে সিঙ্ক করে এবং অন্যান্য ভাষা সমর্থন করে।"
+
+#: admin/partials/commenting-block-settings-page.php:162
+msgid "Upgrade to Premium"
+msgstr "প্রিমিয়ামে আপগ্রেড করুন"
+
+#: admin/settings/settings-general.php:15
+msgid "Hide"
+msgstr "লুকান"
+
+#: admin/settings/settings-general.php:15
+msgid "Comments Column"
+msgstr "মন্তব্য কলাম"
+
+#: admin/settings/settings-general.php:15
+msgid "on the Post Lists."
+msgstr "পোস্টের তালিকায়।"
+
+#: admin/settings/settings-general.php:33
+msgid "reminder."
+msgstr "অনুস্মারক"
+
+#: admin/settings/settings-general.php:33
+msgid "Floating Comment"
+msgstr "ভাসমান মন্তব্য"
+
+#: admin/settings/settings-general.php:33
+msgid "toolbar."
+msgstr "টুলবার"
+
+#: admin/settings/settings-publishing.php:14
+msgid "authors of pending comments before publishing while still"
+msgstr "এখনও প্রকাশ করার আগে মুলতুবি মন্তব্য লেখক"
+
+#: admin/settings/settings-publishing.php:14
+msgid "allowing publish the post."
+msgstr "পোস্ট প্রকাশ করার অনুমতি দেয়।"
+
+#: admin/settings/settings-publishing.php:33
+msgid "authors from publishing posts with pending comments."
+msgstr "মুলতুবি মন্তব্য সহ পোস্ট প্রকাশ থেকে লেখক।"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "Enable Suggestions for"
+msgstr "এর জন্য পরামর্শগুলি সক্ষম করুন৷"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "all pages/posts"
+msgstr "সমস্ত পৃষ্ঠা/পোস্ট"
+
+#: admin/settings/settings-suggestion-mode.php:23
+msgid "(Not Recommended)."
+msgstr "(প্রস্তাবিত নয়)।"
+
+#: admin/settings/settings-suggestion-mode.php:36
+msgid "selected categories."
+msgstr "নির্বাচিত বিভাগ।"
+
+#: admin/settings/settings-suggestion-mode.php:86
+msgid "custom post types."
+msgstr "কাস্টম পোস্ট প্রকার।"
+
+#: admin/partials/commenting-block-settings-page.php:195
+msgid "Real-time Editing "
+msgstr "রিয়েল-টাইম এডিটিং"
+
+#: admin/partials/commenting-block-settings-page.php:196
+msgid "Beta"
+msgstr "বেটা"
+
+#: admin/partials/commenting-block-settings-page.php:197
+msgid "Guide to Setup WebSocket"
+msgstr "WebSocket সেটআপ করার জন্য গাইড"
+
+#: admin/settings/settings-realtime-mode.php:38
+msgid "Your WebSocket URL:"
+msgstr "আপনার WebSocket URL:"
+
+#: admin/settings/settings-realtime-mode.php:53
+msgid "Enter WebSocket URL"
+msgstr "WebSocket URL লিখুন"
+
+#: admin/settings/settings-realtime-mode.php:19
+msgid "Use Multicollab's complementary WebSocket service."
+msgstr "Multicollab এর পরিপূরক WebSocket পরিষেবা ব্যবহার করুন।"

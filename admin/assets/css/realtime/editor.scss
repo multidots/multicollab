@@ -1,0 +1,402 @@
+/**
+* The following styles get applied inside the editor only.
+*
+* Replace them with your own styles or remove the file completely.
+*/
+
+$breakpoint-mobile-max: 768px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+
+.cf-realtime-enable .wp-block-create-block-multiedit {
+	border: 1px dotted #f00;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections__block {
+	position: relative;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections__block.is-peer-selected {
+	outline: 1px dashed #000;
+	max-width: 650px;
+}
+
+.cf-realtime-enable .wp-block-gallery .block-collab-add-block-selections__block.is-peer-selected {
+	flex-grow: 1;
+	display: flex;
+}
+.cf-realtime-enable .wp-block-columns .block-collab-add-block-selections__block.is-peer-selected {
+	flex-grow: 1;
+	flex-basis: 0;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections__block.is-peer-selected:has(.wp-block-read-more) {
+	width: fit-content;
+}
+.cf-realtime-enable .block-collab-add-block-selections__block.is-peer-selected:-moz-has-child(.wp-block-read-more) {
+	width: fit-content;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections__block.is-peer-selected:has(.alignfull.wp-block-columns) {
+	max-width: none;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections__block.is-peer-selected:has(.alignwide.wp-block-columns) {
+	max-width: 1200px;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections__block.is-peer-selected:has(.alignfull.wp-block-group),
+.cf-realtime-enable .block-collab-add-block-selections__block.is-peer-selected:has(.alignfull.wp-block-media-text) {
+	max-width: none;
+	margin-right: calc(var(--wp--style--root--padding-right) * -1) !important;
+	margin-left: calc(var(--wp--style--root--padding-left) * -1) !important;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections__block-peer-names-top{
+	font-size: 12px;
+    position: absolute;
+    top: -20px;
+    display: flex;
+    text-transform:capitalize;
+    justify-content: flex-end;
+	right: 0;
+	left: 0;
+
+}
+
+.cf-realtime-enable .block-collab-add-block-selections__block-peer-names {
+	font-size: 12px;
+	position: absolute;
+	top: 100%;
+	display: grid;
+	grid-auto-flow: column;
+	grid-gap: 10px;
+	text-transform: uppercase;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections--caret {
+	background: #eee;
+	position: relative;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections--caret.is-collapsed {
+	background: none;
+}
+
+// .cf-realtime-enable .block-collab-add-block-selections--caret::before {
+// 	background: inherit;
+// 	// bottom: 0;
+// 	box-shadow: 0 0 2px 0 #2e3d48;
+// 	content: "";
+// 	font-size: 1em;
+// 	left: -1px;
+// 	position: absolute;
+// 	top: 0;
+// 	width: 2px;
+// }
+
+.cf-realtime-enable .block-collab-add-block-selections--caret.is-at-end::before {
+	left: auto;
+	right: -1px;
+}
+
+.cf-realtime-enable .block-collab-add-block-selections--caret::after {
+	font-size: 12px;
+	background-color: inherit;
+	box-shadow: 0 0 2px 0 #2e3d48;
+	content: attr(title);
+	left: -1px;
+	position: absolute;
+	top: -31px;
+	display: block;
+	color: #fff;
+	padding: 5px;
+    border-radius: 2px;
+    min-width: max-content;
+	text-align: center;
+
+}
+
+.cf-realtime-enable .block-collab-add-block-selections--caret.is-at-end::after {
+	left: 0;
+}
+.cf-realtime-enable .components-modal__screen-overlay:has(.editor-post-locked-modal) {
+	display: none;
+}
+
+// Resolve firefox postlock popup show issue.
+.cf-realtime-enable .components-modal__screen-overlay .editor-post-locked-modal {
+    display: none;
+}
+
+@-moz-document url-prefix(){
+.cf-realtime-enable .components-modal__screen-overlay + .editor-post-locked-modal {
+    display: none;
+}
+}
+.active-users {
+	height: 100%;
+	display: flex;
+	margin-right: 8px;
+
+	.active-user-round {
+		border-radius: 50%;
+		font-size: 16px;
+		color: #fff;
+		font-weight: 900;
+		margin: 3px -15px -8px 1px;
+		z-index: 1;
+		cursor: pointer;
+		float: left;
+		position: relative;
+		max-width: 36px;
+		max-height: 36px;
+
+		.active-user-round-tooltip {
+			visibility: hidden;
+			min-width: 100px;
+			background-color: black;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			padding: 5px;
+			position: absolute;
+			z-index: 1;
+			font-weight: normal;
+			top: 32px;
+			left: -35px;
+			text-transform: capitalize;
+		}
+
+		&:hover {
+			.active-user-round-tooltip {
+				visibility: visible;
+			}
+		}
+
+		img {
+			max-width: 30px;
+			max-height: 30px;
+			border-radius: 50%;
+		}
+	}
+
+
+	.active-users-plus-minus {
+		background-color: gray;
+		border: 1px solid;
+		border-radius: 100%;
+		font-size: 16px;
+		margin: 3px -8px 2px 6px;
+		color: #fff;
+		cursor: pointer;
+		width: 30px;
+		height: 30px;
+		line-height: 25px;
+		text-align: center;
+		font-weight: 600;
+		position: relative;
+		z-index: 1;
+		outline: 3px solid rgb(102 99 99 / 18%);
+		border: none;
+
+		span {
+			line-height: normal;
+		}
+
+		&:hover {
+			.active-user-dropdown {
+				display: block;
+			}
+		}
+
+		.active-user-count {
+			font-size: 13px;
+			line-height: 28px;
+		}
+
+		.active-user-arrow {
+			width: 0;
+			height: 0;
+			border-left: 5px solid transparent;
+			border-right: 5px solid transparent;
+			border-bottom: 7px solid #413d3d;
+			display: none;
+		}
+
+		&:hover {
+			.active-user-count {
+				display: none;
+			}
+
+			.active-user-arrow {
+				display: inline-block;
+			}
+		}
+
+		.active-user-dropdown {
+			display: none;
+			position: absolute;
+			width: 210px;
+			right: -60px;
+			top: 0;
+			margin-top: 33px;
+			box-shadow: 0 10px 40px 0 rgb(111 137 163 / 21%);
+			color: #2c2a31;
+			font-size: 14px;
+			font-weight: 400;
+			text-align: left;
+			border-radius: 6px;
+			padding-top: 6px;
+			background-color: #fff;
+			max-height: 400px;
+			overflow-y: auto;
+
+			.active-user-dropdown-single {
+				padding: 5px 10px;
+				line-height: normal;
+				display: flex;
+
+				&:first-child {
+					border-radius: 6px 6px 0 0;
+				}
+
+				&:last-child {
+					border-bottom: none;
+					border-radius: 0 0 6px 6px;
+				}
+
+				.active-user-name {
+					border: 1px solid;
+					border-radius: 100%;
+					font-size: 14px;
+					color: #fff;
+					font-weight: 500;
+					width: 30px;
+					height: 30px;
+					line-height: 30px !important;
+					display: inline-block;
+					text-align: center;
+					margin-right: 5px;
+
+					img {
+						border-radius: 100%;
+						min-width: 28px;
+						max-height: 28px;
+					}
+				}
+
+				.active-user-dropdown-name {
+					text-transform: capitalize;
+					margin-top: 5px;
+				}
+			}
+		}
+	}
+}
+
+.multiedit-panel-wrap {
+	display: grid;
+	grid-gap: 10px;
+
+	img {
+		width: 80%;
+	}
+
+	.components-button {
+		width: fit-content;
+		margin: 10px auto 0;
+		font-size: 12px;
+		height: 30px;
+		padding: 6px 20px;
+		border-radius: 4px;
+	}
+
+	p {
+		margin-bottom: 0;
+		font-size: 12px;
+		line-height: 20px;
+
+		b {
+			font-weight: 700;
+			color: #000000;
+		}
+	}
+
+	ul {
+		margin: 0;
+		padding: 0 0 7px 2px;
+		border-bottom: 1px solid #e3e3e3;
+		margin-bottom: 3px;
+
+		li {
+			font-size: 12px;
+			list-style: disc;
+			margin-left: 10px;
+			margin-bottom: 0;
+			line-height: 30px;
+			color: #000000;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
+
+
+.sidebar-close .commentOn .editor-styles-wrapper.block-editor-writing-flow > .block-editor-block-list__layout {
+	padding-right: 360px;
+}	
+
+button.components-button.multiedit-panel-invite-Btn:focus, button.components-button.multiedit-panel-invite-Btn:focus-visible{
+	box-shadow:unset
+}
+
+.multiedit-panel-wrap ul:last-child {
+	border-bottom: none;
+}
+#gp-active-users-wrapper {
+	margin-right: 15px;
+	margin-top: 10px;
+}
+
+.components-button.interface-complementary-area__pin-unpin-item{
+	display: none !important;
+}
+.block-collab-add-block-selections__block-peer-names + blockquote.wp-block-quote .block-collab-add-block-selections__block-peer-names {
+	position:absolute;
+	right:0;
+}
+.components-snackbar__content{
+text-transform: capitalize;
+}
+.cf-realtime-enable .interface-interface-skeleton__header .edit-post-header {
+    overflow: inherit;
+}
+/*.components-modal__screen-overlay { display :none;}*/
+// .editor-post-locked-modal {display: none;}
+.cf-realtime-enable .interface-interface-skeleton__header .edit-post-header {
+    overflow: inherit;
+}
+
+.cf-commentor-active{
+	margin-right: 0;
+	margin-top: 0;
+}
+
+@media screen and (min-width:781px) {
+.cf-commentor-active {
+	.active-users {
+		margin-right: 10rem;
+	}
+}
+}
+
+.is-peer-selected .wp-block   {
+	pointer-events: none;
+}
+.block-collab-add-block-selections__block.is-peer-selected {
+	cursor: not-allowed;
+}

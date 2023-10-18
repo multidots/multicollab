@@ -59,9 +59,11 @@ function javascriptLoad() {
     const el = document.querySelector('html');
     if (bodyHassetup_wizard) {
         el.style.paddingTop='0px';
+    } else if (window.innerWidth <= 600) {
+        el.style.paddingTop = '0px';
     } else {
         el.style.paddingTop='32px';
     }
-}
+  }
 
 document.addEventListener("DOMContentLoaded", javascriptLoad);

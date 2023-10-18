@@ -31,10 +31,10 @@ class User_And_Role {
 		/**
 		 * Actions/filters.
 		 */
-		
-		add_action( 'init', [ $this, 'add_guest_role' ] );
-		
-		add_action( 'admin_head', [ $this, 'guest_restrict_access' ] );
+
+		add_action( 'init', array( $this, 'add_guest_role' ) );
+
+		add_action( 'admin_head', array( $this, 'guest_restrict_access' ) );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class User_And_Role {
 		add_role(
 			'guest',
 			'Guest',
-			[
+			array(
 				'edit_posts'           => true,
 				'edit_others_posts'    => true,
 				'edit_published_posts' => true,
@@ -69,11 +69,11 @@ class User_And_Role {
 				'edit_published_pages' => true,
 				'edit_others_pages'    => true,
 				'publish_pages'        => false,
-			]
+			)
 		);
 
 		// To resolve comment vanish issue in guest functionality @author Mayank Jain.
-		if( is_user_logged_in() ) {
+		if ( is_user_logged_in() ) {
 			global $current_user;
 			$user_roles = $current_user->roles;
 
@@ -81,7 +81,7 @@ class User_And_Role {
 				kses_remove_filters(); // To resolve comment vanish issue.
 			}
 		}
-	
+
 	}
 
 	/**
@@ -103,7 +103,16 @@ class User_And_Role {
 			return;
 		}
 
-		if ( 'post' !== $current_screen->base ) {
+		$screen_base        = array( 'post', 'revision' ); // change for guest role for multiedit
+		// $allowed_post_types = array( 'post', 'page' ); // Commening this code to enable this functionality on custom post type as well.
+
+		// if ( ! in_array( $current_screen->base, $screen_base, true ) || ( ! empty( $current_screen->post_type ) && ! in_array( $current_screen->post_type, $allowed_post_types, true ) ) ) {
+		// 	wp_safe_redirect( site_url() );
+		// 	exit();
+		// }
+		
+		// Allow for custom type as well.
+		if ( ! in_array( $current_screen->base, $screen_base, true ) ) {
 			wp_safe_redirect( site_url() );
 			exit();
 		}
