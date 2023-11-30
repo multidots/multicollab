@@ -77,7 +77,6 @@ class Commenting_block_Public
          * class.
          */
 
-        wp_enqueue_style($this->plugin_name, trailingslashit(COMMENTING_BLOCK_URL) . '/public/css/commenting-block-public.css', array(), $this->version, 'all');
     }
 
     /**
@@ -100,6 +99,5 @@ class Commenting_block_Public
          * class.
          */
 
-        wp_enqueue_script($this->plugin_name, trailingslashit(COMMENTING_BLOCK_URL) . '/public/js/commenting-block-public.js', array( 'jquery' ), $this->version, false);
     }
 }

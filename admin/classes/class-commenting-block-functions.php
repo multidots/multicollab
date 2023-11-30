@@ -137,8 +137,8 @@ class Commenting_block_Functions {
 			if ( strpos( $dataid, '_el' ) === 0 ) {
 				$dataid            = str_replace( '_', '', $dataid );
 				$v                 = maybe_unserialize( $v[0] );
-				$comments          = $v['comments'];
-				$commented_on_text = $v['commentedOnText'];
+				$comments          = ! empty( $v['comments'] ) ? $v['comments'] : array();
+				$commented_on_text = isset( $v['commentedOnText'] ) ? $v['commentedOnText'] : '';
 				$resolved          = isset( $v['resolved'] ) ? $v['resolved'] : 'false';
 				$blockType         = isset( $v['blockType'] ) ? '-' . $v['blockType'] : '';
 

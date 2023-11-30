@@ -36,7 +36,7 @@ add_action('deleted_user', 'gc_delete_users_transient', 10, 3);
 if (!function_exists('gc_after_edit_load')) {
     function gc_after_edit_load()
     {
-        $post_id = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_STRING);
+        $post_id = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if (! empty($post_id)) {
             // WP User Query.
@@ -128,9 +128,9 @@ add_action('delete_user', 'gc_reassigning_deleted_user', 10, 3);
 if (!function_exists('get_visitor_ip_address')) {
     function get_visitor_ip_address() {
 
-        $HTTP_CLIENT_IP       = filter_input( INPUT_SERVER, 'HTTP_CLIENT_IP', FILTER_SANITIZE_STRING );
-        $HTTP_X_FORWARDED_FOR = filter_input( INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_SANITIZE_STRING );
-        $REMOTE_ADDR          = filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING );
+        $HTTP_CLIENT_IP       = filter_input( INPUT_SERVER, 'HTTP_CLIENT_IP', FILTER_SANITIZE_SPECIAL_CHARS );
+        $HTTP_X_FORWARDED_FOR = filter_input( INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_SANITIZE_SPECIAL_CHARS );
+        $REMOTE_ADDR          = filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_SPECIAL_CHARS );
 
         if ( ! empty( $HTTP_CLIENT_IP ) ) {
             return $HTTP_CLIENT_IP;
@@ -228,8 +228,8 @@ if (!function_exists('cf_dpb_promotional_banner')) {
 
                             if ( true === $display_banner_flag ) {
                                 if ( 'default' === $dpb_schedule_campaign_type ) {
-                                    $banner_cookie_show         = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
-                                    $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+                                    $banner_cookie_show         = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                                    $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
                                     $flag                       = false;
                                     if ( empty( $banner_cookie_show ) && empty( $banner_cookie_visible_once ) ) {
                                         setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes', time() + ( 86400 * 7 ) ); //phpcs:ignore
@@ -237,10 +237,10 @@ if (!function_exists('cf_dpb_promotional_banner')) {
                                         $flag = true;
                                     }
 
-                                    $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+                                    $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
                                     if ( ! empty( $banner_cookie_show ) || true === $flag ) {
 
-                                        $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+                                        $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
                                         $banner_cookie = isset( $banner_cookie ) ? $banner_cookie : '';
                                         if ( empty( $banner_cookie ) && 'yes' !== $banner_cookie ) {
                                             ?>
@@ -273,8 +273,8 @@ if (!function_exists('cf_dpb_promotional_banner')) {
                                     }
                                 } else {
 
-                                    $banner_cookie_show         = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
-                                    $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+                                    $banner_cookie_show         = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                                    $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
                                     $flag                       = false;
                                     if ( empty( $banner_cookie_show ) && empty( $banner_cookie_visible_once ) ) {
                                         setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes'); //phpcs:ignore
@@ -282,10 +282,10 @@ if (!function_exists('cf_dpb_promotional_banner')) {
                                         $flag = true;
                                     }
 
-                                    $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+                                    $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
                                     if ( ! empty( $banner_cookie_show ) || true === $flag ) {
 
-                                        $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_STRING );
+                                        $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
                                         $banner_cookie = isset( $banner_cookie ) ? $banner_cookie : '';
                                         if ( empty( $banner_cookie ) && 'yes' !== $banner_cookie ) {
                                             ?>

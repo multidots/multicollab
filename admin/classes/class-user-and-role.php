@@ -82,6 +82,18 @@ class User_And_Role {
 			}
 		}
 
+		// Add condition to allow translation setting for WPML plugin.
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		}
+
+		if( true === is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			// get the the role object
+			$role_object = get_role( 'guest' );
+			// add $cap capability to this role object
+			$role_object->add_cap( 'manage_options', true );
+		}
+
 	}
 
 	/**
@@ -96,6 +108,16 @@ class User_And_Role {
 			return;
 		}
 
+		// Add condition to allow translation setting for WPML plugin.
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		}
+		
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS );
+		if( isset( $page ) && 'tm/menu/translations-queue.php' === $page && true === is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			return;
+		}
+
 		global $current_user,$current_screen;
 		$user_roles = $current_user->roles;
 
@@ -104,13 +126,7 @@ class User_And_Role {
 		}
 
 		$screen_base        = array( 'post', 'revision' ); // change for guest role for multiedit
-		// $allowed_post_types = array( 'post', 'page' ); // Commening this code to enable this functionality on custom post type as well.
 
-		// if ( ! in_array( $current_screen->base, $screen_base, true ) || ( ! empty( $current_screen->post_type ) && ! in_array( $current_screen->post_type, $allowed_post_types, true ) ) ) {
-		// 	wp_safe_redirect( site_url() );
-		// 	exit();
-		// }
-		
 		// Allow for custom type as well.
 		if ( ! in_array( $current_screen->base, $screen_base, true ) ) {
 			wp_safe_redirect( site_url() );

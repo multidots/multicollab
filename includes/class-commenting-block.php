@@ -143,6 +143,11 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-guest-user-functions.php'; // phpcs:ignore
 
 			/**
+			 * This class is responsible for defining all guest related copy links functionalities.
+			 */
+			require_once COMMENTING_BLOCK_DIR . 'admin/classes/copy-link-feature/class-guest-copy-link-feature.php'; // phpcs:ignore
+
+			/**
 			 * This class is responsible for defining all custom rest route endpoints.
 			 */
 			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-guest-email-template.php'; // phpcs:ignore
@@ -228,6 +233,7 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 			$this->loader->add_action( 'init', $plugin_admin, 'sg_register_post_meta_field' );
 			$this->loader->add_action( 'wp_ajax_sg_update_suggestion_history', $plugin_admin, 'sg_update_suggestion_history' );
 
+			$this->loader->add_action( 'wp_ajax_realtime_collaborators_activity_update_ajax', $plugin_admin, 'realtime_collaborators_activity_update_ajax_function' );
 		}
 
 		/**
@@ -242,6 +248,16 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 
 			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'cf_enqueue_styles' );
 			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'cf_enqueue_scripts' );
+
+			if (class_exists('Copy_Link_Feature')) { // For the copy link feature frontend.
+				$copy_link_frontend = new Copy_Link_Feature();
+				$this->loader->add_action( 'init', $copy_link_frontend, 'cf_add_request_access_endpoint' );
+				$this->loader->add_action( 'wp_enqueue_scripts', $copy_link_frontend, 'cf_enqueue_frontend_scripts' );
+				$this->loader->add_action( 'template_include', $copy_link_frontend, 'cf_load_request_access_template' );
+
+				$this->loader->add_action( 'wp_ajax_nopriv_request_access_form_action', $copy_link_frontend, 'cf_request_access_form_action_handler' );
+				$this->loader->add_action('wp_ajax_request_access_form_action', $copy_link_frontend, 'cf_request_access_form_action_handler');
+			}
 		}
 
 		/**
