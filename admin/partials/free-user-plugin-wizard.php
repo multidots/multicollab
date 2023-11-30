@@ -104,7 +104,7 @@
 								</ul>
 								<?php
 													$vis_ip      = get_visitor_ip_address();
-													$remote_attr = filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING );
+													$remote_attr = filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_SPECIAL_CHARS );
 								if ( 'localhost' === gethostbyaddr( $remote_attr ) ) {
 									$vis_ip = '150.129.206.240';
 								}

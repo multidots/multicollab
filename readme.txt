@@ -5,9 +5,9 @@ Author: Multicollab
 Author URI: https://www.multicollab.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
-Requires at least: 6.1
-Tested up to: 6.3.1
-Stable tag: 4.0
+Requires at least: 6.2
+Tested up to: 6.4
+Stable tag: 4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,7 +213,16 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 
 == Changelog ==
 
-= 4.0 - 18.10.2023
+= 4.1 - 30.11.2023 =
+* [New] — Undo & Redo functionality is now compatible with all default Gutenberg blocks. 
+* [New] — Users can now effortlessly copy the link of the post and page to share with Guest users.
+* [Enhancement] — Real-time editing of content requests has been significantly improved. 
+* [Enhancement] — Multicollab is now compatible with php8.1. 
+* [Enhancement] — Substantial improvement in Email notifications. 
+* [Enhancement] — Collaborator details can now be viewed from the activity panel. 
+* [Enhancement] —@mention functionality now works seamlessly with copy and paste comments.
+
+= 4.0 - 18.10.2023 =
 * [New] Real-time co-editing allows multiple users to collaborate simultaneously.
 * [Enhancement] Improvement in API requests
 * [Bug Fix] Full Block comment UI

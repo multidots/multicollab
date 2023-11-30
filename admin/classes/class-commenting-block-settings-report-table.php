@@ -5,6 +5,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 class MC_List_Table_Report extends WP_List_Table {
 
+	private $found_data;
+	
 	/**
 	 * Gets column of table.
 	 *
@@ -77,11 +79,11 @@ class MC_List_Table_Report extends WP_List_Table {
 	 * @param string $which
 	 */
 	public function extra_tablenav( $which ) {
-		$cpt_filter = filter_input( INPUT_GET, 'cpt_report', FILTER_SANITIZE_STRING );
+		$cpt_filter = filter_input( INPUT_GET, 'cpt_report', FILTER_SANITIZE_SPECIAL_CHARS );
 		$cpt_where  = $cpt_filter ? "post_type = '$cpt_filter'" : "(post_type = 'page' || post_type = 'post')";
-		$cat_filter = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_STRING );
-		$view       = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_STRING );
-		$m          = filter_input( INPUT_GET, 'm_report', FILTER_SANITIZE_STRING );
+		$cat_filter = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_SPECIAL_CHARS );
+		$view       = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_SPECIAL_CHARS );
+		$m          = filter_input( INPUT_GET, 'm_report', FILTER_SANITIZE_SPECIAL_CHARS );
 
 		/* add code to solve get_categories issue */
 		$cat_args   = array(

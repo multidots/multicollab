@@ -21,7 +21,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 	 */
 	public function cf_get_activities() {
 
-		$view = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_STRING );
+		$view = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_SPECIAL_CHARS );
 
 		// Page/Post Activity.
 		if ( 'post-activity' === $view ) {
@@ -41,10 +41,10 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$items_per_page = 10;
 
 		// Post type filter.
-		$cpt_filter = filter_input( INPUT_GET, 'cpt', FILTER_SANITIZE_STRING );
+		$cpt_filter = filter_input( INPUT_GET, 'cpt', FILTER_SANITIZE_SPECIAL_CHARS );
 
 		// Months filter.
-		$m_filter = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_STRING );
+		$m_filter = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_SPECIAL_CHARS );
 		if ( $m_filter ) {
 			$year  = substr( $m_filter, 0, 4 );
 			$month = substr( $m_filter, 4, 2 );
@@ -54,7 +54,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$query         = "$query_replace FROM $wpdb->posts as p
 				LEFT JOIN $wpdb->postmeta as pm ON p.ID = pm.post_id";
 
-		$cat_filter = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_STRING );
+		$cat_filter = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_SPECIAL_CHARS );
 		if ( $cat_filter ) {
 			$query .= " LEFT JOIN $wpdb->term_relationships as tr ON pm.post_id = tr.object_id";
 		}
@@ -83,7 +83,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$found_posts = $wpdb->get_var( $query_all ); //phpcs:ignore 
 		wp_reset_query();
 
-		$order  = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING );
+		$order  = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_SPECIAL_CHARS );
 		$order  = $order ?? 'DESC';
 		$query .= " ORDER BY pm.meta_value $order $limit_query";
 		$result = $wpdb->get_results( $query ); //phpcs:ignore
@@ -221,10 +221,10 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$items_per_page = 10;
 
 		// Post type filter.
-		$cpt_filter = filter_input( INPUT_GET, 'cpt_report', FILTER_SANITIZE_STRING );
+		$cpt_filter = filter_input( INPUT_GET, 'cpt_report', FILTER_SANITIZE_SPECIAL_CHARS );
 
 		// Months filter.
-		$m_filter = filter_input( INPUT_GET, 'm_report', FILTER_SANITIZE_STRING );
+		$m_filter = filter_input( INPUT_GET, 'm_report', FILTER_SANITIZE_SPECIAL_CHARS );
 		if ( $m_filter ) {
 			$year  = substr( $m_filter, 0, 4 );
 			$month = substr( $m_filter, 5, 2 );
@@ -233,7 +233,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$query         = "$query_replace FROM $wpdb->posts as p
 				LEFT JOIN $wpdb->postmeta as pm ON p.ID = pm.post_id";
 
-		$cat_filter = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_STRING );
+		$cat_filter = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_SPECIAL_CHARS );
 		if ( $cat_filter ) {
 			$query .= " LEFT JOIN $wpdb->term_relationships as tr ON pm.post_id = tr.object_id";
 		}
@@ -262,7 +262,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$found_posts = $wpdb->get_var( $query_all ); //phpcs:ignore 
 		wp_reset_query();
 
-		$order  = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING );
+		$order  = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_SPECIAL_CHARS );
 		$order  = $order ?? 'DESC';
 		$query .= " ORDER BY pm.meta_value $order $limit_query";
 		$result = $wpdb->get_results( $query ); //phpcs:ignore
@@ -391,29 +391,31 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 	public function cf_get_site_activity() {
 		global $wpdb;
 
-		$cpt   = filter_input( INPUT_GET, 'cpt', FILTER_SANITIZE_STRING );
-		$cat   = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_STRING );
-		$m     = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_STRING );
-		$month = substr( $m, 5, 2 ); // Solved filters for Dashboard tab. @author: Rishi Shah.
-		$year  = substr( $m, 0, 4 );
+		$cpt   = filter_input( INPUT_GET, 'cpt', FILTER_SANITIZE_SPECIAL_CHARS );
+		$cat   = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_SPECIAL_CHARS );
+		$m     = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ($m !== null) {
+			$month = substr( $m, 5, 2 ); // Solved filters for Dashboard tab. @author: Rishi Shah.
+			$year  = substr( $m, 0, 4 );
+		}
 
-		$action      = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+		$action      = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
 		$offset      = filter_input( INPUT_POST, 'pointer', FILTER_VALIDATE_INT );
-		$date        = filter_input( INPUT_POST, 'date', FILTER_SANITIZE_STRING );
+		$date        = filter_input( INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS );
 		$post_id     = filter_input( INPUT_POST, 'postID', FILTER_VALIDATE_INT );
 		$category_id = filter_input( INPUT_POST, 'categoryID', FILTER_VALIDATE_INT );
 		// Will be used in the included file.
-		$board_position = filter_input( INPUT_POST, 'boardPosition', FILTER_SANITIZE_STRING ); // Removed phpcs:ignore by Rishi Shah.
+		$board_position = filter_input( INPUT_POST, 'boardPosition', FILTER_SANITIZE_SPECIAL_CHARS ); // Removed phpcs:ignore by Rishi Shah.
 		// Will be used in the included file.
-		$displayed_dates = filter_input( INPUT_POST, 'displayedDates', FILTER_SANITIZE_STRING ); // Removed phpcs:ignore by Rishi Shah.
-		$displayed_dates = explode( '|', $displayed_dates );
+		$displayed_dates = filter_input( INPUT_POST, 'displayedDates', FILTER_SANITIZE_SPECIAL_CHARS ); // Removed phpcs:ignore by Rishi Shah.
+		$displayed_dates = explode( '|', (string)$displayed_dates );
 		$offset          = $offset ?? 0;
 		$limit           = 10;
 
 		// will be used in the included file.
 		$new_pointer = $offset + $limit; // Removed phpcs:ignore by Rishi Shah.
 
-		$post_cpt        = filter_input( INPUT_POST, 'cpt', FILTER_SANITIZE_STRING );
+		$post_cpt        = filter_input( INPUT_POST, 'cpt', FILTER_SANITIZE_SPECIAL_CHARS );
 		$cat             = empty( $cat ) ? $category_id : $cat;
 		$cpt             = empty( $cpt ) ? sanitize_text_field( isset( $post_cpt ) ? $post_cpt : '' ) : $cpt; // Removed phpcs:ignore by Rishi Shah.
 		$autodrat_id_str = $this->cf_find_autodraft_id();

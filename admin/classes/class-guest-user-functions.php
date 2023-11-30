@@ -85,6 +85,37 @@ class Guest_user_functions {
 				'permission_callback' => array( $this, 'check_activity_permits' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/commonCopyLink',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'commonCopyLink' ),
+				'permission_callback' => array( $this, 'check_activity_permits' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/usersAccessRequests',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'usersAccessRequests' ),
+				'permission_callback' => array( $this, 'check_activity_permits' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/grantPostAccess',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'grantPostAccess' ),
+				'permission_callback' => array( $this, 'check_activity_permits' ),
+			)
+		);
+
 		register_rest_route(
 			$this->namespace,
 			'/checkUserCapabilities',
@@ -612,6 +643,19 @@ class Guest_user_functions {
 									update_user_meta( $user_id, 'multicollab_guest_token_with_post_id', $token_with_postid );
 								}
 
+								//add user removed activity in post area so we can show user again if they are added back		
+								$realtime_collobrator = get_post_meta( $post_id, '_realtime_collaborators_activity', true );
+								$realtime_collobrator =  (array) json_decode( $realtime_collobrator, true );
+								if( isset( $realtime_collobrator ) && !empty( $realtime_collobrator ) ) {
+									foreach($realtime_collobrator as $collaborator) {
+										if($collaborator['userId'] === (int)$user_id){
+											$realtime_collobrator[] = array('userId' => (int)$user_id, 'timestamp' => current_time( 'timestamp' ), 'type' => 'Removed' );
+											update_post_meta( $post_id, '_realtime_collaborators_activity', wp_json_encode( $realtime_collobrator ) );
+											break;
+										}
+									}
+								}
+
 								// Temporary fix for users that are currently accessing the post, by logging out active users
 								// get all sessions for user with ID $user_id
 								$sessions = WP_Session_Tokens::get_instance($user_id);
@@ -740,6 +784,15 @@ class Guest_user_functions {
 		if ( wp_doing_ajax() ) {
 			return;
 		}
+
+		// Add condition to allow translation setting for WPML plugin.
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		}
+		if( isset( $_GET['page'] ) && 'tm/menu/translations-queue.php' === $_GET['page'] && true === is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			return;
+		}
+		
 		global $post;
 		$post_id = ( isset( $_GET['post'] ) ) ? absint( $_GET['post'] ) : get_the_ID();
 		if ( ! $post_id ) {
@@ -789,6 +842,313 @@ class Guest_user_functions {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Callback to send the rest response.
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	public function commonCopyLink( $data ) {
+
+		$auth_token = $data->get_header( 'X-WP-Nonce' ) ?? '';
+
+		if ( ! wp_verify_nonce( $auth_token, 'wp_rest' ) ) {
+			$response = new WP_Error(
+				'rest_forbidden',
+				__( 'Sorry, you are not allowed to access it.' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+
+			return rest_ensure_response( $response );
+		}
+		$post_id = intval( $data->get_param( 'post_id' ) ) ?? '';
+		if($post_id){
+			$token   = get_post_meta($post_id, 'copy_link_post_token', true) ?? '';
+			if(!$token){
+				$token = wp_generate_password( 12, false, false );
+				update_post_meta($post_id, 'copy_link_post_token', $token);
+			}
+		}
+		$copy_link = get_home_url() . '/request-access?post=' . $post_id . '&token=' . $token;
+
+		return rest_ensure_response( $copy_link );
+	}
+
+	/**
+	 * Callback to send the rest response.
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	public function usersAccessRequests( $data ) {
+
+		$auth_token = $data->get_header( 'X-WP-Nonce' ) ?? '';
+
+		if ( ! wp_verify_nonce( $auth_token, 'wp_rest' ) ) {
+			$response = new WP_Error(
+				'rest_forbidden',
+				__( 'Sorry, you are not allowed to access it.' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+
+			return rest_ensure_response( $response );
+		}
+		$post_id = intval( $data->get_param( 'post_id' ) ) ?? '';
+		$requested_emails = array();
+		if($post_id){
+			$flag = 0;
+			$user_access_requests   = (array) get_post_meta($post_id, 'users_requests', true) ?? [];
+			if(!empty($user_access_requests)){
+				foreach ($user_access_requests as $key => $approved_requests) {
+					if ( 'No' === $approved_requests ) {
+						$requested_emails[$flag]['email'] = $key;
+						$requested_emails[$flag]['name'] = ucfirst(strtok( $key, '@' )) ?? $key;
+						$requested_emails[$flag]['avatar'] = 'https://0.gravatar.com/avatar?s=96&d=mm&r=g';
+						$flag++;
+					}
+				}
+			}
+		}
+		return rest_ensure_response( $requested_emails );
+	}
+
+	/**
+	 * Callback to send the rest response.
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	public function grantPostAccess( $data ) {
+
+		$auth_token = $data->get_header( 'X-WP-Nonce' ) ?? '';
+
+		if ( ! wp_verify_nonce( $auth_token, 'wp_rest' ) ) {
+			$response = new WP_Error(
+				'rest_forbidden',
+				__( 'Sorry, you are not allowed to access it.' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+
+			return rest_ensure_response( $response );
+		}
+
+		$post_id = intval( $data->get_param( 'post_id' ) ) ?? '';
+		$users   = json_decode( $data->get_param( 'users' ) ) ?? array();
+
+		$notices         = array();
+		$user_id         = get_current_user_id();
+		$inviter_user_id = $user_id;
+
+
+		$capabilities   = $data->get_param( 'capabilities' ) ?? '';
+		$message        = '';
+		$post_id        = intval( $data->get_param( 'post_id' ) ) ?? '';
+		$guest_cap_role = '';
+		$user_role      = 'guest';
+
+		$users_requests = (array) get_post_meta($post_id, 'users_requests', true) ?? '';
+		$inviter_info = get_userdata( $inviter_user_id );
+		if ( ! empty( $inviter_info ) ) {
+			$inviter_name          = ucfirst( $inviter_info->display_name ) ?? '';
+			$inviter_email         = $inviter_info->user_email ?? '';
+			$inviter_profile_image = get_avatar_url( isset( $inviter_info->user_email ) ? $inviter_info->user_email : '' ) ?? '';
+		}
+
+		$mail_template = new Guest_Email_Template();
+
+		$response = array();
+		if ( ! empty( $users ) ) {
+			foreach ( $users as $user ) {
+				if ( ! empty( $user ) ) {
+					$user_email   = $user->email ?? '';
+					$capabilities = $user->capabilities ?? '';
+
+					if ( 'commenter' === $capabilities ) {
+						$guest_cap_role = 'Comment';
+					} elseif ( 'viewer' === $capabilities ) {
+						$guest_cap_role = 'View';
+					} elseif ( 'coeditor' === $capabilities ) {
+						$guest_cap_role = 'Edit';
+					}
+
+					if( !$user_email || !$capabilities ) {
+						continue;
+					}
+
+					if ( isset($users_requests[$user_email]) ) {
+						if( 'deny' === $capabilities ){
+							unset($users_requests[$user_email]);
+							update_post_meta($post_id, 'users_requests', $users_requests);
+							$mail_template->access_request_mail_html( $inviter_name, $inviter_email, '', get_the_title( $post_id ), $user_email, '', get_post_permalink( $post_id ), true, $inviter_profile_image);
+							continue;
+						} else if( '' === $capabilities ){
+							$users_requests[$user_email] = 'No';
+							update_post_meta($post_id, 'users_requests', $users_requests);
+							continue;
+						} else {
+							$users_requests[$user_email] = 'Yes';
+							update_post_meta($post_id, 'users_requests', $users_requests);
+						}
+					}
+					if ( email_exists( $user_email ) ) { 
+						$existing_user = get_user_by( 'email', $user_email );
+
+						$fname   = $existing_user->first_name ?? '';
+						$user_id = $existing_user->ID ?? '';
+
+						$post_access = (array) get_user_meta( $user_id, 'guest_user_post_ids', true ) ?? array();
+
+						array_push( $post_access, $post_id );
+						update_user_meta( $user_id, 'guest_user_post_ids', $post_access );
+
+						$guest_role = get_user_meta( $user_id, 'guest_user_post_ids_roles', true );
+						if ( ! empty( $guest_role ) ) {
+							if ( ! array_key_exists( $post_id, $guest_role ) ) {
+								$guest_role[ $post_id ] = $capabilities;
+								update_user_meta( $user_id, 'guest_user_post_ids_roles', $guest_role );
+							}
+						} else {
+							$guest_user_post_ids_roles             = array();
+							$guest_user_post_ids_roles[ $post_id ] = $capabilities;
+							update_user_meta( $user_id, 'guest_user_post_ids_roles', $guest_user_post_ids_roles );
+						}
+
+						$time  = time();
+						$token = wp_hash( $user_email . $time );
+
+						$guest_token = (array) get_user_meta( $user_id, 'multicollab_guest_token', true ) ?? array();
+						array_push( $guest_token, $token );
+						update_user_meta( $user_id, 'multicollab_guest_token', $guest_token );
+
+						$multicollab_guest_token_timestamp = get_user_meta( $user_id, 'multicollab_guest_token_timestamp', true );
+						if ( ! empty( $multicollab_guest_token_timestamp ) ) {
+							if ( ! array_key_exists( $token, $multicollab_guest_token_timestamp ) ) {
+								$multicollab_guest_token_timestamp[ $token ][0] = time();
+								$multicollab_guest_token_timestamp[ $token ][1] = '';
+								update_user_meta( $user_id, 'multicollab_guest_token_timestamp', $multicollab_guest_token_timestamp );
+							}
+						} else {
+							$multicollab_guest_token_timestamp              = array();
+							$multicollab_guest_token_timestamp[ $token ][0] = time();
+							$multicollab_guest_token_timestamp[ $token ][1] = '';
+							update_user_meta( $user_id, 'multicollab_guest_token_timestamp', $multicollab_guest_token_timestamp );
+						}
+
+						$login_url = site_url( 'wp-login.php', 'login' );
+
+						$login_url = add_query_arg(
+							array(
+								'user_id'  => $user_id,
+								'username' => $existing_user->user_login ?? '',
+								'post_id'  => $post_id,
+								'token'    => $token,
+							),
+							$login_url
+						);
+
+						$token_with_postid = get_user_meta( $user_id, 'multicollab_guest_token_with_post_id', true );
+						if ( ! empty( $token_with_postid ) ) {
+							if ( ! array_key_exists( $post_id, $token_with_postid ) ) {
+								$token_with_postid[ $post_id ] = $token;
+								update_user_meta( $user_id, 'multicollab_guest_token_with_post_id', $token_with_postid );
+							}
+						} else {
+							$token_with_postid             = array();
+							$token_with_postid[ $post_id ] = $token;
+							update_user_meta( $user_id, 'multicollab_guest_token_with_post_id', $token_with_postid );
+						}
+
+						$guest_login_url = get_user_meta( $user_id, 'multicollab_guest_login_url', true );
+						if ( ! empty( $guest_login_url ) ) {
+							if ( ! array_key_exists( $post_id, $guest_login_url ) ) {
+								$guest_login_url[ $post_id ] = $login_url;
+								update_user_meta( $user_id, 'multicollab_guest_login_url', $guest_login_url );
+							}
+						} else {
+							$guest_login_url             = array();
+							$guest_login_url[ $post_id ] = $login_url;
+							update_user_meta( $user_id, 'multicollab_guest_login_url', $guest_login_url );
+						}
+
+						$mail_template->invitation_mail_html( $inviter_name, $inviter_email, $inviter_profile_image, get_the_title( $post_id ), '', $user_email, '', '', $login_url, $message, $guest_cap_role, get_post_permalink( $post_id ) );
+					} else {
+						$fname      = strtok( $user_email, '@' ) ?? $user_email;
+						$user_login = str_replace( ' ', '', $fname . wp_generate_password( 3, false, false ) );
+						$user_login = preg_replace( '/[^A-Za-z0-9\-]/', '', $user_login );
+						$user_login = strtolower( $user_login );
+
+						$time     = time();
+						$password = wp_generate_password( 20, false );
+						$token    = wp_hash( $password . $time );
+
+						$new_user_id = wp_insert_user(
+							array(
+								'user_login'   => $user_login,
+								'user_pass'    => $password,
+								'user_email'   => $user_email,
+								'first_name'   => $fname,
+								'display_name' => $fname,
+								'role'         => $user_role,
+							)
+						);
+
+						$post_access = array();
+						array_push( $post_access, $post_id );
+						update_user_meta( $new_user_id, 'guest_user_post_ids', $post_access );
+
+						$guest_user_post_ids_roles             = array();
+						$guest_user_post_ids_roles[ $post_id ] = $capabilities;
+						update_user_meta( $new_user_id, 'guest_user_post_ids_roles', $guest_user_post_ids_roles );
+
+						$post_token = array();
+						array_push( $post_token, $token );
+						update_user_meta( $new_user_id, 'multicollab_guest_token', $post_token );
+
+						$guest_user_post_ids_roles             = array();
+						$guest_user_post_ids_roles[ $post_id ] = $token;
+						update_user_meta( $new_user_id, 'multicollab_guest_token_with_post_id', $guest_user_post_ids_roles );
+
+						$multicollab_guest_token_timestamp              = array();
+						$multicollab_guest_token_timestamp[ $token ][0] = time();
+						$multicollab_guest_token_timestamp[ $token ][1] = '';
+						update_user_meta( $new_user_id, 'multicollab_guest_token_timestamp', $multicollab_guest_token_timestamp );
+
+						$login_url = site_url( 'wp-login.php', 'login' );
+
+						$login_url = add_query_arg(
+							array(
+								'user_id'  => $new_user_id,
+								'username' => $user_login,
+								'post_id'  => $post_id,
+								'token'    => $token,
+							),
+							$login_url
+						);
+
+						$guest_login_url             = array();
+						$guest_login_url[ $post_id ] = $login_url;
+						update_user_meta( $new_user_id, 'multicollab_guest_login_url', $guest_login_url );
+
+						map_meta_cap( 'edit_others_posts', $new_user_id, $post_id );
+						map_meta_cap( 'edit_published_posts', $new_user_id, $post_id );
+						map_meta_cap( 'edit_post', $new_user_id, $post_id );
+
+						$mail_template->invitation_mail_html( $inviter_name, $inviter_email, $inviter_profile_image, get_the_title( $post_id ), '', $user_email, '', '', $login_url, $message, $guest_cap_role, get_post_permalink( $post_id ) );
+					}
+				}
+			}
+			$notices = array('type' => 'success');
+		} else {
+			$notices          = array(
+				'type' => 'error',
+			);
+			$response['data'] = $notices;
+			return rest_ensure_response( $response );
+		}
+		$response['data'] = $notices;
+		return rest_ensure_response( $response );
 	}
 }
 

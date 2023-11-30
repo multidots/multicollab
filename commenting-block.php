@@ -13,8 +13,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Multicollab
- * Description:       A plugin serves the commenting and suggestion feature like Google Docs within the Gutenberg Editor! Content Collaboration made easy for WordPress.
- * Version:           4.0
+ * Description:       Google Docs-Style Collaboration in WordPress. No copy-paste between apps. Faster Publishing. Works in Your Workflow. <strong>Features:</strong> Inline Commenting. Real-time Editing. Suggest Edits. Email & Slack Notifications. Guest Collaboration. Custom Permission. And a lot more!
+ * Version:           4.1
  * Author:            Multicollab
  * Author URI:        https://www.multicollab.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 }
 
 // Plugin version.
-define( 'COMMENTING_BLOCK_VERSION', '4.0' );
+define( 'COMMENTING_BLOCK_VERSION', '4.1' );
 
 // Define constants.
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
@@ -43,17 +43,44 @@ define( 'COMMENTING_BLOCK_DIR', plugin_dir_path( __FILE__ ) );
 define( 'COMMENTING_BLOCK_BASE', plugin_basename( __FILE__ ) );
 define( 'COMMENTING_NONCE', 'BFaYbfonJ=n@R<8kId|nN8x #W[-S>1%Sazm%<' );
 
+add_filter( 'plugin_row_meta', 'cf_custom_plugin_row_meta', 10, 4 );
+
+/**
+ * Added extra links to default meta row.
+ *
+ * @author: Himanshu shekhar
+ * @version 4.1
+ *
+ * @param array  $plugin_meta An array of the plugin's metadata.
+ * @param string $plugin_file The path to the main plugin file.
+ */
+if ( ! function_exists( 'cf_custom_plugin_row_meta' ) ) {
+    function cf_custom_plugin_row_meta( $plugin_meta, $plugin_file ) {
+    	if ( strpos( $plugin_file, plugin_basename( __FILE__ ) ) !== false ) {
+    		$insert_position = array_search( 'By Multicollab', array_keys( $plugin_meta ) );
+    		$links_array     = array();
+
+    		// Add your custom links to the array.
+    		$links_array['upgrade_link'] = '<a href="https://www.multicollab.com/upgrade-to-premium/" style="color:#4abe17" target="_blank">Upgrade to Pro</a>';
+
+    		// Insert the "Upgrade to Pro" link at the desired position.
+    		array_splice( $plugin_meta, $insert_position + 1, 0, $links_array );
+
+    	}
+
+    	return $plugin_meta;
+    }
+}
+
 /**
  * Set Store variable and EDD plan IDs for localhost and Live servers.
  *
  * @author: Rishi Shah
  * @version 3.4
  */
-$remote_arrd = filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING );
-
-	define( 'CF_PROMOTIONAL_BANNER_API_URL', 'https://www.multicollab.com/' );
-	define( 'CF_STORE_URL', 'https://www.multicollab.com/' );
-	define( 'EDD_PLAN_PRO', 2817 );
+define( 'CF_PROMOTIONAL_BANNER_API_URL', 'https://www.multicollab.com/' );
+define( 'CF_STORE_URL', 'https://www.multicollab.com/' );
+define( 'EDD_PLAN_PRO', 3793 );
 
 /**
  * The code that runs during plugin activation.

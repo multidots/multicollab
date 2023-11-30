@@ -248,11 +248,11 @@
         if ($this.closest('.user-commented-on').find(".show-all").hasClass('js-hide')) {
             $this.closest('.user-commented-on').find(".show-all").removeClass('js-hide');
             $this.closest('.user-commented-on').find(".show-less").addClass('js-hide');
-            $(this).text(__('Collapse', 'content-collaboration-inline-commenting'));
+            $(this).text(__('Show less', 'content-collaboration-inline-commenting'));
         } else {
             $this.closest('.user-commented-on').find(".show-all").addClass('js-hide');
             $this.closest('.user-commented-on').find(".show-less").removeClass('js-hide');
-            $(this).text(__('Show all', 'content-collaboration-inline-commenting'));
+            $(this).text(__('Show more', 'content-collaboration-inline-commenting'));
         }
     });
 
@@ -1207,6 +1207,9 @@
 
                         caretPos = range.endOffset;
 
+                    }else if (range.commonAncestorContainer.ownerDocument.activeElement === editableDiv) {
+                        console.log('sel', sel.focusOffset);
+                        caretPos = sel.focusOffset;
                     }
                 }
             } else if (document.selection && document.selection.createRange) {
@@ -1223,7 +1226,7 @@
             return caretPos;
         }
         // Insert Display Name.
-        var insertDisplayName = function (setRange, email, fullName, displayName) {
+        var insertDisplayName = function (setRange, email, userId, fullName, displayName) {
 
             var gapElContent = document.createTextNode("\u00A0"); // Adding whitespace after the name.
             var anchor = document.createElement('a');
@@ -1234,6 +1237,8 @@
             anchor.setAttribute('title', fullName);
             anchor.setAttribute('data-email', email);
             anchor.setAttribute('class', 'js-mentioned');
+            anchor.setAttribute('data-display-name', displayName.substr(1));
+            anchor.setAttribute('data-user-id', userId);
             var anchorContent = document.createTextNode(splitDisplayName[0]);
             anchor.appendChild(anchorContent);
             setRange.insertNode(anchor);
@@ -1251,7 +1256,7 @@
 
         }
         // Format Pasted Content.
-        var formatPastedContent = function () {
+        /*var formatPastedContent = function () {
             $(document.body).on('paste', '.js-cf-share-comment, .js-cf-edit-comment', function (e) {
                 e.preventDefault();
                 let paste = (e.originalEvent || e).clipboardData.getData('text/plain');
@@ -1267,7 +1272,7 @@
             })
 
         }
-        formatPastedContent();
+        formatPastedContent();*/
         // Create @mentioning email features.
         var createAutoEmailMention = function () {
             var el = '';
@@ -1549,8 +1554,9 @@
                     let currentTextAt = typedText.substr(-1, 1);
                     var sel = document.getSelection();
                     var selNodeChar = sel?.baseNode?.data?.charAt(sel.anchorOffset - 1) || sel?.anchorNode?.data?.charAt(sel.anchorOffset - 1);
-
-                    if ('@' === currentTextAt || '@' === typedText.charAt(cursorPos - 1) || '@' === selNodeChar) {
+                    var startTextAt = sel?.baseNode?.data?.charAt(0) || sel?.anchorNode?.data?.charAt(0);
+                    
+                    if ('@' === startTextAt || '@' === currentTextAt || '@' === typedText.charAt(cursorPos - 1) || '@' === selNodeChar) {
                         isEmail = true;
 
                         $.ajax({
@@ -1577,7 +1583,6 @@
                     mentioncounter = 0;
                 }
 
-                //console.log(e.key);
                 // Issue solved after backspace and last work @. @author: Rishi Shah.
                 if ('Backspace' === e.key) {
                     if (!$(createTextarea).text()) {
@@ -1593,18 +1598,14 @@
                         return false;
                     }
 
-                    // console.log( "Cdsjbvdhk" );
-
                     if (!keysToAvoid.find(checkKeys)) {
 
                         // Check for backspace.
-                        //console.log( e.key );
                         if ('keypress' !== e.type) {
                             if ('Backspace' === e.key) {
                                 //alert("single backspace");
                                 let prevCharOfEmailSymbol = typedText.substr(-1, 1);
                                 //trackedStr = '';
-                                //console.log(prevCharOfEmailSymbol);
                                 if ('@' === prevCharOfEmailSymbol) {
                                     //trackedStr = '';
                                     trackedStr = '@'; // Issue solved after backspace and last work @. @author: Rishi Shah.
@@ -1646,7 +1647,6 @@
                         $(assignablePopup).remove();
                     }
                     doingAjax = false;
-                    //console.log(trackedStr);
                     // If trackedStr contains other chars with @ as well.
                     if ('@' !== trackedStr && $(createTextarea).is(':focus') === true) {
 
@@ -1730,8 +1730,9 @@
                         var fullName = $(this).find('.cf-user-list-item:eq( ' + index + ' )').attr("data-full-name");
                         var displayName = '@' + $(this).find('.cf-user-list-item:eq( ' + index + ' )').attr("data-display-name");
                         var email = $(this).find('.cf-user-list-item:eq( ' + index + ' )').attr("data-email");
+                        var userId = $(this).find('.cf-user-list-item:eq( ' + index + ' )').attr("user-id");
                         // Insert Display Name.
-                        insertDisplayName(range, email, fullName, displayName, createTextarea);
+                        insertDisplayName(range, email, userId, fullName, displayName, createTextarea);
                         var typedContent = $(createTextarea).html();
                         // Remove @ before display name anchor tag and insterted in to anchor tag
                         // commented this below line because of bug fixing of <br> removing after user tag
@@ -1787,15 +1788,17 @@
                     var fullName = $(this).data('full-name');
                     var displayName = '@' + $(this).data('display-name');
                     var email = $(this).data('email');
-
+                    var userId = $(this).data("user-id");
                     // Insert Display Name.
-                    insertDisplayName(range, email, fullName, displayName, createTextarea);
+                    insertDisplayName(range, email, userId, fullName, displayName, createTextarea);
 
                     var typedContent = $(createTextarea).html();
                     // Remove @ before display name anchor tag and insterted in to anchor tag
                     // commented this below line because of bug fixing of <br> removing after user tag
                     //typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
                     typedContent = typedContent.replace(/@<a/g, '<a');
+                    typedContent = typedContent.replace(/<\/?span .[^>]*>/g, '');
+                    typedContent = typedContent.replaceAll("</span>", "");
 
                     if ('firefox' !== browser) {
                         typedContent = chromeEdgeClearFix(typedContent);
@@ -1911,8 +1914,18 @@
                     </div>
                     <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
                     </div>`;
-                    checkbox = DOMPurify.sanitize(checkbox);
-                    $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
+                    // Get the assigner id of the current board. @author - Nirav Soni Since-4.0.1 
+                    
+                    let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
+                    if (thisUserId !== currentBoardAssingerID) {
+                        if ('' !== el) {
+                            if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
+                                $(`#${el} ${checkBoxContainer}`).empty();
+                                checkbox = DOMPurify.sanitize(checkbox);
+                                $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
+                            }
+                        }
+                    }
                 }
                 
                 //change assignee message when checkbox selected
@@ -1923,6 +1936,52 @@
                 });
                 
             });
+
+             // paste comment text with check assign user @author - Nirav Soni Since-4.0.1
+            $(document.body).on('keyup paste', '.js-cf-share-comment, .js-cf-edit-comment', function (e) {
+
+                if( $('.js-cf-share-comment a').hasClass('js-mentioned') || $('.js-cf-edit-comment a').hasClass('js-mentioned') ){
+                    
+                    let checkbox;
+                    let thisUserId = $(this).parents('.shareCommentContainer').find('a.js-mentioned').data('user-id');
+                    let thisDisplayName = $(this).parents('.shareCommentContainer').find('a.js-mentioned').data('display-name');
+                    let thisUserEmail = $(this).parents('.shareCommentContainer').find('a.js-mentioned').data('email');
+                    let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).data('user-id');
+                    const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
+
+                    let assignToElement = $(`#${el} ${checkBoxContainer}`);
+                    if (assignToElement.length === 0) {
+                        checkbox = `
+                        <div class="cf-assign-to">
+                        <div class="cf-assign-to-inner">
+                            <label for="${el}-cf-assign-to-user">
+                                <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
+                            </label>
+                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+                        </div>
+                        <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
+                        </div>`;
+
+                        let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
+                        if (thisUserId !== currentBoardAssingerID) {
+                            if ('' !== el) {
+                                if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
+                                    $(`#${el} ${checkBoxContainer}`).empty();
+                                    checkbox = DOMPurify.sanitize(checkbox);
+                                    $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
+                                }
+                            }
+                        }
+                    }
+
+                    //change assignee message when checkbox selected
+
+                    $(document).on("click", '#' + el + '-cf-assign-to-user', function () {
+                        var checked = $('#' + el + ' .cf-assign-to-user').is(':checked');
+                        $('#' + el + ' .assignMessage').text(checked ? __('The Assigned person will be notified and responsible for marking as done.', 'content-collaboration-inline-commenting') : __('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting'));
+                    });
+               }
+            })
 
             // On Assignable Email Click.
             $(document.body).on('click', '.cf-assignable-list li', function (e) {
@@ -2520,7 +2579,6 @@ var timeAgo = function (time) {
                 var seconds = ((now.getTime() - time) * .001) >> 0;
                 var minutes = seconds / 60;
                 var hrsFormat = translateTimeString(time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true }));
-                // console.log((seconds < 60 && template('seconds', seconds) || minutes < 60 && template('minutes', minutes) || minutes > 60 && forhrsToday(hrsFormat)) + (minutes < 60 ? templates.suffix : ""));
                 return templates.prefix + (
                     seconds < 60 && template('seconds', seconds) || minutes < 60 && template('minutes', minutes) || minutes > 60 && forhrsToday(hrsFormat)) + (minutes < 60 ? templates.suffix : "");
             }
@@ -2799,7 +2857,6 @@ function showInfoBoardonNewComments() {
         var didPostSaveRequestSucceed = wp.data.select('core/editor').didPostSaveRequestSucceed();
 
         if (isSavingPost || isAutosavingPost) {
-            //console.log('saving post');
             if (didPostSaveRequestSucceed) {
                 if (null !== pinboard) {
                     pinboard.setAttribute('style', 'display:none');
@@ -2983,3 +3040,75 @@ function fetchBoardsCommonCode() {
   
   }
   
+  function floatCommentsBoard(selectedText) {
+
+    $('.cls-board-outer').removeClass('focus');
+    $('.cls-board-outer').removeClass('is-open');
+    $('.cls-board-outer').removeClass('onGoing');
+    $('.cf-icon__addBlocks, .cf-icon__removeBlocks').removeClass('focus');
+    $('.cf-icon-wholeblock__comment,.cf-onwhole-block__comment').removeClass('focus');
+    
+    $('#cf-span__comments .comment-delete-overlay').removeClass('show');
+    $('#cf-span__comments .comment-resolve .resolve-cb').prop("checked", false);
+    $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
+
+    var singleBoardId = selectedText;
+    let topOfTextSingleBoard;
+    let singleBoardIdWithSg;
+    
+    if(undefined !== singleBoardId ){
+        if (singleBoardId.match(/^el/m) === null) {
+            if(document.querySelector(`[suggestion_id="${singleBoardId}"]`)) {
+                topOfTextSingleBoard = $(`[suggestion_id="${singleBoardId}"]`).offset()?.top;
+            } else if(document.querySelector(`[align_sg_id="${singleBoardId}"]`)) {     // Added for the align block level suggestions @author - Mayank / since 3.6
+                topOfTextSingleBoard = $(`[align_sg_id="${singleBoardId}"]`).offset()?.top;
+            } else if(document.querySelector(`[textAlign_sg_id="${singleBoardId}"]`)) { // Added for the text align block level suggestions @author - Mayank / since 3.6
+                topOfTextSingleBoard = $(`[textAlign_sg_id="${singleBoardId}"]`).offset()?.top;
+            } else if(document.querySelector(`[lock_sg_id="${singleBoardId}"]`)) { // Added for the lock level suggestions @author - Mayank / since 3.6
+                topOfTextSingleBoard = $(`[lock_sg_id="${singleBoardId}"]`).offset()?.top;
+            } else {
+                topOfTextSingleBoard = $('#' + singleBoardId + '').offset()?.top;
+            }
+            singleBoardIdWithSg = 'sg' + singleBoardId;
+
+            // Add active class on activity bar. @author: Rishi Shah @since: 3.4
+            $(`#cf-sg${singleBoardId}`).addClass('active');
+        } else {
+            topOfTextSingleBoard = $('[datatext="' + singleBoardId + '"]').offset().top;
+            singleBoardIdWithSg = singleBoardId;
+        }
+    }
+    
+    $('#' + singleBoardIdWithSg).css('opacity', '1');
+    $('#' + singleBoardIdWithSg + '.cls-board-outer').addClass('is-open');
+    $('#' + singleBoardIdWithSg).addClass('focus onGoing');
+    $('#' + singleBoardIdWithSg).offset({ top: topOfTextSingleBoard });
+
+    var underlineAllAttr = document.querySelectorAll('[data-rich-text-format-boundary="true"]');
+    if( underlineAllAttr ) {
+        for (var singleElement = 0; singleElement < underlineAllAttr.length; ++singleElement) {
+            if( underlineAllAttr[singleElement].classList.contains('mdadded') || underlineAllAttr[singleElement].classList.contains('mdremoved') ) {
+                if( singleBoardId !== underlineAllAttr[singleElement].id ) {
+                    jQuery( '#' + underlineAllAttr[singleElement].id ).attr('data-rich-text-format-boundary', false);
+                } else {
+                    jQuery( '#' + underlineAllAttr[singleElement].id ).attr('data-rich-text-format-boundary', true);
+                }
+            } else if( underlineAllAttr[singleElement].parentNode.classList.contains('mdmodified') ) {
+                if( singleBoardId !== underlineAllAttr[singleElement].parentNode.id ) {
+                    jQuery( '#' + underlineAllAttr[singleElement].parentNode.id ).children().attr('data-rich-text-format-boundary', false);
+                } else {
+                    jQuery( '#' + underlineAllAttr[singleElement].parentNode.id ).children().attr('data-rich-text-format-boundary', true);
+                }
+            } else if( underlineAllAttr[singleElement].classList.contains('mdspan-comment') ) {
+                var suggestionId = underlineAllAttr[singleElement].getAttribute('datatext');
+                if( singleBoardId !== suggestionId ) {
+                    jQuery('[datatext="'+suggestionId+'"]').attr('data-rich-text-format-boundary', false);
+                } else {
+                    jQuery('[datatext="'+suggestionId+'"]').attr('data-rich-text-format-boundary', true);
+                }
+                
+            }
+        }
+    }
+    scrollBoardToPosition(topOfTextSingleBoard);   
+}

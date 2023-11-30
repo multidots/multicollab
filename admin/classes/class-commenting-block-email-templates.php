@@ -51,7 +51,7 @@ class Commenting_Block_Email_Templates {
 	public function cf_email_resolved_thread( $args ) {
 
 		$html                      = $args['html'];
-		$p_title                   = html_entity_decode($args['post_title']);
+		$p_title                   = html_entity_decode( $args['post_title'] );
 		$site_title                = $args['site_title'];
 		$list_of_comments          = $args['list_of_comments'];
 		$commented_on_text         = $args['commented_on_text'];
@@ -67,17 +67,21 @@ class Commenting_Block_Email_Templates {
 
 		if ( ! empty( $list_of_comments ) && is_array( $list_of_comments ) ) {
 			$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-			$html   .= "<div class='commented_text' style='background-color:#F8F8F8;border:1px solid #E2E4E7;font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#191E23;'>" . isset( $block_type_html ) . $commented_on_text . '</div>';
+			$html   .= "<div class='commented_text' style='background-color:#F8F8F8;border:1px solid #E2E4E7;font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#191E23;word-wrap: break-word;'>" . isset( $block_type_html ) . $commented_on_text . '</div>';
 
 			// Get comments loop.
 			$this->list_of_comments = $list_of_comments;
 			$html                  .= $this->cf_email_get_comments_loop();
-
+			$http_host        = filter_input( INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_SPECIAL_CHARS );
 			$html .= '<table class="cf-marked-resolved-by" style="padding-bottom:10px"><tr><td valign="middle">';
 			$html .= '<span class="icon-resolved" style="padding-right:5px;line-height:1;vertical-align:middle;"><img src="' . esc_url_raw( COMMENTING_BLOCK_URL . 'admin/assets/images/icon-check.png' ) . '" alt="resolved by"  style="width: 16px;"/></span>';
 			$html .= '<span><em style="color: #191e23;">' . __( 'Marked as resolved by', 'content-collaboration-inline-commenting' ) . '</em></span>';
 			$html .= '<a href="mailto:' . esc_attr( $current_user_email ) . '" title="' . esc_attr( $current_user_display_name ) . '" target="_blank" style="color:#4B1BCE;text-decoration:none;padding-left:5px;"><em>' . esc_html( $current_user_display_name ) . '</em></a>';
 			$html .= '</td></tr></table>';
+			$html .= '  </div>';
+			$html .= '<div>
+			<p style="color: #5f6368; font-size: 12px; line-height: 16px; letter-spacing: .3px; margin-bottom: 0;">' . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . '<a style="color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;" href="' . esc_url( 'https://www.notion.so/mdnotes/Getting-Started-5103a8f3be084fc0880039161a49e23a' ) . '">' . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . '</a>' . __( ' to notify you of a collaboration activity on this post of ', 'content-collaboration-inline-commenting' ) . '<span><a href="' . esc_url( get_site_url() ) . '" style="color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;">' . esc_html( $http_host ) . '</a>.</span></p>
+			<p style="color: #5f6368; font-size: 12px; line-height: 16px; letter-spacing: .3px; margin: 0;">' . __( 'You have received this email because you are either mentioned or a participant in the post.', 'content-collaboration-inline-commenting' ) . '</p>';
 			$html .= '</div>'; // .comment-box-body end
 			$html .= '</div>'; // .comment-box end
 
@@ -172,7 +176,7 @@ class Commenting_Block_Email_Templates {
 		$mentioned_html            = isset( $args['html'] ) ? $args['html'] : '';
 		$elid                      = $args['elid'];
 		$post_id                   = $args['post_ID'];
-		$p_title                   = html_entity_decode($args['post_title']);
+		$p_title                   = html_entity_decode( $args['post_title'] );
 		$assign_to                 = $args['assign_to'];
 		$site_title                = $args['site_title'];
 		$new_comments              = $args['new_comments'];
@@ -245,11 +249,11 @@ class Commenting_Block_Email_Templates {
 			if ( ! empty( $assign_to ) ) {
 				$assigned_user        = get_user_by( 'ID', $assign_to );
 				$assigned_to_who_html = "
-                <div class='comment-assigned-to' style='padding-bottom:20px;'>
+                <div class='comment-assigned-to' style='padding-bottom:20px;padding-top: 10px;'>
 					<span class='icon-assign' style='padding-right:5px;line-height:1;vertical-align:middle;'>
 						<img src='" . esc_url_raw( COMMENTING_BLOCK_URL . 'admin/assets/images/assigned-user.png' ) . "' alt='Assigned to' />
 					</span>
-                    " . __( 'Assigned to', 'content-collaboration-inline-commenting' ) . "<a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name' style='color:#4B1BCE;text-decoration:none;padding-left:5px;vertical-align:middle;'>@" . esc_html( $assigned_user->display_name ) . '</a>
+                    " . __( 'Assigned to', 'content-collaboration-inline-commenting' ) . "<a href='mailto:" . sanitize_email( $assigned_user->user_email ) . "' title='" . esc_attr( $assigned_user->display_name ) . "' class='commenter-name' style='color:#4B1BCE;text-decoration:none;padding-left:5px;'>@" . esc_html( $assigned_user->display_name ) . '</a>
                 </div>
             	';
 
@@ -257,55 +261,93 @@ class Commenting_Block_Email_Templates {
 				$slack_assign_to_text  = 'Assigned to ';
 				$slack_assign_to_link  = '<mailto:' . sanitize_email( $assigned_user->user_email ) . '|' . esc_html( $assigned_user->display_name ) . '>';
 			}
-
+			$http_host        = filter_input( INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_SPECIAL_CHARS );
+			$site_title_html  = '';
+			$site_title_html .= "<h2 class='comment-page-web' style='margin:0;display:inline-block;'><a href='" . esc_url( get_site_url() ) . "' target='_blank' style='font-size:20px;color:#4B1BCE;text-decoration:underline;color:#4B1BCE;word-wrap: break-word;'>" . esc_html( $http_host ) . '</a></h2>';
+			$arrow_svg = "<span style='vertical-align: middle;padding-right: 5px;'><img src='" . esc_url_raw( COMMENTING_BLOCK_URL . 'admin/assets/images/email-arrow.png' ) . "' alt='Arrow' width='22' height='13' /></span>";
 			$post_title_html = '';
+
 			if ( ! empty( $args['post_title'] ) ) {
-				$post_title_html .= "<h2 class='comment-page-title' style='margin:0;'><a href='" . esc_url( $post_edit_link ) . "' target='_blank' style='font-size:20px;color:#4B1BCE;text-decoration:underline;color:#4B1BCE;'>" . esc_html( $p_title ) . '</a></h2>';
+				$post_title_html .= $arrow_svg . "<h2 class='comment-page-title' style='margin:0;display:inline-block;'><a href='" . esc_url( $post_edit_link ) . "' target='_blank' style='font-size:20px;color:#4B1BCE;text-decoration:underline;color:#4B1BCE;'>" . esc_html( wp_trim_words( $p_title, 3, '...' ) ) . '</a></h2>';
 			}
 
 			$comment_icon_html = '';
 			$html             .= "
-            <div class='comment-box new-comment' style='background:#fff;width:90%;font-family:Arial,serif;padding-top:40px;padding-right:20px;padding-bottom:20px;'>
-                <div class='comment-box-header' style='margin-bottom:30px;border:1px solid #E2E4E7;border-radius:20px;padding:30px;'>
-                    {$post_title_html}
+            <div class='comment-box new-comment' style='background:#fff;width:95%;font-family:Arial,serif;padding-top:40px;padding-right:10px;padding-bottom:20px;padding-left:10px;'>
+                <div class='comment-box-header' style='margin-bottom:30px;'>
+					<div style='display: flex;align-items: center;justify-content:space-between;flex-wrap: wrap;margin-bottom:20px;gap:20px;'>
+						<div class='comment-box-header-right'>
+							{$site_title_html}
+							{$post_title_html}
+						</div>
+						<div class='view_reply' style='
+							margin-right: 10px;
+							display: inline-block;cursor: pointer;margin-left:auto;'>
+							<div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "' style='padding: 9.5px 30px;
+							background-color: #4B1BCE;border-radius: 8px;font-size: 16px;text-decoration: none;color: #fff;'>" . __( 'Open', 'content-collaboration-inline-commenting' ) . "</a>
+						</div>
+					</div>
                 </div>
                 <div class='comment-box-body' style='border:1px solid #E2E4E7;border-radius:20px;padding:30px;'>
                     <h2 class='head-with-icon' style='margin:0;padding-bottom:30px;font-family:Roboto,sans-serif;font-weight:500;font-size:26px;color:#000;'>
                         {$comment_icon_html}
                         " . __( 'Comments', 'content-collaboration-inline-commenting' ) . "
                     </h2>
-                    <div class='commented_text' style='background-color:#F8F8F8;border:1px solid #E2E4E7;font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#191E23;font-family: 'Helvetica Neue',sans-serif;'>" . isset( $block_type_html ) . esc_html( $commented_on_text ) . "</div>
+                    <div class='commented_text' style='background-color:#F8F8F8;border:1px solid #E2E4E7;font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#191E23;'>" . isset( $block_type_html ) . esc_html( $commented_on_text ) . "</div>
                     {$assigned_to_who_html}
                     {$comment_list_html}
-                    <div class='view_reply' style='padding:10px 0;'>
-                        <div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "' style='font-size: 16px;text-decoration: none;color: #4B1BCE;'>" . __( 'Open', 'content-collaboration-inline-commenting' ) . '</a></div>
-                    </div>
                 </div>
+				<div>
+					<p style='color: #5f6368;font-size: 12px;
+					line-height: 16px;letter-spacing: .3px;margin-bottom:0;'>" . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . "<a style='color: #4B1BCE;font-size: 12px;line-height: 16px;letter-spacing: .3px;text-decoration: none;' href='" . esc_url( 'https://www.notion.so/mdnotes/Getting-Started-5103a8f3be084fc0880039161a49e23a' ) . "'>" . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . "</a>
+					" . __( 'to notify you of a collaboration activity on this post of', 'content-collaboration-inline-commenting' ) . " <span><a href='" . esc_url( get_site_url() ) . "' style='color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;'>" . esc_html( $http_host ) . "</a>.</span></p>
+					<p style='color: #5f6368;font-size: 12px; line-height: 16px; letter-spacing: .3px;margin:0;'>" . __( 'You have received this email because you are either mentioned or a participant in the post.', 'content-collaboration-inline-commenting' ) . "</p>
+				</div>
+
             </div>
-			';
+			";
 
 			$mentioned_html .= "
-            <div class='comment-box new-comment' style='background:#fff;width:90%;font-family:Arial,serif;padding-top:40px;padding-right:20px;padding-bottom:20px;'>
-                <div class='comment-box-header' style='margin-bottom:30px;border:1px solid #E2E4E7;border-radius:20px;padding:30px;'>
-                    <p style='font-size:18px;color:#000;line-height:normal;margin:0;margin-bottom:20px'><span class='commenter-name'  style='padding: 9.5px 30px;
-                    font-size: 18px;  background-color: #4B1BCE; border-radius: 8px; color: #fff; text-decoration: none; text-transform: capitalize;margin-right: 10px;font-weight: 700;
-                    display: inline-block;'>" . esc_html( $current_user_display_name ) . '</span>' . __( 'Mentioned you in a comment in the following page.', 'content-collaboration-inline-commenting' ) . "</p>
-					{$post_title_html}
-                </div>
-                <div class='comment-box-body' style='border:1px solid #E2E4E7;border-radius:20px;padding:30px;'>
-					<h2 class='head-with-icon' style='margin:0;padding-bottom:30px;font-family:Roboto,sans-serif;font-weight:500;font-size:26px;color:#000;'>
-						{$comment_icon_html}
-						" . __( 'Comments', 'content-collaboration-inline-commenting' ) . "
-					</h2>
-                    <div class='commented_text' style='background-color:#F8F8F8;border:1px solid #E2E4E7;font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#191E23;font-family: 'Helvetica Neue',sans-serif;'>" . isset( $block_type_html ) . esc_html( $commented_on_text ) . "</div>
-                    {$assigned_to_who_html}
-                    {$comment_list_html}
-                    <div class='view_reply' style='padding:10px 0;'>
-					<div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "' style='font-size: 16px;text-decoration: none;color: #4B1BCE;'>" . __( 'Open', 'content-collaboration-inline-commenting' ) . '</a></div>
-                    </div>
-                </div>
-            </div>
-			';
+			<div class='comment-box new-comment' style='background:#fff;width:95%;font-family:Arial,serif;padding-top:40px;padding-right:10px;padding-bottom:20px;padding-left:10px;'>
+				<div class='comment-box-header' style='margin-bottom:30px;'>
+					<p style='font-size:18px;color:#000;line-height:normal;margin:0;margin-bottom:20px'><span class='commenter-name' style='text-transform: capitalize;font-weight: 700;display: inline-block;'>" . esc_html( $current_user_display_name ) . '</span>';
+
+			if ( ! empty( $assigned_user ) ) {
+				// If $assigned_user is not empty, display assigned text.
+				$mentioned_html .= __( ' assigned you in a comment on this post.', 'content-collaboration-inline-commenting' );
+			} elseif ( ! empty( $newly_mentioned_emails ) ) {
+				// If $newly_mentioned_emails is not empty, display mentioned text.
+				$mentioned_html .= __( ' mentioned you in a comment on this post.', 'content-collaboration-inline-commenting' );
+			}
+
+			$mentioned_html .= "
+						</p>
+						<div style='display: flex;align-items: center;justify-content:space-between;flex-wrap: wrap;gap:20px;'>
+							<div class='comment-box-header-right'>
+								{$site_title_html}
+								{$post_title_html}
+							</div>
+							<div class='view_reply' style='margin-right: 10px;display: inline-block;cursor: pointer;margin-left:auto;'>
+								<div class='view_reply_btn'><a href='" . esc_url( $post_edit_link ) . "' style='padding: 9.5px 30px;background-color: #4B1BCE;border-radius: 8px;font-size: 16px;text-decoration: none;color: #fff;'>" . __( 'Open', 'content-collaboration-inline-commenting' ) . "</a></div>
+							</div>
+						</div>
+					</div>
+					<div class='comment-box-body' style='border:1px solid #E2E4E7;border-radius:20px;padding:30px;'>
+						<h2 class='head-with-icon' style='margin:0;padding-bottom:30px;font-family:Roboto,sans-serif;font-weight:500;font-size:26px;color:#000;'>
+							{$comment_icon_html}
+							" . __( 'Comments', 'content-collaboration-inline-commenting' ) . "
+						</h2>
+						<div class='commented_text' style='background-color:#F8F8F8;border:1px solid #E2E4E7;font-size:16px;padding:20px;border-radius:8px;border-left:5px solid #4B1BCE;margin-bottom:20px;color:#191E23;'>" . isset( $block_type_html ) . esc_html( $commented_on_text ) . "</div>
+						{$assigned_to_who_html}
+						{$comment_list_html}
+					</div>
+					<div>
+						<p style='color: #5f6368;font-size: 12px;line-height: 16px;letter-spacing: .3px;margin-bottom:0;'>" . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . "<a style='color: #4B1BCE;font-size: 12px;line-height: 16px;letter-spacing: .3px;text-decoration: none;' href='" . esc_url( 'https://www.notion.so/mdnotes/Getting-Started-5103a8f3be084fc0880039161a49e23a' ) . "'>" . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . "</a>
+							" . __( 'to notify you of a collaboration activity on this post of', 'content-collaboration-inline-commenting' ) . " <span><a href='" . esc_url( get_site_url() ) . "' style='color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;'>" . esc_html( $http_host ) . "</a>.</span></p>
+						<p style='color: #5f6368;font-size: 12px;line-height: 16px;letter-spacing: .3px;margin:0;'>" . __( 'You have received this email because you are either mentioned or a participant in the post.', 'content-collaboration-inline-commenting' ) . "</p>
+					</div>
+				</div>
+			</div>";
 
 			$headers = 'Content-Type: text/html; charset=UTF-8';
 

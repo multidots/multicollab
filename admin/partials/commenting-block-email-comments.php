@@ -38,7 +38,7 @@ if ( ! defined( 'WPINC' ) ) {
                                     <?php if( !empty( $cf_comment['attachmentText'] ) ) { //phpcs:ignore?>
 										<tr>
 											<td align="left" class="attachment" style="padding-top:10px;">
-												<img src="<?php echo esc_url( trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/images/attach.svg' ); ?>" alt="Attach" class="attachImg" />
+												<img src="<?php echo esc_url( trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/images/attach.png' ); ?>" alt="Attach" class="attachImg" width="14" height="12" style="vertical-align: middle;"/>
 												<?php echo wp_kses( $cf_comment['attachmentText'], wp_kses_allowed_html( 'post' ) ); ?>
 											</td>
 										</tr>

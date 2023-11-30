@@ -4,9 +4,9 @@
  */
 
 // Get settings.
-$view                     = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_STRING );
-$tab_number               = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-$activated                = filter_input( INPUT_GET, 'activated', FILTER_SANITIZE_STRING );
+$view                     = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_SPECIAL_CHARS );
+$tab_number               = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
+$activated                = filter_input( INPUT_GET, 'activated', FILTER_SANITIZE_SPECIAL_CHARS );
 $cf_admin_notif           = get_option( 'cf_admin_notif' );
 $cf_show_infoboard        = get_option( 'cf_show_infoboard' );
 $cf_hide_editorial_column = get_option( 'cf_hide_editorial_column' );
