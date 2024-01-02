@@ -1,0 +1,202 @@
+.multicollab_body_class {
+  .user-data-row {
+    .user-data-box {
+      .user-name {
+        &:hover{
+          .tooltip {
+            display: block;
+            top: 7px;
+            z-index: 1;
+          }
+        }
+      }
+
+      a.user-cmnt-reply,
+      a.user-cmnt-delete {
+        &:hover{
+          .tooltip {
+            display: block;
+            transform: translate(0, 6px);
+            z-index: 9;
+          }
+        }
+      }
+
+      a.user-thread-resolve {
+        &:hover{
+          .tooltip {
+            display: block;
+            transform: translate(0, 6px);
+            z-index: 9;
+          }
+        }
+      }
+    }
+  }
+  .accordian-panel {
+    button {
+      &:hover{
+        .tooltip {
+          display: block;
+          transform: translate(0, 6px);
+          z-index: 9;
+        }
+      }
+    }
+  }
+  @media not all and (-webkit-min-device-pixel-ratio: 0),
+  not all and (-o-min-device-pixel-ratio: 0/1),
+  not all and (min-resolution: 0.001dpcm) {
+    @supports (-webkit-appearance: none) {
+      #cf-comments-suggestions__parent {
+        div#cf-span__comments {
+          position: relative;
+        }
+      }
+      .cls-board-outer {
+        .cf-share-comment {
+          width: auto;
+          padding: 9px 14px;
+          line-height: normal;
+          position: relative;
+          display: block;
+          overflow: hidden;
+          .js-mentioned {
+            line-height: 18px;
+          }
+        }
+      }
+    }
+  }
+  .user-data-row {
+    &.unknownThread {
+      text-decoration: none;
+      background-color: #e6e6e6;
+      pointer-events: none;
+    }
+  }
+  .accordian-panel {
+    padding: 10px 16px 16px;
+    .comments-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .components-button {
+        position: relative;
+        display: inline-block;
+        width: calc(50% - 4px);
+        outline: none;
+        transition: 0.5s;
+        box-shadow: none;
+        color: #000;
+        border: 1px solid #EA100C;
+        background-color: #ffffff;
+        &:hover {
+          background-color: #EA100C;
+          color: #fff;
+          box-shadow: none;
+        }
+        &:first-child {
+          border: 1px solid #188651;
+          &:hover {
+            background-color: #188651;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+  [data-sgfocused] {
+    >* {
+      border: 0 !important;
+    }
+  }
+  .cls-board-outer{
+    &.sg-board {
+      .cf-assign-to-inner {
+        display: none;
+      }
+    }
+    .sg-board{
+      .comment-actions{
+        .buttons-wrapper{
+          @media screen and (max-width:1280px){
+            margin-left:5px;
+          }
+        }
+      }
+    }
+  }
+  #cf-reports {
+    .user-data-row {
+      .show-all-comments {
+        display: block;
+        padding: 10px 0;
+      }
+    }
+  }  
+  .my-tab-panel {
+    position: relative;
+    .components-tab-panel__tabs {
+      position: sticky;
+      top: 48px;
+      width: 100%;
+      z-index: 2;
+    }
+  }
+}
+.commentOn {
+  ins[data-rich-text-format-boundary] {
+    a {
+      text-decoration: none;
+    }
+  }
+}
+.cf_settings_loader {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.48);
+    border-radius: 2px;
+    z-index: 9999;
+  }
+  &::before {
+    content: "";
+    margin: auto;
+    border: 2px solid #fff;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border-right: 2px solid #4b1bce;
+    text-align: center;
+    animation-name: spin;
+    animation-duration: 900ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67);
+    z-index: 99999;
+  }
+  @keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+  }
+}

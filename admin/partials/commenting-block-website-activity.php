@@ -74,6 +74,44 @@ if ( ! empty( $this->cf_activities ) ) {
 				$meta_key         = str_replace( 'th', '', $meta_key );
 				$thread_edit_link = get_edit_post_link( $post_id ) . '&current_url=' . str_replace( '_', '', $meta_key );
 				$meta             = get_post_meta( $meta_single->post_id, $meta_key, true );
+			} elseif ( strpos( $meta_key, 'rc' ) !== false ) {
+				// If its for collaborators.
+				$board_type          = 'collaborators';
+				$collaborator_key    = $main_timestamp;
+				$foundElement        = array();
+				$meta_key            = '_realtime_collaborators_activity';
+				$collaboratorHistory = get_post_meta( $meta_single->post_id, $meta_key, true );
+				$collaboratorHistory = json_decode( $collaboratorHistory );
+				$collaboratorHistory = (array) $collaboratorHistory;
+				$collaboratorHistory = array_filter(
+					$collaboratorHistory,
+					function ( $value ) {
+						return property_exists( $value, 'timestamp' );
+					}
+				);
+
+				$collaboratorHistory = array_filter(
+					$collaboratorHistory,
+					function ( $collab ) {
+						return $collab->type === 'Joined';
+					}
+				);
+
+				$collaboratorHistory = array_values( $collaboratorHistory );
+				foreach ( $collaboratorHistory as $index => $element ) {
+					if ( $element->timestamp === (int) $main_timestamp ) {
+							$elementArray = json_decode( wp_json_encode( $element ), true );
+							// Change the key from 'userId' to 'uid'
+							$elementArray['uid'] = $elementArray['userId'];
+							unset( $elementArray['userId'] );
+						$foundElement[ $element->timestamp ] = $elementArray;
+							break; // Stop iterating once the element is found
+					}
+				}
+
+				$meta                    = array();
+				$meta['comments']        = ! empty( $foundElement ) ? $foundElement : '';
+				$meta['commentedOnText'] = __( 'Joined as collaborator.', 'content-collaboration-inline-commenting' );
 			} else {
 				// If its for suggestions.
 				$board_type       = 'suggestions';
@@ -170,7 +208,7 @@ if ( ! empty( $this->cf_activities ) ) {
 				esc_attr_e( $board_position );
 				echo $date_continue_in_loadmore ? ' date_continued' : '';
 				?>
-				 <?php echo $post_continue_in_loadmore ? 'post_continued' : ''; ?>">
+				<?php echo $post_continue_in_loadmore ? 'post_continued' : ''; ?>">
 				<div class="board-cnt-inner">
 					<div class="board-cnt-wrap">
 						<?php if ( ! $title_displayed_already ) { ?>
@@ -185,7 +223,7 @@ if ( ! empty( $this->cf_activities ) ) {
 							$index                 = 0;
 							$showallcommentbtnflag = 0;
 							foreach ( $all_comments as $timestamp => $comment ) {  //phpcs:ignore
-								$comments_counts ++;
+								++$comments_counts;
 
 								if ( 1 === $comments_counts ) {
 									$side_time_stamp = $timestamp;
@@ -245,8 +283,14 @@ if ( ! empty( $this->cf_activities ) ) {
 											</div>
 										<?php } else { ?>
 											<div class="user-data-wrapper">
-												<?php if ( 1 === $comments_counts && 'comments' === $board_type ) { ?>
-													<div class="user-commented-on">
+												<?php
+												if ( 1 === $comments_counts && ( 'comments' === $board_type || 'collaborators' === $board_type ) ) {
+													$class = '';
+													if ( 'collaborators' === $board_type ) {
+														$class = 'collaborator';
+													}
+													?>
+													<div class="user-commented-on <?php echo esc_attr( $class ); ?>">
 														<blockquote class="user-commented-icon<?php echo ( isset( $meta['blockType'] ) ) ? esc_attr( '-' . $meta['blockType'] ) : ''; ?>">
 															<a  class="user-commented-on show-all <?php echo ( '' !== $meta['commentedOnText'] && strlen( wp_strip_all_tags( $meta['commentedOnText'] ) ) > 45 ) ? 'js-hide' : ''; ?>" href="javascript:void(0)" 
 															>
@@ -275,10 +319,8 @@ if ( ! empty( $this->cf_activities ) ) {
 													</div>
 													<?php
 												} elseif ( 'suggestions' === $board_type && isset( $comment['action'] ) && 'reply' !== $comment['action'] ) {
-
 														$commentingFunction = new Commenting_block_Functions();
 														$comment['text']    = $commentingFunction->translate_strings_format( $comment['text'] ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-														echo "test"; exit;
 													?>
 													<div class="user-commented-on <?php echo ( isset( $comment['action'] ) && 'delete' === strtolower( $comment['action'] ) ) ? 'delete' : 'add'; ?>">
 														<blockquote class="user-commented-icon">
@@ -345,12 +387,12 @@ if ( ! empty( $this->cf_activities ) ) {
 									<?php
 								}
 
-								$index ++;
+								++$index;
 							}
 
 							$side_time = date_i18n( $time_format, $side_time_stamp );
 
-							
+
 							if( 'comments' == $board_type){ //phpcs:ignore
 
 								$show_reply = 1;
@@ -370,7 +412,7 @@ if ( ! empty( $this->cf_activities ) ) {
 			</div>
 				<?php
 			}
-			$count_iterations ++;
+			++$count_iterations;
 			$previousPostId = $post_id;
 		}
 	}

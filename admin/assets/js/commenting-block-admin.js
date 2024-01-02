@@ -2716,7 +2716,8 @@ function filterTextBeforeSave(newText) {
 
 
 
-    newText = newText.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function (match) {
+    //newText = newText.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function (match) {
+    newText = newText.replace(/(?!]*>[^<])(((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?))(?![^<]*<\/a>)/gi, function (match) {
         link = match;
         if ((link.includes("www.") || link.includes("WWW.")) && !link.includes("http://") && !link.includes("https://")) {
             link = link.replace('WWW.', 'http://')
@@ -2818,16 +2819,40 @@ function getPostSaveStatus() {
 }
 
 function appendInfoBoardDiv() {
+    var postStatusLabel = getPostStatuslabel();
     var pinboardNode = document.createElement('div');
     pinboardNode.setAttribute("id", 'cf-span__status');
     pinboardNode.setAttribute("class", 'cf-board__notice');
     pinboardNode.setAttribute('style', 'display:none');
-    pinboardNode.innerHTML = sprintf('%s <span>x</span> %s <br> %s <strong>%s</strong> %s', wp.i18n.__('You have', 'content-collaboration-inline-commenting'), wp.i18n.__('unsaved comments.', 'content-collaboration-inline-commenting'), wp.i18n.__('Click', 'content-collaboration-inline-commenting'), wp.i18n.__("'Save Draft'", 'content-collaboration-inline-commenting'), wp.i18n.__('to save.', 'content-collaboration-inline-commenting'));
+    pinboardNode.innerHTML = sprintf('%s <span>x</span> %s <br> %s <strong>%s</strong> %s', wp.i18n.__('You have', 'content-collaboration-inline-commenting'), wp.i18n.__('unsaved comments.', 'content-collaboration-inline-commenting'), wp.i18n.__('Click', 'content-collaboration-inline-commenting'), wp.i18n.__(postStatusLabel, 'content-collaboration-inline-commenting'), wp.i18n.__('to save.', 'content-collaboration-inline-commenting'));
     var parentNodeRef = document.getElementById('cf-comments-suggestions__parent');
     if (null !== parentNodeRef) {
         parentNodeRef.appendChild(pinboardNode);
     }
 }
+
+function getPostStatuslabel() {
+
+    var postStatus = wp.data.select('core/editor').getEditedPostAttribute('status');
+    var postStatusLabel = '';
+
+    if( postStatus === 'private' ){
+        postStatusLabel = 'Privately Published'; 
+    }else if( postStatus === 'publish' ){
+        postStatusLabel = 'Published / Update';
+    }else if( postStatus === 'future' || postStatus === 'scheduled' ){
+        postStatusLabel = 'Scheduled';
+    }else if( postStatus === 'draft' ){
+        postStatusLabel = 'Save draft';
+    }else if( postStatus === 'pending' ){
+        postStatusLabel = 'Pending Review';
+    }else{
+        postStatusLabel = postStatus;
+    }
+
+    return postStatusLabel;
+}
+
 function showInfoBoardonNewComments() {
 
     appendInfoBoardDiv();
@@ -2843,7 +2868,9 @@ function showInfoBoardonNewComments() {
         setTimeout(function () {
             let count = document.querySelectorAll('.draftComment').length;
             if (pinboard && !getPostSaveStatus() && count > 0) {
+                var postStatusLabel = getPostStatuslabel();
                 pinboard.getElementsByTagName("SPAN")[0].innerHTML = count; //phpcs:ignore
+                pinboard.getElementsByTagName("STRONG")[0].innerHTML = postStatusLabel; //phpcs:ignore
                 pinboard.setAttribute('style', '');
             }
             if (pinboard && count === 0) {

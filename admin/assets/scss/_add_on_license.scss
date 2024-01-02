@@ -1,0 +1,137 @@
+.multicollab_body_class {
+	.cf-tabs-main {
+		.cf-tab-inner {
+			.cf-content-simple {
+				p {
+					&.cf-greetings {
+						padding-top: 20px;
+						margin: 0 -12px;
+					}
+				}
+			}
+			.cf-cnt-box-header {
+				@media screen and (max-width:767px) {
+					padding: 15px 10px;
+				}
+				h3 {
+					.dashicons-plugins-checked {
+						margin-right: 10px;
+					}
+				}
+			}
+			.cf-cnt-box-body {
+				@media screen and (max-width:767px) {
+					padding: 15px 10px;
+				}
+				& > p {
+					&:not(.submit) {
+						margin-top: 0;
+						font-size: 16px;
+						line-height: 24px;
+						a {
+							color: #4a1bce;
+						}
+					}
+				}
+				.cf-license-settings {
+					input[type="text"] {
+						padding: 5px 20px 5px 10px;
+						border-radius: 6px;
+						border: 1px solid #C3C4C7;
+					}
+					.cf-license-sucess {
+						&.activate {
+							color: #4a1bce;
+							margin-top: 10px;
+						}
+					}
+				}
+				.license_check_status {
+					h4 {
+						font-size: 16px;
+					}
+					table {
+						&.widefat {
+							tr {
+								&:first-child {
+									td {
+										font-weight: 600;
+									}
+								}
+							}
+						}
+					}
+				}
+				.multicollab_body_class {
+					.license_check_status {
+						border-top: 0.5px solid #E2E4E7;
+						margin-top: 20px;
+					}
+				}
+			}
+		}
+	}
+	.cf-license-notices {
+		.cf-notice {
+			background: #fff;
+			border: 0.5px solid #E2E4E7;
+			border-left: 1px solid #d63638;
+			border-left-width: 4px;
+			box-shadow: 0 1px 1px rgb(0, 0, 0, 0.04);
+			margin: 20px 15px 2px 0;
+			padding: 15px 12px;
+			p {
+				margin: 0;
+				font-size: 16px;
+			}
+			&.notice-expired {
+				border-left-color: #d63638;
+			}
+			&.notice-success {
+				border-left-color: #00a32a;
+			}
+		}
+	}
+	span {
+		&.cf-license-activator-input {
+			position: relative;
+			display: inline-block;
+			max-width: 28%;
+			width: 100%;
+			@media screen and (max-width:1200px){
+				max-width:50%;
+				width:100%;
+			}
+			@media screen and (max-width:782px) {
+				max-width:100%;
+				margin-bottom: 10px;
+			}
+			.dashicons {
+				&.dashicons-yes-alt {
+					position: absolute;
+					top: 50%;
+					right: 6px;
+					transform: translateY(-50%);
+					font-size: 21px;
+					color: #00a32a;
+				}
+			}
+			input#cf-license-activator {
+				width: 100%;
+			}
+		}
+	}
+}
+.cf-tabs-main {
+	.cf-tab-inner {
+		.cf-cnt-box-body {
+			.multiedit-websocket-settings {
+				input[type="url"] {
+					padding: 5px 20px 5px 10px;
+					border-radius: 6px;
+					border: 1px solid #C3C4C7;
+				}
+			}
+		}
+	}
+}

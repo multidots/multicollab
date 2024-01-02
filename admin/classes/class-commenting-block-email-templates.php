@@ -218,7 +218,7 @@ class Commenting_Block_Email_Templates {
 
 		// Grab only newly mentioned email of the board.
 		$newly_mentioned_emails = $this->cf_find_mentioned_emails( $find_new_mentions );
-
+		$mentioned_user_name = array();
 		// Unset the newly mentioned emails from the list.
 		if ( ! empty( $newly_mentioned_emails ) ) {
 			foreach ( $newly_mentioned_emails as $newly_mentioned ) {
@@ -228,6 +228,8 @@ class Commenting_Block_Email_Templates {
 						unset( $email_list[ $key ] );
 					}
 				}
+				$mentioned_user = get_user_by( 'email', $newly_mentioned );
+				array_push( $mentioned_user_name, $mentioned_user->display_name );
 			}
 		}
 
@@ -275,6 +277,9 @@ class Commenting_Block_Email_Templates {
 			$html             .= "
             <div class='comment-box new-comment' style='background:#fff;width:95%;font-family:Arial,serif;padding-top:40px;padding-right:10px;padding-bottom:20px;padding-left:10px;'>
                 <div class='comment-box-header' style='margin-bottom:30px;'>
+				<p style='font-size:18px;color:#000;line-height:normal;margin:0;;margin-bottom:20px'>
+                <span class='commenter-name' style='text-transform: capitalize;font-weight: 700;display: inline-block;margin-bottom:10px;'>" . esc_html( $current_user_display_name ) . '</span>' . __( ' added you in a comment on this post.', 'content-collaboration-inline-commenting' ) . "
+            	</p>
 					<div style='display: flex;align-items: center;justify-content:space-between;flex-wrap: wrap;margin-bottom:20px;gap:20px;'>
 						<div class='comment-box-header-right'>
 							{$site_title_html}
@@ -317,7 +322,7 @@ class Commenting_Block_Email_Templates {
 				$mentioned_html .= __( ' assigned you in a comment on this post.', 'content-collaboration-inline-commenting' );
 			} elseif ( ! empty( $newly_mentioned_emails ) ) {
 				// If $newly_mentioned_emails is not empty, display mentioned text.
-				$mentioned_html .= __( ' mentioned you in a comment on this post.', 'content-collaboration-inline-commenting' );
+				$mentioned_html .= __( ' mentioned <span class="mentioed-name" style="text-transform: capitalize;font-weight: 700;display: inline-block;">'. implode( ', ', $mentioned_user_name ) .'</span> in a comment on this post.', 'content-collaboration-inline-commenting' );
 			}
 
 			$mentioned_html .= "

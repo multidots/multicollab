@@ -4,12 +4,13 @@
  */
 
 // Get settings.
-$view                     = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_SPECIAL_CHARS );
-$tab_number               = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
-$activated                = filter_input( INPUT_GET, 'activated', FILTER_SANITIZE_SPECIAL_CHARS );
-$cf_admin_notif           = get_option( 'cf_admin_notif' );
-$cf_show_infoboard        = get_option( 'cf_show_infoboard' );
-$cf_hide_editorial_column = get_option( 'cf_hide_editorial_column' );
+$view                        = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_SPECIAL_CHARS );
+$tab_number                  = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
+$activated                   = filter_input( INPUT_GET, 'activated', FILTER_SANITIZE_SPECIAL_CHARS );
+$cf_admin_notif              = get_option( 'cf_admin_notif' );
+$cf_show_infoboard           = get_option( 'cf_show_infoboard' );
+$cf_show_multicollab_sidebar = get_option( 'cf_show_multicollab_sidebar' );
+$cf_hide_editorial_column    = get_option( 'cf_hide_editorial_column' );
 
 $cf_give_alert_message                          = get_option( 'cf_give_alert_message' );
 $cf_suggestion_mode_option_name                 = get_option( 'cf_suggestion_mode_option_name' );

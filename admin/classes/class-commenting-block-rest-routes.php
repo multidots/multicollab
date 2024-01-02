@@ -83,9 +83,10 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 		$current_users   = get_userdata( $user_id );
 		$hide_suggestion = isset( $cf_options[ $current_users->roles[0] ]['hide_suggestion'] ) ? $cf_options[ $current_users->roles[0] ]['hide_suggestion'] : '';
 		$hide_comment    = isset( $cf_options[ $current_users->roles[0] ]['hide_comment'] ) ? $cf_options[ $current_users->roles[0] ]['hide_comment'] : '';
-		$like            = $wpdb->esc_like( '_el' ) . '%';
 
-        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id=%d AND meta_key LIKE %s", $current_post_id, $like), ARRAY_A); // phpcs:ignore
+        $like            = $wpdb->esc_like( '_el' ) . '%';
+		$c_reg_exp       = $wpdb->esc_like( '_el[0-9]' );
+		$results = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id=%d AND meta_key LIKE %s AND meta_key REGEXP %s", $current_post_id, $like, $c_reg_exp), ARRAY_A); // phpcs:ignore
 
 		$threads = array();
 

@@ -1,0 +1,287 @@
+.multicollab_body_class {
+	.cf-slack-settings {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		gap: 25px;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+		max-width: 50%;
+		@media screen and (max-width:768px) {
+			max-width: 100%;
+			display: block;
+		}
+		label {
+			line-height: 1.3em;
+			font-size: 14px;
+			font-weight: 500;
+			width: 20%;
+			display: inline-block;
+			@media screen and (max-width:768px) {
+				margin-bottom: 5px;
+				width: 100%;
+			}
+		}
+		.cf_slack_webhook {
+			width: 55%;
+		}
+		.cf_webhook_url_input {
+			div {
+				margin-top: 10px;
+			}
+		}
+		input {
+			&.field_type_text {
+				padding: 2px 8px;
+				border-radius: 0;
+			}
+		}
+		button {
+			&.cf_slack_test_integration {
+				font-size: 15px;
+				min-width: 128px;
+				padding: 10px 15px;
+				width: auto;
+				background-color: #4a1bce;
+				border: 2px solid #4a1bce;
+				color: #fff;
+				line-height: normal;
+				border-radius: 0;
+				display: inline-block;
+				-webkit-transition: 0.2s all ease-in-out;
+				-o-transition: 0.2s all ease-in-out;
+				transition: 0.2s all ease-in-out;
+				&:hover {
+					border: 2px solid #4a1bce;
+					color: #4a1bce;
+					background-color: transparent;
+				}
+			}
+		}
+	}
+	.cf-slack-integration-messages{
+		@media screen and (max-width:767px) {
+			margin: 15px 0;
+		}
+	}
+	.cf-slack-integration-box {
+		display: flex;
+		align-items: center;
+		border-bottom: 1px solid #E2E4E7;
+		padding: 20px;
+		gap: 30px;
+		@media screen and (max-width:767px) {
+			padding: 15px 10px;
+		}
+		@media screen and (max-width:600px) {
+			display: block;
+		}
+		.cf-slack-image {
+			svg {
+				width: 55px;
+				height: 55px;
+			}
+		}
+		.cf-slack-integration-messages {
+			span {
+				font-size: 14px;
+				b {
+					display: block;
+					font-size: 16px;
+					line-height: 24px;
+					margin-bottom: 5px;
+					font-weight: 500;
+					color: #444;
+				}
+			}
+		}
+		.cf-slack-integration-connect {
+			font-size: 15px;
+			padding: 12px 15px;
+			cursor: pointer;
+			border: none;
+			color: #fff;
+			border-radius: 4px;
+			background-color: #009aff;
+			text-decoration: none;
+			display: block;
+			@media screen and (max-width:600px) {
+				width: 100%;
+				text-align: center;
+			}
+		}
+		.slack-accordion-settings {
+			display: block;
+			font-size: 18px;
+			color: #4a1bce;
+			box-shadow: none;
+			padding-right: 20px;
+			text-decoration: none;
+			cursor: pointer;
+		}
+	}
+	.cf-tabs-main {
+		.cf-tab-inner {
+			.cf-cnt-box-body {
+				&.cf-slack-integration-form,
+				& > .cf-cnt-box-body {
+					padding: 0;
+				}
+				table {
+					border: 0.5px solid #E2E4E7;
+					box-shadow: none;
+					@media screen and (max-width:860px) {
+						display: block;
+						overflow-x: auto;
+						white-space: nowrap;
+					}
+					tbody {
+						@media screen and (max-width:860px) {
+							display: table;
+							width: 100%;
+						}
+						th,
+						td {
+							&:not(:first-child) {
+								text-align: center;
+							}
+						}
+					}
+				}
+			}
+			.cf-slack-inner-integration-box {
+				padding: 20px;
+				display: none;
+				@media screen and (max-width:767px) {
+					padding: 15px 10px;
+				}
+				h4 {
+					font-size: 16px;
+					margin-top: 0;
+				}
+				.cf_slack_channel_setting {
+					display: flex;
+					align-items: center;
+					@media screen and (max-width:600px) {
+						display: block;
+					}
+				}
+				h5 {
+					font-size: 14px;
+					margin-top: 0;
+					margin-bottom: 0;
+					width: 9.6%;
+					@media screen and (max-width:600px) {
+						margin-bottom: 10px;
+						width: 100%;
+					}
+				}
+				.select2 {
+					.select2-selection--single {
+						border: 0.5px solid #E2E4E7;
+						padding: 5px 60px 5px 10px;
+						border-radius: 0;
+						-webkit-border-radius: 0;
+						-moz-border-radius: 0;
+						-ms-border-radius: 0;
+						-o-border-radius: 0;
+						height: auto;
+						min-width: 190px;
+					}
+				}
+				.select2-container--default {
+					.select2-selection--single {
+						.select2-selection__arrow {
+							top: 5px;
+						}
+					}
+				}
+				p {
+					&.submit {
+						width: 90.4%;
+						margin-left: auto;
+						@media screen and (max-width:1200px){
+							width:85.4%;
+						}
+						@media screen and (max-width:600px) {
+							width: 100%;
+						}
+					}
+				}
+			}
+			.cf-slack-notification-wrap {
+				display: flex;
+				margin-top: 20px;
+				@media screen and (max-width:600px) {
+					display: block;
+					margin-top: 15px;
+				}
+				h5 {
+					width: 9.6%;
+					@media screen and (max-width:1200px){
+						width:15.6%;
+					}
+					@media screen and (max-width:600px) {
+						width: 100%;
+					}
+				}
+				table {
+					width: 91.4%;
+					tbody {
+						tr {
+							th {
+								width: 85%;
+								&:last-child {
+									width: 15%;
+									border-left: 0.5px solid #E2E4E7;
+									text-align: center;
+								}
+							}
+							td {
+								width: 85%;
+								&:last-child {
+									width: 15%;
+									border-left: 0.5px solid #E2E4E7;
+									text-align: center;
+									@media screen and (max-width:1200px){
+										width:20%;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.cf-plugin-settings {
+		.widefat {
+			td {
+				padding: 10px 10px;
+				font-size: 14px;
+			}
+		}
+	}
+}
+html[lang="de-DE"] {
+	.multicollab_plan_pro {
+		.cf-tabs-main {
+			.cf-tab-inner {
+				.cf-slack-notification-wrap,
+				.cf-slack-inner-integration-box {
+					h5 {
+						width: 12%;
+					}
+				}
+				.cf-slack-inner-integration-box {
+					p {
+						&.submit {
+							width: 88.4%;
+						}
+					}
+				}
+			}
+		}
+	}
+}
