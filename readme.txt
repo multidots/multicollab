@@ -214,8 +214,8 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 == Changelog ==
 
 = 4.2 - 02.01.2024 =
-* [New] Users can comment on entire gallery blocks. - (Share Image)
-* [New] Users can add comments to Gutenberg widget category blocks (Latest Comment, RSS, Archives, Calendar). - (Share Image)
+* [New] Users can comment on entire gallery blocks.
+* [New] Users can add comments to Gutenberg widget category blocks (Latest Comment, RSS, Archives, Calendar).
 * [Enhancement] Collaborator details are now displayed on the dashboard activity.
 * [Enhancement] Users can set their default tab when opening a WordPress page.
 * [Enhancement] Admins can view real-time collaboration permissions in the permission settings tab.
