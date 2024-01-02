@@ -1,0 +1,70 @@
+.multicollab_body_class {
+	.cls-board-outer {
+		.comment-delete-overlay {
+			background-color: rgb(0, 0, 0, 0.7);
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			padding: 20px;
+			display: none;
+			&.show {
+				display: block;
+			}
+			.comment-overlay-text {
+				font-size: 14px;
+				font-weight: 500;
+				color: #fff;
+				line-height: 17px;
+			}
+		}
+		.board {
+			.comment-delete-overlay {
+				button {
+					margin-top: 4px;
+					&.btn-delete {
+						background-color: #CEE7F4;
+						border: 1px solid #5E9FBF;
+						padding: 5px 10px;
+					}
+				}
+				.btn {
+					&.btn-cancel {
+						border: 1px solid #E2E4E7;
+					}
+				}
+			}
+			.commentContainer {
+				&:first-child {
+					position: initial;
+					.commentInnerContainer {
+						border-top: 0;
+						.comment-delete-overlay {
+							border-radius: 10px;
+						}
+					}
+				}
+			}
+			&.fresh-board {
+				.commentContainer {
+					.commentInnerContainer {
+						padding: 16px 0 14px;
+						border-top: 0;
+					}
+					.comment-header {
+						margin-bottom: 0;
+					}
+				}
+			}
+		}
+		.shareCommentContainer,
+		.cf-board-assigned-to {
+			&.overlay-display-none {
+				display: none;
+			}
+		}
+	}
+}

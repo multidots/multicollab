@@ -127,7 +127,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 				$activity_count = 0;
 				foreach ( $prepareDataTable as $comments ) {
 					foreach ( $comments as $item ) {
-						$activity_count ++;
+						++$activity_count;
 
 						if ( $activity_limit < $activity_count ) {
 							break;
@@ -187,7 +187,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 						} else {
 							$activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</span>';
 						}
-						
+
 						$activity_text .= '</div></div>';
 					}
 				}
@@ -300,13 +300,14 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 				$prepare_data['comments_count'] = $comments_count;
 
 				// Activities.
-				$collaborators  = array();
-				$activity_text  = '';
-				$activity_limit = 3;
-				$activity_count = 0;
+				$collaborators          = array();
+				$realtime_collaborators = array();
+				$activity_text          = '';
+				$activity_limit         = 3;
+				$activity_count         = 0;
 				foreach ( $prepareDataTable as $comments ) {
 					foreach ( $comments as $item ) {
-						$activity_count ++;
+						++$activity_count;
 
 						if ( $activity_limit < $activity_count ) {
 							break;
@@ -364,11 +365,42 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 						} else {
 							$activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</span>';
 						}
-						
+
 						$activity_text .= '</div></div>';
 					}
 				}
 				$prepare_data['activities'] = $activity_text;
+
+				$collaboratorHistory = get_post_meta( $current_post_id, '_realtime_collaborators_activity', true );
+				$collaboratorHistory = json_decode( $collaboratorHistory );
+				$collaboratorHistory = (array) $collaboratorHistory;
+				$collaboratorHistory = array_filter(
+					$collaboratorHistory,
+					function ( $value ) {
+						return property_exists( $value, 'timestamp' );
+					}
+				);
+
+				$collaboratorHistory = array_filter(
+					$collaboratorHistory,
+					function ( $collab ) {
+						return $collab->type === 'Joined';
+					}
+				);
+
+				$collaboratorHistory = array_values( $collaboratorHistory );
+
+				if ( ! empty( $collaboratorHistory ) ) {
+					foreach ( $collaboratorHistory as  $collaborator ) {
+						$collaborator             = (array) $collaborator;
+						$user_info                = get_userdata( $collaborator['userId'] );
+						$profile_url              = get_avatar_url( $user_info->user_email );
+						$username                 = $user_info->display_name;
+						$realtime_collaborators[] = "<span class='tbl-user-avatar'><img src=" . esc_url( $profile_url ) . "  alt='" . esc_attr( $username ) . "' />" . esc_html( $username ) . '</span>';
+					}
+				}
+
+				$collaborators = ! empty( $realtime_collaborators ) ? $realtime_collaborators : $collaborators;
 
 				// Collaborators.
 				$collaborators                 = array_unique( $collaborators );
@@ -391,10 +423,10 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 	public function cf_get_site_activity() {
 		global $wpdb;
 
-		$cpt   = filter_input( INPUT_GET, 'cpt', FILTER_SANITIZE_SPECIAL_CHARS );
-		$cat   = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_SPECIAL_CHARS );
-		$m     = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_SPECIAL_CHARS );
-		if ($m !== null) {
+		$cpt = filter_input( INPUT_GET, 'cpt', FILTER_SANITIZE_SPECIAL_CHARS );
+		$cat = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_SPECIAL_CHARS );
+		$m   = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( $m !== null ) {
 			$month = substr( $m, 5, 2 ); // Solved filters for Dashboard tab. @author: Rishi Shah.
 			$year  = substr( $m, 0, 4 );
 		}
@@ -408,7 +440,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$board_position = filter_input( INPUT_POST, 'boardPosition', FILTER_SANITIZE_SPECIAL_CHARS ); // Removed phpcs:ignore by Rishi Shah.
 		// Will be used in the included file.
 		$displayed_dates = filter_input( INPUT_POST, 'displayedDates', FILTER_SANITIZE_SPECIAL_CHARS ); // Removed phpcs:ignore by Rishi Shah.
-		$displayed_dates = explode( '|', (string)$displayed_dates );
+		$displayed_dates = explode( '|', (string) $displayed_dates );
 		$offset          = $offset ?? 0;
 		$limit           = 10;
 
@@ -427,9 +459,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 			$query .= " LEFT JOIN $wpdb->term_relationships as tr ON pm.post_id = tr.object_id";
 		}
 
-		
-		$query .= $wpdb->remove_placeholder_escape( $wpdb->prepare( " WHERE pm.meta_key LIKE '%s' AND LENGTH(pm.meta_value) = 10 AND  pm.meta_key NOT IN (%s)", 'th_el%', $autodrat_id_str ) );
-		
+		$query .= $wpdb->remove_placeholder_escape( $wpdb->prepare( " WHERE pm.meta_key LIKE '%s' OR pm.meta_key LIKE '%s' AND LENGTH(pm.meta_value) = 10 AND  pm.meta_key NOT IN (%s)", 'th_rc_joined%', 'th_el%', $autodrat_id_str ) );
 
 		if ( $cat ) {
 			$query .= $wpdb->prepare( ' AND tr.term_taxonomy_id	 = %d', $cat );

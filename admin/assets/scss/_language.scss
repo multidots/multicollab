@@ -1,0 +1,376 @@
+html[lang="hi-IN"] {
+	.cf_publishing_option {
+		&:not(.cf_general_option) {
+			.cf-notification-settings {
+				&:last-child {
+					.cf-check-wrap {
+						margin-top: 8px;
+					}
+				}
+			}
+		}
+	}
+	.cf-floating__button {
+		li {
+			&:last-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-117px, -35px);
+					}
+				}
+			}
+			&:first-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-85px, -78px);
+					}
+				}
+			}
+		}
+	}
+	.comment-header {
+		.comment-actions {
+			.buttons-wrapper {
+				.comment-more-option {
+					width: 98px;
+				}
+			}
+		}
+	}
+	.accordian-panel {
+		.comments-row {
+			.components-button {
+				word-break: break-word;
+				white-space: pre-wrap;
+				height: 50px;
+			}
+		}
+		button {
+			&:last-child {
+				.tooltip {
+					-webkit-transform: translate(-10px, 6px);
+					-ms-transform: translate(-10px, 6px);
+					transform: translate(-10px, 6px);
+					-moz-transform: translate(-10px, 6px);
+					-o-transform: translate(-10px, 6px);
+				}
+			}
+		}
+	}
+}
+html[lang="ES"] {
+	.cf_publishing_option {
+		&:not(.cf_general_option) {
+			.cf-notification-settings {
+				&:last-child {
+					.cf-check-wrap {
+						margin-top: 8px;
+					}
+				}
+			}
+		}
+	}
+	.comment-header {
+		.comment-actions {
+			.comment-resolve {
+				.tooltip {
+					-webkit-transform: translate(-71%, -100%);
+					-ms-transform: translate(-71%, -100%);
+					transform: translate(-71%, -100%);
+				}
+			}
+		}
+	}
+	.cf-floating__button {
+		li {
+			&:first-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-145px, -78px);
+					}
+				}
+			}
+			&:last-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-131px, -35px);
+					}
+				}
+			}
+		}
+	}
+	.cls-board-outer {
+		.shareCommentContainer {
+			.tooltip {
+				-webkit-transform: translate(-42px, 12px);
+				-ms-transform: translate(-42px, 12px);
+				transform: translate(-42px, 12px);
+			}
+		}
+		.commentContainer {
+			.tooltip {
+				-webkit-transform: translate(-42px, 12px);
+				-ms-transform: translate(-42px, 12px);
+				transform: translate(-42px, 12px);
+			}
+		}
+	}
+}
+html[lang="bn-BD"] {
+	.cf_publishing_option {
+		&:not(.cf_general_option) {
+			.cf-notification-settings {
+				&:last-child {
+					.cf-check-wrap {
+						margin-top: 8px;
+					}
+				}
+			}
+		}
+	}
+	.cf-plugin-settings {
+		label {
+			font-size: 15px;
+		}
+	}
+	.cf-floating__button {
+		li {
+			&:last-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-137px, -35px);
+					}
+				}
+			}
+		}
+	}
+	.comment-header {
+		.comment-actions {
+			.comment-resolve {
+				.tooltip {
+					-webkit-transform: translate(-71%, -100%);
+					-ms-transform: translate(-71%, -100%);
+					transform: translate(-71%, -100%);
+				}
+			}
+		}
+	}
+	.accordian-panel {
+		.comments-row {
+			.components-button {
+				word-break: break-word;
+				white-space: pre-wrap;
+				height: 50px;
+			}
+		}
+		button {
+			&:last-child {
+				.tooltip {
+					-webkit-transform: translate(-40px, 6px);
+					-ms-transform: translate(-40px, 6px);
+					transform: translate(-40px, 6px);
+					-moz-transform: translate(-40px, 6px);
+					-o-transform: translate(-40px, 6px);
+				}
+			}
+		}
+	}
+}
+html[lang="fr-FR"] {
+	.cf_publishing_option {
+		&:not(.cf_general_option) {
+			.cf-notification-settings {
+				&:last-child {
+					.cf-check-wrap {
+						margin-top: 8px;
+					}
+				}
+			}
+		}
+	}
+	.comment-header {
+		.comment-actions {
+			.comment-resolve {
+				.tooltip {
+					-webkit-transform: translate(-71%, -100%);
+					-ms-transform: translate(-71%, -100%);
+					transform: translate(-71%, -100%);
+				}
+			}
+			.buttons-wrapper {
+				.comment-more-option {
+					width: 100px;
+				}
+			}
+		}
+	}
+	.cf-floating__button {
+		li {
+			&:last-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-188px, -35px);
+						-webkit-transform: translate(-188px, -35px);
+						-moz-transform: translate(-188px, -35px);
+						-ms-transform: translate(-188px, -35px);
+						-o-transform: translate(-188px, -35px);
+					}
+				}
+			}
+			&:first-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-167px, -78px);
+					}
+				}
+			}
+		}
+	}
+	.accordian-panel {
+		button {
+			&:last-child {
+				.tooltip {
+					-webkit-transform: translate(0, 6px);
+					-ms-transform: translate(-75px, 6px);
+					transform: translate(-75px, 6px);
+				}
+			}
+		}
+	}
+}
+html[lang="zh-CN"] {
+	.cf_publishing_option {
+		&:not(.cf_general_option) {
+			.cf-notification-settings {
+				&:last-child {
+					.cf-check-wrap {
+						margin-top: 8px;
+					}
+				}
+			}
+		}
+	}
+	.cf-floating__button {
+		li {
+			&:first-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-76px, -78px);
+					}
+				}
+			}
+			&:last-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-76px, -35px);
+					}
+				}
+			}
+		}
+	}
+}
+html[lang="de-DE"] {
+	.comment-header {
+		.comment-actions {
+			.comment-resolve {
+				.tooltip {
+					-webkit-transform: translate(-71%, -100%);
+					-ms-transform: translate(-71%, -100%);
+					transform: translate(-71%, -100%);
+				}
+			}
+			.buttons-wrapper {
+				.comment-more-option {
+					width: 105px;
+				}
+			}
+		}
+	}
+	.cf-floating__button {
+		li {
+			&:last-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-175px, -35px);
+					}
+				}
+			}
+			&:first-child {
+				&:hover {
+					.tooltip {
+						transform: translate(-200px, -78px);
+					}
+				}
+			}
+		}
+	}
+	.cls-board-outer {
+		.shareCommentContainer {
+			.tooltip {
+				-webkit-transform: translate(-42px, 12px);
+				-ms-transform: translate(-42px, 12px);
+				transform: translate(-42px, 12px);
+			}
+		}
+		.commentContainer {
+			.tooltip {
+				-webkit-transform: translate(-42px, 12px);
+				-ms-transform: translate(-42px, 12px);
+				transform: translate(-42px, 12px);
+			}
+		}
+	}
+	.accordian-panel {
+		button {
+			&:last-child {
+				.tooltip {
+					-webkit-transform: translate(-40px, 6px);
+					-ms-transform: translate(-40px, 6px);
+					transform: translate(-40px, 6px);
+					-moz-transform: translate(-40px, 6px);
+					-o-transform: translate(-40px, 6px);
+				}
+			}
+		}
+	}
+	.cf-sidebar-comment-summary {
+		span {
+			word-break: break-word;
+			padding-left: 15px;
+		}
+	}
+	.cf-tabs-main {
+		.cf-tab-inner {
+			.cf-slack-notification-wrap {
+				h5 {
+					width: 12%;
+				}
+			}
+			.cf-slack-inner-integration-box {
+				h5 {
+					width: 12%;
+				}
+				p {
+					&.submit {
+						width: 88.4%;
+					}
+				}
+			}
+		}
+	}
+}
+html[lang="es"] {
+	.accordian-panel {
+		button {
+			&:last-child {
+				.tooltip {
+					-webkit-transform: translate(-60px, 6px);
+					-ms-transform: translate(-60px, 6px);
+					transform: translate(-60px, 6px);
+					-moz-transform: translate(-60px, 6px);
+					-o-transform: translate(-60px, 6px);
+				}
+			}
+		}
+	}
+}

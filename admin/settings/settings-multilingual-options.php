@@ -2,6 +2,13 @@
 <p><?php printf( '%s', esc_html__( 'Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages.', 'content-collaboration-inline-commenting' ) ); ?></p>
 	<?php
 	$lang          = get_bloginfo( 'language' );
+
+	$cf_edd = new CF_EDD();
+	if( $cf_edd->is_free() ) {
+		$lang          = 'en-US';
+	} else {
+		$lang          = get_bloginfo( 'language' );
+	}
 	$supported_lan = array(
 		'English' => 'en-US',
 		'Chinese' => 'zh-CN',

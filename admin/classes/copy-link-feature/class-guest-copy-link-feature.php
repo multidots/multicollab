@@ -67,7 +67,7 @@ class Copy_Link_Feature {
 		);
 		// Localize the script with the action URL
 		wp_localize_script('request-access-script', 'requestAccess', $script_data);
-		wp_enqueue_style( 'request-access-style', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/css/frontend-copy-link-feature.css', array(), wp_rand(), false );
+		wp_enqueue_style( 'request-access-style', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/frontStyle.build.min.css', array(), wp_rand(), false );
 
 	}
 

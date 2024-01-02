@@ -1,0 +1,164 @@
+.multicollab_body_class {
+	.cf_disabled_input {
+		position: relative;
+		pointer-events: none;
+		.cf-cnt-box-header {
+			h3 {
+				position: relative;
+				a {
+					pointer-events: auto;
+					text-decoration: none;
+				}
+				.cf_premium_star {
+					&:hover {
+						background-color: #4B1BCE;
+						color: #fff;
+					}
+				}
+			}
+		}
+		.submit {
+			.button {
+				background-color: transparent !important;
+				color: #C3C4C7 !important;
+				border-color: #E2E4E7 !important;
+				cursor: default;
+			}
+		}
+		span {
+			&.cf_suggestion_optionlabel {
+				color: #939393;
+			}
+			&.cf-check {
+				border: 1px solid #E2E4E7;
+			}
+		}
+		label {
+			color: #939393;
+		}
+		.widefat {
+			td,
+			th {
+				color: #939393;
+			}
+		}
+		svg {
+			fill: #939393;
+		}
+		.md-plugin-tooltip {
+			pointer-events: none;
+			cursor: none;
+		}
+		.cf-board-premi-btn {
+			pointer-events: all;
+			margin: 0;
+			padding: 0 !important;
+			font-size: 14px !important;
+			@media screen and (max-width:1026px) {
+				padding: 18.5px 35px !important;
+				max-width: 382px !important;
+				min-width: 382px !important;
+			}
+			@media screen and (max-width:1024px) {
+				margin: 0;
+			}
+			@media screen and (max-width:767px) {
+				margin-bottom: 0 !important;
+				margin-left: 0 !important;
+				margin-top: 6px !important;
+			}
+			svg {
+				margin-left: 7px;
+				top: 0px;
+				width: 12px;
+				height: 12px;
+			}
+		}
+		.cf-board-free-btn {
+			pointer-events: all;
+			margin: 0;
+			padding: 0 !important;
+			font-size: 14px !important;
+			line-height: normal;
+			min-width: auto;
+			margin-left: 3px !important;
+			@media screen and (max-width:1026px) {
+				padding: 18.5px 35px !important;
+				max-width: 382px !important;
+				min-width: 382px !important;
+			}
+			@media screen and (max-width:1024px) {
+				margin: 0;
+			}
+			@media screen and (max-width:767px) {
+				margin-bottom: 0 !important;
+				margin-left: 0 !important;
+				margin-top: 6px !important;
+			}
+		}
+		.cf-submit-button-settings {
+			p {
+				&.submit {
+					display: inline-block;
+					@media screen and (max-width:767px) {
+						display: block;
+					}
+				}
+			}
+		}
+		.button {
+			& + a {
+				&.cf-board-premi-btn {
+					margin-left: 7px !important;
+				}
+			}
+		}
+	}
+	.cf-tab-active {
+		.cf-cnt-box-header {
+			h3 {
+				a {
+					pointer-events: auto;
+					text-decoration: none;
+				}
+				.cf_premium_star {
+					&:hover {
+						background-color: #4B1BCE;
+						color: #fff;
+					}
+				}
+			}
+		}
+	}
+	.cf-tabs-main {
+		.cf-tab-inner {
+			.cf_disabled_input {
+				p {
+					color: #939393;
+				}
+			}
+			@media screen and (max-width:1400px){
+				min-height:auto;
+			}
+		}
+	}
+	.cf-plugin-settings {
+		.cf_disabled_input {
+			input[type=checkbox]:checked {
+				border-color: #C3C4C7;
+			}
+		}
+	}
+}
+
+.multicollab_body_class{
+	.cf-suggestion-box{
+		.widefat{
+			td,th{
+				@media screen and (max-width:1200px){
+					font-size:13px;padding:8px 7px;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,336 @@
+.multicollab_body_class {
+	.block-editor-block-list__layout {
+		.commentIcon {
+			&.block-editor-block-list__block {
+				&:after {
+					width: 100%;
+				}
+				&:not([contenteditable]):focus {
+					&:after {
+						left: auto;
+						right: -1px;
+					}
+				}
+			}
+		}
+		.block-editor-block-list__block {
+			&.commentIcon {
+				&:not([contenteditable]):focus {
+					&:after {
+						-webkit-box-shadow: none;
+						box-shadow: none;
+					}
+				}
+			}
+		}
+	}
+	.commentIcon {
+		&.wp-block-video {
+			.components-disabled {
+				position: relative;
+				&::after {
+					right: -1px !important;
+				}
+			}
+		}
+		&.block-editor-block-list__block {
+			&:not([contenteditable]):focus {
+				left: auto;
+				right: -1px;
+			}
+		}
+		&.wp-block-cover {
+			&::after {
+				min-height: 50px;
+				z-index: 9;
+			}
+		}
+	}
+	&.hide-comments {
+		.commentIcon {
+			border-color: transparent;
+		}
+	}
+	.wp-block-media-text {
+		&.commentIcon {
+			.components-resizable-box__container {
+				&::after {
+					content: none !important;
+				}
+			}
+		}
+	}
+	.user-data-row {
+		.user-data-box {
+			.user-commented-on {
+				blockquote {
+					&:not(.user-commented-icon)::before {
+						content: "";
+						position: absolute;
+						height: 10px;
+						width: 10px;
+						top: 0;
+						left: 0;
+						line-height: 10px;
+						margin-top: 6px;
+						margin-left: 10px;
+						background-repeat: no-repeat;
+					}
+					&.user-commented-icon-core\/audio {
+						&::before {
+							background-image: url('../images/media-text.svg');
+						}
+					}
+					&.user-commented-icon-core\/video {
+						&::before {
+							background-image: url(../images/Video.svg);
+						}
+					}
+					&.user-commented-icon-core\/cover {
+						&::before {
+							background-image: url(../images/cover.svg);
+						}
+					}
+					&.user-commented-icon-core\/gallery {
+						&::before {
+							background-image: url(../images/gallery.svg);
+						}
+					}
+					&.user-commented-icon-core\/media-text {
+						&::before {
+							background-image: url(../images/media-text.svg);
+						}
+					}
+					&.user-commented-icon-core\/image {
+						&::before {
+							background-image: url(../images/image.svg);
+						}
+					}
+					&.user-commented-icon-md-block {
+						&::before {
+							background-image: url(../images/md-block-icon.svg);
+							background-size: 10px;
+							top: -1px;
+						}
+					}
+				}
+			}
+		}
+	}
+	#cf-reports {
+		table {
+			.activities {
+				blockquote {
+					&.tbl-user-commented-icon-md-block {
+						&::before {
+							background-image: url(../images/md-block-icon.svg);
+							background-size: 10px;
+							top: -1px;
+						}
+					}
+				}
+			}
+		}
+		.web-activity{
+			 .tablenav{
+				@media screen and (max-width:782px) {
+					margin: 0 0 10px;
+				}
+			}
+		}
+		.tablenav{
+			.view-switch{
+				@media screen and (max-width:782px) {
+					display: block;
+					text-align: center;
+					margin-bottom: 15px;
+					float: none;
+					padding: 0;
+				}
+				@media screen and (max-width:700px) {
+					margin-bottom: 0;
+				}
+			}
+			&.top{
+				.actions{
+					@media screen and (max-width:782px) {
+						display: block;
+						text-align: center;
+						margin-bottom: 15px;
+						float: none;
+						padding: 0;
+					}
+					@media screen and (max-width:700px) {
+						margin-bottom: 0;
+					}
+				}
+			}
+			.actions {
+				select{
+					@media screen and (max-width:700px) {
+						float: none;
+					}
+				}
+			
+			}
+		}
+	}
+	.components-accessible-toolbar,
+	.components-toolbar {
+		.components-button {
+			&.toolbar-button__multidots\/comment {
+				&:before {
+					-webkit-transition: all 0.1s ease-in;
+					-o-transition: all 0.1s ease-in;
+					transition: all 0.1s ease-in;
+				}
+			}
+		}
+	}
+	.cf-tabs-main {
+		#cf-reports {
+			&.cf-tab-inner {
+				.tablenav {
+					padding: 0 15px 0 15px;
+					&>.alignleft.actions.bulkactions{
+						@media screen and (max-width:782px) {
+							margin: 0;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+.commentOn {
+	.commentIcon {
+		border: 2px solid #feeead;
+		padding: 10px;
+		.wp-block-media-text__content {
+			overflow-x: auto;
+			overflow-x: auto;
+			.wp-block-audio {
+				audio {
+					min-width: 100%;
+				}
+			}
+		}
+		&.wp-block-audio {
+			padding: 10px 8px 5px;
+		}
+		.wp-social-link {
+			padding: 0;
+		}
+	}
+	.cf-onwhole-block__comment {
+		border: 2px solid #feeead;
+	}
+	.editor-styles-wrapper {
+		.cf-wrapperblock__suggestion {
+			p {
+				&.wp-block {
+					padding: 10px;
+				}
+			}
+		}
+	}
+	&:not(.hide-sg) {
+		.editor-styles-wrapper {
+			.cf-wrapperblock__suggestion {
+				p {
+					&.wp-block {
+						padding: 10px;
+					}
+				}
+				.wp-block-heading {
+					padding: 10px;
+				}
+			}
+		}
+	}
+	ul {
+		&.cf-onwhole-block__comment {
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+	}
+}
+.commentOn .cf-onwhole-block__comment:not(ul.cf-onwhole-block__comment, ol.cf-onwhole-block__comment) {
+	padding: 10px;
+}
+body {
+	&.hide-comments {
+		.editor-styles-wrapper {
+			.cf-wrapperblock__suggestion {
+				p {
+					&.wp-block {
+						padding: 10px;
+					}
+				}
+				.wp-block-heading {
+					padding: 10px;
+				}
+			}
+		}
+	}
+}
+#cf-reports {
+	table {
+		.activities {
+			blockquote {
+				&:not(.tbl-user-commented-icon)::before {
+					content: "";
+					position: absolute;
+					height: 10px;
+					width: 10px;
+					top: 0;
+					left: 0;
+					line-height: 10px;
+					margin-top: 6px;
+					margin-left: 10px;
+					background-repeat: no-repeat;
+				}
+				&.tbl-user-commented-icon-core\/audio {
+					&::before {
+						background-image: url(../images/media.svg);
+					}
+				}
+				&.tbl-user-commented-icon-core\/video {
+					&::before {
+						background-image: url(../images/Video.svg);
+					}
+				}
+				&.tbl-user-commented-icon-core\/cover {
+					&::before {
+						background-image: url(../images/cover.svg);
+					}
+				}
+				&.tbl-user-commented-icon-core\/gallery {
+					&::before {
+						background-image: url(../images/gallery.svg);
+					}
+				}
+				&.tbl-user-commented-icon-core\/media-text {
+					&::before {
+						background-image: url(../images/media-text.svg);
+					}
+				}
+				&.tbl-user-commented-icon-core\/image {
+					&::before {
+						background-image: url(../images/image.svg);
+					}
+				}
+			}
+		}
+	}
+}
+
+.commentOn {
+	.commentIcon {
+		&.wp-block-media-text {
+			@media screen and (max-width:1200px){
+			display: block;
+			}
+		}
+	}
+}

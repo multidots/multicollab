@@ -30,33 +30,8 @@ class Realtime {
 		/**
 		 * Actions/filters.
 		 */
-		add_filter( 'allowed_block_types_all', array( $this, 'blacklist_blocks' ) );
 		add_filter( 'wp_check_post_lock_window', array( $this, 'enable_post_lock' ) );
 		add_action( 'save_post', array( $this, 'update_edit_post_lock' ), 10, 2 );
-
-	}
-
-	/**
-	 * Blacklist blocks.
-	 *
-	 * @return array
-	 * @since 1.0.0
-	 */
-	public function blacklist_blocks() {
-		// get all the registered blocks.
-		$blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
-
-		if ( is_user_logged_in() ) {
-			$user  = wp_get_current_user();
-			$roles = (array) $user->roles;
-
-			if ( in_array( 'guest', $roles, true ) ) {
-				unset( $blocks['core/navigation'] ); // guest cannot create new menu.
-			}
-		}
-
-		// return the new list of allowed blocks.
-		return array_keys( $blocks );
 
 	}
 

@@ -1,0 +1,22 @@
+.multicollab_body_class {
+	.cf-plugin-settings {
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		padding-right: 20px;
+		* {
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		.cf-success {
+			margin: 0 0 20px;
+			&.notices {
+				background: #fff;
+				border: 1px solid #c3c4c7;
+				border-left-width: 4px;
+				border-left-color: #00a32a;
+				box-shadow: 0 1px 1px rgb(0, 0, 0, 0.04);
+				padding: 1px 12px;
+			}
+		}
+	}
+}

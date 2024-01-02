@@ -1,0 +1,64 @@
+.user-invitation-modal {
+	.tab-header {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 20px;
+	}
+	.tab-button {
+		border: none;
+		padding: 10px 20px;
+		cursor: pointer;
+		color: var(--wp-admin-theme-color);
+		background: transparent;
+		box-shadow: inset 0 0 0 1px var(--wp-admin-theme-color);
+		outline: 1px solid transparent;
+		display: flex;
+		@media screen and (max-width:375px) {
+			padding: 10px 15px;
+		}
+		&.active {
+			white-space: nowrap;
+			background: var(--wp-admin-theme-color);
+			color: #fff;
+			text-decoration: none;
+			text-shadow: none;
+			outline: 1px solid transparent;
+		}
+	}
+	.tab-content {
+		display: none;
+		&.active {
+			display: block;
+		}
+	}
+	.centered-container {
+		display: flex;
+		height: 100vh;
+		margin: 0;
+	}
+	.requests-count {
+		content: attr(data-count);
+		background: #f02849;
+		color: #fff;
+		padding: 2px;
+		border-radius: 10px;
+		font-size: 8px;
+		font-weight: 600;
+		width: 16px;
+		height: 16px;
+		line-height: 16px;
+		text-align: center;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+		margin-left: 3px;
+	}
+}

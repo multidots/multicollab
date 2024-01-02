@@ -1,0 +1,115 @@
+.commentOn {
+	.editor-styles-wrapper {
+		.block-editor-block-list__layout {
+			&.is-root-container {
+				.cf-wrapperblock__suggestion {
+					position: relative;
+					margin-left: 0 !important;
+					z-index: 9;
+				}
+			}
+		}
+		.cf-wrapperblock__suggestion {
+			.wp-block {
+				width: auto !important;
+				margin-left: 0 !important;
+				margin-right: 0 !important;
+				max-width: inherit;
+			}
+			.wp-block-quote {
+				border-width: 2px;
+				& > .cf-wrapperblock__suggestion {
+					margin-right: 30px;
+				}
+			}
+		}
+	}
+	&:not(.hide-sg) {
+		.cf-icon__addBlocks,
+		.cf-icon__removeBlocks {
+			position: absolute;
+			top: 0;
+			left: auto;
+			right: -32px;
+			display: inline-block;
+			width: 32px;
+			height: 32px;
+			cursor: pointer;
+			&::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				right: 4px;
+				left: auto;
+				width: 24px;
+				height: 22px;
+				background-repeat: no-repeat;
+				display: inline-block;
+				line-height: normal;
+				background-size: 24px;
+				z-index: 1;
+				background-image: url(../images/md-block-addicon.svg);
+			}
+			&.focus {
+				&::before {
+					background-image: url(../images/md-block-focus-addicon.svg);
+				}
+			}
+		}
+		.cf-icon__removeBlocks{
+			&::before {
+				background-image: url(../images/md-block-removeicon.svg);
+			}
+			&.focus {
+				&::before {
+					background-image: url(../images/md-block-focus-removeicon.svg);
+				}
+			}
+		}
+	}
+	&:not(.hide-comments) {
+		.cf-icon-wholeblock__comment {
+			position: absolute;
+			top: 0;
+			left: auto;
+			right: -32px;
+			display: inline-block;
+			width: 32px;
+			height: 32px;
+			cursor: pointer;
+			&::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				right: 4px;
+				left: auto;
+				width: 24px;
+				height: 22px;
+				background-repeat: no-repeat;
+				display: inline-block;
+				line-height: normal;
+				background-size: 24px;
+				z-index: 1;
+				background-image: url(../images/md-block-commenticon.svg);
+			}
+			&.focus {
+				&::before {
+					background-image: url(../images/md-block-focus-commenticon.svg);
+				}
+			}
+		}
+	}
+	ul {
+		&.wp-block {
+			.cf-wrapperblock__suggestion {
+				margin-bottom: 30px;
+				&:first-child {
+					margin-top: 40px;
+				}
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+}
