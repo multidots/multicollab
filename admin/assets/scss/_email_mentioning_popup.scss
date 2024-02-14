@@ -48,12 +48,13 @@
 			}
 		}
 	}
-	[contenteditable=true]:empty {
+	/*[contenteditable=true]:empty {
+		// To resolve github issue #1189 
 		&::before {
 			content: attr(placeholder);
 			display: block;
 		}
-	}
+	}*/
 	.cf-system-user-email-list {
 		max-height: 300px;
 		overflow-y: scroll;

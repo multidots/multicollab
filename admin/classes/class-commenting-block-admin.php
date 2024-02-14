@@ -384,6 +384,19 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			wp_schedule_event( time(), 'daily', 'cf_daily_license_checker' );
 		}
 
+		$args = array(
+			'title' => 'Getting Started with Multicollab',
+			'post_type'         => 'post',
+			'post_status'       => 'draft',
+		);
+		$posts_array = get_posts( $args );
+		if( empty( $posts_array ) ){
+			$wizard_redirect_link = home_url() . '/wp-admin/admin.php?page=editorial-comments&view=web-activity';
+		} else {
+			$wizard_redirect_link = $url = get_edit_post_link( $posts_array[0]->ID );;
+		}
+
+		echo esc_html( $wizard_redirect_link );
 		wp_die();
 	}
 
@@ -747,16 +760,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		$this->cf_activities_object = new Commenting_Block_Activities();
 		$this->cf_activities        = $this->cf_activities_object->cf_migrate_to_pro_now();
-	}
-
-	/**
-	 * Get permissions code.
-	 */
-	public function cf_get_pp_roles() {
-		require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-permissions.php'; // Removed phpcs:ignore by Rishi Shah.
-		$this->cf_pp_roles_object = new Commenting_Block_Permissions();
-		$this->default_permission = $this->cf_pp_roles_object->cf_default_permissions();
-		$this->cf_pp_roles        = $this->cf_pp_roles_object->cf_get_pp_roles();
 	}
 
 	/**
@@ -1842,7 +1845,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 */
 	public function cf_update_meta() {
 		$current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
-        $autoDraft_ids          = isset($_POST['data']) ? $_POST['data'] : ''; //phpcs:ignore
+		$autoDraft_ids          = filter_input(INPUT_POST, 'data', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		update_post_meta( $current_post_id, '_autodraft_ids', $autoDraft_ids );
 		wp_die();
 	}
@@ -2398,12 +2401,17 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * @return array
 	 */
 	public function filter_block_type_metadata( $metadata ) {
-		$allowedBlocks_widget = array('core/rss','core/tag-cloud','core/latest-comments','core/archives','core/calendar');
+		$allowedBlocks_widget = array('core/rss','core/tag-cloud','core/latest-comments','core/archives','core/calendar','woocommerce/product-best-sellers','woocommerce/product-new','woocommerce/product-categories','woocommerce/product-top-rated',
+		'woocommerce/product-category','woocommerce/handpicked-products','woocommerce/product-tag','woocommerce/products-by-attribute','woocommerce/filled-cart-block');
 
-		if ( str_starts_with( $metadata['name'], 'core/' )
-            && ( in_array($metadata['name'], $allowedBlocks_widget,true)
-			
-            ) ) {
+		if ( ( str_starts_with( $metadata['name'], 'core/' ) || str_starts_with( $metadata['name'], 'woocommerce/' ) )
+            && 
+			( 
+				in_array($metadata['name'], $allowedBlocks_widget,true) 
+				|| str_contains($metadata['name'], 'woocommerce/cart-') 
+				|| str_contains($metadata['name'], 'woocommerce/checkout-') 
+			)
+		) {
                 $metadata['attributes']['datatext'] = [
                     'type'    => 'string',
                     'default' => true,

@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 6.2
 Tested up to: 6.4
-Stable tag: 4.2
+Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,9 +213,16 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 
 == Changelog ==
 
+= 4.3 - 14.02.2024 =
+* [Enhancement] Users can now add comments on ACF blocks and the block's text.
+* [Enhancement] Whole block comments now work seamlessly with reusable blocks.
+* [Enhancement] Ensure compatibility with the Multicollab plugin and Gutenberg-built WooCommerce Product Pages.
+* [Enhancement] Redesigned onboarding workflow.
+* [Enhancement] Multiple users can simultaneously work on the same block.
+
 = 4.2 - 02.01.2024 =
-* [New] Users can comment on entire gallery blocks.
-* [New] Users can add comments to Gutenberg widget category blocks (Latest Comment, RSS, Archives, Calendar).
+* [New] Users can comment on entire gallery blocks. - (Share Image)
+* [New] Users can add comments to Gutenberg widget category blocks (Latest Comment, RSS, Archives, Calendar). - (Share Image)
 * [Enhancement] Collaborator details are now displayed on the dashboard activity.
 * [Enhancement] Users can set their default tab when opening a WordPress page.
 * [Enhancement] Admins can view real-time collaboration permissions in the permission settings tab.

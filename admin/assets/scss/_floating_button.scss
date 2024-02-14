@@ -173,6 +173,13 @@
 				}
 			}
 		}
+		.acfb_accordion_block .acfb_accordion {
+			.acfb_accordion_content{
+				.acfb_accordion_content_inner{
+					display: block;
+				}
+			} 
+		}
 	}
 	.toolbar-button-with-text,
 	.toolbar-button-with-nontext {

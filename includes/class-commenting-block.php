@@ -309,6 +309,44 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 		public static function cf_redirect_on_activate( $plugin = false ) {
 			if ( COMMENTING_BLOCK_BASE === $plugin ) {
 
+				// Create getting started page from API on plugin activation.
+				$getting_started_api_url =  CF_STORE_URL . 'wp-json/cf-getting-started-draft-page/v2/cf-getting-started-draft-page?' . wp_rand();
+				if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
+					$response = vip_safe_wp_remote_get( $getting_started_api_url, 3, 1, 20 );
+				} else {
+					$response = wp_remote_get( $getting_started_api_url );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+				}
+
+				if ( ! empty( $response['body'] ) ) {
+					$response_data = $response['body'];
+					$response_data_array = json_decode( $response_data, true );
+					$args = array(
+						'title' => $response_data_array['post_title'],
+						'post_type'         => 'post',
+						'post_status'       => 'draft',
+					);
+					$posts_array = get_posts( $args );
+					if( ! empty( $posts_array ) ){
+						$existing_getting_started_post = array(
+							'ID' =>  $posts_array[0]->ID,
+							'post_title'    => $response_data_array['post_title'],
+							'post_content'  => $response_data_array['post_content'],
+							'post_status'   => $posts_array[0]->post_status,
+						);
+						wp_update_post( $existing_getting_started_post );
+					} else {
+						$wordpress_post = array(
+							'post_title' => $response_data_array['post_title'],
+							'post_content' => $response_data_array['post_content'],
+							'post_status' => 'draft',
+							'post_author' => 1,
+							'post_type' => 'post'
+						);
+						wp_insert_post( $wordpress_post );
+					}
+
+				}
+
 				// Delete setting options.
 				delete_option( 'cf_hide_floating_icons' );
 				delete_option( 'cf_admin_notif' );

@@ -459,7 +459,9 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 			$query .= " LEFT JOIN $wpdb->term_relationships as tr ON pm.post_id = tr.object_id";
 		}
 
-		$query .= $wpdb->remove_placeholder_escape( $wpdb->prepare( " WHERE pm.meta_key LIKE '%s' OR pm.meta_key LIKE '%s' AND LENGTH(pm.meta_value) = 10 AND  pm.meta_key NOT IN (%s)", 'th_rc_joined%', 'th_el%', $autodrat_id_str ) );
+		$query .= $wpdb->remove_placeholder_escape( $wpdb->prepare( " WHERE pm.meta_key LIKE '%s' OR pm.meta_key LIKE '%s' AND LENGTH(pm.meta_value) = 10", 'th_rc_joined%', 'th_el%' ) );
+
+		$query .= ' AND pm.meta_key NOT IN ('.$autodrat_id_str.')';
 
 		if ( $cat ) {
 			$query .= $wpdb->prepare( ' AND tr.term_taxonomy_id	 = %d', $cat );
