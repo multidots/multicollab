@@ -84,7 +84,7 @@
 		}
 		.block-editor-block-list__layout {
 			&.is-root-container {
-				& > .wp-block {
+				& > .wp-block,.wc-block-reviews-by-product {
 					margin-left: 0 !important;
 					margin-right: auto;
 					width: 100%;

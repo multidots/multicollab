@@ -75,7 +75,7 @@
             }
 
             if (!$(this).hasClass('blockAdded') && $(this).attr('data-block')) { // To solve the custom Block add suggestion problem @Author Mayank
-                const blockDetail = wp.data.select('core/editor').getBlock($(this).attr('data-block'));
+                const blockDetail = wp.data.select('core/block-editor').getBlock($(this).attr('data-block'));
                 if (blockDetail) {
                     const blockClasses = blockDetail?.attributes?.className;
                     if (blockClasses && blockClasses.includes('blockAdded')) {
@@ -136,7 +136,7 @@
             }
 
             if (!$(this).hasClass('blockremove') && $(this).attr('data-block')) { // To solve the custom Block remove suggestion problem @Author Mayank
-                const blockDetail = wp.data.select('core/editor').getBlock($(this).attr('data-block'));
+                const blockDetail = wp.data.select('core/block-editor').getBlock($(this).attr('data-block'));
                 if (blockDetail) {
                     const blockClasses = blockDetail?.attributes?.className;
                     if (blockClasses && blockClasses.includes('blockremove')) {
@@ -654,8 +654,11 @@
             var val = $('input.cf_websocket_options:checked').val();
             if( 'cf_websocket_custom' === val ) {
                 jQuery('#cf_multiedit_websocket').prop("disabled", false);
+                document.getElementById('cf_multiedit_websocket').setAttribute('required', 'required');
+                
             } else {
                 jQuery('#cf_multiedit_websocket').prop("disabled", true);
+                document.getElementById('cf_multiedit_websocket').removeAttribute('required');
             }
         });
 
@@ -1760,7 +1763,8 @@
                             currentTextareaNode.removeChild(children)
                         }
                         e.preventDefault();
-                        $(".cf-share-comment").focus();
+                        // commented this below line because of bug fixing of board gets shifted issue #997. @author - Nirav Soni Since-4.3 
+                        //$(".cf-share-comment").focus();
                         var selectChild = currentTextareaNode.childNodes.length - 1;
                         var el = currentTextareaNode.childNodes[selectChild];
                         var cursorSel = window.getSelection();
@@ -2399,14 +2403,19 @@ var removeTag = function (elIDRemove) { // eslint-disable-line
     var blockType = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-type'); // eslint-disable-line
     const findAttributes = window.adminLocalizer.allowed_attribute_tags;
     const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId); // eslint-disable-line
-
+    var prefixAcf = 'acf/';
+    
     if ('core/gallery' === blockType) {
         removeGalleryTag(blockAttributes, clientId, elIDRemove)
     }
     if ('core/table' === blockType) {
         removeTableTag(blockAttributes, clientId, elIDRemove)
     }
-    if (null !== blockAttributes) {
+    if ( blockType.startsWith( prefixAcf ) ) {
+        removeAcfTag(blockAttributes, clientId, elIDRemove)
+    }
+
+    if (null !== blockAttributes && !blockType.startsWith( prefixAcf ) ) {
 
         jQuery(findAttributes).each(function (i, attrb) { // eslint-disable-line
             var content = blockAttributes[attrb];
@@ -2442,6 +2451,84 @@ var removeTag = function (elIDRemove) { // eslint-disable-line
         });
     }
 }
+
+var removeAcfTag = function (blockAttributes, clientId, elIDRemove) {
+    const updatedAttributes = {
+        data: deepCopy(blockAttributes.data), // Ensure that the original object is not mutated
+    };
+
+    let targetObject = null;
+
+    // Recursive function to traverse nested objects
+    const checkAndRemoveDatatext = (obj, parentObject, parentKey) => {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const value = obj[key];
+
+                // Check if the attribute value contains both 'mdspan' and 'datatext'
+                if (typeof value === 'string' && value.includes('<mdspan') && value.includes('datatext="' + elIDRemove + '"')) {
+                    // Use DOM manipulation to remove mdspan tags only for the specific datatext value
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = value;
+
+                    const mdspans = tempDiv.querySelectorAll('mdspan[datatext="' + elIDRemove + '"]');
+                    for (let i = 0; i < mdspans.length; i++) {
+                        const mdspan = mdspans[i];
+                        // Replace mdspan with its content (keeping only the text content)
+                        mdspan.parentNode.replaceChild(document.createTextNode(mdspan.textContent), mdspan);
+                    }
+                    targetObject = parentObject;
+
+                    var $currentElement = jQuery('[datatext="' + elIDRemove + '"]');
+                    var $currentMdspan = $currentElement.closest('mdspan');
+                    $currentMdspan.replaceWith($currentMdspan.contents());
+
+                    const matchnum = key.match(/(\d+)_/);
+                    const numericValue = matchnum ? matchnum[1] : null;
+                    const matchResult = key.match(/\d+_(.+)/);
+                    const dataName = matchResult ? matchResult[1] : key;
+
+                    let selector = key.startsWith('field_') ? `[data-key="${key}"]` : `[data-name="${dataName}"]`;
+                    if (parentKey !== null) {
+                        selector += `${selector} input[type="text"][id*="${parentKey}"], ${selector} textarea[id*="${parentKey}"]`;
+                    } else {
+                        if (numericValue !== null) {
+                            selector += `${selector} input[type="text"][id*="row-${numericValue}"], ${selector} textarea[id*="row-${numericValue}"]`;
+                        } else {
+                            selector += `${selector} input[type="text"], ${selector} textarea`;
+                        }
+                    }
+                    const $inputField = jQuery(selector);
+                    $inputField.val(tempDiv.innerHTML);
+
+                    obj[key] = tempDiv.innerHTML;
+
+                } else if (typeof value === 'object') {
+                    // If the value is an object, recursively check and remove datatext
+                    checkAndRemoveDatatext(value, obj, key);
+                }
+            }
+        }
+    };
+
+    // Start the recursive check
+    checkAndRemoveDatatext(updatedAttributes.data, null, null);
+
+    // Update block attributes if needed
+    wp.data.dispatch('core/block-editor').updateBlockAttributes(clientId, updatedAttributes);
+
+    return targetObject;
+}
+
+// Deep copy function to avoid mutating the original object
+function deepCopy(obj) { 
+    if( obj ) {
+        return JSON.parse(JSON.stringify(obj));
+    } else {
+        return obj;
+    }
+}
+
 var removeGalleryTag = function (blockAttributes, clientId, elIDRemove) {
     jQuery('.blocks-gallery-item').each(function (index, el) {
         if (jQuery(el).find('figure figcaption').length) {
@@ -3026,58 +3113,58 @@ function fetchBoardsCommonCode() {
       let selectedDataText;
   
       // ====== FOR Add block suggestion functionality. @author Mayank Jain since 3.4
-      $(".wp-block").each(function () {
+      jQuery(".wp-block").each(function () {
         let uniqueId;
-        if ( $(this).hasClass("blockAdded") ) {
+        if ( jQuery(this).hasClass("blockAdded") ) {
+            uniqueId = jQuery(this).attr("suggestion_id");
+        } else if( jQuery(this).hasClass("blockremove") ) {
             uniqueId = $(this).attr("suggestion_id");
-        } else if( $(this).hasClass("blockremove") ) {
-            uniqueId = $(this).attr("suggestion_id");
-        } else if ($(this).attr("align_sg_id") !== undefined) {
-            uniqueId = $(this).attr("align_sg_id");
-        } else if ($(this).attr("textAlign_sg_id") !== undefined) {
-            uniqueId = $(this).attr("textAlign_sg_id");
-        } else if ($(this).attr("lock_sg_id") !== undefined) {
-            uniqueId = $(this).attr("lock_sg_id");
+        } else if (jQuery(this).attr("align_sg_id") !== undefined) {
+            uniqueId = jQuery(this).attr("align_sg_id");
+        } else if (jQuery(this).attr("textAlign_sg_id") !== undefined) {
+            uniqueId = jQuery(this).attr("textAlign_sg_id");
+        } else if (jQuery(this).attr("lock_sg_id") !== undefined) {
+            uniqueId = jQuery(this).attr("lock_sg_id");
         }
         selectedNontextblock.push(uniqueId);
       });
   
-      $(
+      jQuery(
         ".commentIcon, .wp-block mdspan,.cf-onwhole-block__comment, .wp-block .mdadded, .wp-block .mdmodified, .wp-block .mdremoved"
       ).each(function () {
         if (
-          $(this).hasClass("mdadded") ||
-          $(this).hasClass("mdremoved") ||
-          $(this).hasClass("mdmodified")
+          jQuery(this).hasClass("mdadded") ||
+          jQuery(this).hasClass("mdremoved") ||
+          jQuery(this).hasClass("mdmodified")
         ) {
           selectedDataText = $(this).attr("id");
           if (
-            $(this).has("suggestion_id") &&
-            $(this).hasClass("cf-onwhole-block__comment")
+            jQuery(this).has("suggestion_id") &&
+            jQuery(this).hasClass("cf-onwhole-block__comment")
           ) {
-            selectedDataText = $(this).attr("datatext");
+            selectedDataText = jQuery(this).attr("datatext");
           }
         } else {
-          selectedDataText = $(this).attr("datatext");
+          selectedDataText = jQuery(this).attr("datatext");
         }
         selectedNontextblock.push(selectedDataText);
       });
   
       return selectedNontextblock;
   
-  }
+}
   
   function floatCommentsBoard(selectedText) {
 
-    $('.cls-board-outer').removeClass('focus');
-    $('.cls-board-outer').removeClass('is-open');
-    $('.cls-board-outer').removeClass('onGoing');
-    $('.cf-icon__addBlocks, .cf-icon__removeBlocks').removeClass('focus');
-    $('.cf-icon-wholeblock__comment,.cf-onwhole-block__comment').removeClass('focus');
+    jQuery('.cls-board-outer').removeClass('focus');
+    jQuery('.cls-board-outer').removeClass('is-open');
+    jQuery('.cls-board-outer').removeClass('onGoing');
+    jQuery('.cf-icon__addBlocks, .cf-icon__removeBlocks').removeClass('focus');
+    jQuery('.cf-icon-wholeblock__comment,.cf-onwhole-block__comment').removeClass('focus');
     
-    $('#cf-span__comments .comment-delete-overlay').removeClass('show');
-    $('#cf-span__comments .comment-resolve .resolve-cb').prop("checked", false);
-    $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
+    jQuery('#cf-span__comments .comment-delete-overlay').removeClass('show');
+    jQuery('#cf-span__comments .comment-resolve .resolve-cb').prop("checked", false);
+    jQuery('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
 
     var singleBoardId = selectedText;
     let topOfTextSingleBoard;
@@ -3086,30 +3173,30 @@ function fetchBoardsCommonCode() {
     if(undefined !== singleBoardId ){
         if (singleBoardId.match(/^el/m) === null) {
             if(document.querySelector(`[suggestion_id="${singleBoardId}"]`)) {
-                topOfTextSingleBoard = $(`[suggestion_id="${singleBoardId}"]`).offset()?.top;
+                topOfTextSingleBoard = jQuery(`[suggestion_id="${singleBoardId}"]`).offset()?.top;
             } else if(document.querySelector(`[align_sg_id="${singleBoardId}"]`)) {     // Added for the align block level suggestions @author - Mayank / since 3.6
-                topOfTextSingleBoard = $(`[align_sg_id="${singleBoardId}"]`).offset()?.top;
+                topOfTextSingleBoard = jQuery(`[align_sg_id="${singleBoardId}"]`).offset()?.top;
             } else if(document.querySelector(`[textAlign_sg_id="${singleBoardId}"]`)) { // Added for the text align block level suggestions @author - Mayank / since 3.6
-                topOfTextSingleBoard = $(`[textAlign_sg_id="${singleBoardId}"]`).offset()?.top;
+                topOfTextSingleBoard = jQuery(`[textAlign_sg_id="${singleBoardId}"]`).offset()?.top;
             } else if(document.querySelector(`[lock_sg_id="${singleBoardId}"]`)) { // Added for the lock level suggestions @author - Mayank / since 3.6
-                topOfTextSingleBoard = $(`[lock_sg_id="${singleBoardId}"]`).offset()?.top;
+                topOfTextSingleBoard = jQuery(`[lock_sg_id="${singleBoardId}"]`).offset()?.top;
             } else {
-                topOfTextSingleBoard = $('#' + singleBoardId + '').offset()?.top;
+                topOfTextSingleBoard = jQuery('#' + singleBoardId + '').offset()?.top;
             }
             singleBoardIdWithSg = 'sg' + singleBoardId;
 
             // Add active class on activity bar. @author: Rishi Shah @since: 3.4
-            $(`#cf-sg${singleBoardId}`).addClass('active');
+            jQuery(`#cf-sg${singleBoardId}`).addClass('active');
         } else {
-            topOfTextSingleBoard = $('[datatext="' + singleBoardId + '"]').offset().top;
+            topOfTextSingleBoard = jQuery('[datatext="' + singleBoardId + '"]').offset().top;
             singleBoardIdWithSg = singleBoardId;
         }
     }
     
-    $('#' + singleBoardIdWithSg).css('opacity', '1');
-    $('#' + singleBoardIdWithSg + '.cls-board-outer').addClass('is-open');
-    $('#' + singleBoardIdWithSg).addClass('focus onGoing');
-    $('#' + singleBoardIdWithSg).offset({ top: topOfTextSingleBoard });
+    jQuery('#' + singleBoardIdWithSg).css('opacity', '1');
+    jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').addClass('is-open');
+    jQuery('#' + singleBoardIdWithSg).addClass('focus onGoing');
+    jQuery('#' + singleBoardIdWithSg).offset({ top: topOfTextSingleBoard });
 
     var underlineAllAttr = document.querySelectorAll('[data-rich-text-format-boundary="true"]');
     if( underlineAllAttr ) {
@@ -3138,4 +3225,40 @@ function fetchBoardsCommonCode() {
         }
     }
     scrollBoardToPosition(topOfTextSingleBoard);   
+}
+
+function showNoticeMsg() {
+    const { __ } = wp.i18n;
+    var noticeMsg = __(
+        "Multiple comments are not possible on the same block.",
+        "content-collaboration-inline-commenting"
+    );
+    document.getElementById("cf-board__notice").innerHTML = noticeMsg;
+    document
+        .getElementById("cf-board__notice")
+        .setAttribute("style", "display:block");
+    setTimeout(function () {
+        document
+            .getElementById("cf-board__notice")
+            .setAttribute("style", "display:none");
+        document.getElementById("cf-board__notice").innerHTML = "";
+    }, 3000);
+}
+
+function nonTextNoticeMsg() {
+    const { __ } = wp.i18n;
+    var noticeMsg = __(
+        "Please Select a Text",
+        "content-collaboration-inline-commenting"
+    );
+    document.getElementById("cf-board__notice").innerHTML = noticeMsg;
+    document
+        .getElementById("cf-board__notice")
+        .setAttribute("style", "display:block");
+    setTimeout(function () {
+        document
+            .getElementById("cf-board__notice")
+            .setAttribute("style", "display:none");
+        document.getElementById("cf-board__notice").innerHTML = "";
+    }, 3000);
 }

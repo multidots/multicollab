@@ -45,12 +45,13 @@
 						</span>
 					</span>
 					<div class="cf_websocket_custom_url_section">
-						<input id="cf_multiedit_websocket" type="url" name="cf_multiedit_websocket" placeholder="<?php esc_attr_e( 'Enter WebSocket URL', 'content-collaboration-inline-commenting' ); ?>" value="<?php if( 'cf_websocket_custom' === $cf_websocket_options ) { echo esc_attr( $cf_multiedit_websocket ); } else { echo 'wss://your-WebSocket-URL/ws/'; } ?>" 
+						<input id="cf_multiedit_websocket" type="url" name="cf_multiedit_websocket" placeholder="<?php esc_attr_e( 'wss://your-WebSocket-URL/ws/', 'content-collaboration-inline-commenting' ); ?>" value="<?php if ( 'cf_websocket_custom' === $cf_websocket_options ) { echo esc_attr( $cf_multiedit_websocket ); } ?>" 
 						<?php
 							if ( 'cf_websocket_custom' !== $cf_websocket_options ) {
 								echo 'disabled'; 
 							}
 						?>
+						required='required'
 						/>
 						<?php
 							printf(

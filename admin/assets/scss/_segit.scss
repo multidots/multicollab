@@ -299,6 +299,9 @@
 			}
 		}
 	}
+	.wc-block-mini-cart{
+		display: block;
+	}
 }
 .commentOn {
 	.wp-block {
@@ -408,6 +411,11 @@
 				border-width: 2px;
 				border-style: solid;
 				border-color: #188651;
+				&.wc-block-all-reviews {
+					border-width: 0px;
+					border-style: unset;
+					border-color: unset;
+				}
 			}
 			.wp-block[data-sgremove=true] {
 				border-width: 2px;
@@ -503,6 +511,13 @@
 				&.is-focused,
 				&.focus {
 					border: 2px solid #fcef45;
+				}
+				&.wc-block-all-reviews{
+					border: none;
+					padding: 0;
+					&.focus {
+						border: none;
+					}
 				}
 			}
 			.cf-onwhole-block__comment {

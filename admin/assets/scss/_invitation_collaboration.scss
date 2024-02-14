@@ -1,24 +1,4 @@
 .multicollab_body_class {
-	.interface-complementary-area {
-		.components-panel__header {
-			.cf-multicollab-svgicon {
-				position: relative;
-				top: -5px;
-				font-size: 0;
-				display: inline-block;
-				&::before {
-					content: "";
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 102px;
-					height: 27px;
-					background-image: url('../images/multicollab-black-logo-new.svg');
-					background-repeat: no-repeat;
-				}
-			}
-		}
-	}
 	.editor-post-saved-state {
 		display: flex !important;
 	}

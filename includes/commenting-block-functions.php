@@ -28,47 +28,6 @@ add_action('user_register', 'gc_delete_users_transient', 10, 1);
 add_action('deleted_user', 'gc_delete_users_transient', 10, 3);
 
 /**
- * On edit page loaded this function will trigger
- * and restore the users in the transient.
- *
- * @return void
- */
-if (!function_exists('gc_after_edit_load')) {
-    function gc_after_edit_load()
-    {
-        $post_id = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_SPECIAL_CHARS);
-
-        if (! empty($post_id)) {
-            // WP User Query.
-            $users = new WP_User_Query([
-                    'number'   => 9999,
-                    'exclude'  => array( get_current_user_id() ), // phpcs:ignore
-                ]);
-
-            // Fetch out all user's email.
-            $email_list   = [];
-            $system_users = $users->get_results();
-
-            foreach ($system_users as $user) {
-                if ($user->has_cap('edit_post', $post_id)) {
-                    $email_list[] = [
-                            'ID'                => $user->ID,
-                            'role'              => implode(', ', $user->roles),
-                            'display_name'      => $user->display_name,
-                            'full_name'         => $user->display_name,
-                            'user_email'        => $user->user_email,
-                            'avatar'            => get_avatar_url($user->ID, [ 'size' => '24' ]),
-                            'profile'           => admin_url("/user-edit.php?user_id={$user->ID}"),
-                            'edit_others_posts' => isset($user->allcaps['edit_others_posts']) ? $user->allcaps['edit_others_posts'] : '',
-                        ];
-                }
-            }
-        }
-    }
-}
-add_action('admin_init', 'gc_after_edit_load');
-
-/**
  * Reaasigning Deleted User.
  *
  * @param int $id
@@ -174,156 +133,34 @@ if (!function_exists('cf_dpb_promotional_banner')) {
 
         if( in_array( $pagenow, $allow_pages ) || null !== $location ){
 
-            $CF_PROMOTIONAL_BANNER_API_URL = CF_PROMOTIONAL_BANNER_API_URL . 'wp-json/dpb-promotional-banner/v2/dpb-promotional-banner?' . wp_rand();
-            if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
-                $promotional_banner_request = vip_safe_wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL, 3, 1, 20 );
+            $cf_edd = new CF_EDD();
+            $promotional_banner_request_body = get_transient( 'cf_promotional_banner_request_data' );
+
+            // Check if promotional banner datat exists in caching or not.
+            if( isset( $promotional_banner_request_body ) && !empty( $promotional_banner_request_body ) ) {
+                cf_display_promotional_banner_code( $promotional_banner_request_body, $pagenow, $location, $single_new_edit_page, $cf_edd, $dpb_banner_main_class );
             } else {
-                $promotional_banner_request = wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
-            }
-            
-            ob_start();
-            if ( empty( $promotional_banner_request->errors ) ) {
-                $promotional_banner_request_body = $promotional_banner_request['body'];
-                $promotional_banner_request_body = json_decode( $promotional_banner_request_body, true );
-                if ( ! empty( $promotional_banner_request_body ) ) {
+                $CF_PROMOTIONAL_BANNER_API_URL = CF_PROMOTIONAL_BANNER_API_URL . 'wp-json/dpb-promotional-banner/v2/dpb-promotional-banner?' . wp_rand();
+                if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
+                    $promotional_banner_request = vip_safe_wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL, 3, 1, 20 );
+                } else {
+                    $promotional_banner_request = wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+                }
+                
+                ob_start();
+                if ( empty( $promotional_banner_request->errors ) ) {
+                    $promotional_banner_request_body = $promotional_banner_request['body'];
+                    $promotional_banner_request_body = json_decode( $promotional_banner_request_body, true );
+                    if ( ! empty( $promotional_banner_request_body ) ) {
+                        cf_display_promotional_banner_code( $promotional_banner_request_body, $pagenow, $location, $single_new_edit_page, $cf_edd, $dpb_banner_main_class );
 
-                    foreach ( $promotional_banner_request_body as $promotional_banner_request_body_data ) {
-
-                        $dpb_banner_display_on = explode(",", $promotional_banner_request_body_data['dpb_banner_display_on']);
-     
-                        if( in_array( $pagenow, $single_new_edit_page ) ){
-                            $dpb_banner_display_position = isset($promotional_banner_request_body_data['dpb_banner_display_position']) ? $promotional_banner_request_body_data['dpb_banner_display_position'] : '';
-                        }else{
-                            $dpb_banner_display_position = '';
-                        }
-
-                        if ( in_array($location, $dpb_banner_display_on)){ 
-
-                            $promotional_banner_cookie          = $promotional_banner_request_body_data['promotional_banner_cookie'];
-                            $promotional_banner_image           = $promotional_banner_request_body_data['promotional_banner_image'];
-                            $promotional_banner_description     = $promotional_banner_request_body_data['promotional_banner_description'];
-                            $promotional_banner_button_group    = $promotional_banner_request_body_data['promotional_banner_button_group'];
-                            $dpb_schedule_campaign_type         = $promotional_banner_request_body_data['dpb_schedule_campaign_type'];
-                            $promotional_banner_target_audience = $promotional_banner_request_body_data['promotional_banner_target_audience'];
-
-                            if ( ! empty( $promotional_banner_target_audience ) ) {
-
-                                $currunt_plan_name = esc_html( 'FREE' );
-
-                                $display_banner_flag = false;
-                                if ( 'all_customers' === $promotional_banner_target_audience['value'] ) {
-                                    $display_banner_flag = true;
-                                } elseif ( 'pro_plan_customer' === $promotional_banner_target_audience['value'] && 'pro' === $currunt_plan_name ) {
-                                    $display_banner_flag = true;
-                                } elseif ( 'plus_plan_customer' === $promotional_banner_target_audience['value'] && 'plus' === $currunt_plan_name ) {
-                                    $display_banner_flag = true;
-                                } elseif ( 'vip_plan_customer' === $promotional_banner_target_audience['value'] && 'vip' === $currunt_plan_name ) {
-                                    $display_banner_flag = true;
-                                } elseif ( 'basic_plan_customer' === $promotional_banner_target_audience['value'] && 'FREE' === $currunt_plan_name ) {
-                                    $display_banner_flag = true;
-                                } elseif ( 'premium_customer' === $promotional_banner_target_audience['value'] && ( 'plus' === $currunt_plan_name || 'pro' === $currunt_plan_name || 'vip' === $currunt_plan_name ) ) {
-                                    $display_banner_flag = true;
-                                }
-                            }
-
-                            if ( true === $display_banner_flag ) {
-                                if ( 'default' === $dpb_schedule_campaign_type ) {
-                                    $banner_cookie_show         = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
-                                    $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
-                                    $flag                       = false;
-                                    if ( empty( $banner_cookie_show ) && empty( $banner_cookie_visible_once ) ) {
-                                        setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes', time() + ( 86400 * 7 ) ); //phpcs:ignore
-                                        setcookie( 'banner_show_once_' . $promotional_banner_cookie, 'yes' ); //phpcs:ignore
-                                        $flag = true;
-                                    }
-
-                                    $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
-                                    if ( ! empty( $banner_cookie_show ) || true === $flag ) {
-
-                                        $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
-                                        $banner_cookie = isset( $banner_cookie ) ? $banner_cookie : '';
-                                        if ( empty( $banner_cookie ) && 'yes' !== $banner_cookie ) {
-                                            ?>
-                                    <div class="cf-plugin-popup <?php echo isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner'; ?> <?php echo esc_attr($dpb_banner_display_position); ?> <?php echo esc_attr($dpb_banner_main_class); ?>">
-                                            <?php
-                                            if ( ! empty( $promotional_banner_image ) ) {
-                                                ?>
-                                                    <img src="<?php echo esc_url( $promotional_banner_image ); ?>"/>
-                                                <?php
-                                            }
-                                            ?>
-                                            <div class="cf-plugin-popup-meta">
-                                                <p>
-                                                    <?php
-                                                    echo wp_kses_post( str_replace( array( '<p>', '</p>' ), '', $promotional_banner_description ) );
-                                                    if ( ! empty( $promotional_banner_button_group ) ) {
-                                                        foreach ( $promotional_banner_button_group as $promotional_banner_button_group_data ) {
-                                                            ?>
-                                                            <a href="<?php echo esc_url( $promotional_banner_button_group_data['promotional_banner_button_link'] ); ?>" target="_blank"><?php echo esc_html( $promotional_banner_button_group_data['promotional_banner_button_text'] ); ?></a>
-                                                            <?php
-                                                        }
-                                                    }
-                                                    ?>
-                                            </p>
-                                            </div>
-                                            <a href="#." data-popup-name="<?php echo isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner'; ?>" class="cf-pluginpop-close"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path id="Icon_material-close" data-name="Icon material-close" d="M17.5,8.507,16.493,7.5,12.5,11.493,8.507,7.5,7.5,8.507,11.493,12.5,7.5,16.493,8.507,17.5,12.5,13.507,16.493,17.5,17.5,16.493,13.507,12.5Z" transform="translate(-7.5 -7.5)" fill="#acacac"/></svg></a>   
-                                        </div>
-                                            <?php
-                                        }
-                                    }
-                                } else {
-
-                                    $banner_cookie_show         = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
-                                    $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
-                                    $flag                       = false;
-                                    if ( empty( $banner_cookie_show ) && empty( $banner_cookie_visible_once ) ) {
-                                        setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes'); //phpcs:ignore
-                                        setcookie( 'banner_show_once_' . $promotional_banner_cookie, 'yes' ); //phpcs:ignore
-                                        $flag = true;
-                                    }
-
-                                    $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
-                                    if ( ! empty( $banner_cookie_show ) || true === $flag ) {
-
-                                        $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
-                                        $banner_cookie = isset( $banner_cookie ) ? $banner_cookie : '';
-                                        if ( empty( $banner_cookie ) && 'yes' !== $banner_cookie ) {
-                                            ?>
-                                        <div class="cf-plugin-popup <?php echo isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner'; ?> <?php echo esc_attr($dpb_banner_display_position); ?> <?php echo esc_attr($dpb_banner_main_class); ?>">
-                                            <?php
-                                            if ( ! empty( $promotional_banner_image ) ) {
-                                                ?>
-                                                    <img src="<?php echo esc_url( $promotional_banner_image ); ?>"/>
-                                                <?php
-                                            }
-                                            ?>
-                                            <div class="cf-plugin-popup-meta">
-                                                <p>
-                                                    <?php
-                                                    echo wp_kses_post( str_replace( array( '<p>', '</p>' ), '', $promotional_banner_description ) );
-                                                    if ( ! empty( $promotional_banner_button_group ) ) {
-                                                        foreach ( $promotional_banner_button_group as $promotional_banner_button_group_data ) {
-                                                            ?>
-                                                            <a href="<?php echo esc_url( $promotional_banner_button_group_data['promotional_banner_button_link'] ); ?>" target="_blank"><?php echo esc_html( $promotional_banner_button_group_data['promotional_banner_button_text'] ); ?></a>
-                                                            <?php
-                                                        }
-                                                    }
-                                                    ?>
-                                            </p>
-                                            </div>
-                                            <a href="#." data-popup-name="<?php echo isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner'; ?>" class="cf-pluginpop-close"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path id="Icon_material-close" data-name="Icon material-close" d="M17.5,8.507,16.493,7.5,12.5,11.493,8.507,7.5,7.5,8.507,11.493,12.5,7.5,16.493,8.507,17.5,12.5,13.507,16.493,17.5,17.5,16.493,13.507,12.5Z" transform="translate(-7.5 -7.5)" fill="#acacac"/></svg></a>
-                                        </div>
-                                            <?php
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
+                        // Set promotional banner data in transient for 6 hours to restrict API call everytime.
+                        set_transient( 'cf_promotional_banner_request_data', $promotional_banner_request_body, 21600 );
                     }
                 }
             }
+
+            
 
             return ob_get_clean();
 
@@ -332,5 +169,155 @@ if (!function_exists('cf_dpb_promotional_banner')) {
         }
 
         
+    }
+}
+
+
+/**
+ * Function to display promotional banner HTML code.
+ */
+if (!function_exists('cf_display_promotional_banner_code')) {
+    function cf_display_promotional_banner_code( $promotional_banner_request_body, $pagenow, $location, $single_new_edit_page, $cf_edd, $dpb_banner_main_class ){
+        
+        foreach ( $promotional_banner_request_body as $promotional_banner_request_body_data ) {
+
+            $dpb_banner_display_on = explode(",", $promotional_banner_request_body_data['dpb_banner_display_on']);
+
+            if( in_array( $pagenow, $single_new_edit_page ) ){
+                $dpb_banner_display_position = isset($promotional_banner_request_body_data['dpb_banner_display_position']) ? $promotional_banner_request_body_data['dpb_banner_display_position'] : '';
+            }else{
+                $dpb_banner_display_position = '';
+            }
+
+            if ( in_array($location, $dpb_banner_display_on)){ 
+
+                $promotional_banner_cookie          = $promotional_banner_request_body_data['promotional_banner_cookie'];
+                $promotional_banner_image           = $promotional_banner_request_body_data['promotional_banner_image'];
+                $promotional_banner_description     = $promotional_banner_request_body_data['promotional_banner_description'];
+                $promotional_banner_button_group    = $promotional_banner_request_body_data['promotional_banner_button_group'];
+                $dpb_schedule_campaign_type         = $promotional_banner_request_body_data['dpb_schedule_campaign_type'];
+                $promotional_banner_target_audience = $promotional_banner_request_body_data['promotional_banner_target_audience'];
+
+                if ( ! empty( $promotional_banner_target_audience ) ) {
+
+                    $currunt_plan_name = '';
+                    if ( $cf_edd->is__premium_only() ) {
+                        $currunt_plan_name = esc_html( $cf_edd->get_plan_name() );
+                    } else {
+                        $currunt_plan_name = esc_html( 'FREE' );
+                    }
+
+                    $display_banner_flag = false;
+                    if ( 'all_customers' === $promotional_banner_target_audience['value'] ) {
+                        $display_banner_flag = true;
+                    } elseif ( 'pro_plan_customer' === $promotional_banner_target_audience['value'] && 'pro' === $currunt_plan_name ) {
+                        $display_banner_flag = true;
+                    } elseif ( 'plus_plan_customer' === $promotional_banner_target_audience['value'] && 'plus' === $currunt_plan_name ) {
+                        $display_banner_flag = true;
+                    } elseif ( 'vip_plan_customer' === $promotional_banner_target_audience['value'] && 'vip' === $currunt_plan_name ) {
+                        $display_banner_flag = true;
+                    } elseif ( 'basic_plan_customer' === $promotional_banner_target_audience['value'] && 'FREE' === $currunt_plan_name ) {
+                        $display_banner_flag = true;
+                    } elseif ( 'premium_customer' === $promotional_banner_target_audience['value'] && ( 'plus' === $currunt_plan_name || 'pro' === $currunt_plan_name || 'vip' === $currunt_plan_name ) ) {
+                        $display_banner_flag = true;
+                    }
+                }
+
+                if ( true === $display_banner_flag ) {
+                    if ( 'default' === $dpb_schedule_campaign_type ) {
+                        $banner_cookie_show         = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                        $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                        $flag                       = false;
+                        if ( empty( $banner_cookie_show ) && empty( $banner_cookie_visible_once ) ) {
+                            setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes', time() + ( 86400 * 7 ) ); //phpcs:ignore
+                            setcookie( 'banner_show_once_' . $promotional_banner_cookie, 'yes' ); //phpcs:ignore
+                            $flag = true;
+                        }
+
+                        $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                        if ( ! empty( $banner_cookie_show ) || true === $flag ) {
+
+                            $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                            $banner_cookie = isset( $banner_cookie ) ? $banner_cookie : '';
+                            if ( empty( $banner_cookie ) && 'yes' !== $banner_cookie ) {
+                                ?>
+                        <div class="cf-plugin-popup <?php echo isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner'; ?> <?php echo esc_attr($dpb_banner_display_position); ?> <?php echo esc_attr($dpb_banner_main_class); ?>">
+                                <?php
+                                if ( ! empty( $promotional_banner_image ) ) {
+                                    ?>
+                                        <img src="<?php echo esc_url( $promotional_banner_image ); ?>"/>
+                                    <?php
+                                }
+                                ?>
+                                <div class="cf-plugin-popup-meta">
+                                    <p>
+                                        <?php
+                                        echo wp_kses_post( str_replace( array( '<p>', '</p>' ), '', $promotional_banner_description ) );
+                                        if ( ! empty( $promotional_banner_button_group ) ) {
+                                            foreach ( $promotional_banner_button_group as $promotional_banner_button_group_data ) {
+                                                ?>
+                                                <a href="<?php echo esc_url( $promotional_banner_button_group_data['promotional_banner_button_link'] ); ?>" target="_blank"><?php echo esc_html( $promotional_banner_button_group_data['promotional_banner_button_text'] ); ?></a>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                </p>
+                                </div>
+                                <a href="#." data-popup-name="<?php echo isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner'; ?>" class="cf-pluginpop-close"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path id="Icon_material-close" data-name="Icon material-close" d="M17.5,8.507,16.493,7.5,12.5,11.493,8.507,7.5,7.5,8.507,11.493,12.5,7.5,16.493,8.507,17.5,12.5,13.507,16.493,17.5,17.5,16.493,13.507,12.5Z" transform="translate(-7.5 -7.5)" fill="#acacac"/></svg></a>   
+                            </div>
+                                <?php
+                            }
+                        }
+                    } else {
+
+                        $banner_cookie_show         = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                        $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                        $flag                       = false;
+                        if ( empty( $banner_cookie_show ) && empty( $banner_cookie_visible_once ) ) {
+                            setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes'); //phpcs:ignore
+                            setcookie( 'banner_show_once_' . $promotional_banner_cookie, 'yes' ); //phpcs:ignore
+                            $flag = true;
+                        }
+
+                        $banner_cookie_show = filter_input( INPUT_COOKIE, 'banner_show_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                        if ( ! empty( $banner_cookie_show ) || true === $flag ) {
+
+                            $banner_cookie = filter_input( INPUT_COOKIE, 'banner_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
+                            $banner_cookie = isset( $banner_cookie ) ? $banner_cookie : '';
+                            if ( empty( $banner_cookie ) && 'yes' !== $banner_cookie ) {
+                                ?>
+                            <div class="cf-plugin-popup <?php echo isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner'; ?> <?php echo esc_attr($dpb_banner_display_position); ?> <?php echo esc_attr($dpb_banner_main_class); ?>">
+                                <?php
+                                if ( ! empty( $promotional_banner_image ) ) {
+                                    ?>
+                                        <img src="<?php echo esc_url( $promotional_banner_image ); ?>"/>
+                                    <?php
+                                }
+                                ?>
+                                <div class="cf-plugin-popup-meta">
+                                    <p>
+                                        <?php
+                                        echo wp_kses_post( str_replace( array( '<p>', '</p>' ), '', $promotional_banner_description ) );
+                                        if ( ! empty( $promotional_banner_button_group ) ) {
+                                            foreach ( $promotional_banner_button_group as $promotional_banner_button_group_data ) {
+                                                ?>
+                                                <a href="<?php echo esc_url( $promotional_banner_button_group_data['promotional_banner_button_link'] ); ?>" target="_blank"><?php echo esc_html( $promotional_banner_button_group_data['promotional_banner_button_text'] ); ?></a>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                </p>
+                                </div>
+                                <a href="#." data-popup-name="<?php echo isset( $promotional_banner_cookie ) ? esc_html( $promotional_banner_cookie ) : 'default-banner'; ?>" class="cf-pluginpop-close"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path id="Icon_material-close" data-name="Icon material-close" d="M17.5,8.507,16.493,7.5,12.5,11.493,8.507,7.5,7.5,8.507,11.493,12.5,7.5,16.493,8.507,17.5,12.5,13.507,16.493,17.5,17.5,16.493,13.507,12.5Z" transform="translate(-7.5 -7.5)" fill="#acacac"/></svg></a>
+                            </div>
+                                <?php
+
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }

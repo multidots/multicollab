@@ -2,7 +2,7 @@
 	.bs-calltoaction-wrap {
 		background-color: #fff;
 		max-width: 970px;
-		margin: 80px auto 0;
+		margin: 0 auto;
 		border-radius: 10px;
 		box-shadow: 0 10px 40px 0 rgb(111 137 163 / 10%);
 		border-bottom: 6px solid #4B1BCE;
@@ -11,15 +11,22 @@
 		@media screen and (max-width:767px) {
 			padding: 50px 30px;
 		}
-
+		&.bs-calltoaction-spacewrap {
+			padding: 100px 60px;
+			@media screen and (max-width:767px) {
+				padding: 50px 30px;
+			}
+		}
 		h3 {
-			margin: 0 0 40px;
-			font-size: 20px;
+			margin: 40px 0 0;
+			font-size: 30px;
 			font-weight: 600;
-			text-transform: uppercase;
 			color: #000000;
+			line-height: 34px;
 			@media screen and (max-width:767px) {
 				margin-bottom: 20px;
+				font-size: 20px;
+				line-height: normal;
 			}
 		}
 		p {
@@ -37,6 +44,15 @@
 				text-decoration-thickness: 1px;
 				text-underline-offset: 2px;
 				box-shadow: none;
+			}
+		}
+		.step3-cta-contents-para{
+			font-size: 34px;
+			font-weight: 500;
+			line-height: 45px;
+			@media screen and (max-width:767px) {
+				font-size: 25px;
+				line-height: normal;
 			}
 		}
 		ul {
@@ -89,7 +105,7 @@
 		}
 	}
 	.bs-calltoaction-logo {
-		margin-bottom: 30px;
+		margin-bottom: 20px;
 		@media screen and (max-width:767px) {
 			margin-bottom: 15px;
 			max-width: 190px;
@@ -196,10 +212,12 @@
 		}
 	}
 	&.admin_page_multicollab_setup_wizard {
+		background: #F9FAFB;
 		div#wpcontent {
 			padding-left: 0;
 			position: relative;
 			margin-left: 0;
+			width: 100%;
 			.wizard {
 				z-index: 999;
 				position: relative;
@@ -215,6 +233,12 @@
 				left: 0;
 				background-color: #F9FAFB;
 			}
+			max-width: 1000px;
+			margin: 0 auto;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 30px 0;
 		}
 		div#wpfooter {
 			display: none;
@@ -224,6 +248,150 @@
 		}
 		.tab-pane {
 			padding: 0 15px;
+			&.active {
+				.bs-calltoaction-wrap {
+					margin: 0 auto;
+				}
+			}
+			.cf-tab-steps {
+				position: relative;
+				top: -40px;
+				@media only screen and (max-width:768px){
+					top: -20px;
+				}
+				.cf-tab-steps-bulletlists {
+					display: flex;
+					justify-content: center;
+					.cf-tab-steps-list{
+						position: relative;
+						margin-right: 10px;
+						padding-right: 135px;
+						@media only screen and (max-width:420px){
+							padding-right: 100px;
+						}
+						.cf-tab-steps-list-number{
+							font-size: 20px;
+							line-height: 24px;
+							color: rgba(0, 0, 0, 0.1);
+						}
+						&.cf-tab-step-list-three{
+							padding: 0;
+							margin: 0;
+							&::after{
+								content: none;
+							}
+						}
+
+					}
+				}
+			}
+		}
+		#step1{
+			.cf-tab-steps {
+				.cf-tab-steps-bulletlists {
+					.cf-tab-steps-list{
+						.cf-tab-steps-list-number{
+							&.cf-tab-step-list-number-one{
+								color: #4a1bce;
+							}
+						}
+						&.cf-tab-step-list-one,&.cf-tab-step-list-two{
+							&:after{
+								content: "";
+								width: 100%;
+								max-width: 94%;
+								height: 2px;
+								background-color: rgba(0,0,0,0.1);
+								position: absolute;
+								left: 15px;
+								right: 0px;
+								bottom: 10px;
+							}
+						}
+						&.cf-tab-step-list-one{
+							&:after{
+							background-color: #000000;
+							}
+						}
+
+					}
+				}
+			}
+		}
+		#step2{
+			.cf-tab-steps {
+				.cf-tab-steps-bulletlists {
+					.cf-tab-steps-list{
+						.cf-tab-steps-list-number{
+							&.cf-tab-step-list-number-one,&.cf-tab-step-list-number-two{
+								color: #4a1bce;
+							}
+						}
+						&.cf-tab-step-list-one,&.cf-tab-step-list-two{
+							&:after{
+								content: "";
+								width: 100%;
+								max-width: 94%;
+								height: 2px;
+								background-color: rgba(0,0,0,0.1);
+								position: absolute;
+								left: 15px;
+								right: 0px;
+								bottom: 10px;
+							}
+						}
+						&.cf-tab-step-list-one{
+							&:after{
+							background-color: #000000;
+							}
+						}
+					}
+				}
+			}
+		}
+		#step3{
+			.cf-tab-steps {
+				.cf-tab-steps-bulletlists {
+					.cf-tab-steps-list{
+						.cf-tab-steps-list-number{
+							font-size: 20px;
+							line-height: 24px;
+							color: rgba(0, 0, 0, 0.1);
+							&.cf-tab-step-list-number-one,&.cf-tab-step-list-number-two,&.cf-tab-step-list-number-three{
+								color: #4a1bce;
+							}
+						}
+						&.cf-tab-step-list-one,&.cf-tab-step-list-two{
+							&:after{
+								content: "";
+								width: 100%;
+								max-width: 94%;
+								height: 2px;
+								background-color: rgba(0,0,0,0.1);
+								position: absolute;
+								left: 15px;
+								right: 0px;
+								bottom: 10px;
+							}
+						}
+						&.cf-tab-step-list-one,&.cf-tab-step-list-two{
+							&:after{
+							background-color: #000000;
+							}
+						}
+					}
+				}
+			}
+		}
+		#wpcontent{
+			.notice {
+				display: none;
+			}
+		}
+		#wpbody-content{
+			padding: 0;
+			overflow: inherit;
+			float: none;
 		}
 	}
 	&.cf_fullscreen {

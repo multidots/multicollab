@@ -671,6 +671,14 @@ class Guest_user_functions {
 									}
 								}
 
+								// remove user data from the realtime collobrator in the post @author Nirav Soni/@since - 4.3.
+								$realtime_collobrator_users = get_post_meta( $post_id, '_realtime_collaborators', true );
+								$realtime_collobrator_users =  (array) json_decode( $realtime_collobrator_users, true );
+								if( isset( $realtime_collobrator_users ) && !empty( $realtime_collobrator_users ) ) {
+									unset($realtime_collobrator_users[$user_id]);
+									update_post_meta( $post_id, '_realtime_collaborators', wp_json_encode( $realtime_collobrator_users ) );
+								}
+
 								// Temporary fix for users that are currently accessing the post, by logging out active users
 								// get all sessions for user with ID $user_id
 								$sessions = WP_Session_Tokens::get_instance($user_id);

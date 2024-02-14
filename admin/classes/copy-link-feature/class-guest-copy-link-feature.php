@@ -19,7 +19,7 @@ class Copy_Link_Feature {
 	public function cf_add_request_access_endpoint() {
 	
 		if ( function_exists( 'wpcom_vip_get_page_by_path' ) ) {
-			$existing_page = wpcom_vip_get_page_by_path('request-access', OBJECT, 'page');
+			$existing_page = wpcom_vip_get_page_by_title('Request Access', OBJECT, 'page');
 		} else {
 			$existing_page = get_page_by_path('request-access', OBJECT, 'page');   // phpcs:ignore
 		}
@@ -61,13 +61,17 @@ class Copy_Link_Feature {
 	 * @since 4.0
 	 */
 	public function cf_enqueue_frontend_scripts(){
-		wp_enqueue_script( 'request-access-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/frontend-copy-link-feature.js', array(), wp_rand(), true );
-		$script_data = array(
-			'action_url' => admin_url('admin-ajax.php')
-		);
-		// Localize the script with the action URL
-		wp_localize_script('request-access-script', 'requestAccess', $script_data);
-		wp_enqueue_style( 'request-access-style', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/frontStyle.build.min.css', array(), wp_rand(), false );
+		global $wp_query;
+
+		if( is_page('request-access') || is_page('Request Access') || (isset($wp_query->query_vars['name']) && 'request-access' === $wp_query->query_vars['name']) ){
+			wp_enqueue_script( 'request-access-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/frontend-copy-link-feature.js', array(), wp_rand(), true );
+			$script_data = array(
+				'action_url' => admin_url('admin-ajax.php')
+			);
+			// Localize the script with the action URL
+			wp_localize_script('request-access-script', 'requestAccess', $script_data);
+			wp_enqueue_style( 'request-access-style', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/frontStyle.build.min.css', array(), wp_rand(), false );
+		}
 
 	}
 

@@ -205,9 +205,8 @@
 .commentOn {
 	.commentIcon {
 		border: 2px solid #feeead;
-		padding: 10px;
+		padding: 20px;
 		.wp-block-media-text__content {
-			overflow-x: auto;
 			overflow-x: auto;
 			.wp-block-audio {
 				audio {
@@ -224,6 +223,12 @@
 	}
 	.cf-onwhole-block__comment {
 		border: 2px solid #feeead;
+		.wc-block-product-categories{
+			border: none;
+		}
+	}
+	&.wp-block-woocommerce-cart{
+		border: none;
 	}
 	.editor-styles-wrapper {
 		.cf-wrapperblock__suggestion {
@@ -254,9 +259,20 @@
 			padding-bottom: 10px;
 		}
 	}
+	&.wp-block-media-text {
+		@media screen and (max-width:1200px){
+		display: block;
+		}
+	}
 }
-.commentOn .cf-onwhole-block__comment:not(ul.cf-onwhole-block__comment, ol.cf-onwhole-block__comment) {
-	padding: 10px;
+.commentOn {
+	.cf-onwhole-block__comment:not(ul.cf-onwhole-block__comment, ol.cf-onwhole-block__comment) {
+		padding: 10px;
+	}
+	.wc-block-product-categories{
+		padding: 0;
+		margin-bottom: 0;
+	}
 }
 body {
 	&.hide-comments {
@@ -320,16 +336,6 @@ body {
 						background-image: url(../images/image.svg);
 					}
 				}
-			}
-		}
-	}
-}
-
-.commentOn {
-	.commentIcon {
-		&.wp-block-media-text {
-			@media screen and (max-width:1200px){
-			display: block;
 			}
 		}
 	}

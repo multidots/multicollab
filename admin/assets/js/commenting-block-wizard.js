@@ -9,7 +9,7 @@ jQuery(function ($) {
             var curruntButton = jQuery(this).closest('.tab-pane').attr('id');
             var nextButton = 'step' + (parseInt(curruntButton.slice(4, 5)) + 1); // Masteringjs.io
 
-            if ('step4' === curruntButton) {
+            if ('step3' === curruntButton) {
 
                 const freeWizardData = {
                     'action': 'cf_free_plugin_wizard_submit',
@@ -23,8 +23,8 @@ jQuery(function ($) {
                     url: ajaxurl,
                     data: freeWizardData,
                     success: function ( success ) {
-                        var curruntUrl = location.protocol + '//' + location.host + location.pathname + '?page=editorial-comments';
-                        window.location.href = curruntUrl;
+                        var url = success.replace( '&amp;', '&' );
+                        window.location.href = url;
                         return false;
                     },
                     beforeSend: function () {
@@ -37,8 +37,9 @@ jQuery(function ($) {
 
 
             } else {
-                jQuery('#' + curruntButton).hide();
-                jQuery('#' + nextButton).show();
+                jQuery('#' + curruntButton).fadeOut(400, function () {
+                    jQuery('#' + nextButton).fadeIn(400);
+                });
             }
 
             if (jQuery('.count_me_in_free').is(":checked")) {
