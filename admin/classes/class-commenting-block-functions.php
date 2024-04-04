@@ -26,7 +26,7 @@ class Commenting_block_Functions {
 	 */
 	public function cf_get_comment_counts( $post_ID, $content = '', $metas = array() ) {
 
-		$metas       = 0 === count( $metas ) ? get_post_meta( $post_ID ) : $metas;
+		$metas       = empty( $metas ) ? get_post_meta( $post_ID ) : $metas;
 		$content     = get_post( $post_ID )->post_content;
 		$total_count = $open_counts = $resolved_counts = 0;
 
@@ -417,7 +417,6 @@ class Commenting_block_Functions {
 
 
 		$cf_gen_hide_multicollab_comment 				= get_option( 'cf_hide_editorial_column' );
-		$cf_gen_hide_save_draft_comment  				= get_option( 'cf_show_infoboard' );
 		$cf_gen_hide_floating_icons      				= get_option( 'cf_hide_floating_icons' );
 		$cf_admin_notification 							= get_option( 'cf_admin_notif' );
 

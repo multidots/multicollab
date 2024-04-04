@@ -1,5 +1,11 @@
 .multicollab_body_class {
 	.bs-calltoaction-wrap {
+
+		* , *::after, *::before{
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		
 		background-color: #fff;
 		max-width: 970px;
 		margin: 0 auto;

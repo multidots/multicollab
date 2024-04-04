@@ -229,8 +229,7 @@ if (!function_exists('cf_display_promotional_banner_code')) {
                         $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
                         $flag                       = false;
                         if ( empty( $banner_cookie_show ) && empty( $banner_cookie_visible_once ) ) {
-                            setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes', time() + ( 86400 * 7 ) ); //phpcs:ignore
-                            setcookie( 'banner_show_once_' . $promotional_banner_cookie, 'yes' ); //phpcs:ignore
+                            ?><div class="onBannerCookieSet" attr-value="<?php echo esc_attr( $promotional_banner_cookie ) ?>" attr-time="<?php echo esc_attr( time() + ( 86400 * 7 ) ) ?>"></div><?php
                             $flag = true;
                         }
 
@@ -274,8 +273,7 @@ if (!function_exists('cf_display_promotional_banner_code')) {
                         $banner_cookie_visible_once = filter_input( INPUT_COOKIE, 'banner_show_once_' . $promotional_banner_cookie, FILTER_SANITIZE_SPECIAL_CHARS );
                         $flag                       = false;
                         if ( empty( $banner_cookie_show ) && empty( $banner_cookie_visible_once ) ) {
-                            setcookie( 'banner_show_' . $promotional_banner_cookie, 'yes'); //phpcs:ignore
-                            setcookie( 'banner_show_once_' . $promotional_banner_cookie, 'yes' ); //phpcs:ignore
+                            ?><div class="onBannerCookieSet" attr-value="<?php echo esc_attr( $promotional_banner_cookie ) ?>" attr-time="<?php echo esc_attr( time() + ( 86400 * 7 ) ) ?>"></div><?php
                             $flag = true;
                         }
 

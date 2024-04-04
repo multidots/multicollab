@@ -78,7 +78,7 @@
 					}
 					&.user-commented-icon-core\/audio {
 						&::before {
-							background-image: url('../images/media-text.svg');
+							background-image: url(../images/media.svg);
 						}
 					}
 					&.user-commented-icon-core\/video {
@@ -206,7 +206,11 @@
 	.commentIcon {
 		border: 2px solid #feeead;
 		padding: 20px;
+		&.wc-block-components-checkout-step {
+			padding: 20px 20px 20px 36px;
+		}
 		.wp-block-media-text__content {
+			overflow-x: auto;
 			overflow-x: auto;
 			.wp-block-audio {
 				audio {
@@ -219,6 +223,48 @@
 		}
 		.wp-social-link {
 			padding: 0;
+		}
+		&.wp-block-woocommerce-product-categories {
+			&.wc-block-product-categories {
+				border: none;
+				padding: 0;
+			}
+		}
+		&.wp-block-woocommerce-product-collection {
+			.wp-block-product-collection-is-layout-flow {
+				border: none;
+				padding: 0;
+			}
+		}
+		&.wp-block[data-type="woocommerce/cart"] {
+			.wp-block-woocommerce-cart {
+				border: none;
+				padding: 0;
+			}
+		}
+	}
+	&:not(.hide-comments) {
+		.editor-styles-wrapper {
+			.commentIcon {
+				&.is-selected {
+					.wp-block-woocommerce-product-categories {
+						&.wc-block-product-categories {
+							border: none;
+						}
+					} 
+					&.wp-block-woocommerce-product-collection {
+						.wp-block-product-collection-is-layout-flow {
+							border: none;
+							padding: 0;
+						}
+					}
+					&.wp-block[data-type="woocommerce/cart"] {
+						.wp-block-woocommerce-cart {
+							border: none;
+						}
+					}
+				}
+			}
 		}
 	}
 	.cf-onwhole-block__comment {
@@ -233,7 +279,7 @@
 	.editor-styles-wrapper {
 		.cf-wrapperblock__suggestion {
 			p {
-				&.wp-block {
+				&:not(.blockAdded).wp-block {
 					padding: 10px;
 				}
 			}
@@ -243,7 +289,7 @@
 		.editor-styles-wrapper {
 			.cf-wrapperblock__suggestion {
 				p {
-					&.wp-block {
+					&.wp-block.blockAdded {
 						padding: 10px;
 					}
 				}
@@ -267,11 +313,11 @@
 }
 .commentOn {
 	.cf-onwhole-block__comment:not(ul.cf-onwhole-block__comment, ol.cf-onwhole-block__comment) {
-		padding: 10px;
-	}
+	padding: 10px;
 	.wc-block-product-categories{
 		padding: 0;
 		margin-bottom: 0;
+	}
 	}
 }
 body {
@@ -281,10 +327,28 @@ body {
 				p {
 					&.wp-block {
 						padding: 10px;
+						
+						&.cf-onwhole-block__comment {
+							padding: 0;
+						}
 					}
 				}
 				.wp-block-heading {
 					padding: 10px;
+				}
+			}
+		}
+	}
+	&.hide-comments.hide-sg {
+		.editor-styles-wrapper {
+			.cf-wrapperblock__suggestion {
+				p {
+					&.wp-block {
+						padding: 0;
+					}
+				}
+				.wp-block-heading {
+					padding: 0;
 				}
 			}
 		}

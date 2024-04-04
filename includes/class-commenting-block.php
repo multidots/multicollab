@@ -108,55 +108,34 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 			 * The class responsible for orchestrating the actions and filters of the
 			 * core plugin.
 			 */
-	        require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-loader.php'; // phpcs:ignore
+	        require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-loader.php';
 
 			/**
 			 * The class responsible for defining internationalization functionality
 			 * of the plugin.
 			 */
-	        require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-i18n.php'; // phpcs:ignore
+	        require_once COMMENTING_BLOCK_DIR . 'includes/class-commenting-block-i18n.php';
 
 			/**
 			 * The class responsible for generic functions.
 			 */
-	        require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-functions.php'; // phpcs:ignore
+	        require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-functions.php';
 
 			/**
 			 * The class responsible for defining all actions that occur in the admin area.
 			 */
-	        require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-admin.php'; // phpcs:ignore
+	        require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-admin.php';
 
 			/**
 			 * This class is responsible for defining all custom rest route endpoints.
 			 */
-	        require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-rest-routes.php'; // phpcs:ignore
-
-			/**
-			 * This class is responsible for defining user role and capabilities.
-			 * Kept outside of is_premium functionality because from here we are restricting user to access the dashboard from the free build.
-			 */
-			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-user-and-role.php'; // phpcs:ignore
-
-			/**
-			 * This class is responsible for defining all custom rest route endpoints.
-			 */
-			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-guest-user-functions.php'; // phpcs:ignore
-
-			/**
-			 * This class is responsible for defining all guest related copy links functionalities.
-			 */
-			require_once COMMENTING_BLOCK_DIR . 'admin/classes/copy-link-feature/class-guest-copy-link-feature.php'; // phpcs:ignore
-
-			/**
-			 * This class is responsible for defining all custom rest route endpoints.
-			 */
-			require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-guest-email-template.php'; // phpcs:ignore
+	        require_once COMMENTING_BLOCK_DIR . 'admin/classes/class-commenting-block-rest-routes.php';
 
 			/**
 			 * The class responsible for defining all actions that occur in the public-facing
 			 * side of the site.
 			 */
-	        require_once COMMENTING_BLOCK_DIR . 'public/class-commenting-block-public.php'; // phpcs:ignore
+	        require_once COMMENTING_BLOCK_DIR . 'public/class-commenting-block-public.php';
 
 			/**
 			 * Include the Email template class and initiate the object.
@@ -164,10 +143,6 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 
 			$this->loader = new Commenting_block_Loader();
 
-			/**
-			 *  Include all the multiedit related class files.
-			 */
-			require_once(COMMENTING_BLOCK_DIR . 'admin/classes/realtime/class-realtime.php');
 		}
 
 		/**
@@ -212,7 +187,6 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 			$this->loader->add_action( 'wp_ajax_cf_slack_intigration_revoke', $plugin_admin, 'cf_slack_intigration_revoke' );
 			$this->loader->add_action( 'wp_ajax_cf_save_permissions', $plugin_admin, 'cf_save_permissions' );
 			$this->loader->add_action( 'wp_ajax_cf_save_suggestions', $plugin_admin, 'cf_save_suggestions' );
-			$this->loader->add_action( 'wp_ajax_cf_save_multiedit_settings', $plugin_admin, 'cf_save_multiedit_settings' );
 			$this->loader->add_action( 'wp_ajax_cf_save_email_notification', $plugin_admin, 'cf_save_email_notification' );
 			$this->loader->add_action( 'wp_ajax_cf_save_suggestions_mode', $plugin_admin, 'cf_save_suggestions_mode' );
 			$this->loader->add_action( 'wp_ajax_cf_get_user_email_list', $plugin_admin, 'cf_get_user_email_list' );
@@ -225,15 +199,12 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 			$this->loader->add_action( 'wp_ajax_cf_update_meta', $plugin_admin, 'cf_update_meta' );
 			$this->loader->add_action( 'wp_ajax_cf_license_activation', $plugin_admin, 'cf_license_activation' );
 			$this->loader->add_action( 'wp_ajax_cf_deactive_plugin_free', $plugin_admin, 'cf_deactive_plugin_free' );
-			$this->loader->add_action( 'wp_ajax_realtime_collaborators_update_ajax', $plugin_admin, 'realtime_collaborators_update_ajax_function' );
 
 			// Replace content with filter HTML(without HTML tags) which we get from AJAX response. Github issue: #491. @author: Rishi Shah @since: 3.5
 			$this->loader->add_action( 'wp_ajax_cf_suggestion_text_filter', $plugin_admin, 'cf_suggestion_text_filter' );
 
 			$this->loader->add_action( 'init', $plugin_admin, 'sg_register_post_meta_field' );
 			$this->loader->add_action( 'wp_ajax_sg_update_suggestion_history', $plugin_admin, 'sg_update_suggestion_history' );
-
-			$this->loader->add_action( 'wp_ajax_realtime_collaborators_activity_update_ajax', $plugin_admin, 'realtime_collaborators_activity_update_ajax_function' );
 		}
 
 		/**
@@ -248,16 +219,6 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 
 			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'cf_enqueue_styles' );
 			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'cf_enqueue_scripts' );
-
-			if (class_exists('Copy_Link_Feature')) { // For the copy link feature frontend.
-				$copy_link_frontend = new Copy_Link_Feature();
-				$this->loader->add_action( 'init', $copy_link_frontend, 'cf_add_request_access_endpoint' );
-				$this->loader->add_action( 'wp_enqueue_scripts', $copy_link_frontend, 'cf_enqueue_frontend_scripts' );
-				$this->loader->add_action( 'template_include', $copy_link_frontend, 'cf_load_request_access_template' );
-
-				$this->loader->add_action( 'wp_ajax_nopriv_request_access_form_action', $copy_link_frontend, 'cf_request_access_form_action_handler' );
-				$this->loader->add_action('wp_ajax_request_access_form_action', $copy_link_frontend, 'cf_request_access_form_action_handler');
-			}
 		}
 
 		/**
@@ -314,7 +275,7 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 				if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
 					$response = vip_safe_wp_remote_get( $getting_started_api_url, 3, 1, 20 );
 				} else {
-					$response = wp_remote_get( $getting_started_api_url );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+					$response = wp_remote_get( $getting_started_api_url ); // phpcs:ignore
 				}
 
 				if ( ! empty( $response['body'] ) ) {

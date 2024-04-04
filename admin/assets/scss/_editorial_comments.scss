@@ -3,7 +3,7 @@
 		-webkit-box-sizing: border-box;
 		box-sizing: border-box;
 		padding-right: 20px;
-		* {
+		* , *::after, *::before{
 			-webkit-box-sizing: border-box;
 			box-sizing: border-box;
 		}

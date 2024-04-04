@@ -199,9 +199,9 @@ class Commenting_Block_Email_Templates {
 
 		foreach ( $list_of_comments as $timestamp => $comment ) {
 			if ( isset( $comment['status'] ) && 'publish' === $comment['status'] ) {
-				$find_mentions .= $comment['thread'];
+				$find_mentions .= !empty( $comment['thread'] ) ? $comment['thread'] : '';
 				if ( in_array( $timestamp, $new_comments, true ) ) {
-					$find_new_mentions .= $comment['thread'];
+					$find_new_mentions .= !empty( $comment['thread'] ) ? $comment['thread'] : '';
 				}
 			}
 		}

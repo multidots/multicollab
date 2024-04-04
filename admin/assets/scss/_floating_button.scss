@@ -201,4 +201,12 @@
 			}
 		}
 	}
+	
+	&.hide-comments.hide-sg {
+		#cf-comments-suggestions__parent {
+			div#cf-span__comments {
+				height: auto;
+			}
+		}
+	}
 }
