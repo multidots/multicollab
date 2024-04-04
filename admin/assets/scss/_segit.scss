@@ -306,7 +306,7 @@
 .commentOn {
 	.wp-block {
 		del,
-		.mdremoved {
+		del.mdremoved {
 			color: #EA1010;
 			.mdmodified {
 				color: #EA1010;
@@ -337,7 +337,7 @@
 				}
 			}
 		}
-		.mdadded {
+		ins.mdadded {
 			color: #188651;
 			text-decoration: none;
 			[data-rich-text-format-boundary="true"] {
@@ -425,7 +425,15 @@
 		}
 		.wp-block[textAlign_sg_id],
 		.wp-block[lock_sg_id],
-		.wp-block[align_sg_id] {
+		.wp-block[align_sg_id],
+		.wp-block[width_sg_id],
+		.wp-block[url_sg_id],
+		.wp-block[link_sg_id],
+		.wp-block[tracks_sg_id],
+		.wp-block[contentPosition_sg_id],
+		.wp-block[style_sg_id],
+		.wp-block[minHeight_sg_id],
+		.wp-block[table_style_sg_id] {
 			border-width: 2px;
 			border-style: solid;
 			border-color: #188651;
@@ -437,6 +445,9 @@
 				background-color: transparent;
 				border-top: 2px solid #188651;
 				border-bottom: 2px solid #188651;
+			}
+			mdspan[data-rich-text-format-boundary="true"] {
+				background-color: #fcef45 ;
 			}
 		}
 	}

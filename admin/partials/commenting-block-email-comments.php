@@ -11,11 +11,11 @@ if ( ! defined( 'WPINC' ) ) {
 	<?php
     foreach ($this->list_of_comments as $cf_comment) { // phpcs:ignore
 		if ( isset( $cf_comment['status'] ) && 'publish' === $cf_comment['status'] ) {
-			$user_info            = get_userdata( $cf_comment['userData'] );
-			$user_role            = implode( ', ', $user_info->roles );
-			$username             = $user_info->display_name;
-            $this->users_emails[] = $user_info->user_email; // phpcs:ignore
-			$profile_url          = get_avatar_url( $user_info->user_email );
+			$user_info            = !empty( $cf_comment['userData'] ) ? get_userdata( $cf_comment['userData'] ) : '';
+			$user_role            = !empty( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
+			$username             = !empty( $user_info->display_name ) ? $user_info->display_name : '';
+            $this->users_emails[] = !empty( $user_info->user_email ) ? $user_info->user_email : ''; // phpcs:ignore
+			$profile_url          = !empty( $user_info->user_email ) ? get_avatar_url( $user_info->user_email ) : '';
 			?>
 			<tr>
 				<td style="padding-bottom:20px">
@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
 										</th>
 									</tr>
 									<tr>
-										<td align="left" class="comment"><?php echo wp_kses( $cf_comment['thread'], wp_kses_allowed_html( 'post' ) ); ?></td>
+										<td align="left" class="comment"><?php echo !empty( $cf_comment['thread'] ) ? wp_kses( $cf_comment['thread'], wp_kses_allowed_html( 'post' ) ) : ''; ?></td>
 									</tr>
                                     <?php if( !empty( $cf_comment['attachmentText'] ) ) { //phpcs:ignore?>
 										<tr>

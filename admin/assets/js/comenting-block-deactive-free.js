@@ -108,7 +108,13 @@ function getCookieDeactive(name) {
     return null;
 }
 
-//set cookies
+/**
+ * Sets a cookie with the given name, value and expiration time in minutes.
+ *
+ * @param {string} name - The name of the cookie to set. 
+ * @param {string} value - The value to set for the cookie.
+ * @param {number} minutes - The expiration time for the cookie in minutes.
+ */
 function setCookie(name, value, minutes) {
     var expires = "";
     if (minutes) {

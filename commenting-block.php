@@ -14,7 +14,7 @@
  * @wordpress-plugin
  * Plugin Name:       Multicollab
  * Description:       Google Docs-Style Collaboration in WordPress. No copy-paste between apps. Faster Publishing. Works in Your Workflow. <strong>Features:</strong> Inline Commenting. Real-time Editing. Suggest Edits. Email & Slack Notifications. Guest Collaboration. Custom Permission. And a lot more!
- * Version:           4.3
+ * Version:           4.4
  * Author:            Multicollab
  * Author URI:        https://www.multicollab.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 }
 
 // Plugin version.
-define( 'COMMENTING_BLOCK_VERSION', '4.3' );
+define( 'COMMENTING_BLOCK_VERSION', '4.4' );
 
 // Define constants.
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
@@ -88,7 +88,7 @@ define( 'EDD_PLAN_PRO', 3793 );
  */
 if ( ! function_exists( 'cf_activate_commenting_block' ) ) {
 	function cf_activate_commenting_block() {
-        require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-activator.php'; // phpcs:ignore
+        require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-activator.php';
 		Commenting_block_Activator::activate();
 	}
 }
@@ -99,7 +99,7 @@ if ( ! function_exists( 'cf_activate_commenting_block' ) ) {
  */
 if ( ! function_exists( 'cf_deactivate_commenting_block' ) ) {
 	function cf_deactivate_commenting_block() {
-        require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-deactivator.php'; // phpcs:ignore
+        require_once plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block-deactivator.php';
 		Commenting_block_Deactivator::deactivate();
 	}
 }
@@ -111,22 +111,17 @@ register_deactivation_hook( __FILE__, 'cf_deactivate_commenting_block' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block.php'; // phpcs:ignore
+require plugin_dir_path( __FILE__ ) . 'includes/class-commenting-block.php';
 
 /**
  * Load global function file.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/commenting-block-functions.php'; // phpcs:ignore
-
-/**
- * Load realtime feature function file.
- */
-require plugin_dir_path( __FILE__ ) . 'includes/realtime-functions.php'; // phpcs:ignore
+require plugin_dir_path( __FILE__ ) . 'includes/commenting-block-functions.php';
 
 /**
  * Load EDD plan details class file.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-edd-plan-details.php'; // phpcs:ignore
+require plugin_dir_path( __FILE__ ) . 'includes/class-edd-plan-details.php';
 
 
 /**

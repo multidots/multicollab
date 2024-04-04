@@ -74,44 +74,6 @@ if ( ! empty( $this->cf_activities ) ) {
 				$meta_key         = str_replace( 'th', '', $meta_key );
 				$thread_edit_link = get_edit_post_link( $post_id ) . '&current_url=' . str_replace( '_', '', $meta_key );
 				$meta             = get_post_meta( $meta_single->post_id, $meta_key, true );
-			} elseif ( strpos( $meta_key, 'rc' ) !== false ) {
-				// If its for collaborators.
-				$board_type          = 'collaborators';
-				$collaborator_key    = $main_timestamp;
-				$foundElement        = array();
-				$meta_key            = '_realtime_collaborators_activity';
-				$collaboratorHistory = get_post_meta( $meta_single->post_id, $meta_key, true );
-				$collaboratorHistory = json_decode( $collaboratorHistory );
-				$collaboratorHistory = (array) $collaboratorHistory;
-				$collaboratorHistory = array_filter(
-					$collaboratorHistory,
-					function ( $value ) {
-						return property_exists( $value, 'timestamp' );
-					}
-				);
-
-				$collaboratorHistory = array_filter(
-					$collaboratorHistory,
-					function ( $collab ) {
-						return $collab->type === 'Joined';
-					}
-				);
-
-				$collaboratorHistory = array_values( $collaboratorHistory );
-				foreach ( $collaboratorHistory as $index => $element ) {
-					if ( $element->timestamp === (int) $main_timestamp ) {
-							$elementArray = json_decode( wp_json_encode( $element ), true );
-							// Change the key from 'userId' to 'uid'
-							$elementArray['uid'] = $elementArray['userId'];
-							unset( $elementArray['userId'] );
-						$foundElement[ $element->timestamp ] = $elementArray;
-							break; // Stop iterating once the element is found
-					}
-				}
-
-				$meta                    = array();
-				$meta['comments']        = ! empty( $foundElement ) ? $foundElement : '';
-				$meta['commentedOnText'] = __( 'Joined as collaborator.', 'content-collaboration-inline-commenting' );
 			} else {
 				// If its for suggestions.
 				$board_type       = 'suggestions';
@@ -349,7 +311,8 @@ if ( ! empty( $this->cf_activities ) ) {
 												<div class="user-assigned-to"><span class="icon"></span><span class="assign-avatar-data"><?php esc_html_e( 'Assigned to', 'content-collaboration-inline-commenting' ); ?><a href="mailto:<?php echo esc_attr( $assigned_to['user_email'] ); ?>" title="<?php echo esc_attr( $assigned_to['display_name'] ); ?>"> <?php echo esc_html_e( $assigned_to['display_name'], 'content-collaboration-inline-commenting' ); ?></a></span></div>
 												<?php } ?>
 												<?php
-												if ( isset( $comment['editedTime'] ) && 'deleted' !== $comment['status'] ) {
+												$comment_status = isset( $comment['status'] ) ? $comment['status'] : '';
+												if ( isset( $comment['editedTime'] ) && 'deleted' !== $comment_status ) {
 													if ( isset( $comment['editedTimestamp'] ) ) {
 														$timestamp = $comment['editedTimestamp'];
 													} elseif ( 10 !== strlen( $comment['editedTime'] ) ) {

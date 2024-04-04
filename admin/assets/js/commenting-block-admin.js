@@ -644,24 +644,7 @@
                 jQuery('.cf_specific_post_type_section').hide();
             }
         });
-
-        // On change event for real-time mode options.
-        $(document).on('change', 'input.cf_websocket_options', function () {
-
-            //Uncheck other options.
-            $('input.cf_websocket_options').not(this).prop('checked', false);
-
-            var val = $('input.cf_websocket_options:checked').val();
-            if( 'cf_websocket_custom' === val ) {
-                jQuery('#cf_multiedit_websocket').prop("disabled", false);
-                document.getElementById('cf_multiedit_websocket').setAttribute('required', 'required');
-                
-            } else {
-                jQuery('#cf_multiedit_websocket').prop("disabled", true);
-                document.getElementById('cf_multiedit_websocket').removeAttribute('required');
-            }
-        });
-
+ 
         // Save Publishing Settings.
         $('#cf_suggestion_settings').on('submit', function (e) {
             e.preventDefault();
@@ -771,9 +754,13 @@
             if (!optimage) {
                 return opt.text.toLowerCase();
             } else {
-                var $opt = $(
-                    '<span><img src="' + optimage + '" width="12px" /> ' + opt.text.toLowerCase() + '</span>'
-                );
+                var span = document.createElement('span');
+                var img = document.createElement('img');
+                img.setAttribute('src', optimage);
+                img.setAttribute('width', '12px');
+                img.innerHTML = opt.text.toLowerCase();
+                span.appendChild(img);
+                var $opt = $(span);
                 return $opt;
             }
         };
@@ -917,23 +904,6 @@
             });
         });
 
-        // Save Real-Time Co-editing settings.
-        $('#cf_multiedit_mode').on('submit', function (e) {
-            e.preventDefault();
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_save_multiedit_settings',
-                'formData': $(this).serialize(),
-            };
-            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
-                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                $('#cf_multiedit_mode .cf-success').slideDown(300);
-                setTimeout(function () {
-                    $('#cf_multiedit_mode .cf-success').slideUp(300);
-                }, 3000);
-            });
-        });
-
         // Save show_avatar option in a localstorage.
         const data = {
             'action': 'cf_store_in_localstorage'
@@ -962,19 +932,13 @@
             $('#cf-span__comments .comment-resolve .resolve-cb').prop("checked", false);
             $('#cf-span__comments .cls-board-outer .buttons-wrapper').removeClass('active');
             $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
-            let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
-            if(true !== realTimeMode){
-                $('.btn-wrapper').css('display', 'none');
-            }
+            
+            $('.btn-wrapper').css('display', 'none');
+            
 
             const selectedText = _this.attr('id');
             const currentUser = wp.data.select('core').getCurrentUser()?.id;
-            if(realTimeMode){
-               var hide = commentLock(selectedText, currentUser);
-               if(hide){
-                return;
-               }
-            }
+             
             removeFloatingIcon();
             _this.addClass('focus');
             _this.addClass('is-open');
@@ -1067,15 +1031,8 @@
                     $('#cf-span__comments .cls-board-outer').removeClass('is-open');
                     $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
 
-                    let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
                     const currentUser = wp.data.select('core').getCurrentUser()?.id;
-                    if(realTimeMode){
-                       var hide = commentLock(elID, currentUser);
-                       if(hide){
-                        return;
-                       }
-                    }
-
+                     
                     $('#' + elID + '.cls-board-outer').addClass('focus');
                     $('#' + elID + '.cls-board-outer').addClass('is-open');
                     $('#' + elID + '.cls-board-outer').css('opacity', '1');
@@ -1088,43 +1045,6 @@
                 }, 800);
             }
         });
-        
-        // Function for comment Lock
-        var commentLock = function (selectedText, currentUser) {
-            document.querySelector('.comment-lock')?.remove();
-            const activeUsers = wp.data.select("multiedit/block-collab/add-block-selections").getState();
-            var hide = false;
-            
-            for (let i = 0; i < activeUsers.length; i++) {
-                const comment = activeUsers[i];
-                if (comment.commentId === selectedText && comment.userId !== currentUser) {
-                    const commentInnerContainer = document.querySelector('#' + selectedText + ' .commentInnerContainer');
-                    const commentHeader = commentInnerContainer.querySelector('.comment-header');
-                    const commentLock = document.createElement('div');
-                    commentLock.setAttribute("class", "comment-lock");
-                    commentLock.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 18 18"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M16.25 16.25v-6.5a1.5 1.5 0 0 0-1.5-1.5h-9.5a1.5 1.5 0 0 0-1.5 1.5v6.5a1 1 0 0 0 1 1h10.5a1 1 0 0 0 1-1Zm-10-8V6a3.75 3.75 0 1 1 7.5 0v2.25"></path></svg>';
-                    commentInnerContainer.style.pointerEvents = 'none';
-                    commentInnerContainer.insertBefore(commentLock, commentHeader);
-                    var noticeMsg = __(
-                    `${comment.username} is adding comment to same thread, please try after some time.`,
-                    "content-collaboration-inline-commenting"
-                    );
-                    document.getElementById("cf-board__notice").innerHTML = noticeMsg;
-                    document
-                    .getElementById("cf-board__notice")
-                    .setAttribute("style", "display:block");
-                    setTimeout(function () {
-                    document
-                        .getElementById("cf-board__notice")
-                        .setAttribute("style", "display:none");
-                    document.getElementById("cf-board__notice").innerHTML = "";
-                    }, 3000);
-                    hide = true;
-                    
-                }
-            }
-            return hide;
-        } 
 
         // Email List Template Function.
         var emailList = function (appendTo, data) {
@@ -2940,48 +2860,6 @@ function getPostStatuslabel() {
     return postStatusLabel;
 }
 
-function showInfoBoardonNewComments() {
-
-    appendInfoBoardDiv();
-
-    wp.data.subscribe(function () {
-
-        let pinboard = document.getElementById("cf-span__status");
-        if (null === pinboard) {
-            appendInfoBoardDiv();
-            pinboard = document.getElementById("cf-span__status");
-        }
-
-        setTimeout(function () {
-            let count = document.querySelectorAll('.draftComment').length;
-            if (pinboard && !getPostSaveStatus() && count > 0) {
-                var postStatusLabel = getPostStatuslabel();
-                pinboard.getElementsByTagName("SPAN")[0].innerHTML = count; //phpcs:ignore
-                pinboard.getElementsByTagName("STRONG")[0].innerHTML = postStatusLabel; //phpcs:ignore
-                pinboard.setAttribute('style', '');
-            }
-            if (pinboard && count === 0) {
-                pinboard.setAttribute('style', 'display:none');
-            }
-
-        }, 300);
-
-        var isSavingPost = wp.data.select('core/editor').isSavingPost();
-        var isAutosavingPost = wp.data.select('core/editor').isAutosavingPost();
-        var didPostSaveRequestSucceed = wp.data.select('core/editor').didPostSaveRequestSucceed();
-
-        if (isSavingPost || isAutosavingPost) {
-            if (didPostSaveRequestSucceed) {
-                if (null !== pinboard) {
-                    pinboard.setAttribute('style', 'display:none');
-                    Array.from(document.querySelectorAll('.draftComment')).forEach((el) => el.classList.remove('draftComment'));
-                }
-            }
-        }
-
-    });
-}
-
 function appendNoticeBoardDiv() {
     var noticeboardNode = document.createElement('div');
     noticeboardNode.setAttribute("id", 'cf-board__notice');
@@ -3046,7 +2924,19 @@ function cf_removeAllNotices() {
 
 }
 jQuery(document).ready(function () {
-    if ('1' !== showinfoboard.showinfoboard) { showInfoBoardonNewComments(); }
+
+     // Set cookie for promotional banner show.
+     var onBannerCookieSet = document.querySelectorAll( '.onBannerCookieSet' );
+     if( null !== onBannerCookieSet ) {
+         Array.from(onBannerCookieSet).forEach((element,index) => {
+             var date = new Date();
+             date.setTime(date.getTime() + 7*24*60*60*1000);
+
+             document.cookie = 'banner_show_' + element.getAttribute( 'attr-value' ) + '=yes; expires='+date+';';
+             document.cookie = 'banner_show_once_' + element.getAttribute( 'attr-value' ) + '=yes;';
+         });
+     }
+
 });
 
 

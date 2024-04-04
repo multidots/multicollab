@@ -116,11 +116,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		}
 
 		add_filter( 'cron_schedules', array( $this, 'cf_free_cron_job_recurrence' ) );
-
-		// User authentication function while redirect guest.
-		add_filter( 'authenticate', array( $this, 'cf_guest_auto_login' ), 10, 3 );
 		add_filter( 'plugin_action_links_' . COMMENTING_BLOCK_BASE, array( $this, 'cf_custom_plugin_action_links' ), 10, 4 );
-		add_filter( 'block_type_metadata', array( $this, 'filter_block_type_metadata' ), 10, 1  );
+		add_filter( "register_block_type_args", array( $this, "cf_modify_block_type_args_defaults" ), 10, 2 );
+		add_filter( "wp_kses_allowed_html", array( $this, "cf_add_allowed_iframe_tag" ), 10, 2 );
 	}
 
 	/**
@@ -171,104 +169,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		// Merge the custom links with the existing action links.
 		$links = array_merge( $custom_links, $links );
 		return $links;
-	}
-
-	/**
-	 * Update realtime collobrators ajax function.
-	 *
-	 * @return void
-	 */
-	public function realtime_collaborators_update_ajax_function() {
-
-
-		$current_post_id = filter_input( INPUT_POST, 'postID', FILTER_SANITIZE_SPECIAL_CHARS );
-		$activeUsers = filter_input( INPUT_POST, 'activeUsers', FILTER_UNSAFE_RAW ); //phpcs:ignore
-		$active_users =  json_decode( stripslashes( $activeUsers ), true );
-
-		$realtime_collobrator = get_post_meta( $current_post_id, '_realtime_collaborators', true );
-		$realtime_collobrator =  (array) json_decode( $realtime_collobrator, true );
-
-		if( isset( $realtime_collobrator ) && !empty( $realtime_collobrator ) ) {
-			foreach( $active_users as $active_users_data ) {
-				array_push( $realtime_collobrator, $active_users_data );
-			}
-		} else {
-			$realtime_collobrator = $active_users;
-		}
-
-
-
-		$realtime_collobrators_unique_array = [];
-		foreach($realtime_collobrator as $element) {
-			$hash = $element['userId'];
-			$realtime_collobrators_unique_array[$hash] = $element;
-			$user_data   = get_user_by( 'ID', $element['userId'] );
-
-			$realtime_user_roles = array_values( $user_data->roles );
-			$realtime_user_role  = array_shift( $realtime_user_roles );
-
-			$realtime_collobrators_unique_array[$hash]['role'] = $realtime_user_role;
-			$realtime_collobrators_unique_array[$hash]['email'] = $user_data->user_email;
-			$realtime_collobrators_unique_array[$hash]['userAvatar'] = get_avatar_url( $element['userId'] );
-
-		}
-
-		update_post_meta( $current_post_id, '_realtime_collaborators', wp_json_encode( $realtime_collobrators_unique_array ) );
-		echo wp_json_encode( $realtime_collobrators_unique_array );
-		wp_die();
-
-
-	}
-	
-	/**
-	 * Update realtime collobrators activity ajax function.
-	 *
-	 * @return void
-	 */
-	public function realtime_collaborators_activity_update_ajax_function() {
-		$current_post_id = filter_input( INPUT_POST, 'postID', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$activeUsers = filter_input( INPUT_POST, 'currentUser', FILTER_UNSAFE_RAW ); //phpcs:ignore
-		$active_users =  json_decode( stripslashes( $activeUsers ), true );
-		
-		$realtime_collobrator = get_post_meta( $current_post_id, '_realtime_collaborators_activity', true );
-		$realtime_collobrator =  (array) json_decode( $realtime_collobrator, true );
-		
-		if( isset( $realtime_collobrator ) && !empty( $realtime_collobrator ) ) {
-			$userIdExists = false;
-			$joined_count = 0;
-			$removed_count = 0;
-			foreach($realtime_collobrator as $collaborator) {
-				if($collaborator['userId'] === $active_users[0]['userId']){
-					if ( 'Joined' === $collaborator['type'] ) {
-						$joined_count++;
-					}
-					if ( 'Removed' === $collaborator['type'] ) {
-						$removed_count++;
-					}
-					$userIdExists = true;
-				}
-			}
-			
-			// If userId is unique, OR IF user joined back after being removed merge it into realtime_collobrator array
-				if (!$userIdExists || ($joined_count === $removed_count)) {
-					$realtime_collobrator[] = $active_users[0];
-					$meta_key_sufix = $active_users[0]['userId'].'_'.$active_users[0]['timestamp'];
-					if( 'Joined' === $active_users[0]['type'] ){
-						update_post_meta( $current_post_id, 'th_rc_joined_'.$meta_key_sufix, $active_users[0]['timestamp'] );
-					}
-					
-				}
-		} else {
-			$realtime_collobrator = $active_users;
-			$meta_key_sufix = $active_users[0]['userId'].'_'.$active_users[0]['timestamp'];
-			if( 'Joined' === $active_users[0]['type'] ){
-				update_post_meta( $current_post_id, 'th_rc_joined_'.$meta_key_sufix, $active_users[0]['timestamp'] );
-			}
-		}
-		
-		update_post_meta( $current_post_id, '_realtime_collaborators_activity', wp_json_encode( $realtime_collobrator ) );
-		echo wp_json_encode( $realtime_collobrator );
-		wp_die();
 	}
 
 	/**
@@ -374,7 +274,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		$feedback_api_url = CF_STORE_URL . '/wp-json/edd-add-free-user-contact/v2/edd-add-free-user-contact';
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
-		$response         = wp_remote_get( $query_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+		
+		if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
+			$response = vip_safe_wp_remote_get( $query_url, 3, 1, 20 );
+		} else {
+			$response = wp_remote_get( $query_url );   // phpcs:ignore
+		}
 
 		if ( ! wp_next_scheduled( 'cf_free_plugin_usage_data' ) ) {
 			wp_schedule_event( current_time( 'timestamp' ), 'cf_free_monthly', 'cf_free_plugin_usage_data' );
@@ -513,39 +418,13 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$feedback_api_url = CF_STORE_URL . '/wp-json/edd-add-free-user-contact/v2/edd-add-free-user-contact?' . wp_rand();
 		$query_url        = $feedback_api_url . '&' . http_build_query( $data_insert_array );
 
-		$response = wp_remote_get( $query_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+		if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
+			$response = vip_safe_wp_remote_get( $query_url, 3, 1, 20 );
+		} else {
+			$response = wp_remote_get( $query_url );   // phpcs:ignore
+		}
 
 		wp_die();
-	}
-
-	/**
-	 * Daily cron for check license key status.
-	 *
-	 * @return void
-	 */
-	public function cf_daily_license_checker_callback_function() {
-
-		// Set webhook URL.
-		$cf_websocket_options = get_option( 'cf_websocket_options' );
-		$cf_edd = new CF_EDD();
-		if( 'cf_websocket_default' === $cf_websocket_options ) {
-
-			$cf_websocket_url  = CF_STORE_URL . 'wp-json/cf-websocket-url/v2/cf-websocket-url?' . wp_rand();
-			if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
-				$cf_websocket_url_request = vip_safe_wp_remote_get( $cf_websocket_url, 3, 1, 20 ); //phpcs:ignore
-			} else {
-				$cf_websocket_url_request = wp_remote_get( $cf_websocket_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
-			}
-			$cf_websocket_url_request_body = $cf_websocket_url_request['body'];
-			$cf_websocket_url_request_data = json_decode( $cf_websocket_url_request_body, true );
-			
-			if ( $cf_edd->is__premium_only() ) {
-				update_option( 'cf_multiedit_websocket', isset($cf_websocket_url_request_data['pro']['wsurl']) ? $cf_websocket_url_request_data['pro']['wsurl'] : '' );
-			} else {
-				update_option( 'cf_multiedit_websocket', isset($cf_websocket_url_request_data['free']['wsurl']) ? $cf_websocket_url_request_data['free']['wsurl'] : '' );
-			}
-			
-		}
 	}
 
 	/**
@@ -569,6 +448,27 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 */
 	public function cf_app_output_buffer() {
 		ob_start();
+
+		/**
+		 * Get all public, non-builtin post types. 
+		 * Loop through each post type and add 'custom-fields' support.
+		 * This allows custom fields to be used on all public, non-builtin post types.
+		 */
+		$args = array(
+			'public'   => true,
+			'_builtin' => false
+		);
+
+		$output = '';
+		$operator = 'and';
+
+		$post_types = get_post_types($args, $output, $operator);
+		if (isset($post_types) && !empty($post_types)) {
+			foreach ($post_types as $post_type) {
+				add_post_type_support($post_type->name, 'custom-fields');
+			}
+		}
+
 	}
 
 	/**
@@ -859,7 +759,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					$local_time        = current_datetime();
 					$deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
 					// Update the timestamp of deleted comment.
-					$previous_comment = $prev_state['comments'][ $t ];
+					$previous_comment = !empty( $prev_state['comments'][ $t ] ) ? $prev_state['comments'][ $t ] : '';
 					if ( ! empty( $previous_comment ) ) {
 						$prev_state['comments'][ $deleted_timestamp ]               = $previous_comment;
 						$prev_state['comments'][ $deleted_timestamp ]['status']     = 'deleted';
@@ -1193,7 +1093,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			);
 
 			wp_localize_script( $this->plugin_name, 'multicollab_fs', $cf_fs_data );
-			wp_localize_script( $this->plugin_name, 'showinfoboard', array( 'showinfoboard' => get_option( 'cf_show_infoboard' ) ) );
 			$cf_give_alert_message = array(
 				'cf_give_alert_message' => get_option( 'cf_give_alert_message' ),
 			);
@@ -1225,23 +1124,10 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					wp_enqueue_script( 'jquery-ui-draggable' );
 					wp_enqueue_script( 'jquery-ui-droppable' );
 
-					$cf_multiedit_websocket_url = '';
-					if( !empty( get_option( 'cf_websocket_options' ) ) ) {
-						$cf_multiedit_websocket_url = get_option( 'cf_multiedit_websocket' );
-					}
-
-					$cf_multiedit_websocket = array(
-						'cf_multiedit_websocket' => $cf_multiedit_websocket_url,
-					);
-
-					// load multiedit scripts and styles
-					wp_enqueue_script( 'multiedit-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/realTimeScripts.build.min.js', array(), wp_rand(), true );
-					wp_enqueue_style( 'multiedit-style', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/realTimeEditor.build.min.css', array(), wp_rand(), false );
-
-					wp_localize_script( 'multiedit-script', 'cf_multiedit', $cf_multiedit_websocket );
-
 					wp_enqueue_script( 'cf-block-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/activityCentre.build.min.js', array(), wp_rand(), true );
+
 					$cf_protocol_remove = array("http://","https://");
+
 					wp_localize_script(
 						'cf-block-script',
 						'activityLocalizer',
@@ -1250,21 +1136,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 							'apiUrl'                 => rtrim( get_rest_url(), '/\\'), // No nedded to pass wp-json inside this function as it is already giving same path.
 							'ajaxUrl'                => admin_url( 'admin-ajax.php' ),
 							'currentUserID'          => get_current_user_id(),
-							'cf_multiedit_websocket' => $cf_multiedit_websocket,
 							'cf_site_url' => str_replace( $cf_protocol_remove,"",home_url() ),
 						)
 					);
-
-					// Add unique_key to websocket URL.
-					$cf_multiedit_websocket_unique_key = get_option( 'cf_multiedit_websocket_unique_key' );
-					if( empty( $cf_multiedit_websocket_unique_key ) ) {
-						$cf_multiedit_websocket_unique_key = strtolower( wp_generate_password( 8, false ) );
-						update_option( 'cf_multiedit_websocket_unique_key', $cf_multiedit_websocket_unique_key, true );
-					}
-					$cf_multiedit_websocket_uniqe_array = array(
-						'cf_multiedit_websocket_unique_key' => $cf_multiedit_websocket_unique_key,
-					);
-					wp_localize_script( 'multiedit-script', 'cf_multiedit_websocket_unique_key', $cf_multiedit_websocket_uniqe_array );
 
 		}
 
@@ -1580,11 +1454,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$form_data = array();
 		parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_URL ), $form_data );
 
-		if ( isset( $form_data['cf_show_infoboard'] ) ) {
-			update_option( 'cf_show_infoboard', $form_data['cf_show_infoboard'] );
-		} else {
-			delete_option( 'cf_show_infoboard' );
-		}
 		if ( isset( $form_data['cf_hide_editorial_column'] ) ) {
 			update_option( 'cf_hide_editorial_column', $form_data['cf_hide_editorial_column'] );
 		} else {
@@ -1617,54 +1486,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			update_option( 'cf_give_alert_message', $form_data['cf_give_alert_message'] );
 		} else {
 			delete_option( 'cf_give_alert_message' );
-		}
-
-		echo 'saved';
-		wp_die();
-	}
-
-	/**
-	 * Save Real-Time Co-editing settings of the plugin.
-	 */
-	public function cf_save_multiedit_settings() {
-		$cf_edd = new CF_EDD();
-
-		$form_data = array();
-		parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_URL ), $form_data );
-
-		update_option( 'cf_websocket_options', $form_data['cf_websocket_options'], true );
-
-		if( 'cf_websocket_default' === $form_data['cf_websocket_options'] ) {
-
-			$cf_websocket_url  = CF_STORE_URL . 'wp-json/cf-websocket-url/v2/cf-websocket-url?' . wp_rand();
-			if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
-				$cf_websocket_url_request = vip_safe_wp_remote_get( $cf_websocket_url, 3, 1, 20 ); //phpcs:ignore
-			} else {
-				$cf_websocket_url_request = wp_remote_get( $cf_websocket_url, array( 'timeout' => 20 ) ); // phpcs:ignore
-			}
-			
-			$cf_websocket_url_request_data = json_decode( $cf_websocket_url_request['body'], true );
-
-			if ( $cf_edd->is__premium_only() ) {
-				update_option( 'cf_multiedit_websocket', $cf_websocket_url_request_data['pro']['wsurl'] );
-			} else {
-				update_option( 'cf_multiedit_websocket', $cf_websocket_url_request_data['free']['wsurl'] );
-			}
-
-		} else if( 'cf_websocket_custom' === $form_data['cf_websocket_options'] ) {
-
-			if ( isset( $form_data['cf_multiedit_websocket'] ) ) {
-				update_option( 'cf_multiedit_websocket', $form_data['cf_multiedit_websocket'] );
-			} else {
-				delete_option( 'cf_multiedit_websocket' );
-			}
-
-		}
-
-		if ( isset( $form_data['cf_websocket_options'] ) ) {
-			update_option( 'cf_websocket_options', $form_data['cf_websocket_options'] );
-		} else {
-			delete_option( 'cf_websocket_options' );
 		}
 
 		echo 'saved';
@@ -1802,7 +1623,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$html .= '</span>' . __( ' Resolved Thread Comments', 'content-collaboration-inline-commenting' );
 		$html .= '</h3>';
 
-		$elid              = str_replace( '_', '', $el );
 		$comments          = get_post_meta( $current_post_id, $metaId, true );
 		$commented_on_text = $comments['commentedOnText'];
 		$list_of_comments  = isset( $comments['comments'] ) ? $comments['comments'] : '';
@@ -1845,7 +1665,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 */
 	public function cf_update_meta() {
 		$current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
-		$autoDraft_ids          = filter_input(INPUT_POST, 'data', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		$autoDraft_ids          = filter_input(INPUT_POST, 'data', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY); //phpcs:ignore
 		update_post_meta( $current_post_id, '_autodraft_ids', $autoDraft_ids );
 		wp_die();
 	}
@@ -1901,6 +1721,17 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		);
 		register_post_meta(
 			'',
+			'_sb_show_comment_boards',
+			array(
+				'show_in_rest'  => true,
+				'single'        => true,
+				'type'          => 'boolean',
+				'auth_callback' => function() {
+					return true; },
+			)
+		);
+		register_post_meta(
+			'',
 			'_sb_suggestion_history',
 			array(
 				'show_in_rest'  => true,
@@ -1921,31 +1752,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					return true; },
 			)
 		);
-		register_post_meta(
-			'',
-			'_is_real_time_mode',
-			array(
-				'show_in_rest'  => true,
-				'single'        => true,
-				'default'       => false,
-				'type'          => 'boolean',
-				'auth_callback' => function() {
-					return true; },
-			)
-		);
-
-		register_post_meta(
-			'',
-			'_realtime_collaborators',
-			array(
-				'show_in_rest'  => true,
-				'single'        => true,
-				'type'          => 'string',
-				'auth_callback' => function() {
-					return true; },
-			)
-		);
-
 	}
 
 	/**
@@ -2317,108 +2123,41 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	}
 
 	/**
-	 * User authentication function while redirect guest.
+	 * Update the $args variable where our custom attributes are not set.
 	 *
-	 * @param object|array $user - contains user details.
-	 * @param string       $username_  - contains user name
-	 * @param string       $password   - user's password.
-	 * @return mixed
+	 * @param [type] $args
+	 * @param [type] $block_type
+	 * @return void
 	 */
-	public function cf_guest_auto_login( $user, $username_, $password ) {
+	public function cf_modify_block_type_args_defaults($args, $block_type) { 
 
-		$user_id  = filter_input( INPUT_GET, 'user_id', FILTER_SANITIZE_NUMBER_INT );
-		$username = filter_input( INPUT_GET, 'username', FILTER_SANITIZE_SPECIAL_CHARS );
-		$post_id  = filter_input( INPUT_GET, 'post_id', FILTER_SANITIZE_NUMBER_INT );
-		$token    = filter_input( INPUT_GET, 'token', FILTER_SANITIZE_SPECIAL_CHARS );
-
-		$guest_token = get_user_meta( (int) $user_id, 'multicollab_guest_token', true );
-		$guest_token = ( ! is_array( $guest_token ) ) ? (array) $guest_token : $guest_token;
-
-		if ( ! empty( $user_id ) && ! empty( $username ) && ( ! in_array( $token, $guest_token, true ) ) ) {
-			$error_redirect = site_url( 'landing-page', 'login' );
-			$error_string   = 'Token miss match';
-			$error_redirect = add_query_arg(
-				array(
-					'message' => $error_string,
-				),
-				$error_redirect
-			);
-
-			wp_safe_redirect( $error_redirect, 302, 'Multicollab-token-message' );
-			exit;
+		if( ! array_key_exists( 'datatext', $args['attributes'] ) ) {
+			$args['attributes']['datatext'] = [
+				'type'    => 'string',
+				'default' => true,
+			];
 		}
-
-		$multicollab_guest_token_timestamp = get_user_meta( $user_id, 'multicollab_guest_token_timestamp', true );
-
-		if ( ! empty( $multicollab_guest_token_timestamp ) ) {
-			if ( isset( $multicollab_guest_token_timestamp[ $token ] ) && ! empty( $multicollab_guest_token_timestamp[ $token ] ) ) {
-				if ( $multicollab_guest_token_timestamp[ $token ][0] <= strtotime( '-48 hours' ) && '' === $multicollab_guest_token_timestamp[ $token ][1] ) { // Check if timestamp is more than 48 hours and user not visited.
-
-					// LINK is expired.
-					wp_die( esc_html__( 'Link is Expired.', 'content-collaboration-inline-commenting' ) );
-
-				} elseif ( $multicollab_guest_token_timestamp[ $token ][0] >= strtotime( '-48 hours' ) && '' === $multicollab_guest_token_timestamp[ $token ][1] ) { // If timestamp is less than 48 hours and user not visited.
-
-					// Update value of visited link.
-					$multicollab_guest_token_timestamp[ $token ][1] = 'Visited';
-					update_user_meta( $user_id, 'multicollab_guest_token_timestamp', $multicollab_guest_token_timestamp );
-				} else {
-				}
-			}
-		}
-
-		if ( $user_id && $username ) {
-			wp_set_current_user( $user_id, $username );
-			wp_set_auth_cookie( $user_id );
-			$user_data = new WP_User( $user_id );
-			do_action( 'wp_login', $username, $user_data );
-
-			// redirect to login URL.
-			$editor_url = site_url( 'wp-admin/post.php', 'post-editor' );
-
-			$editor_url = add_query_arg(
-				array(
-					'post'   => $post_id,
-					'action' => 'edit',
-				),
-				$editor_url
-			);
-
-			wp_safe_redirect( $editor_url, 302, 'Multicollab-editor-redirect' );
-			exit;
-		}
-		if ( ! empty( $user_data ) ) {
-			return $user_data;
-		} else {
-			return $user;
-		}
+	
+		return $args; 
 	}
 
 	/**
-	 * Add custom attribute to core block.
+	 * Filters the HTML tags that are allowed for a given context.
 	 *
-	 * @param array $metadata Array of meta data.
-	 * @return array
+	 * @param [type] $tags
+	 * @param [type] $context
+	 * @return void
 	 */
-	public function filter_block_type_metadata( $metadata ) {
-		$allowedBlocks_widget = array('core/rss','core/tag-cloud','core/latest-comments','core/archives','core/calendar','woocommerce/product-best-sellers','woocommerce/product-new','woocommerce/product-categories','woocommerce/product-top-rated',
-		'woocommerce/product-category','woocommerce/handpicked-products','woocommerce/product-tag','woocommerce/products-by-attribute','woocommerce/filled-cart-block');
+	public function cf_add_allowed_iframe_tag( $tags, $context ) {
 
-		if ( ( str_starts_with( $metadata['name'], 'core/' ) || str_starts_with( $metadata['name'], 'woocommerce/' ) )
-            && 
-			( 
-				in_array($metadata['name'], $allowedBlocks_widget,true) 
-				|| str_contains($metadata['name'], 'woocommerce/cart-') 
-				|| str_contains($metadata['name'], 'woocommerce/checkout-') 
-			)
-		) {
-                $metadata['attributes']['datatext'] = [
-                    'type'    => 'string',
-                    'default' => true,
-                ];
-        }
+		// allow mdspan for advance cusutom field 
+	    if ( $context === 'acf' ) {
+	        $tags['mdspan'] = array(
+	            'datatext' => true,
+	        );
+	    }
 
-        return $metadata;
+	    return $tags;
 	}
 
 }

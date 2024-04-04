@@ -8,7 +8,6 @@ $view                        = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_
 $tab_number                  = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
 $activated                   = filter_input( INPUT_GET, 'activated', FILTER_SANITIZE_SPECIAL_CHARS );
 $cf_admin_notif              = get_option( 'cf_admin_notif' );
-$cf_show_infoboard           = get_option( 'cf_show_infoboard' );
 $cf_show_multicollab_sidebar = get_option( 'cf_show_multicollab_sidebar' );
 $cf_hide_editorial_column    = get_option( 'cf_hide_editorial_column' );
 
@@ -21,10 +20,8 @@ $cf_slack_notification_accept_reject_suggestion = get_option( 'cf_slack_notifica
 $cf_page_url                                    = menu_page_url( 'editorial-comments', false );
 $cf_web_activity_url                            = add_query_arg( 'view', 'web-activity', $cf_page_url );
 $cf_post_activity_url                           = add_query_arg( 'view', 'post-activity', $cf_page_url );
-$view                   = ( null === $view ) ? 'web-activity' : $view;
-$cf_permissions         = get_option( 'cf_permissions' );
-$cf_multiedit_websocket = get_option( 'cf_multiedit_websocket' );
-$cf_websocket_options   = get_option( 'cf_websocket_options' );
+$view                       = ( null === $view ) ? 'web-activity' : $view;
+$cf_permissions             = get_option( 'cf_permissions' );
 ?>
 <div class="cf-plugin-settings">
 <div class="cf_settings_loader"></div>
@@ -186,21 +183,6 @@ $cf_websocket_options   = get_option( 'cf_websocket_options' );
 									<?php
 										// Get permission form HTML.
 										require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-suggestion-mode.php';
-									?>
-								</div>
-							</div>
-
-							<div class="cf-suggestion-box" id="real-time-settings">
-								<div class="cf-content-box">
-									<div class="cf-cnt-box-header">
-										<h3>
-											<?php printf( '%s', esc_html__( 'Real-time Editing ', 'content-collaboration-inline-commenting' ) ); ?>
-											(<i><?php printf( esc_html__( 'Beta', 'content-collaboration-inline-commenting' ) ); ?></i>)
-										</h3>
-									</div>
-									<?php
-										// Get permission form HTML.
-										require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-realtime-mode.php';
 									?>
 								</div>
 							</div>

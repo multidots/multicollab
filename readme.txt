@@ -6,8 +6,8 @@ Author URI: https://www.multicollab.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 6.2
-Tested up to: 6.4
-Stable tag: 4.3
+Tested up to: 6.4.3
+Stable tag: 4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,11 +18,14 @@ This plugin serves the commenting feature like Google Docs within the Gutenberg 
 <strong>Power up your editorial workflow</strong>
 
 In a content editorial workflow, reviewing and providing feedback should be reasonably easy parts of the process.
+
 While external collaboration tools like Google Docs are an option, online collaboration within the WordPress dashboard isn’t well set up by default. 
-Copy-pasting between Google Docs and WordPress can get frustrating and time-consuming. Also, being unable to leave direct comments on a post’s draft during the editorial process is a deal-breaker. 
+
+<strong>Copy-pasting between Google Docs and WordPress can get frustrating and time-consuming.</strong> Also, being unable to leave direct comments on a post’s draft during the editorial process is a deal-breaker. 
+
 So, what should WordPress-focused content teams do to improve their collaborative output?
 
-We bring to you - <a href="https://bit.ly/3vR2maF" target="_blank">Multicollab</a>: <strong>a WordPress collaboration plugin which lets you Comment, Suggest and Collaborate - in real-time, in WordPress without switching back and forth between WordPress and other Apps. You can easily share editorial feedback directly within WordPress, including commenting, tagging, replying and much more!</strong>
+We bring to you - <a href="https://bit.ly/3vR2maF" target="_blank">Multicollab</a>: <strong>a WordPress collaboration plugin which lets you Comment, Suggest and Collaborate - <i>in real-time</i>, in WordPress without switching back and forth between WordPress and other Apps. You can easily share editorial feedback directly within WordPress, including commenting, tagging, replying and much more!</strong>
 
 The Multicollab WordPress plugin is a versatile WordPress collaboration plugin designed to streamline editorial collaboration and content feedback. It allows WordPress content creators to collaborate on articles, blog posts, and other editorial content directly within WordPress. 
 
@@ -32,7 +35,7 @@ Install <strong>Multicollab,</strong> and you’ll instantly unlock collaboratio
 
 This plugin adds inline commenting functionality to Gutenberg directly, making commenting a single click of a button away. Users can add comments on text as well as Media.
 
-[youtube https://youtu.be/s1v5_z4gGf8]
+[youtube https://youtu.be/dbX_P6c3i54]
 
 ><em>This an easy-to-use plugin—the best one I’m aware of—for those who have an editorial process. My wife is a blogger and I’m her editor. We’ve only begun taking advantage of it but I wanted to offer a positive shout out.
 <strong>-       Mario T. Lanza - Sr. Web Developer<strong></em>
@@ -54,8 +57,6 @@ Installing the plugin enables the following key editorial features instantly:
 <ol>
 <li><strong>Inline Commenting - </strong>Users can add comments on text and Media blocks to mark their feedback.</li>
 <li><strong>Team Collaboration - </strong>Invite editorial users to collaborate and comment by mentioning them, ensuring quick email notifications and seamless engagement in the conversation.</li>
-<li><strong>Real-time Co-Editing - </strong>Collaborate with multiple users simultaneously and edit posts together in real-time.</li>
-<li><strong>Guest Collaboration - </strong>Invite guest collaborators over email with magic links without creating a WordPress user account.</li>
 <li><strong>Reports and Activities - </strong>Track progress across all pages and posts with easy filtering to view by user, content categories, and time stamps.</li>
 <li><strong>Email Notifications - </strong>Instant email notifications make collaborations with your team easier and foster intra-group connectivity.</li>
 </ol>
@@ -84,13 +85,35 @@ If you do need more help or have a specific question, we’re always happy to su
 ><em>The plug-in is awesome! It works fantastically.
 <strong>-       Charudatta Mondale Co-Founder at QuickDraft LLP<strong></em>
 
-📣 <a href="https://youtu.be/s1v5_z4gGf8"><strong>Collaborate even more effectively with Premium</strong></a>
+📣 <a href="https://www.multicollab.com/blog/multicollab-4-3-introducing-new-lite-plan/"><strong>Lite Plan for Smaller Teams</strong></a>
+
+We just introduced a brand new Lite Plan! Priced at $199/year, the Lite plan offers the following features:
+
+<ul>
+<li>Inline Commenting</li>
+<li>Team Collaboration</li>
+<li>Guest Collaboration</li>
+<li>Custom Permissions</li>
+<li>Attach a document to comment</li>
+<li>Multilingual</li>
+<li>Reports and Activity</li>
+<li>Email Notifications</li>
+<li>Email Support</li>
+</ul>
+
+We are excited to see smaller teams reinvent their WordPress editorial collaboration with WordPress.
+
+📣 <a href="https://youtu.be/s1v5_z4gGf8"><strong>Collaborate even more effectively with our 'PRO' Plan</strong></a>
 
 The free version of Multicollab is easy to use and gives you all the commenting functionality to power up your editorial collaboration.
 
 But if you’re looking to take your team’s collaboration even further, we offer a PRO plan which <a href="https://bit.ly/37n6XrN" target="_blank">takes things to the next level</a>.
 
 Here’s what you can unlock by <a href="https://www.multicollab.com/pricing/" target="_blank">upgrading today</a>:
+
+👉🏻 <strong>Real-time Co-Editing</strong>
+
+Collaborate with multiple users simultaneously and edit posts together in real-time.
 
 👉🏻 <strong>Track changes with Suggestion mode</strong>
 
@@ -161,13 +184,23 @@ For a complete list of differences between versions, <a href="https://bit.ly/3sk
 
 Multicollab is an excellent team collaboration plugin in WordPress for content teams of all sizes: Whether it’s just two people or a team of hundreds, Multicollab ensures editorial workflows are made easier by enabling real-time, collaborative editing directly on the WordPress-Gutenberg interface. Here is a <a href="https://docs.multicollab.com/getting-started/requirements">resource kit</a> for you.
 
+= <strong> What are the potential benefits of using Multicollab instead of Google Docs for improving my publishing speed? </strong> =
+
+Our publisher clients who’ve made the switch to Multicollab from Google Docs have witnessed remarkable enhancements in their content creation and publishing efficiency. Multicollab eliminates the need for tedious tasks such as copying and pasting content between Google Docs and WordPress and capitalizes on features like reusable content blocks, rich content formatting, and other advantages offered by WordPress’s native content editor. Here’s a <a href="https://youtu.be/6K-MOn7txMQ">video</a> showcasing how Multicollab can potentially 2x your publishing speed.
+
 = <strong> What are the benefits of using Multicollab for Publishers? </strong> =
 
 If you are creating and publishing content with WordPress, you will love <a href="https://www.multicollab.com/publishers/#It's-frustrating-when-your-story-gets-stuck--due-to-a-slow-and-inefficient-editing-workflow,--but-you-can-change-that-with-Multicollab">all these benefits</a> of using Multicollab. It is a great Plugin for editorial collaboration and enabling collaborative editing in WordPress.
 
+= What are the reasons for considering a switch from Google Docs if it’s working fine for me?  =
+
+Multicollab offers all the benefits of Google Docs, <a href="https://www.multicollab.com/blog/google-docs-vs-multicollab/">without the downside</a>.
+
 = Does this work with Gutenberg?  =
 
 Yes! Multicollab is a wordpress approval workflow plugin built to work perfectly with Gutenberg versions 8.6 to 10.7 and is consistently being updated to work with the latest versions of Gutenberg as they roll out.
+
+<a href="https://www.multicollab.com/blog/building-blocks-of-collaboration-in-gutenberg-phase-3-roadmap-extended/">Building Blocks of Collaboration in Gutenberg Phase 3 (Roadmap Extended)</a>
 
 <a href="https://www.multicollab.com/blog/building-blocks-of-collaboration-in-gutenberg-phase-3-roadmap-extended/">Building Blocks of Collaboration in Gutenberg Phase 3 (Roadmap Extended)</a>
 
@@ -177,7 +210,7 @@ Unfortunately, the WordPress Classic Editor isn’t as versatile as Gutenberg an
 
 = What is Multicollab compatible with? =
 
-We’re constantly working to improve Multicollab and make it more widely available. The plugin is fully compatible with Gutenberg versions 8.6 to 10.7, WordPress versions 5.6 and above, and PHP versions 7.0 or 8.0.
+We’re constantly working to improve Multicollab and make it more widely available. The plugin is fully compatible with Gutenberg versions 14.2 to 16.7, WordPress versions 6.2 and above, and PHP versions 7.0 or 8.3.
 
 = Which browsers does Multicollab work with? =
 
@@ -203,15 +236,21 @@ Authors and Contributors can only add, edit, delete, reply, and resolve their po
 
 Available with our premium plan, users can either accept or reject all suggestions in a go.
 
-= I have another question. How can I get support?    =
+= I have another question. How can I get support? =
 
 Have you had a look at our documentation? 
 
 <a href="https://bit.ly/3FqfRRD" target="_blank">We’ve covered a lot of common questions in our repository available freely here</a>.
 
-If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as fast as we can!
+If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as quickly as possible!
 
 == Changelog ==
+
+= 4.4 - 04.04.2024 =
+* [Enhancement] Comments are automatically saved upon addition for a seamless workflow.
+* [Enhancement] Users can now hide comments using keyboard shortcuts — For Windows ctrl + alt + J && For Mac ⌘ Cmd + ⌥ Option + J.
+* [Enhancement] Multicollab now seamlessly integrates with WP Forms and the MemberPress plugin.
+* [Enhancement] Eliminated the functionality of real-time co-editing and guest collaboration.
 
 = 4.3 - 14.02.2024 =
 * [Enhancement] Users can now add comments on ACF blocks and the block's text.
@@ -221,8 +260,8 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 * [Enhancement] Multiple users can simultaneously work on the same block.
 
 = 4.2 - 02.01.2024 =
-* [New] Users can comment on entire gallery blocks. - (Share Image)
-* [New] Users can add comments to Gutenberg widget category blocks (Latest Comment, RSS, Archives, Calendar). - (Share Image)
+* [New] Users can comment on entire gallery blocks.
+* [New] Users can add comments to Gutenberg widget category blocks (Latest Comment, RSS, Archives, Calendar).
 * [Enhancement] Collaborator details are now displayed on the dashboard activity.
 * [Enhancement] Users can set their default tab when opening a WordPress page.
 * [Enhancement] Admins can view real-time collaboration permissions in the permission settings tab.

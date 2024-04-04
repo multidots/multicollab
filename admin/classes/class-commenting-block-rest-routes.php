@@ -201,16 +201,6 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 			}
 		}
 
-		$real_time_mode = get_post_meta( $current_post_id, '_is_real_time_mode', true );
-		if ( '1' === $real_time_mode ) { 
-			$collaborators = $this->get_collaborator_activities( $current_post_id );
-			if ( empty( $threads ) && ! empty( $collaborators ) ) {
-				$threads = $collaborators;
-			} elseif ( ! empty( $collaborators ) && ! empty( $threads ) ) {
-				$threads = array_merge( $collaborators, $threads );
-			}
-		}
-
 		if ( ! metadata_exists( 'post', $current_post_id, '_autodraft_ids' ) ) {
 			// create new meta if meta key doesn't exists
 			add_post_meta( $current_post_id, '_autodraft_ids', '' );
@@ -222,74 +212,6 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 		);
 
 		return rest_ensure_response( $response );
-	}
-
-	 /**
-	  * Return collaborator activities array
-	  *
-	  * @param integer $data
-	  * @return array
-	  */
-	public function get_collaborator_activities( $postId ) {
-		$current_post_id = intval( $postId );
-		$date_format     = get_option( 'date_format' );
-		$time_format     = get_option( 'time_format' );
-		$timestamp       = current_time( 'timestamp' );
-
-		$collaboratorHistory = get_post_meta( $current_post_id, '_realtime_collaborators_activity', true );
-		if ( $collaboratorHistory === '' ) {
-			return;
-		}
-		
-		
-		$collaboratorHistory = json_decode( $collaboratorHistory );
-		$collaboratorHistory = (array)$collaboratorHistory;
-		$collaboratorHistory = array_filter($collaboratorHistory, function($value) {
-			return property_exists( $value, 'timestamp' );
-		});		
-
-		$collaboratorHistory = array_filter($collaboratorHistory, function($collab) {
-			return $collab->type === 'Joined';
-		});
-
-		$collaboratorHistory = array_values($collaboratorHistory);
-		$threads = array();
-		if ( ! empty( $collaboratorHistory ) ) {
-			foreach ( $collaboratorHistory as $Id => $collaborator ) {
-				$cmnts = array();
-
-				$suggeestionDetail = $collaborator;
-				$suggeestionDetail = (array) $suggeestionDetail;
-				$elID  = 'collaborator-' . $suggeestionDetail['userId'];
-				$user_info = get_userdata( $suggeestionDetail['userId'] );
-				$timestamp = $suggeestionDetail['timestamp'];
-				$cmnts[]   = array(
-					'id'        => $timestamp,
-					'status'    => 'publish',
-					'timestamp' => isset( $suggeestionDetail['timestamp'] ) ? $suggeestionDetail['timestamp'] : '',
-					'userData'  => array(
-						'id'        => isset( $user_info->ID ) ? intval( $user_info->ID ) : 0,
-						'username'  => isset( $user_info->display_name ) ? $user_info->display_name : '',
-						'avatarUrl' => get_avatar_url( isset( $user_info->user_email ) ? $user_info->user_email : '' ),
-						'userRole'  => isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '',
-					),
-					'thread'    => '',
-				);
-
-				if ( ! empty( $cmnts ) ) {
-					$threads[] = array(
-						'elID'              => $elID,
-						'activities'        => $cmnts,
-						'updatedAt'					=> $timestamp,
-						'resolved'       		=> 'true',
-						'selectedText'			=> 'Joined as collaborator.',
-						'assignedTo'        => '',
-					);
-				}
-			}
-		}
-
-		return $threads;
 	}
 
 	// custom rest end point to get userdata by user id

@@ -193,11 +193,6 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 				}
 				$prepare_data['activities'] = $activity_text;
 
-				// Collaborators.
-				$collaborators                 = array_unique( $collaborators );
-				$collaborators                 = implode( $collaborators );
-				$prepare_data['collaborators'] = $collaborators;
-
 				if ( ! empty( $activity_text ) ) {
 					$activities_data[] = $prepare_data;
 				}
@@ -301,7 +296,6 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 
 				// Activities.
 				$collaborators          = array();
-				$realtime_collaborators = array();
 				$activity_text          = '';
 				$activity_limit         = 3;
 				$activity_count         = 0;
@@ -370,42 +364,6 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 					}
 				}
 				$prepare_data['activities'] = $activity_text;
-
-				$collaboratorHistory = get_post_meta( $current_post_id, '_realtime_collaborators_activity', true );
-				$collaboratorHistory = json_decode( $collaboratorHistory );
-				$collaboratorHistory = (array) $collaboratorHistory;
-				$collaboratorHistory = array_filter(
-					$collaboratorHistory,
-					function ( $value ) {
-						return property_exists( $value, 'timestamp' );
-					}
-				);
-
-				$collaboratorHistory = array_filter(
-					$collaboratorHistory,
-					function ( $collab ) {
-						return $collab->type === 'Joined';
-					}
-				);
-
-				$collaboratorHistory = array_values( $collaboratorHistory );
-
-				if ( ! empty( $collaboratorHistory ) ) {
-					foreach ( $collaboratorHistory as  $collaborator ) {
-						$collaborator             = (array) $collaborator;
-						$user_info                = get_userdata( $collaborator['userId'] );
-						$profile_url              = get_avatar_url( $user_info->user_email );
-						$username                 = $user_info->display_name;
-						$realtime_collaborators[] = "<span class='tbl-user-avatar'><img src=" . esc_url( $profile_url ) . "  alt='" . esc_attr( $username ) . "' />" . esc_html( $username ) . '</span>';
-					}
-				}
-
-				$collaborators = ! empty( $realtime_collaborators ) ? $realtime_collaborators : $collaborators;
-
-				// Collaborators.
-				$collaborators                 = array_unique( $collaborators );
-				$collaborators                 = implode( $collaborators );
-				$prepare_data['collaborators'] = $collaborators;
 
 				if ( ! empty( $activity_text ) ) {
 					$activities_data[] = $prepare_data;
