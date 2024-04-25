@@ -2705,26 +2705,39 @@ function filterTextBeforeSave(newText) {
     newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
     newText = newText.replace(/<br>/igm, ' <br> ');
     if (isSafari || isChrome) {
-        newText = newText.replace(/<div>/igm, ' <br> ');
+        newText = newText.replace(/<div>/igm, '<br>');
         newText = newText.replace(/<\/div>/igm, '');
-        newText = newText.replace(/<\/?span[^>]*>/g, ''); // Resolved #512 multiline comment bug @author - Mayank / since 3.6
+        newText = newText.replace(/<br> <br>/igm, '<br>');
+        newText = newText.replace(/<\/?span[^>]*>/g, ''); // Resolved #512 multiline comment bug @author - Mayank / since 3.6        
     }
     var link;
     // Adding anchor tag around the linkable text.
     // For bug fixing of semicolon there is a little chnage in regex   
 
     newText = newText.replace(/<a\s.*?>(.*?)<\/a>/g, function (match) {
-
         return ' ' + match + ' ';
     });
+
+         // Detect Browser.
+         var browser = (function (agent) {
+            switch (true) {
+                case agent.indexOf("firefox") > -1: return "firefox";
+                default: return "other";
+            }
+        })(window.navigator.userAgent.toLowerCase());
+    
+        if ('firefox' === browser) {
+            newText = newText.replace(/<a\s.*?>(.*?)<\/a>/g, function (match) {
+            return ' ' + `${match}\u00a0` + ' ';
+          });
+        }
 
     // replace nbsp; with space for separate links
     //newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');
 
 
-
     //newText = newText.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function (match) {
-    newText = newText.replace(/(?!]*>[^<])(((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?))(?![^<]*<\/a>)/gi, function (match) {
+    newText = newText.replace(/(?!]*>[^<])(((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?))(?![^<]*<\/a>)/gi, function (match) {     
         link = match;
         if ((link.includes("www.") || link.includes("WWW.")) && !link.includes("http://") && !link.includes("https://")) {
             link = link.replace('WWW.', 'http://')
@@ -2733,6 +2746,7 @@ function filterTextBeforeSave(newText) {
 
         return `<a href="${link}" target="_blank">${match}</a>`;
     });
+
 
 
     newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');

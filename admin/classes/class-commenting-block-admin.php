@@ -551,10 +551,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	public function cf_columns_head( $defaults ) {
 		$all_post_type            = get_post_types_by_support( array( 'editor' ) );
 		$post_type                = filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_SPECIAL_CHARS );
+		$post_type 				  = isset( $post_type ) ? trim( $post_type ) : '';
 		$type                     = get_post_type();
+		$type 					  = isset( $type ) ? trim( $type ) : '';
 		$cf_hide_editorial_column = get_option( 'cf_hide_editorial_column' );
 		if ( empty( $cf_hide_editorial_column ) ) {
-			if ( ( in_array( trim( $post_type ), $all_post_type, true ) ) || ( in_array( trim( $type ), $all_post_type, true ) ) ) {
+			if ( ( in_array( $post_type, $all_post_type, true ) ) || ( in_array( $type, $all_post_type, true ) ) ) {
 				if ( ( isset( $post_type ) || isset( $type ) ) && ( $post_type !== 'product' || $type !== 'product' ) ) {
 					$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ) . '" width=17/>' . __( 'Multicollab', 'content-collaboration-inline-commenting' );
 				}
@@ -1270,7 +1272,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				'timestamp'    => $timestamp,
 				'assignedTo'   => $assigned_to,
 				'assignedText' => $assigned_text,
-				'arr'          => $arr,
+				'arr' => $arr,
 			)
 		);
 
@@ -1310,12 +1312,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	public function cf_secure_content( $content ) {
 		$allowed_tags = array(
 			'a'   => array(
-				'contenteditable' => array(),
-				'href'            => array(),
-				'target'          => array(),
-				'style'           => array(),
-				'class'           => array( 'js-mentioned' ),
-				'data-email'      => array(),
+				'contenteditable' 	=> array(),
+				'href'            	=> array(),
+				'target'          	=> array(),
+				'style'           	=> array(),
+				'class'           	=> array( 'js-mentioned' ),
+				'data-email'      	=> array(),
 				'data-display-name' => array(),
 				'data-user-id'	  	=> array(),
 			),

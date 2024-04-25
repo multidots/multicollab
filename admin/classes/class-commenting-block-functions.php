@@ -361,10 +361,10 @@ class Commenting_block_Functions {
 		}
 		$available_roles = $wp_roles->get_names();
 		$order           = array_keys( $available_roles );
-		uksort(
+		usort(
 			$needToSortArray,
 			function( $key1, $key2 ) use ( $order, $needToSortArray ) {
-				return ( array_search( $needToSortArray[ $key1 ], $order, true ) > array_search( $needToSortArray[ $key2 ], $order, true ) );
+				return ( array_search( $needToSortArray[ $key1 ], $order, true ) <=> array_search( $needToSortArray[ $key2 ], $order, true ) );
 			}
 		);
 		return $needToSortArray;
@@ -419,6 +419,7 @@ class Commenting_block_Functions {
 		$cf_gen_hide_multicollab_comment 				= get_option( 'cf_hide_editorial_column' );
 		$cf_gen_hide_floating_icons      				= get_option( 'cf_hide_floating_icons' );
 		$cf_admin_notification 							= get_option( 'cf_admin_notif' );
+		$cf_gen_hide_save_draft_comment  				= get_option( 'cf_show_infoboard' );
 
 		$cf_plugin_general_setting = array(
 			'cf_gen_hide_multicollab_comment' 				 => $cf_gen_hide_multicollab_comment,

@@ -6,8 +6,8 @@ Author URI: https://www.multicollab.com/
 Contributors: dots, multicollab, lkraav
 Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
 Requires at least: 6.2
-Tested up to: 6.4.3
-Stable tag: 4.4
+Tested up to: 6.5
+Stable tag: 4.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,7 +68,7 @@ Multicollab offers a comprehensive editorial content management system, enabling
 
 <strong>Built specifically for Gutenberg</strong>
 
-Multicollab was designed to work with Gutenberg natively, so there’s no need to change your workflow! Fully compatible with Gutenberg versions 8.6 to 10.7, it works right out of the box!
+Multicollab was designed to work with Gutenberg natively, so there’s no need to change your workflow! Fully compatible with Gutenberg versions 14.2 to 16.7, it works right out of the box!
 
 <a href="https://bit.ly/3pBV6iK" target="_blank">The Arrival of Gutenberg Phase 3: A Comprehensive Overview</a>
 
@@ -166,7 +166,7 @@ The team behind Multicollab is <a href="https://bit.ly/38Xwp7w" target="_blank">
 <strong>-       Charles Araujo - Co-Founder – The MAPS Institute<strong></em>
 
 <p align="center">🔥 <a href="https://bit.ly/3wcQjDB" target="_blank">Try out the full features of Multicollab Premium in our demo here!</a> 🔥
-For a complete list of differences between versions, <a href="https://bit.ly/3skcdDP" target="_blank">please visit this link</a>.</p>
+</p>
 
 
 == Screenshots ==
@@ -176,6 +176,12 @@ For a complete list of differences between versions, <a href="https://bit.ly/3sk
 3.
 4.
 5.
+6.
+7.
+8.
+9.
+10.
+11.
 
 
 == Frequently Asked Questions ==
@@ -198,7 +204,7 @@ Multicollab offers all the benefits of Google Docs, <a href="https://www.multico
 
 = Does this work with Gutenberg?  =
 
-Yes! Multicollab is a wordpress approval workflow plugin built to work perfectly with Gutenberg versions 8.6 to 10.7 and is consistently being updated to work with the latest versions of Gutenberg as they roll out.
+Yes! Multicollab is a wordpress approval workflow plugin built to work perfectly with Gutenberg versions 14.2 to 16.7 and is consistently being updated to work with the latest versions of Gutenberg as they roll out.
 
 <a href="https://www.multicollab.com/blog/building-blocks-of-collaboration-in-gutenberg-phase-3-roadmap-extended/">Building Blocks of Collaboration in Gutenberg Phase 3 (Roadmap Extended)</a>
 
@@ -246,9 +252,12 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 
 == Changelog ==
 
+= 4.4.1 - 25.04.2024 =
+* [Enhancement] Compatible with WordPress 6.5.
+
 = 4.4 - 04.04.2024 =
 * [Enhancement] Comments are automatically saved upon addition for a seamless workflow.
-* [Enhancement] Users can now hide comments using keyboard shortcuts — For Windows ctrl + alt + J && For Mac ⌘ Cmd + ⌥ Option + J.
+* [Enhancement] Users can now hide comments using keyboard shortcuts — For Windows alt + Shift + J && For Mac ⌥ Option + Shift + J.
 * [Enhancement] Multicollab now seamlessly integrates with WP Forms and the MemberPress plugin.
 * [Enhancement] Eliminated the functionality of real-time co-editing and guest collaboration.
 
