@@ -1,6 +1,6 @@
 # Team Collaboration Plugin for WordPress Editorial teams- Multicollab
 
-<p align="center"><a href="https://www.multidots.com/google-doc-style-gutenberg-block-commenting/" target="_blank"><img src="https://user-images.githubusercontent.com/82029773/196437606-feb8a469-0588-4d4e-8f43-f4b31098b0c7.jpg" alt="Commenting Demo"></a></p>
+<p align="center"><a href="https://www.multicollab.com/try-demo/" target="_blank"><img src="https://user-images.githubusercontent.com/82029773/196437606-feb8a469-0588-4d4e-8f43-f4b31098b0c7.jpg" alt="Commenting Demo"></a></p>
 
 <a href="https://www.multicollab.com/" target="_blank">About Multicollab</a> | <a href="https://www.multicollab.com/publishers/" target="_blank">Publishers</a> | <a href="https://www.multicollab.com/agencies/" target="_blank"> Agencies </a> | <a href="https://www.multicollab.com/features/" target="_blank"> Features </a> |
 <a href="https://www.multicollab.com/try-demo/" target="_blank">Live Demo</a> | <a href="https://www.multicollab.com/pricing/" target="_blank"> Pricing </a>
@@ -23,7 +23,7 @@ All types of contributions are most welcome.
 
 ## Support
 
-This repository is not for support. Please use it for contributions only. To get help/support, please email us at [contact@multicollab.com](mailto:contact@multicollab.com) or [Contact us](https://www.multicollab.com/contact/)
+This repository is not for support. Please use it for contributions only. To get help/support, please email us at [contact@multidots.com](mailto:contact@multidots.com) or [Contact us](https://www.multicollab.com/contact/)
 
 ## License
 

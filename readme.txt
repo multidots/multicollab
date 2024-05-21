@@ -4,10 +4,10 @@ Plugin URI: https://plugins.svn.wordpress.org/commenting-feature
 Author: Multicollab
 Author URI: https://www.multicollab.com/
 Contributors: dots, multicollab, lkraav
-Tags: Editorial, Collaboration, Comment, Editorial comments, Collaborative editing, Collaborative, Editing, Inline, Commentary, Editorial comment, Workflow, Google Docs
-Requires at least: 6.2
-Tested up to: 6.5
-Stable tag: 4.4.1
+Tags: Collaboration, Editorial comments, Collaborative editing, Editorial, Team Collaboration
+Requires at least: 6.3
+Tested up to: 6.5.3
+Stable tag: 4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -251,6 +251,10 @@ Have you had a look at our documentation?
 If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as quickly as possible!
 
 == Changelog ==
+
+= 4.5 - 20.05.2024 =
+* [Bug Fix] Fixed design issue: Background color of the activity center box is removed when the board is not in focus.
+* [Enhancement] Improved compatibility: Comment shortcode now works seamlessly with the insert-special-character plugin.
 
 = 4.4.1 - 25.04.2024 =
 * [Enhancement] Compatible with WordPress 6.5.
