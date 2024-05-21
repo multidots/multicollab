@@ -2115,8 +2115,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$feedback_api_url = CF_STORE_URL . '/wp-json/cf-free-user-feedback/v2/cf-free-user-feedback';
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
 		$response         = wp_remote_get( $query_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+		$response_body = isset( $response['body'] ) ? $response['body'] : '';
 
-		if ( 'success' === trim( $response['body'] ) ) {
+		if ( 'success' === trim( $response_body ) ) {
 			deactivate_plugins( COMMENTING_BLOCK_BASE );
 			echo 'success';
 		}

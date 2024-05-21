@@ -1086,6 +1086,19 @@
 			}
 		}
 	}
+	.cf-board-assigned-to + .boardTop{
+		.comment-header {
+			.comment-actions {
+				.comment-resolve {
+					.tooltip {
+						@media screen and (max-width: 1024px){
+							transform: translate(-55%, 85%);
+						}
+					}
+				}
+			}
+		}
+	}
 	.user-avatar {
 		border-radius: 50%;
 		overflow: hidden;

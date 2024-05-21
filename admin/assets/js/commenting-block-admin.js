@@ -2331,7 +2331,7 @@ var removeTag = function (elIDRemove) { // eslint-disable-line
     if ('core/table' === blockType) {
         removeTableTag(blockAttributes, clientId, elIDRemove)
     }
-    if ( blockType.startsWith( prefixAcf ) ) {
+    if ( blockType?.startsWith( prefixAcf ) ) {
         removeAcfTag(blockAttributes, clientId, elIDRemove)
     }
 
