@@ -246,7 +246,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		$plugin_usage_data = array(
 			'Admin Email'                => $user_email,
-			'Website URL'                => esc_url( get_home_url() ),
+			'Website URL'                => esc_url( get_site_url() ),
 			'WordPress Version'          => $wp_version,
 			'Gutenberg Version'          => $gutenberg_version,
 			'PHP Version'                => phpversion(),
@@ -269,7 +269,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			'opt_in'            => $opt_in,
 			'plan_name'         => $multicollab_plan,
 			'PLUGIN_USAGE_DATA' => wp_json_encode( $plugin_usage_data ),
-			'website_url'       => esc_url( get_home_url() ),
+			'website_url'       => esc_url( get_site_url() ),
 		);
 
 		$feedback_api_url = CF_STORE_URL . '/wp-json/edd-add-free-user-contact/v2/edd-add-free-user-contact';
@@ -296,7 +296,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		);
 		$posts_array = get_posts( $args );
 		if( empty( $posts_array ) ){
-			$wizard_redirect_link = home_url() . '/wp-admin/admin.php?page=editorial-comments&view=web-activity';
+			$wizard_redirect_link = site_url() . '/wp-admin/admin.php?page=editorial-comments&view=web-activity';
 		} else {
 			$wizard_redirect_link = $url = get_edit_post_link( $posts_array[0]->ID );;
 		}
@@ -409,7 +409,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		);
 
 		$data_insert_array = array(
-			'website_url'         => esc_url( get_home_url() ),
+			'website_url'         => esc_url( get_site_url() ),
 			'plugin_basic_data'   => wp_json_encode( $plugin_basic_data ),
 			'plugin_advance_data' => wp_json_encode( $plugin_advance_data ),
 			'opt_in'              => $cf_opt_in,
@@ -607,7 +607,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		);
 
 		add_submenu_page(
-			'',
+			' ',
 			__( 'Free Wizard', 'textdomain' ),
 			'Multicolab Wizard',
 			'manage_options',
@@ -1138,7 +1138,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 							'apiUrl'                 => rtrim( get_rest_url(), '/\\'), // No nedded to pass wp-json inside this function as it is already giving same path.
 							'ajaxUrl'                => admin_url( 'admin-ajax.php' ),
 							'currentUserID'          => get_current_user_id(),
-							'cf_site_url' => str_replace( $cf_protocol_remove,"",home_url() ),
+							'cf_site_url' => str_replace( $cf_protocol_remove,"",site_url() ),
 						)
 					);
 
@@ -2103,20 +2103,43 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$fs_feedback_message = filter_input( INPUT_POST, 'fs_feedback_message', FILTER_SANITIZE_SPECIAL_CHARS );
 		$current_date        = gmdate( 'Y-m-d' );
 
-		$data_insert_array = array(
-			'user_name'           => $current_user->display_name,
-			'user_email'          => $current_user->user_email,
-			'feedback_type'       => $subscription_option,
-			'feedback_message'    => $fs_feedback_message,
-			'feedback_date'       => $current_date,
-			'free_plugin_version' => COMMENTING_BLOCK_VERSION
-		);
+		$first_option_value = filter_input( INPUT_POST, 'first_option_value', FILTER_SANITIZE_SPECIAL_CHARS );
+		$free_plugin_deactivate_step3 = filter_input( INPUT_POST, 'free_plugin_deactivate_step3', FILTER_SANITIZE_SPECIAL_CHARS );
+
+		if( isset( $first_option_value ) && 'yes' === $first_option_value ) {
+			$data_insert_array = array(
+				'user_name'           => $current_user->display_name,
+				'user_email'          => $current_user->user_email,
+				'feedback_type'       => 'N/A',
+				'feedback_message'    => 'N/A',
+				'feedback_date'       => $current_date,
+				'free_plugin_version' => COMMENTING_BLOCK_VERSION,
+				'overall_experience'  => 'N/A',
+				'meet_your_needs'     => 'Yes'
+			);
+		} else {
+			$data_insert_array = array(
+				'user_name'           => $current_user->display_name,
+				'user_email'          => $current_user->user_email,
+				'feedback_type'       => $subscription_option,
+				'feedback_message'    => $fs_feedback_message,
+				'feedback_date'       => $current_date,
+				'free_plugin_version' => COMMENTING_BLOCK_VERSION,
+				'overall_experience'  => $free_plugin_deactivate_step3,
+				'meet_your_needs'     => 'No'
+			);
+		}
 
 		$feedback_api_url = CF_STORE_URL . '/wp-json/cf-free-user-feedback/v2/cf-free-user-feedback';
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
-		$response         = wp_remote_get( $query_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
-		$response_body = isset( $response['body'] ) ? $response['body'] : '';
 
+		if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
+			$response = vip_safe_wp_remote_get( $query_url);
+		} else {
+			$response = wp_remote_get( $query_url );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+		}
+		
+		$response_body = isset( $response['body'] ) ? $response['body'] : '';
 		if ( 'success' === trim( $response_body ) ) {
 			deactivate_plugins( COMMENTING_BLOCK_BASE );
 			echo 'success';

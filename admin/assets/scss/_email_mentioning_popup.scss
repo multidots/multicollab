@@ -10,7 +10,11 @@
 		.cf-assignable-list-popup {
 			ul {
 				li {
+					margin-bottom: 0;
 					.cf-user-info {
+						.cf-user-display-name {
+							margin: 0;
+						}
 						.cf-user-role {
 							display: block;
 							line-height: 18px;
@@ -58,6 +62,7 @@
 	.cf-system-user-email-list {
 		max-height: 300px;
 		overflow-y: scroll;
+		margin: 0;
 	}
 	.cf-mentioned-user-popup,
 	.cf-assignable-list-popup {
@@ -85,6 +90,7 @@
 				-ms-flex-align: center;
 				align-items: center;
 				padding: 9px 12px;
+				margin-bottom: 0;
 				-webkit-transition: all 0.3s ease-in-out;
 				-o-transition: all 0.3s ease-in-out;
 				transition: all 0.3s ease-in-out;

@@ -194,6 +194,7 @@
 		.comment-more-option-list {
 			li {
 				padding: 4.5px 9px;
+				margin: 0;
 				display: -webkit-box;
 				display: -ms-flexbox;
 				display: flex;
@@ -221,6 +222,7 @@
 				color: #191E23;
 				font-size: 12px;
 				margin-left: 4px;
+				line-height: inherit;
 			}
 		}
 		.cf-assign-to-inner {

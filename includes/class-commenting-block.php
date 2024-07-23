@@ -313,7 +313,7 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 				delete_option( 'cf_admin_notif' );
 				delete_option( 'cf_give_alert_message' );
 				delete_option( 'cf_suggestion_mode_option_name' );
-
+				
 				wp_redirect(
 					add_query_arg(
 						array(
@@ -323,6 +323,7 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 					)
 				);
 				exit();
+				
 			}
 		}
 		public static function cf_deactivate_notice() {      ?>

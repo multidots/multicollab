@@ -227,8 +227,18 @@
 					}
 					.user-commented-date {
 						display: block;
+						font-size: 12px;
+						line-height: 16px;
 						color: #50575E;
+						font-weight: 400;
+						position: relative;
 						font-weight: normal;
+						
+						span {
+							font-size: inherit;
+							line-height: inherit;
+						}
+
 						@media screen and (max-width:1200px){
 							font-size: 11px;
 						}

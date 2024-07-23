@@ -1,4 +1,15 @@
 .multicollab_body_class {
+	#cf-activity-center\:cf-activity-center {
+		.components-panel > .components-panel__body.is-opened {
+			padding: 0;
+			border-top: none;
+			.my-tab-panel {
+				.components-tab-panel__tabs {
+					border-bottom: 1px solid #e0e0e0;
+				}
+			}
+		}
+	}
 	.cf-share-comment {
 		&.js-cf-edit-comment {
 			&:focus {
@@ -96,6 +107,7 @@
 				font-weight: 500;
 				position: relative;
 				word-break: break-word;
+				text-transform: capitalize;
 			}
 			.user-display-name {
 				display: -webkit-box;
@@ -113,6 +125,11 @@
 				color: #50575E;
 				font-weight: 400;
 				position: relative;
+
+				span {
+					font-size: inherit;
+					line-height: inherit;
+				}
 			}
 			.user-commented-on {
 				blockquote {
@@ -226,6 +243,12 @@
 			line-height: 14px;
 			font-weight: 400;
 			word-break: break-word;
+
+			span {
+				font-size: inherit;
+				line-height: inherit;
+			}
+
 			.js-mentioned {
 				word-break: break-word;
 				display: inline-block;
@@ -434,6 +457,11 @@
 		align-items: center;
 		white-space: nowrap;
 		justify-content: center;
+		
+		span {
+			font-size: inherit;
+			line-height: inherit;
+		}
 		@media screen and (max-width:780px) {
 			width: 33.33%;
 		}
@@ -604,35 +632,33 @@
 			cursor: pointer;
 		}
 	}
-	.editor-styles-wrapper {
+	.comment-copied-tooltip {
+		&:not(:empty) {
+			position: absolute;
+			bottom: -3px;
+			left: -72px;
+			margin: 0;
+			padding: 10px 5px;
+			-ms-flex-line-pack: justify;
+			align-content: space-between;
+			font-size: 12px;
+			line-height: normal;
+			text-align: center;
+			width: 115px;
+			margin: 0;
+			z-index: 9;
+			justify-content: center;
+			background-color: #fff;
+			color: #191e23;
+		}
+		@media screen and (max-width:1024px) {
+			bottom: -2px;
+		}
+	}
+	.sg-board {
 		.comment-copied-tooltip {
 			&:not(:empty) {
-				position: absolute;
-				bottom: -3px;
-				left: -72px;
-				margin: 0;
-				padding: 10px 5px;
-				-ms-flex-line-pack: justify;
-				align-content: space-between;
-				font-size: 12px;
-				line-height: normal;
-				text-align: center;
-				width: 115px;
-				margin: 0;
-				z-index: 9;
-				justify-content: center;
-				background-color: #fff;
-				color: #191e23;
-			}
-			@media screen and (max-width:1024px) {
-				bottom: -2px;
-			}
-		}
-		.sg-board {
-			.comment-copied-tooltip {
-				&:not(:empty) {
-					left: -38px;
-				}
+				left: -38px;
 			}
 		}
 	}

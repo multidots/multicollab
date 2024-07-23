@@ -4,7 +4,7 @@ $request_post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT )
 $token =  filter_input( INPUT_GET, 'token', FILTER_SANITIZE_SPECIAL_CHARS ); 
 
 if(!$request_post_id || !$token){ // Check if token or post id are not present in the link.
-    wp_safe_redirect(home_url('/404-page/'));
+    wp_safe_redirect(site_url('/404-page/'));
     exit();
 }
 
