@@ -15,6 +15,12 @@
      *
      */
 
+    window.process = {
+        env: {
+            NODE_ENV: 'development',
+        },
+    };
+
     /*  Trigger to close sidebar on post editor focus */
     window.addEventListener('click', function (e) {
         if (jQuery('.edit-post-layout').hasClass('is-sidebar-opened')) {
@@ -413,134 +419,9 @@
     $(document).ready(function () {
 
         // Editor layout width changes sidebar multicollab btn click @author: Minal Diwan @since-3.3
-        $(document).on('click', '.interface-pinned-items .components-button,.edit-post-header-toolbar__inserter-toggle', function (e) {
-            setTimeout(function () {
-                var ediLayot = document.querySelector(".editor-styles-wrapper");
-                var cmntLayout = document.querySelector("#cf-comments-suggestions__parent");
-                var ediLayotWidth = ediLayot?.offsetWidth;
-                var cmntLyotWidth = cmntLayout?.offsetWidth;
-                var calcLyotWidth = ediLayotWidth - cmntLyotWidth;
-                var editSidebarchck = document.querySelector(".edit-post-layout");
-                var blockinsertchck = document.querySelector(".interface-interface-skeleton__body");
-                const firstChild = blockinsertchck?.firstElementChild;
-                const elid = $('#cf-span__comments').find('.cls-board-outer.focus').attr('id');
-                let topOfText;
-                function mdboardOffset() {
-                    setTimeout(function () {
-                        var totalOpenBoardsIds = document.querySelectorAll('.cls-board-outer.is-open');
-                        if (totalOpenBoardsIds.length >= 2) {
-
-                            let topOfTextSingleBoardSuggestion;
-                            let topOfTextSingleBoardComment;
-                            let SuggestionBoardOuterHeight;
-                            let singleBoardIdSuggestion;
-                            let singleBoardIdComment;
-                            let combineBoardId;
-                            let counter = 0;
-                            let FirstsingleBoardIdSuggestion;
-                            let FirstSuggestionBoardOuterHeight;
-
-                            for (var i = 0; i < totalOpenBoardsIds.length; ++i) {
-                                var singleBoardId = totalOpenBoardsIds[i].id;
-                                if (undefined !== singleBoardId) {
-                                    if (singleBoardId.match(/^el/m) === null) {
-                                        topOfTextSingleBoardSuggestion = $('#' + singleBoardId + '').offset().top;
-                                        singleBoardIdSuggestion = 'sg' + singleBoardId;
-                                        if (counter === 0) {
-                                            FirstsingleBoardIdSuggestion = 'sg' + singleBoardId;
-                                        }
-                                        combineBoardId = 'sg' + singleBoardId;
-                                        counter++;
-                                    } else {
-                                        topOfTextSingleBoardComment = $('[datatext="' + singleBoardId + '"]').offset().top;
-                                        singleBoardIdComment = singleBoardId;
-                                        combineBoardId = singleBoardId;
-                                    }
-                                }
-                                if (FirstsingleBoardIdSuggestion) {
-                                    FirstSuggestionBoardOuterHeight = document.querySelector('#' + FirstsingleBoardIdSuggestion)?.offsetHeight;
-                                }
-                                $('#' + combineBoardId).css('opacity', '1');
-                                $('#' + combineBoardId).addClass('is-open');
-                                $('#' + combineBoardId).addClass('focus onGoing');
-
-                            }
-
-                            if (document.querySelector('#' + singleBoardIdSuggestion)) {
-                                SuggestionBoardOuterHeight = document.querySelector('#' + singleBoardIdSuggestion).offsetHeight;
-                                $('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
-
-                                // Add floating board adjustment for multi-suggestion. @author: Rishi Shah @since: 3.4
-                                if (2 === counter && FirstsingleBoardIdSuggestion) {
-                                    $('#' + FirstsingleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
-                                    $('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion + FirstSuggestionBoardOuterHeight + 20 });
-                                }
-                                if (false === $('#' + singleBoardIdComment + ', .board').hasClass('fresh-board')) {
-                                    if (2 === counter && FirstsingleBoardIdSuggestion) {
-                                        $('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + FirstSuggestionBoardOuterHeight + 40 });
-                                    } else {
-                                        $('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + 20 });
-                                    }
-                                } else {
-                                    $('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion });
-                                }
-                                // Adding sg-format-class class on selected text. @author: Minal Diwan @since: 3.4
-                                //$('#' + singleBoardId).addClass('sg-format-class');
-                                var underlineAllAttr = document.querySelectorAll('[data-rich-text-format-boundary="true"]');
-                                if (underlineAllAttr) {
-                                    for (var singleElement = 0; singleElement < underlineAllAttr.length; ++singleElement) {
-                                        if (underlineAllAttr[singleElement].classList.contains('mdadded') || underlineAllAttr[singleElement].classList.contains('mdremoved')) {
-                                            if (singleBoardId !== underlineAllAttr[singleElement].id) {
-                                                jQuery('#' + underlineAllAttr[singleElement].id).attr('data-rich-text-format-boundary', false);
-                                            } else {
-                                                jQuery('#' + underlineAllAttr[singleElement].id).attr('data-rich-text-format-boundary', true);
-                                            }
-                                        } else if (underlineAllAttr[singleElement].parentNode.classList.contains('mdmodified')) {
-                                            if (singleBoardId !== underlineAllAttr[singleElement].parentNode.id) {
-                                                jQuery('#' + underlineAllAttr[singleElement].parentNode.id).children().attr('data-rich-text-format-boundary', false);
-                                            } else {
-                                                jQuery('#' + underlineAllAttr[singleElement].parentNode.id).children().attr('data-rich-text-format-boundary', true);
-                                            }
-                                        } else if (underlineAllAttr[singleElement].classList.contains('mdspan-comment')) {
-                                            var suggestionId = underlineAllAttr[singleElement].getAttribute('datatext');
-                                            if (singleBoardId !== suggestionId) {
-                                                jQuery('[datatext="' + suggestionId + '"]').attr('data-rich-text-format-boundary', false);
-                                            } else {
-                                                jQuery('[datatext="' + suggestionId + '"]').attr('data-rich-text-format-boundary', true);
-                                            }
-
-                                        }
-                                    }
-                                }
-                                scrollBoardToPosition(topOfTextSingleBoardSuggestion);
-                            }
-                        } else {
-                            if ($('#cf-span__comments').find('.cls-board-outer').hasClass('focus')) {
-                                if (elid && elid.match(/^el/m) !== null) {
-                                    topOfText = $('[datatext="' + elid + '"]').offset().top;
-                                } else {
-                                    let sid = $('#' + elid).attr('data-sid');
-                                    topOfText = $('[id="' + sid + '"]').offset()?.top;
-                                    if (!topOfText) {
-                                        topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
-                                    }
-                                }
-                                $('#cf-span__comments').find('.cls-board-outer.focus').offset({ top: topOfText });
-                                scrollBoardToPosition(topOfText);
-                            }
-                        }
-
-                    }, 800);
-                }
-                if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild) {
-                    mdboardOffset();
-                    document.querySelector(".is-root-container.block-editor-block-list__layout").style.width = calcLyotWidth + "px";
-                } else {
-                    mdboardOffset();
-                    document.querySelector(".is-root-container.block-editor-block-list__layout").style.width = calcLyotWidth + "px";
-                }
-            }, 100);
-        });
+        $(document).on('click', '.interface-pinned-items .components-button,.edit-post-header-toolbar__inserter-toggle,.editor-document-tools__inserter-toggle', function (e) {
+            setTimeout(handleEditorLayoutChange, 200);
+         });
 
         // Add loader on setting page loading. @author: Rishi @since-3.0
         $(".cf_settings_loader").delay(100).fadeOut("slow");
@@ -1131,7 +1012,6 @@
                         caretPos = range.endOffset;
 
                     }else if (range.commonAncestorContainer.ownerDocument.activeElement === editableDiv) {
-                        console.log('sel', sel.focusOffset);
                         caretPos = sel.focusOffset;
                     }
                 }
@@ -1499,6 +1379,18 @@
                                 mentioncounter = 0;  // Issue solved for add 2 mentions continues without space. @author: Rishi Shah.
                             }
                         })
+                    }
+                    // resolved git issue #920 @author: Nirav Soni / since 4.6.
+                    if (sel.rangeCount > 0) {
+                        var range = sel.getRangeAt(0);
+                        if (range.startContainer.nodeType === Node.TEXT_NODE) {
+                            var parent = range.startContainer.parentElement;
+                            if (parent.tagName.toLowerCase() === 'a' && parent.className === 'js-mentioned') {
+                                while (parent.firstChild) {
+                                    parent.removeChild(parent.firstChild);
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -2967,7 +2859,7 @@ function displaySuggestionBoards() {
 function createCommentNode() {
     var parentNode = document.createElement('div');
     parentNode.setAttribute("id", 'cf-comments-suggestions__parent');
-    var referenceNode = document.querySelector('.block-editor-writing-flow');
+    var referenceNode = document.querySelector('.edit-post-visual-editor');
     if (null !== referenceNode) {
         referenceNode.appendChild(parentNode);
         var commentNode = document.createElement('div');
@@ -3073,6 +2965,7 @@ function fetchBoardsCommonCode() {
     var singleBoardId = selectedText;
     let topOfTextSingleBoard;
     let singleBoardIdWithSg;
+   
     
     if(undefined !== singleBoardId ){
         if (singleBoardId.match(/^el/m) === null) {
@@ -3091,6 +2984,7 @@ function fetchBoardsCommonCode() {
 
             // Add active class on activity bar. @author: Rishi Shah @since: 3.4
             jQuery(`#cf-sg${singleBoardId}`).addClass('active');
+            
         } else {
             topOfTextSingleBoard = jQuery('[datatext="' + singleBoardId + '"]').offset().top;
             singleBoardIdWithSg = singleBoardId;
@@ -3165,4 +3059,144 @@ function nonTextNoticeMsg() {
             .setAttribute("style", "display:none");
         document.getElementById("cf-board__notice").innerHTML = "";
     }, 3000);
+}
+
+//Calculated layout width function @ Minal Diwan
+function mdboardOffset() {
+    const elid = jQuery('#cf-span__comments').find('.cls-board-outer.focus').attr('id');
+    setTimeout(function () {
+
+        const totalOpenBoardsIds = document.querySelectorAll('.cls-board-outer.focus');
+        let counter = 0;
+
+        if (totalOpenBoardsIds.length >= 2 ) {
+            let topOfTextSingleBoardSuggestion;
+            let topOfTextSingleBoardComment;
+            let SuggestionBoardOuterHeight;
+            let singleBoardIdSuggestion;
+            let singleBoardIdComment;
+            let combineBoardId;
+            let FirstsingleBoardIdSuggestion;
+            let FirstSuggestionBoardOuterHeight;
+
+            totalOpenBoardsIds.forEach(board => {
+                const singleBoardId = board.id;
+                if (singleBoardId) {
+                    if (singleBoardId.match(/^el/m) === null) {
+                        topOfTextSingleBoardSuggestion = jQuery('#' + singleBoardId).offset().top;
+                        singleBoardIdSuggestion = 'sg' + singleBoardId;
+                        if (counter === 0) {
+                            FirstsingleBoardIdSuggestion = 'sg' + singleBoardId;
+                        }
+                        combineBoardId = 'sg' + singleBoardId;
+                        counter++;
+                    } else {
+                        topOfTextSingleBoardComment = jQuery('[datatext="' + singleBoardId + '"]').offset().top;
+                        singleBoardIdComment = singleBoardId;
+                        combineBoardId = singleBoardId;
+                    }
+                    jQuery('#' + combineBoardId).css('opacity', '1').addClass('is-open focus onGoing');
+                }
+                if (FirstsingleBoardIdSuggestion) {
+                    FirstSuggestionBoardOuterHeight = document.querySelector('#' + FirstsingleBoardIdSuggestion)?.offsetHeight;
+                }
+            });
+
+            if (document.querySelector('#' + singleBoardIdSuggestion)) {
+                SuggestionBoardOuterHeight = document.querySelector('#' + singleBoardIdSuggestion).offsetHeight;
+                jQuery('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
+
+                // Add floating board adjustment for multi-suggestion. @author: Rishi Shah @since: 3.4
+                if (counter === 2 && FirstsingleBoardIdSuggestion) {
+                    jQuery('#' + FirstsingleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
+                    jQuery('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion + FirstSuggestionBoardOuterHeight + 20 });
+                }
+
+                if (!jQuery('#' + singleBoardIdComment + ', .board').hasClass('fresh-board')) {
+                    if (counter === 2 && FirstsingleBoardIdSuggestion) {
+                        jQuery('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + FirstSuggestionBoardOuterHeight + 40 });
+                    } else {
+                        jQuery('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + 20 });
+                    }
+                } else {
+                    jQuery('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion });
+                }
+
+                document.querySelectorAll('[data-rich-text-format-boundary="true"]').forEach(attr => {
+                    if (attr.classList.contains('mdadded') || attr.classList.contains('mdremoved')) {
+                        const id = attr.id;
+                        if (singleBoardId !== id) {
+                            jQuery('#' + id).attr('data-rich-text-format-boundary', false);
+                        } else {
+                            jQuery('#' + id).attr('data-rich-text-format-boundary', true);
+                        }
+                    } else if (attr.parentNode.classList.contains('mdmodified')) {
+                        const id = attr.parentNode.id;
+                        if (singleBoardId !== id) {
+                            jQuery('#' + id).children().attr('data-rich-text-format-boundary', false);
+                        } else {
+                            jQuery('#' + id).children().attr('data-rich-text-format-boundary', true);
+                        }
+                    } else if (attr.classList.contains('mdspan-comment')) {
+                        const suggestionId = attr.getAttribute('datatext');
+                        if (singleBoardId !== suggestionId) {
+                            jQuery('[datatext="' + suggestionId + '"]').attr('data-rich-text-format-boundary', false);
+                        } else {
+                            jQuery('[datatext="' + suggestionId + '"]').attr('data-rich-text-format-boundary', true);
+                        }
+                    }
+                });
+
+
+                scrollBoardToPosition(topOfTextSingleBoardSuggestion);
+            }
+        } else if (jQuery('#cf-span__comments').find('.cls-board-outer').hasClass('focus')) {
+            if (elid && elid.match(/^el/m) !== null) {
+                topOfText = jQuery('[datatext="' + elid + '"]').offset()?.top;
+            } else {
+                const sid = jQuery('#' + elid).attr('data-sid');
+                topOfText = jQuery('[id="' + sid + '"]').offset()?.top;
+                cfgetCustomAttribute().forEach(attrValue => {
+                    if (!topOfText && jQuery(`[${attrValue}="${sid}"]`).length > 0) {
+                        topOfText = jQuery(`[${attrValue}="${sid}"]`).offset()?.top;
+                    }
+                });
+            }
+            jQuery('#cf-span__comments').find('.cls-board-outer.focus').offset({ top: topOfText });
+            scrollBoardToPosition(topOfText);
+        }
+    }, 800);
+}
+
+function setContainerDimensions(width, maxWidth) {
+    const rootContainer = document.querySelector(".is-root-container");
+    if (rootContainer) {
+        rootContainer.style.width = width;
+        rootContainer.style.maxWidth = maxWidth;
+        if (window.innerWidth > 680) {
+            rootContainer.style.minWidth = "440px";
+        }
+    }
+}
+
+// Function to handle layout changes
+function handleEditorLayoutChange() {
+    const notCommentOncls = document.querySelector(".multicollab_body_class");
+    var checkCommntAval = !notCommentOncls?.classList?.contains('commentOn');
+    const ediLayot = document.querySelector(".editor-styles-wrapper");
+    const cmntLayout = document.querySelector("#cf-comments-suggestions__parent");
+    const ediLayotWidth = ediLayot?.offsetWidth;
+    const cmntLyotWidth = cmntLayout?.offsetWidth;
+    const calcLyotWidth = ediLayotWidth - cmntLyotWidth;
+    const editSidebarchck = document.querySelector(".edit-post-layout");
+    const blockinsertchck = document.querySelector(".interface-interface-skeleton__body");
+    const firstChild = blockinsertchck?.firstElementChild;
+    if (!checkCommntAval) {
+       if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild) {
+        mdboardOffset();
+        setContainerDimensions(`${calcLyotWidth}px`, "unset");
+       }
+    } else {
+        setContainerDimensions("auto", `${calcLyotWidth}px`);
+    }
 }

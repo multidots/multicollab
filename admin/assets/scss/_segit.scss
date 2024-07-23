@@ -199,10 +199,17 @@
 		}
 	}
 	.suggestion-comment-accpt-meta {
+		padding-left: 0;
+		margin-left: 0;
+		list-style: none;
+		margin: 0;
+
 		li {
 			display: inline-block;
 			margin-right: 10px;
 			position: relative;
+			margin-bottom: 0;
+			
 			@media screen and (max-width:1280px){
 				margin-right:5px;
 			}

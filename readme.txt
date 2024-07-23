@@ -6,8 +6,8 @@ Author URI: https://www.multicollab.com/
 Contributors: dots, multicollab, lkraav
 Tags: Collaboration, Editorial comments, Collaborative editing, Editorial, Team Collaboration
 Requires at least: 6.3
-Tested up to: 6.5.3
-Stable tag: 4.5
+Tested up to: 6.6
+Stable tag: 4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -252,7 +252,12 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 
 == Changelog ==
 
-= 4.5 - 20.05.2024 =
+= 4.6 - 23.07.2024 =
+* [Enhancements] Compatibility with WordPress 6.6.
+* [Enhancements] Upgraded React packages.
+* [Bug Fix] Minor fixes for @mention copy/paste features.
+
+= 4.5 - 21.05.2024 =
 * [Bug Fix] Fixed design issue: Background color of the activity center box is removed when the board is not in focus.
 * [Enhancement] Improved compatibility: Comment shortcode now works seamlessly with the insert-special-character plugin.
 

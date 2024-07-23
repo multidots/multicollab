@@ -32,6 +32,7 @@
 				padding: 12px;
 				cursor: pointer;
 				list-style: none;
+				margin: 0;
 				&:first-child {
 					border-radius: 10px 10px 0 0;
 					-webkit-border-radius: 10px 10px 0 0;
@@ -64,7 +65,7 @@
 				}
 				.admin-comments-holder,
 				.admin-suggestion-holder {
-					line-height: 13px;
+					line-height: 10px;
 					&::before{
 						content: "";
 						position: relative;

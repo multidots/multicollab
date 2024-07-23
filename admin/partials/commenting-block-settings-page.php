@@ -64,13 +64,13 @@ $cf_permissions             = get_option( 'cf_permissions' );
 						if ( ( 'dashboard' === $tab_number || empty( $tab_number ) || 'web-activity' === $view ) && 'post-activity' !== $view && 'intigrations' !== $view && 'settings' !== $view && 'integrations' !== $tab_number && 'license' !== $view ) {
 							echo esc_html( 'cf-tab-active' ); }
 						?>
-							"><a href="<?php echo esc_url( home_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=web-activity" class="cf-tab-item" data-id="cf-dashboard"><?php esc_html_e( 'Dashboard', 'content-collaboration-inline-commenting' ); ?></a></li>
+							"><a href="<?php echo esc_url( site_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=web-activity" class="cf-tab-item" data-id="cf-dashboard"><?php esc_html_e( 'Dashboard', 'content-collaboration-inline-commenting' ); ?></a></li>
 						<li class="
 									<?php
 									if ( 'post-activity' === $view ) {
 										echo esc_html( 'cf-tab-active' ); }
 									?>
-						"><a href="<?php echo esc_url( home_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=post-activity" class="cf-tab-item" data-id="cf-reports"><?php esc_html_e( 'Reports', 'content-collaboration-inline-commenting' ); ?></a></li>
+						"><a href="<?php echo esc_url( site_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=post-activity" class="cf-tab-item" data-id="cf-reports"><?php esc_html_e( 'Reports', 'content-collaboration-inline-commenting' ); ?></a></li>
 		
 						<?php if ( current_user_can( 'administrator' ) ) : ?>
 						<li class="
@@ -78,13 +78,13 @@ $cf_permissions             = get_option( 'cf_permissions' );
 							if ( 'settings' === $view ) {
 								echo esc_html( 'cf-tab-active' ); }
 							?>
-						"><a href="<?php echo esc_url( home_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=settings" class="cf-tab-item" data-id="cf-settings"><?php esc_html_e( 'Settings', 'content-collaboration-inline-commenting' ); ?></a></li>
+						"><a href="<?php echo esc_url( site_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=settings" class="cf-tab-item" data-id="cf-settings"><?php esc_html_e( 'Settings', 'content-collaboration-inline-commenting' ); ?></a></li>
 						<li class="
 							<?php
 							if ( ! empty( $tab_number ) || 'intigrations' === $view ) {
 								echo esc_html( 'cf-tab-active' ); }
 							?>
-						"><a href="<?php echo esc_url( home_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=intigrations" class="cf-tab-item" data-id="cf-roles-slack-integration"><?php esc_html_e( 'Integrations', 'content-collaboration-inline-commenting' ); ?></a></li>
+						"><a href="<?php echo esc_url( site_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=intigrations" class="cf-tab-item" data-id="cf-roles-slack-integration"><?php esc_html_e( 'Integrations', 'content-collaboration-inline-commenting' ); ?></a></li>
 						<?php endif; ?>
 
 					</ul>
