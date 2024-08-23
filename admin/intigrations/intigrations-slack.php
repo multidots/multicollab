@@ -45,7 +45,7 @@
 					<select name="channels" id="cf_slack_channels">
 						<option value=""><?php esc_html_e( 'Please select a channel', 'content-collaboration-inline-commenting' ); ?></option>
 						<?php
-						if ( ! empty( $cf_slack_channels ) ) {
+						if ((is_array($cf_slack_channels) && !empty($cf_slack_channels)) || (is_object($cf_slack_channels) && !empty((array)$cf_slack_channels))) {
 							$lock_image = COMMENTING_BLOCK_URL . 'admin/assets/images/lock-icon.svg';
 							$channel_id = get_option( 'channel_id' );
 							foreach ( $cf_slack_channels as $channel ) {

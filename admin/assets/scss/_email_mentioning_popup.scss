@@ -123,36 +123,36 @@
 			}
 		}
 	}
-	.editor-styles-wrapper {
-		.cf-mentioned-user-popup,
-		.cf-assignable-list-popup {
-			ul {
-				padding: 0;
-				margin: 0;
-				&:focus-visible {
-					outline: none;
-				}
-				li {
-					.cf-user-info {
-						.cf-user-display-name {
-							color: #000000;
-							font-size: 14px;
-							font-weight: 500;
-							line-height: 17px;
-							text-transform: capitalize;
-							margin: 0px;
-						}
+	
+	.cf-mentioned-user-popup,
+	.cf-assignable-list-popup {
+		ul {
+			padding: 0;
+			margin: 0;
+			&:focus-visible {
+				outline: none;
+			}
+			li {
+				.cf-user-info {
+					.cf-user-display-name {
+						color: #000000;
+						font-size: 14px;
+						font-weight: 500;
+						line-height: 17px;
+						text-transform: capitalize;
+						margin: 0px;
 					}
 				}
 			}
 		}
-		.cls-board-outer {
-			.dashicons,
-			.dashicons-before {
-				font-family: dashicons;
-			}
+	}
+	.cls-board-outer {
+		.dashicons,
+		.dashicons-before {
+			font-family: dashicons;
 		}
 	}
+
 	.cf-user-info {
 		mark {
 			background-color: transparent;

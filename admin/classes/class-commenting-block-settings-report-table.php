@@ -99,23 +99,26 @@ class MC_List_Table_Report extends WP_List_Table {
 					<select name="m_report" id="filter-by-date">
 						<option selected="selected" value="0"> <?php esc_html_e( 'All dates', 'content-collaboration-inline-commenting' ); ?> </option>
 						<?php
-						foreach ( $months as $single_month ) {
-							$month       = $single_month->post_month;
-							$year        = $single_month->post_year;
-							$month_value = $year . '0' . $month;
-							$month_title = date_i18n( 'F', mktime( 0, 0, 0, $month, 10 ) );
-							?>
-							<option value="<?php esc_attr_e( $month_value ); ?>" 
-															 <?php
-																if ( 'post-activity' === $view ) {
-																	selected( $m, $month_value );
-																}
-																?>
-																>
-								<?php esc_html_e( $month_title . ' ' . $year ); ?>
-							</option>
+						if ((is_array($months) && !empty($months)) || (is_object($months) && !empty((array)$months))) {
+							foreach ( $months as $single_month ) {
+								$month       = $single_month->post_month;
+								$year        = $single_month->post_year;
+								$month_value = $year . '0' . $month;
+								$month_title = date_i18n( 'F', mktime( 0, 0, 0, $month, 10 ) );
+								?>
+								<option value="<?php esc_attr_e( $month_value ); ?>" 
+																 <?php
+																	if ( 'post-activity' === $view ) {
+																		selected( $m, $month_value );
+																	}
+																	?>
+																	>
+									<?php esc_html_e( $month_title . ' ' . $year ); ?>
+								</option>
 
-						<?php } ?>
+							<?php 
+							}
+						} ?>
 					</select>
 					<?php
 					$args = array(
@@ -130,7 +133,7 @@ class MC_List_Table_Report extends WP_List_Table {
 					<select name="cpt_report" class="filter-allpagepost-report">
 						<option value=""><?php esc_html_e( 'All pages/posts', 'content-collaboration-inline-commenting' ); ?> </option>
 						<?php
-						if ( ! empty( $post_types ) ) {
+						if ((is_array($post_types) && !empty($post_types)) || (is_object($post_types) && !empty((array)$post_types))) {
 							foreach ( $post_types as $key => $post_types_values ) {
 								if ( 'attachment' !== $key ) {
 									?>
@@ -144,8 +147,10 @@ class MC_List_Table_Report extends WP_List_Table {
 					<select name="cat" class="filter-allcategory">
 						<option value=""><?php esc_html_e( 'All categories', 'content-collaboration-inline-commenting' ); ?></option>
 						<?php
-						foreach ( $categories as $category ) {
-							echo '<option value="' . esc_attr( $category->term_id ) . '" ' . selected( $cat_filter, $category->term_id ) . '>' . esc_html( $category->name ) . '</option>';
+						if ((is_array($categories) && !empty($categories)) || (is_object($categories) && !empty((array)$categories))) {
+							foreach ( $categories as $category ) {
+								echo '<option value="' . esc_attr( $category->term_id ) . '" ' . selected( $cat_filter, $category->term_id ) . '>' . esc_html( $category->name ) . '</option>';
+							}
 						}
 						?>
 					</select>

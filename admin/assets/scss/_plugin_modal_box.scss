@@ -1,0 +1,207 @@
+.multicollab_body_class {
+    .cf-plugin_modal {
+        * {
+            box-sizing: border-box;
+        }
+        display: inline-block;
+        width: 100%;
+        visibility: hidden;
+        opacity: 0;
+        position: fixed;
+        z-index: 99999;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        overflow: auto;
+        padding: 40px 20px 50px;
+
+        &.cf-active-modal {
+            visibility: visible;
+            opacity: 1;
+
+            @media screen and (max-width: 860px) {
+                padding: 10px 0px;
+            }
+        }
+       
+        .cf-pro-modal-dialog {
+            z-index: 99999;
+            width: 100%;
+            background-color: #fff;
+            max-width: 620px;
+            margin: 60px auto;
+            border-radius: 15px;
+            padding: 205px 20px 30px;
+            visibility: hidden;
+            opacity: 0;
+            position: relative;
+            -webkit-transition: all ease-in-out 0.3s;
+            -o-transition: all ease-in-out 0.3s;
+            transition: all ease-in-out 0.3s;
+
+            @media screen and (max-width: 767px) {
+                max-width: 350px;
+                margin: 40px auto;
+               padding: 40px 25px 25px;
+            }
+
+            .cf-pro-modal-header {
+                position: relative;
+    
+                img {
+                    width: calc(100% + 44px);
+                    max-width: calc(100% + 44px);
+                    position: absolute;
+                    top: -263px;
+                    left: -22px;
+                    
+                    @media screen and (max-width: 767px) {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        &.cf-active-modal {
+            .cf-pro-modal-dialog {
+                visibility: visible;
+                opacity: 1;
+                -webkit-animation-name: afrsmModalEffect;
+                animation-name: afrsmModalEffect;
+                -webkit-animation-duration: 0.3s;
+                animation-duration: 0.3s;
+            }
+        }
+        .cf-pro-modal-dialog-outer {
+            width: 100%;
+            height: 100%;
+            display: table;
+        }
+        
+        .cf-pro-modal-dialog-wrapper {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        
+        .modal-close-btn {
+            position: absolute;
+            top: -198px;
+            right: -8px;      
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 16px;
+            padding: 7px 0;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            color: #fff;
+            background-color: transparent;
+            border-radius: 50%;
+            -webkit-transition: all .3s linear;
+            -o-transition: all .3s linear;
+            transition: all .3s linear;
+
+            @media screen and (max-width: 767px) {
+                top: -34px;
+                right: -18px;
+                font-size: 20px;
+                line-height: 13px;
+                padding: 7px 0;
+                width: 26px;
+                height: 26px;
+                color: #000;
+            }
+        }
+        
+        .cf-pro-modal-title {
+            margin: 0 0 20px;
+            font-size: 21px;
+            line-height: normal;
+            font-weight: 700;
+        }
+        
+        
+        .cf-pro-modal-body {
+            p {
+                font-size: 16px;
+                line-height: 24px;
+                margin: 0 0 14px 0;
+                color: #000;
+            }
+            ul {
+                margin: 15px 0 10px 10px;
+            
+                li {
+                    font-size: 16px;
+                    line-height: 22px;
+                    color: #000;
+                    padding: 0 0 15px 16px;
+                    position: relative;
+                    margin: 0;
+                
+                    &::before {
+                        content: '';
+                        background-color: #4b1bce;
+                        display: inline-block;
+                        font-size: 0px;
+                        width: 6px;
+                        margin-left: 0em;
+                        position: absolute;
+                        left: 0px;
+                        top: 7px;
+                        height: 6px;
+                        border-radius: 50%;
+                    }
+
+                    &:last-child {
+                        padding-bottom: 0;
+                    }
+                }
+            }
+        } 
+        .cf-pro-modal-footer {
+            text-align: center;
+            margin: 25px 0 0;
+        
+            a.cf-plugin_upgradenow__btn {
+                padding: 15px 50px 15px;
+                color: #1f2b24;
+                border-radius: 10px;
+                text-decoration: none;
+                background-color: #ffc107;
+                border: 2px solid #ffc107;
+                font-size: 20px;
+                line-height: 26px;
+                font-weight: 700;
+                white-space: normal;
+                cursor: pointer;
+                display: inline-block;
+                -webkit-transition: all .3s linear;
+                -o-transition: all .3s linear;
+                transition: all .3s linear;
+                outline: none;
+                box-shadow: none;
+            
+                &:hover {
+                    background-color: transparent;
+                }
+            }
+            
+        }
+        
+        
+        
+        
+        @keyframes afrsmModalEffect {
+            0% {
+                top: -8%;
+            }
+        
+            100% {
+                top: 0;
+            }
+        }
+    } 
+}
+

@@ -46,12 +46,14 @@ class Commenting_block_Activator {
         $editable_roles = apply_filters( 'editable_roles', $all_roles );
         $initial_count  = $wpdb->get_var( "SELECT COUNT(option_id) FROM $wpdb->options WHERE option_name = 'cf_permissions'" );// db call ok; no-cache ok.
         if( 0 === (int) $initial_count ){ //phpcs:ignore
-            foreach ( $editable_roles as $key => $role ) {
-                if ( 1 === (int) isset( $role['capabilities']['edit_posts'] ) || 1 === (int) isset( $role['capabilities']['edit_pages'] ) ) { // Removed phpcs:ignore by Rishi Shah.
-                    $default_data[ $key ]['add_comment']         = 1;
-                    $default_data[ $key ]['resolved_comment']    = 1;
-                    $default_data[ $key ]['resolved_suggestion'] = 1;
+            if ((is_array($editable_roles) && !empty($editable_roles)) || (is_object($editable_roles) && !empty((array)$editable_roles))) {
+                foreach ( $editable_roles as $key => $role ) {
+                    if ( 1 === (int) isset( $role['capabilities']['edit_posts'] ) || 1 === (int) isset( $role['capabilities']['edit_pages'] ) ) { // Removed phpcs:ignore by Rishi Shah.
+                        $default_data[ $key ]['add_comment']         = 1;
+                        $default_data[ $key ]['resolved_comment']    = 1;
+                        $default_data[ $key ]['resolved_suggestion'] = 1;
 
+                    }
                 }
             }
             update_option( 'cf_permissions', $default_data );

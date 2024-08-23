@@ -145,6 +145,22 @@
 			}
 		}
 	}
+	&:not(.commentOn) {
+		.editor-styles-wrapper {
+			.block-editor-block-list__layout {
+				&.is-root-container {
+					> .wp-block.alignfull {
+						margin-right: calc(min(1.8rem, 8vw)* -1);
+						margin-left: calc(min(1.8rem, 8vw)* -1);
+					}
+					.wc-block-reviews-by-product.alignfull {
+						margin-right: calc(min(1.8rem, 8vw)* -1);
+						margin-left: calc(min(1.8rem, 8vw)* -1);
+					}
+				}
+			}
+		}
+	}
 }
 body {
 	&:not(.hide-sg) {

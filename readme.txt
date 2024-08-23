@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Collaboration, Editorial comments, Collaborative editing, Editorial, Team Collaboration
 Requires at least: 6.3
 Tested up to: 6.6
-Stable tag: 4.6
+Stable tag: 4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -251,6 +251,10 @@ Have you had a look at our documentation?
 If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as quickly as possible!
 
 == Changelog ==
+
+= 4.7 - 23.08.2024 =
+* [Enhancements] Fully compatible with PHP 8.2, ensuring smooth operation with the latest PHP version.
+* [Bug Fix] Improved UI design and resolved layout issues for a more streamlined user experience.
 
 = 4.6 - 23.07.2024 =
 * [Enhancements] Compatibility with WordPress 6.6.

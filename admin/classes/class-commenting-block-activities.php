@@ -15,6 +15,13 @@ if ( ! defined( 'WPINC' ) ) {
 class Commenting_Block_Activities extends Commenting_block_Functions {
 
 	/**
+     * Property to store activities.
+     *
+     * @var array
+     */
+    private $cf_activities = array();
+
+	/**
 	 * Get the latest activities of comments.
 	 *
 	 * @return array Activity data.
@@ -91,7 +98,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 
 		// The Loop
 		$activities_data = array();
-		if ( $result ) {
+		if ((is_array($result) && !empty($result)) || (is_object($result) && !empty((array)$result))) {
 
 			foreach ( $result as $item ) {
 				$current_post_id = $item->ID;
@@ -125,70 +132,74 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 				$activity_text  = '';
 				$activity_limit = 3;
 				$activity_count = 0;
-				foreach ( $prepareDataTable as $comments ) {
-					foreach ( $comments as $item ) {
-						++$activity_count;
+				if ((is_array($prepareDataTable) && !empty($prepareDataTable)) || (is_object($prepareDataTable) && !empty((array)$prepareDataTable))) {
+					foreach ( $prepareDataTable as $comments ) {
+						if ((is_array($comments) && !empty($comments)) || (is_object($comments) && !empty((array)$comments))) {
+							foreach ( $comments as $item ) {
+								++$activity_count;
 
-						if ( $activity_limit < $activity_count ) {
-							break;
-						}
-						$status = '';
-						switch ( $item['status'] ) {
-							case 'commented on':
-								$status = 'New Comment';
-								break;
-							case 'replied on':
-							case 'reply':
-								$status = 'replied';
-								break;
-							case 'deleted comment of':
-								$status = 'deleted';
-								break;
-							case 'resolved thread':
-								$status = 'Marked as Resolved';
-								break;
-							case 'accept':
-							case 'reject':
-								$status = 'Resolved';
-								break;
-							case 'edited':
-								$status = 'edited';
-								break;
-							default:
-								$status = $item['status'];
-						}
-						$max_str_length = 150;
+								if ( $activity_limit < $activity_count ) {
+									break;
+								}
+								$status = '';
+								switch ( $item['status'] ) {
+									case 'commented on':
+										$status = 'New Comment';
+										break;
+									case 'replied on':
+									case 'reply':
+										$status = 'replied';
+										break;
+									case 'deleted comment of':
+										$status = 'deleted';
+										break;
+									case 'resolved thread':
+										$status = 'Marked as Resolved';
+										break;
+									case 'accept':
+									case 'reject':
+										$status = 'Resolved';
+										break;
+									case 'edited':
+										$status = 'edited';
+										break;
+									default:
+										$status = $item['status'];
+								}
+								$max_str_length = 150;
 
-						if ( isset( $item['title'] ) ) {
-							$item['commented_on_text'] = ( strlen( $item['title'] ) < $max_str_length ) ? $item['title'] : substr( $item['title'], 0, $max_str_length ) . '...';
-						}
+								if ( isset( $item['title'] ) ) {
+									$item['commented_on_text'] = ( strlen( $item['title'] ) < $max_str_length ) ? $item['title'] : substr( $item['title'], 0, $max_str_length ) . '...';
+								}
 
-						// For PHP8 Warning in Activity Snapshot - code added by meet
-						// Fixed : Time not Display for Accept/Reject Sugg. in Reports - Modified by /@author Meet Mehta/@since VIP Plan
-						$dateTimeConvert = isset( $item['dtTime'] ) ? $item['dtTime'] : '';
-						$dateTimeConvert = date_i18n( 'g:i a F j, Y', strtotime( $dateTimeConvert ) );
-						$dtTime          = "<time class='user-commented-date'>" . $dateTimeConvert . '</time>';
-						// Last updated.
+								// For PHP8 Warning in Activity Snapshot - code added by meet
+								// Fixed : Time not Display for Accept/Reject Sugg. in Reports - Modified by /@author Meet Mehta/@since VIP Plan
+								$dateTimeConvert = isset( $item['dtTime'] ) ? $item['dtTime'] : '';
+								$dateTimeConvert = date_i18n( 'g:i a F j, Y', strtotime( $dateTimeConvert ) );
+								$dtTime          = "<time class='user-commented-date'>" . $dateTimeConvert . '</time>';
+								// Last updated.
 
-						if ( isset( $item['thread'] ) ) {
-							$thread = ( strlen( wp_strip_all_tags( $item['thread'] ) ) < $max_str_length ) ? $item['thread'] : substr( $item['thread'], 0, $max_str_length ) . '...';
-						} else {
-							$thread = '';
-						}
-							$collaborators[]       = "<span class='tbl-user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' />" . esc_html( $item['username'] ) . '</span>';
-							$single_collaborator   = "<div class='user-data-header'> <div class='user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' /></div><div class='user-display-name'><span class='user-name'>" . esc_html( $item['username'] ) . "<span class='tooltip'>" . esc_html( $item['userrole'] ) . '</span> </span>' . $dtTime . '</div></div>';
-							$activity_text        .= "<div class='single-activity'><span class='single-activity-status'>" . sprintf( __( '%s By', 'content-collaboration-inline-commenting' ), __( $status, 'content-collaboration-inline-commenting' ) ) . '</span>' . $single_collaborator;
-							$commented_text_class  = empty( $item['commented_on_text'] ) ? 'empty' : '';
-							$commented_text_class .= isset( $item['mode'] ) ? ' ' . $item['mode'] : '';
-							$commented_text_class .= isset( $item['blockType'] ) ? $item['blockType'] : '';
-							$activity_text        .= "<div class='tbl-user-activity-left'><blockquote class='tbl-user-commented-icon$commented_text_class'>" . wp_kses( $item['commented_on_text'], wp_kses_allowed_html( 'post' ) ) . '</blockquote>';
-						if ( 'deleted comment of' === $item['status'] ) {
-							$activity_text .= "<span class='tbl-user-comment'> <del>" . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</del></span>';
-						} else {
-							$activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</span>';
-						}
+								if ( isset( $item['thread'] ) ) {
+									$thread = ( strlen( wp_strip_all_tags( $item['thread'] ) ) < $max_str_length ) ? $item['thread'] : substr( $item['thread'], 0, $max_str_length ) . '...';
+								} else {
+									$thread = '';
+								}
+									$collaborators[]       = "<span class='tbl-user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' />" . esc_html( $item['username'] ) . '</span>';
+									$single_collaborator   = "<div class='user-data-header'> <div class='user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' /></div><div class='user-display-name'><span class='user-name'>" . esc_html( $item['username'] ) . "<span class='tooltip'>" . esc_html( $item['userrole'] ) . '</span> </span>' . $dtTime . '</div></div>';
+									$activity_text        .= "<div class='single-activity'><span class='single-activity-status'>" . sprintf( __( '%s By', 'content-collaboration-inline-commenting' ), __( $status, 'content-collaboration-inline-commenting' ) ) . '</span>' . $single_collaborator;
+									$commented_text_class  = empty( $item['commented_on_text'] ) ? 'empty' : '';
+									$commented_text_class .= isset( $item['mode'] ) ? ' ' . $item['mode'] : '';
+									$commented_text_class .= isset( $item['blockType'] ) ? $item['blockType'] : '';
+									$activity_text        .= "<div class='tbl-user-activity-left'><blockquote class='tbl-user-commented-icon$commented_text_class'>" . wp_kses( $item['commented_on_text'], wp_kses_allowed_html( 'post' ) ) . '</blockquote>';
+								if ( 'deleted comment of' === $item['status'] ) {
+									$activity_text .= "<span class='tbl-user-comment'> <del>" . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</del></span>';
+								} else {
+									$activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</span>';
+								}
 
-						$activity_text .= '</div></div>';
+								$activity_text .= '</div></div>';
+							}
+						}
 					}
 				}
 				$prepare_data['activities'] = $activity_text;
@@ -265,7 +276,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 
 		// The Loop
 		$activities_data = array();
-		if ( $result ) {
+		if ((is_array($result) && !empty($result)) || (is_object($result) && !empty((array)$result))) {
 
 			foreach ( $result as $item ) {
 				$current_post_id = $item->ID;
@@ -299,68 +310,72 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 				$activity_text          = '';
 				$activity_limit         = 3;
 				$activity_count         = 0;
-				foreach ( $prepareDataTable as $comments ) {
-					foreach ( $comments as $item ) {
-						++$activity_count;
+				if ((is_array($prepareDataTable) && !empty($prepareDataTable)) || (is_object($prepareDataTable) && !empty((array)$prepareDataTable))) {	
+					foreach ( $prepareDataTable as $comments ) {
+						if ((is_array($comments) && !empty($comments)) || (is_object($comments) && !empty((array)$comments))) {
+							foreach ( $comments as $item ) {
+								++$activity_count;
 
-						if ( $activity_limit < $activity_count ) {
-							break;
-						}
-						$status = '';
-						switch ( $item['status'] ) {
-							case 'commented on':
-								$status = 'New Comment';
-								break;
-							case 'replied on':
-							case 'reply':
-								$status = 'Replied';
-								break;
-							case 'deleted comment of':
-								$status = 'Deleted';
-								break;
-							case 'resolved thread':
-								$status = 'Marked as Resolved';
-								break;
-							case 'accept':
-							case 'reject':
-								$status = 'Resolved';
-								break;
-							case 'edited':
-								$status = 'Edited';
-								break;
-							default:
-								$status = $item['status'];
-						}
-						$max_str_length = 150;
-						if ( isset( $item['title'] ) ) {
-							$item['commented_on_text'] = ( strlen( $item['title'] ) < $max_str_length ) ? $item['title'] : substr( $item['title'], 0, $max_str_length ) . '...';
-						}
-						// For PHP8 Warning in Activity Snapshot - code added by meet
-						// Fixed : Time not Display for Accept/Reject Sugg. in Reports - Modified by /@author Meet Mehta/@since VIP Plan
-						$dateTimeConvert = isset( $item['dtTime'] ) ? $item['dtTime'] : '';
-						$dateTimeConvert = date_i18n( 'g:i a F j, Y', strtotime( $dateTimeConvert ) );
-						$dtTime          = "<time class='user-commented-date'>" . $dateTimeConvert . '</time>';
-						// Last updated.
+								if ( $activity_limit < $activity_count ) {
+									break;
+								}
+								$status = '';
+								switch ( $item['status'] ) {
+									case 'commented on':
+										$status = 'New Comment';
+										break;
+									case 'replied on':
+									case 'reply':
+										$status = 'Replied';
+										break;
+									case 'deleted comment of':
+										$status = 'Deleted';
+										break;
+									case 'resolved thread':
+										$status = 'Marked as Resolved';
+										break;
+									case 'accept':
+									case 'reject':
+										$status = 'Resolved';
+										break;
+									case 'edited':
+										$status = 'Edited';
+										break;
+									default:
+										$status = $item['status'];
+								}
+								$max_str_length = 150;
+								if ( isset( $item['title'] ) ) {
+									$item['commented_on_text'] = ( strlen( $item['title'] ) < $max_str_length ) ? $item['title'] : substr( $item['title'], 0, $max_str_length ) . '...';
+								}
+								// For PHP8 Warning in Activity Snapshot - code added by meet
+								// Fixed : Time not Display for Accept/Reject Sugg. in Reports - Modified by /@author Meet Mehta/@since VIP Plan
+								$dateTimeConvert = isset( $item['dtTime'] ) ? $item['dtTime'] : '';
+								$dateTimeConvert = date_i18n( 'g:i a F j, Y', strtotime( $dateTimeConvert ) );
+								$dtTime          = "<time class='user-commented-date'>" . $dateTimeConvert . '</time>';
+								// Last updated.
 
-						if ( isset( $item['thread'] ) ) {
-							$thread = ( strlen( wp_strip_all_tags( $item['thread'] ) ) < $max_str_length ) ? $item['thread'] : substr( $item['thread'], 0, $max_str_length ) . '...';
-						} else {
-							$thread = '';
-						}
-							$collaborators[]       = "<span class='tbl-user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' />" . esc_html( $item['username'] ) . '</span>';
-							$single_collaborator   = "<div class='user-data-header'> <div class='user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' /></div><div class='user-display-name'><span class='user-name'>" . esc_html( $item['username'] ) . "<span class='tooltip'>" . esc_html( $item['userrole'] ) . '</span> </span>' . $dtTime . '</div></div>';
-							$activity_text        .= "<div class='single-activity'><span class='single-activity-status'>" . sprintf( __( '%s By', 'content-collaboration-inline-commenting' ), __( $status, 'content-collaboration-inline-commenting' ) ) . '</span>' . $single_collaborator;
-							$commented_text_class  = empty( $item['commented_on_text'] ) ? 'empty' : '';
-							$commented_text_class .= isset( $item['mode'] ) ? ' ' . $item['mode'] : '';
-							$commented_text_class .= isset( $item['blockType'] ) ? $item['blockType'] : '';
-							$activity_text        .= "<div class='tbl-user-activity-left'><blockquote class='tbl-user-commented-icon$commented_text_class'>" . wp_kses( $item['commented_on_text'], wp_kses_allowed_html( 'post' ) ) . '</blockquote>';
-						if ( 'deleted comment of' === $item['status'] ) {
-							$activity_text .= "<span class='tbl-user-comment'> <del>" . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</del></span>';
-						} else {
-							$activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</span>';
-						}
+								if ( isset( $item['thread'] ) ) {
+									$thread = ( strlen( wp_strip_all_tags( $item['thread'] ) ) < $max_str_length ) ? $item['thread'] : substr( $item['thread'], 0, $max_str_length ) . '...';
+								} else {
+									$thread = '';
+								}
+									$collaborators[]       = "<span class='tbl-user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' />" . esc_html( $item['username'] ) . '</span>';
+									$single_collaborator   = "<div class='user-data-header'> <div class='user-avatar'><img src=" . esc_url( $item['profileURL'] ) . "  alt='" . esc_attr( $item['username'] ) . "' /></div><div class='user-display-name'><span class='user-name'>" . esc_html( $item['username'] ) . "<span class='tooltip'>" . esc_html( $item['userrole'] ) . '</span> </span>' . $dtTime . '</div></div>';
+									$activity_text        .= "<div class='single-activity'><span class='single-activity-status'>" . sprintf( __( '%s By', 'content-collaboration-inline-commenting' ), __( $status, 'content-collaboration-inline-commenting' ) ) . '</span>' . $single_collaborator;
+									$commented_text_class  = empty( $item['commented_on_text'] ) ? 'empty' : '';
+									$commented_text_class .= isset( $item['mode'] ) ? ' ' . $item['mode'] : '';
+									$commented_text_class .= isset( $item['blockType'] ) ? $item['blockType'] : '';
+									$activity_text        .= "<div class='tbl-user-activity-left'><blockquote class='tbl-user-commented-icon$commented_text_class'>" . wp_kses( $item['commented_on_text'], wp_kses_allowed_html( 'post' ) ) . '</blockquote>';
+								if ( 'deleted comment of' === $item['status'] ) {
+									$activity_text .= "<span class='tbl-user-comment'> <del>" . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</del></span>';
+								} else {
+									$activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</span>';
+								}
 
-						$activity_text .= '</div></div>';
+								$activity_text .= '</div></div>';
+							}
+						}
 					}
 				}
 				$prepare_data['activities'] = $activity_text;
@@ -477,21 +492,24 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		global $wpdb;
 		$autodraft_ids = array();
 		$meta_key      = '_autodraft_ids';
+		$autodrat_id_str = '';
 		$autodrafts_id = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT pm.meta_value as ids  FROM $wpdb->postmeta as pm
 			LEFT JOIN $wpdb->posts as p ON pm.post_id = p.ID
 			WHERE pm.meta_key =  %s",$meta_key)//phpcs:ignore
 		); // db call ok; no-cache ok
-		foreach ( $autodrafts_id as $id ) {
-			$ids = ( maybe_unserialize( $id->ids ) );
-			if ( isset( $ids ) && ! empty( $ids ) ) {
-				foreach ( $ids as $id ) {
-					array_push( $autodraft_ids, $id );
+		if ((is_array($autodrafts_id) && !empty($autodrafts_id)) || (is_object($autodrafts_id) && !empty((array)$autodrafts_id))) {
+			foreach ( $autodrafts_id as $id ) {
+				$ids = ( maybe_unserialize( $id->ids ) );
+				if ( isset( $ids ) && ! empty( $ids ) ) {
+					foreach ( $ids as $id ) {
+						array_push( $autodraft_ids, $id );
+					}
 				}
 			}
+			$autodrat_id_str = "'" . implode( "', '", $autodraft_ids ) . "'";
 		}
-		$autodrat_id_str = "'" . implode( "', '", $autodraft_ids ) . "'";
 
 		return $autodrat_id_str;
 	}
@@ -537,42 +555,44 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 			$post_ids = $wpdb->get_col(  //phpcs:ignore 
 				$wpdb->prepare( "SELECT DISTINCT p.ID FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as pm ON pm.post_id = p.ID WHERE pm.meta_key LIKE '_el%' $where_suggestions" )); //phpcs:ignore
 
-			foreach ( $post_ids as $post_id ) {
+			if ((is_array($post_ids) && !empty($post_ids)) || (is_object($post_ids) && !empty((array)$post_ids))) {
+				foreach ( $post_ids as $post_id ) {
 
-				$total_suggestions = 0;
-				if ( $suggestions_included ) {
-					$suggestions_meta = get_post_meta( $post_id, '_sb_suggestion_history', true );
-					$suggestions_meta = json_decode( $suggestions_meta );
+					$total_suggestions = 0;
+					if ( $suggestions_included ) {
+						$suggestions_meta = get_post_meta( $post_id, '_sb_suggestion_history', true );
+						$suggestions_meta = json_decode( $suggestions_meta );
 
-					$total_suggestions = count( (array) $suggestions_meta );
-				}
-				$total_comments = (int) $wpdb->get_var(
-					$wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key LIKE '_el%' AND post_id = %d", $post_id )
-				); // db call ok; no-cache ok
+						$total_suggestions = count( (array) $suggestions_meta );
+					}
+					$total_comments = (int) $wpdb->get_var(
+						$wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key LIKE '_el%' AND post_id = %d", $post_id )
+					); // db call ok; no-cache ok
 
-				$total_should_be                       = $total_suggestions + $total_comments;
-				$data[ $post_id ]['total_comments']    = $total_comments;
-				$data[ $post_id ]['total_suggestions'] = $total_suggestions;
-				$data[ $post_id ]['total_should_be']   = $total_should_be;
+					$total_should_be                       = $total_suggestions + $total_comments;
+					$data[ $post_id ]['total_comments']    = $total_comments;
+					$data[ $post_id ]['total_suggestions'] = $total_suggestions;
+					$data[ $post_id ]['total_should_be']   = $total_should_be;
 
-				$th_exists = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT COUNT(*) FROM $wpdb->postmeta
-						WHERE meta_key LIKE 'th_%'
-						  AND LENGTH ( meta_value ) = 10
-						  AND post_id = %d",
-						$post_id
-					)
-				); // db call ok; no-cache ok
+					$th_exists = (int) $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT COUNT(*) FROM $wpdb->postmeta
+							WHERE meta_key LIKE 'th_%'
+							  AND LENGTH ( meta_value ) = 10
+							  AND post_id = %d",
+							$post_id
+						)
+					); // db call ok; no-cache ok
 
-				$data[ $post_id ]['th_exists'] = $th_exists;
+					$data[ $post_id ]['th_exists'] = $th_exists;
 
-				if ( $th_exists >= $total_should_be ) {
-					$data[ $post_id ]['status'] = 'done';
-				} else {
-					$data[ $post_id ]['status'] = 'pending';
+					if ( $th_exists >= $total_should_be ) {
+						$data[ $post_id ]['status'] = 'done';
+					} else {
+						$data[ $post_id ]['status'] = 'pending';
 
-					$pending[] = $post_id;
+						$pending[] = $post_id;
+					}
 				}
 			}
 			$pending = implode( ',', $pending );
@@ -585,9 +605,11 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 				$suggestions_meta = json_decode( $suggestions_meta );
 
 				// Create/Update 'th_*' metas for suggestions.
-				foreach ( $suggestions_meta as $uid => $item ) {
-					$timestamp = $item[0]->updated_at;
-					update_post_meta( $post_id, 'th_' . $uid, $timestamp );
+				if ((is_array($suggestions_meta) && !empty($suggestions_meta)) || (is_object($suggestions_meta) && !empty((array)$suggestions_meta))) {
+					foreach ( $suggestions_meta as $uid => $item ) {
+						$timestamp = $item[0]->updated_at;
+						update_post_meta( $post_id, 'th_' . $uid, $timestamp );
+					}
 				}
 			}
 
@@ -595,10 +617,13 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 			$all_comments = $wpdb->get_results(
 				$wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE meta_key LIKE '_el%' AND post_id = %d", $post_id )
 			); // db call ok; no-cache ok
-			foreach ( $all_comments as $item ) {
-				$key  = 'th' . $item->meta_key;
-				$data = maybe_unserialize( $item->meta_value );
-				update_post_meta( $post_id, $key, $data['updated_at'] );
+
+			if ((is_array($all_comments) && !empty($all_comments)) || (is_object($all_comments) && !empty((array)$all_comments))) {
+				foreach ( $all_comments as $item ) {
+					$key  = 'th' . $item->meta_key;
+					$data = maybe_unserialize( $item->meta_value );
+					update_post_meta( $post_id, $key, $data['updated_at'] );
+				}
 			}
 			$migrated_post = $post_id;
 		}
