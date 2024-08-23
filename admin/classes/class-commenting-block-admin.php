@@ -358,7 +358,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$posts_counts    = count( $all_posts_id );
 		$comments_counts = 0;
 
-		if ( $all_posts_id ) {
+		if ((is_array($all_posts_id) && !empty($all_posts_id)) || (is_object($all_posts_id) && !empty((array)$all_posts_id))) {
 
 			foreach ( $all_posts_id as $id ) {
 
@@ -438,6 +438,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		if ( 'plugins.php' === $pagenow ) {
 			require_once COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-admin-deactive-free.php'; // phpcs:ignore
 		}
+
 	}
 
 
@@ -632,6 +633,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		// Add setting page file.
 		require_once COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-settings-page.php'; // Removed phpcs:ignore by Rishi Shah.
+		require_once COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-admin-upgrade-premium.php';
 	}
 
 	/**
@@ -728,6 +730,16 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * @param string        $update Status of the update.
 	 */
 	public function cf_post_status_changes( $post_ID, $post ) {
+
+		if ( 'revision' === $post->post_type ) {
+            // Get the parent post ID from the revision
+            $parent_post_ID = wp_is_post_revision( $post_ID );
+            if ( $parent_post_ID ) {
+            	$post_ID = $parent_post_ID;
+                
+            }
+        }
+        
 		$metas      = get_post_meta( $post_ID );
 		$p_content  = is_object( $post ) ? $post->post_content : $post;
 		$p_link     = get_edit_post_link( $post_ID );
@@ -755,17 +767,18 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			foreach ( $deleted_drafts as $el => $timestamps ) {
 				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
+				if ((is_array($timestamps) && !empty($timestamps)) || (is_object($timestamps) && !empty((array)$timestamps))) {
+					foreach ( $timestamps as $key => $t ) {
 
-				foreach ( $timestamps as $key => $t ) {
-
-					$local_time        = current_datetime();
-					$deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
-					// Update the timestamp of deleted comment.
-					$previous_comment = !empty( $prev_state['comments'][ $t ] ) ? $prev_state['comments'][ $t ] : '';
-					if ( ! empty( $previous_comment ) ) {
-						$prev_state['comments'][ $deleted_timestamp ]               = $previous_comment;
-						$prev_state['comments'][ $deleted_timestamp ]['status']     = 'deleted';
-						$prev_state['comments'][ $deleted_timestamp ]['created_at'] = $t;
+						$local_time        = current_datetime();
+						$deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
+						// Update the timestamp of deleted comment.
+						$previous_comment = !empty( $prev_state['comments'][ $t ] ) ? $prev_state['comments'][ $t ] : '';
+						if ( ! empty( $previous_comment ) ) {
+							$prev_state['comments'][ $deleted_timestamp ]               = $previous_comment;
+							$prev_state['comments'][ $deleted_timestamp ]['status']     = 'deleted';
+							$prev_state['comments'][ $deleted_timestamp ]['created_at'] = $t;
+						}
 					}
 				}
 				$prev_state['updated_at'] = $current_timestamp;
@@ -797,9 +810,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					$prev_state   = $metas[ $el ][0];
 					$prev_state   = maybe_unserialize( $prev_state );
 					$new_comments = array();
-					foreach ( $drafts as $d ) {
-						$prev_state['comments'][ $d ]['status'] = 'publish';
-						$new_comments[]                         = $d;
+					if ((is_array($drafts) && !empty($drafts)) || (is_object($drafts) && !empty((array)$drafts))) {
+						foreach ( $drafts as $d ) {
+							$prev_state['comments'][ $d ]['status'] = 'publish';
+							$new_comments[]                         = $d;
+						}
 					}
 
 					$prev_state['updated_at'] = $current_timestamp;
@@ -815,26 +830,27 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			foreach ( $edited_drafts as $el => $timestamps ) {
 				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
+				if ((is_array($timestamps) && !empty($timestamps)) || (is_object($timestamps) && !empty((array)$timestamps))) {
+					foreach ( $timestamps as $t ) {
+						$edited_draft      = $prev_state['comments'][ $t ]['draft_edits']['thread'];
+						$edited_attachment = $prev_state['comments'][ $t ]['draft_edits']['attachmentText'];
+						if ( ! empty( $edited_draft ) ) {
+							$prev_state['comments'][ $t ]['thread'] = $edited_draft;
+						}
+						if ( ! empty( $edited_attachment ) ) {
+							$prev_state['comments'][ $t ]['attachmentText'] = $edited_attachment;
 
-				foreach ( $timestamps as $t ) {
-					$edited_draft      = $prev_state['comments'][ $t ]['draft_edits']['thread'];
-					$edited_attachment = $prev_state['comments'][ $t ]['draft_edits']['attachmentText'];
-					if ( ! empty( $edited_draft ) ) {
-						$prev_state['comments'][ $t ]['thread'] = $edited_draft;
+						} else {
+							$prev_state['comments'][ $t ]['attachmentText'] = '';
+						}
+
+						// Change status to publish.
+						$prev_state['comments'][ $t ]['status'] = 'publish';
+
+						// Remove comment from edited_draft.
+						unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
+						unset( $prev_state['comments'][ $t ]['draft_edits']['attachmentText'] );
 					}
-					if ( ! empty( $edited_attachment ) ) {
-						$prev_state['comments'][ $t ]['attachmentText'] = $edited_attachment;
-
-					} else {
-						$prev_state['comments'][ $t ]['attachmentText'] = '';
-					}
-
-					// Change status to publish.
-					$prev_state['comments'][ $t ]['status'] = 'publish';
-
-					// Remove comment from edited_draft.
-					unset( $prev_state['comments'][ $t ]['draft_edits']['thread'] );
-					unset( $prev_state['comments'][ $t ]['draft_edits']['attachmentText'] );
 				}
 				$prev_state['updated_at'] = $current_timestamp;
 				update_post_meta( $post_ID, $el, $prev_state );
@@ -863,8 +879,10 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		if ( ! empty( $current_drafts['deleted'] ) ) {
 			foreach ( $current_drafts['deleted'] as $key => $value ) {
 				$comment = get_post_meta( $post_ID, $key, true );
-				foreach ( $value as $delete_key ) {
-					unset( $comment['comments'][ $delete_key ] );
+				if ((is_array($value) && !empty($value)) || (is_object($value) && !empty((array)$value))) {
+					foreach ( $value as $delete_key ) {
+						unset( $comment['comments'][ $delete_key ] );
+					}
 				}
 				update_post_meta( $post_ID, $key, $comment );
 			}
@@ -885,9 +903,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				$prev_state   = $metas[ $el ][0];
 				$prev_state   = maybe_unserialize( $prev_state );
 				$new_comments = array();
-				foreach ( $drafts as $d ) {
-					$prev_state['comments'][ $d ]['status'] = 'publish';
-					$new_comments[]                         = $d;
+				if ((is_array($drafts) && !empty($drafts)) || (is_object($drafts) && !empty((array)$drafts))) {
+					foreach ( $drafts as $d ) {
+						$prev_state['comments'][ $d ]['status'] = 'publish';
+						$new_comments[]                         = $d;
+					}
 				}
 
 				// Send email to the commented recipients.
@@ -1147,7 +1167,10 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		wp_enqueue_script( 'cf-select2-js', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/select2.min.js', array( 'jquery' ), wp_rand(), true );
 
 		wp_enqueue_script( $this->plugin_name . '-general', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin-general.js', array(), wp_rand(), false );
-
+        
+		if ( isset($_GET['page']) && $_GET['page'] === 'editorial-comments' && isset($_GET['view']) && $_GET['view'] === 'settings' || isset($_GET['view']) && $_GET['view'] === 'intigrations' ) {
+			wp_enqueue_script( $this->plugin_name . '-upgrade-pro-modal', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin-upgrade-pro-modal.js', array(), wp_rand(), false );
+		}			
 	}
 
 	/**
@@ -1413,14 +1436,16 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 						$prev_state = $metas[ $el ][0];
 						$prev_state = maybe_unserialize( $prev_state );
 						// Deleteing comments if users delete comments at the same moment.
-						foreach ( $timestamps as $t ) {
-							$t       = intval( $t );
-							$get_key = array_search( $t, $current_drafts['comments'][ $el ], true );
+						if ((is_array($timestamps) && !empty($timestamps)) || (is_object($timestamps) && !empty((array)$timestamps))) {
+							foreach ( $timestamps as $t ) {
+								$t       = intval( $t );
+								$get_key = array_search( $t, $current_drafts['comments'][ $el ], true );
 
-							if ( $get_key !== false ) {
-								unset( $current_drafts['comments'][ $el ][ $get_key ] );
-								unset( $current_drafts['deleted'][ $el ][ $get_key ] );
-								unset( $prev_state['comments'][ $t ] );
+								if ( $get_key !== false ) {
+									unset( $current_drafts['comments'][ $el ][ $get_key ] );
+									unset( $current_drafts['deleted'][ $el ][ $get_key ] );
+									unset( $prev_state['comments'][ $t ] );
+								}
 							}
 						}
 						$metas[ $el ][0] = maybe_serialize( $prev_state );
@@ -1668,7 +1693,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	public function cf_update_meta() {
 		$current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
 		$autoDraft_ids          = filter_input(INPUT_POST, 'data', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY); //phpcs:ignore
-		update_post_meta( $current_post_id, '_autodraft_ids', $autoDraft_ids );
+		// resolved issue regarding not allowed to edit the _autodraft_ids custom field.
+		if(empty($autoDraft_ids) || $autoDraft_ids === null){
+			update_post_meta( $current_post_id, '_autodraft_ids', array() );
+		}else{
+			update_post_meta( $current_post_id, '_autodraft_ids', $autoDraft_ids );
+		}
 		wp_die();
 	}
 	public function register_post_meta_autodraft_id() {
@@ -1797,45 +1827,47 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$time_format     = get_option( 'time_format' );
 		$login_user      = wp_get_current_user();
 
-		foreach ( $comments as $t => $val ) {
-			if ( isset( $val['editedTime'] ) ) {
-				$val['editedTime'] = $val['editedTime'];
-			} else {
-				$val['editedTime'] = '';
-			}
-			$user_info       = get_userdata( $val['userData'] );
-			$username        = isset( $user_info->display_name ) ? $user_info->display_name : '';
-			$user_role       = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
-			$profile_url     = get_avatar_url( isset( $user_info->user_email ) ? $user_info->user_email : '' );
-			$thread          = $val['thread'];
-			$cstatus         = isset( $val['status'] ) ? $val['status'] : '';
-			$cstatus         = isset( $val['status'] ) ? $val['status'] : '';
-			$edited_draft    = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
-			$updatedTime     = $val['editedTime'];
-			$assigned_text   = $val['assigned'];
-			$editedTimestamp = isset( $val['editedTimestamp'] ) ? $val['editedTimestamp'] : '';
-			$attachment_text = isset( $val['attachmentText'] ) ? $val['attachmentText'] : '';
-			$date            = gmdate( $time_format . ' ' . $date_format, $t );
+		if ((is_array($comments) && !empty($comments)) || (is_object($comments) && !empty((array)$comments))) {
+			foreach ( $comments as $t => $val ) {
+				if ( isset( $val['editedTime'] ) ) {
+					$val['editedTime'] = $val['editedTime'];
+				} else {
+					$val['editedTime'] = '';
+				}
+				$user_info       = get_userdata( $val['userData'] );
+				$username        = isset( $user_info->display_name ) ? $user_info->display_name : '';
+				$user_role       = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
+				$profile_url     = get_avatar_url( isset( $user_info->user_email ) ? $user_info->user_email : '' );
+				$thread          = $val['thread'];
+				$cstatus         = isset( $val['status'] ) ? $val['status'] : '';
+				$cstatus         = isset( $val['status'] ) ? $val['status'] : '';
+				$edited_draft    = isset( $val['draft_edits']['thread'] ) ? $val['draft_edits']['thread'] : '';
+				$updatedTime     = $val['editedTime'];
+				$assigned_text   = $val['assigned'];
+				$editedTimestamp = isset( $val['editedTimestamp'] ) ? $val['editedTimestamp'] : '';
+				$attachment_text = isset( $val['attachmentText'] ) ? $val['attachmentText'] : '';
+				$date            = gmdate( $time_format . ' ' . $date_format, $t );
 
-			if ( 'deleted' !== $cstatus ) {
-				array_push(
-					$userDetails,
-					array(
-						'userName'        => $username,
-						'userRole'        => $user_role,
-						'profileURL'      => $profile_url,
-						'dtTime'          => $date,
-						'thread'          => $thread,
-						'userData'        => $val['userData'],
-						'status'          => $cstatus,
-						'timestamp'       => $t,
-						'editedDraft'     => $edited_draft,
-						'updatedTime'     => $updatedTime,
-						'editedTimestamp' => $editedTimestamp,
-						'assignedText'    => $assigned_text,
-						'attachmentText'  => $attachment_text,
-					)
-				);
+				if ( 'deleted' !== $cstatus ) {
+					array_push(
+						$userDetails,
+						array(
+							'userName'        => $username,
+							'userRole'        => $user_role,
+							'profileURL'      => $profile_url,
+							'dtTime'          => $date,
+							'thread'          => $thread,
+							'userData'        => $val['userData'],
+							'status'          => $cstatus,
+							'timestamp'       => $t,
+							'editedDraft'     => $edited_draft,
+							'updatedTime'     => $updatedTime,
+							'editedTimestamp' => $editedTimestamp,
+							'assignedText'    => $assigned_text,
+							'attachmentText'  => $attachment_text,
+						)
+					);
+				}
 			}
 		}
 
@@ -1904,26 +1936,28 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			$system_users = $users->get_results();
 			set_transient( 'cf_system_users', $system_users, 30 * MINUTE_IN_SECONDS );
 		}
-		foreach ( $system_users as $user ) {
-			$needToSortArray = $this->cf_get_reorder_user_role( $user->roles );
-			$user->roles     = $needToSortArray;
-			if ( $user->has_cap( 'edit_posts' ) || $user->has_cap( 'edit_pages' ) ) {
-				$email_list[] = array(
-					'ID'                => $user->ID,
-					'role'              => implode( ', ', $user->roles ),
-					'display_name'      => $user->display_name,
-					'full_name'         => $user->display_name,
-					'first_name'        => $user->first_name,
-					'user_email'        => $user->user_email,
-					'avatar'            => get_avatar_url(
-						$user->ID,
-						array(
-							'size' => '24',
-						)
-					),
-					'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
-					'edit_others_posts' => isset( $user->allcaps['edit_others_posts'] ) ? $user->allcaps['edit_others_posts'] : '',
-				);
+		if ((is_array($system_users) && !empty($system_users)) || (is_object($system_users) && !empty((array)$system_users))) {
+			foreach ( $system_users as $user ) {
+				$needToSortArray = $this->cf_get_reorder_user_role( $user->roles );
+				$user->roles     = $needToSortArray;
+				if ( $user->has_cap( 'edit_posts' ) || $user->has_cap( 'edit_pages' ) ) {
+					$email_list[] = array(
+						'ID'                => $user->ID,
+						'role'              => implode( ', ', $user->roles ),
+						'display_name'      => $user->display_name,
+						'full_name'         => $user->display_name,
+						'first_name'        => $user->first_name,
+						'user_email'        => $user->user_email,
+						'avatar'            => get_avatar_url(
+							$user->ID,
+							array(
+								'size' => '24',
+							)
+						),
+						'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
+						'edit_others_posts' => isset( $user->allcaps['edit_others_posts'] ) ? $user->allcaps['edit_others_posts'] : '',
+					);
+				}
 			}
 		}
 
@@ -1968,26 +2002,28 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			// Fetch out matched user's email.
 			$email_list   = array();
 			$system_users = $users->get_results();
-			foreach ( $system_users as $user ) {
-				$needToSortArray = $this->cf_get_reorder_user_role( $user->roles );
-				$user->roles     = $needToSortArray;
-				if ( $user->has_cap( 'edit_posts' ) || $user->has_cap( 'edit_pages' ) ) {
-					$email_list[] = array(
-						'ID'                => $user->ID,
-						'role'              => implode( ', ', $user->roles ),
-						'display_name'      => $user->display_name,
-						'full_name'         => $user->display_name,
-						'first_name'        => $user->first_name,
-						'user_email'        => $user->user_email,
-						'avatar'            => get_avatar_url(
-							$user->ID,
-							array(
-								'size' => '24',
-							)
-						),
-						'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
-						'edit_others_posts' => isset( $user->allcaps['edit_others_posts'] ) ? $user->allcaps['edit_others_posts'] : '',
-					);
+			if ((is_array($system_users) && !empty($system_users)) || (is_object($system_users) && !empty((array)$system_users))) {
+				foreach ( $system_users as $user ) {
+					$needToSortArray = $this->cf_get_reorder_user_role( $user->roles );
+					$user->roles     = $needToSortArray;
+					if ( $user->has_cap( 'edit_posts' ) || $user->has_cap( 'edit_pages' ) ) {
+						$email_list[] = array(
+							'ID'                => $user->ID,
+							'role'              => implode( ', ', $user->roles ),
+							'display_name'      => $user->display_name,
+							'full_name'         => $user->display_name,
+							'first_name'        => $user->first_name,
+							'user_email'        => $user->user_email,
+							'avatar'            => get_avatar_url(
+								$user->ID,
+								array(
+									'size' => '24',
+								)
+							),
+							'profile'           => admin_url( "/user-edit.php?user_id  ={ {$user->ID}}" ),
+							'edit_others_posts' => isset( $user->allcaps['edit_others_posts'] ) ? $user->allcaps['edit_others_posts'] : '',
+						);
+					}
 				}
 			}
 			$response = $email_list;
@@ -2098,6 +2134,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		$current_user        = wp_get_current_user();
 		$subscription_option = filter_input( INPUT_POST, 'subscription_option', FILTER_SANITIZE_SPECIAL_CHARS );
+		$subscription_option = $subscription_option ?? '';
 		$subscription_option = str_replace( '&#39;', "'", $subscription_option );
 
 		$fs_feedback_message = filter_input( INPUT_POST, 'fs_feedback_message', FILTER_SANITIZE_SPECIAL_CHARS );

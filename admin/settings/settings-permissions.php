@@ -23,22 +23,24 @@ delete_option( 'cf_permissions' );
 			<th><b><?php esc_html_e( 'Disable Comments', 'content-collaboration-inline-commenting' ); ?></b></th>	
 		</tr>
 		<?php
+		if ((is_array($data) && !empty($data)) || (is_object($data) && !empty((array)$data))) {
+			foreach ( $data as $key => $value ) {
 
-		foreach ( $data as $key => $value ) {
+					$disabled = (1 == isset($value['role']['capabilities']['edit_posts']) || 1 == isset($value['role']['capabilities']['edit_pages']) )? '':'disabled'; //phpcs:ignore
+					$options             = get_option( 'cf_permissions' );
+					$disabled_comment = ("1" == isset($options[$key]["hide_comment"])) ? 'disabled' : '';//phpcs:ignore
+					$disabled_suggestion = ('1'== isset($options[$key]["hide_suggestion"])) ? 'disabled' : '';//phpcs:ignore             
+				?>
+				<tr><td><?php echo esc_html( translate_user_role( $value['role']['name'] ) ); ?> </td>
+				
+				<td><input type='checkbox' name='<?php echo esc_attr($key)?>[add_comment]' id ='cf_add_comment' <?php echo '1' ==  isset($options[$key]['add_comment']) ? 'checked' : '' ?>  value='1'  <?php echo esc_attr($disabled.$disabled_comment);?>/></td> <?php  //phpcs:ignore ?>
+				<td><input type='checkbox' name='<?php echo esc_attr($key)?>[resolved_comment]'  id ='cf_resolved_comment' <?php echo '1' == isset($options[$key]['resolved_comment']) ? 'checked' : '' ?>  value='1' <?php echo esc_attr($disabled.$disabled_comment);?>/></td> <?php  //phpcs:ignore ?>
+				<td><input type='checkbox' name='<?php echo esc_attr($key)?>[hide_comment]'  id ='cf_hide_comment' <?php echo '1' ==isset( $options[$key]['hide_comment']) ? 'checked' : '' ?>  value='1' <?php echo esc_attr($disabled); ?>/></td> <?php  //phpcs:ignore ?>	
+				</tr>
 
-				$disabled = (1 == isset($value['role']['capabilities']['edit_posts']) || 1 == isset($value['role']['capabilities']['edit_pages']) )? '':'disabled'; //phpcs:ignore
-				$options             = get_option( 'cf_permissions' );
-				$disabled_comment = ("1" == isset($options[$key]["hide_comment"])) ? 'disabled' : '';//phpcs:ignore
-				$disabled_suggestion = ('1'== isset($options[$key]["hide_suggestion"])) ? 'disabled' : '';//phpcs:ignore             
-			?>
-			<tr><td><?php echo esc_html( translate_user_role( $value['role']['name'] ) ); ?> </td>
-			
-			<td><input type='checkbox' name='<?php echo esc_attr($key)?>[add_comment]' id ='cf_add_comment' <?php echo '1' ==  isset($options[$key]['add_comment']) ? 'checked' : '' ?>  value='1'  <?php echo esc_attr($disabled.$disabled_comment);?>/></td> <?php  //phpcs:ignore ?>
-			<td><input type='checkbox' name='<?php echo esc_attr($key)?>[resolved_comment]'  id ='cf_resolved_comment' <?php echo '1' == isset($options[$key]['resolved_comment']) ? 'checked' : '' ?>  value='1' <?php echo esc_attr($disabled.$disabled_comment);?>/></td> <?php  //phpcs:ignore ?>
-			<td><input type='checkbox' name='<?php echo esc_attr($key)?>[hide_comment]'  id ='cf_hide_comment' <?php echo '1' ==isset( $options[$key]['hide_comment']) ? 'checked' : '' ?>  value='1' <?php echo esc_attr($disabled); ?>/></td> <?php  //phpcs:ignore ?>	
-		</tr>
-
-	<?php } ?>
+			<?php 
+			}
+		} ?>
 	</table> 
 	<div class="cf-submit-button-settings"><?php submit_button( __( 'Save', 'content-collaboration-inline-commenting' ) ); ?>
 	</div>

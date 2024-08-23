@@ -15,6 +15,7 @@ jQuery(function ($) {
     });
 });
 
+
 //set cookies
 function setCookieGeneral(name, value, minutes) {
     var expires = "";
@@ -25,4 +26,3 @@ function setCookieGeneral(name, value, minutes) {
     }
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
-

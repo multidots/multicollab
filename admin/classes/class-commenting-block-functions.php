@@ -29,19 +29,20 @@ class Commenting_block_Functions {
 		$metas       = empty( $metas ) ? get_post_meta( $post_ID ) : $metas;
 		$content     = get_post( $post_ID )->post_content;
 		$total_count = $open_counts = $resolved_counts = 0;
+		if ((is_array($metas) && !empty($metas)) || (is_object($metas) && !empty((array)$metas))) {
+			foreach ( $metas as $key => $val ) {
+				if ( substr( $key, 0, 3 ) === '_el' ) {
+					$key = str_replace( '_el', '', $key );
+					if ( strpos( $val[0], 'resolved_timestamp' ) === false && strpos( $content, strval( $key ) ) !== false ) {
+						$open_counts ++;
+					}
+					if ( strpos( $val[0], 'resolved' ) !== false ) {
+						$resolved_counts ++;
+					}
 
-		foreach ( $metas as $key => $val ) {
-			if ( substr( $key, 0, 3 ) === '_el' ) {
-				$key = str_replace( '_el', '', $key );
-				if ( strpos( $val[0], 'resolved_timestamp' ) === false && strpos( $content, strval( $key ) ) !== false ) {
-					$open_counts ++;
-				}
-				if ( strpos( $val[0], 'resolved' ) !== false ) {
-					$resolved_counts ++;
-				}
-
-				if ( strpos( $val[0], 'publish' ) !== false && ( strpos( $val[0], 'resolved' ) !== false || strpos( $content, strval( $key ) ) !== false ) ) {
-					$total_count ++;
+					if ( strpos( $val[0], 'publish' ) !== false && ( strpos( $val[0], 'resolved' ) !== false || strpos( $content, strval( $key ) ) !== false ) ) {
+						$total_count ++;
+					}
 				}
 			}
 		}
@@ -81,7 +82,7 @@ class Commenting_block_Functions {
 			'total_counts'    => 0,
 		);
 
-		if ( is_array( $suggestions_meta ) ) {
+		if ( is_array( $suggestions_meta ) && !empty($suggestions_meta) ) {
 			$accepted_suggestions = 0;
 			$rejected_suggestions = 0;
 			$open_suggestions     = 0;
@@ -131,97 +132,100 @@ class Commenting_block_Functions {
 		$dtTime      = '';
 
 		$total_comments = 0;
+		if ((is_array($all_meta) && !empty($all_meta)) || (is_object($all_meta) && !empty((array)$all_meta))) {
+			foreach ( $all_meta as $dataid => $v ) {
 
-		foreach ( $all_meta as $dataid => $v ) {
+				if ( strpos( $dataid, '_el' ) === 0 ) {
+					$dataid            = str_replace( '_', '', $dataid );
+					$v                 = maybe_unserialize( $v[0] );
+					$comments          = ! empty( $v['comments'] ) ? $v['comments'] : array();
+					$commented_on_text = isset( $v['commentedOnText'] ) ? $v['commentedOnText'] : '';
+					$resolved          = isset( $v['resolved'] ) ? $v['resolved'] : 'false';
+					$blockType         = isset( $v['blockType'] ) ? '-' . $v['blockType'] : '';
 
-			if ( strpos( $dataid, '_el' ) === 0 ) {
-				$dataid            = str_replace( '_', '', $dataid );
-				$v                 = maybe_unserialize( $v[0] );
-				$comments          = ! empty( $v['comments'] ) ? $v['comments'] : array();
-				$commented_on_text = isset( $v['commentedOnText'] ) ? $v['commentedOnText'] : '';
-				$resolved          = isset( $v['resolved'] ) ? $v['resolved'] : 'false';
-				$blockType         = isset( $v['blockType'] ) ? '-' . $v['blockType'] : '';
+					if ( 'true' === $resolved ) {
+						$udata = isset( $v['resolved_by'] ) ? $v['resolved_by'] : 0;
+						if ( ! array_key_exists( $udata, $userData ) ) {
+							$user_info = get_userdata( $udata );
 
-				if ( 'true' === $resolved ) {
-					$udata = isset( $v['resolved_by'] ) ? $v['resolved_by'] : 0;
-					if ( ! array_key_exists( $udata, $userData ) ) {
-						$user_info = get_userdata( $udata );
+							$userData[ $udata ]['username']   = $username = $user_info->display_name;
+							$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
+							$userData[ $udata ]['userrole']   = $userrole = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
+						} else {
+							$username    = $userData[ $udata ]['username'];
+							$profile_url = $userData[ $udata ]['profileURL'];
+							$userrole    = $userData[ $udata ]['userrole'];
+						}
 
-						$userData[ $udata ]['username']   = $username = $user_info->display_name;
-						$userData[ $udata ]['profileURL'] = $profile_url = get_avatar_url( $user_info->user_email );
-						$userData[ $udata ]['userrole']   = $userrole = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
-					} else {
-						$username    = $userData[ $udata ]['username'];
-						$profile_url = $userData[ $udata ]['profileURL'];
-						$userrole    = $userData[ $udata ]['userrole'];
+						$timestamp = isset( $v['resolved_timestamp'] ) ? (int) $v['resolved_timestamp'] : '';
+						if ( ! empty( $timestamp ) ) {
+							 $dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
+						}
+
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dataid']            = $dataid;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['commented_on_text'] = $commented_on_text;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['username']          = $username;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['profileURL']        = $profile_url;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['userrole']          = $userrole;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dtTime']            = $dtTime;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['blockType']         = $blockType;
+						$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = __( 'resolved thread', 'content-collaboration-inline-commenting' );
+
 					}
 
-					$timestamp = isset( $v['resolved_timestamp'] ) ? (int) $v['resolved_timestamp'] : '';
-					if ( ! empty( $timestamp ) ) {
-						 $dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
+					$comment_count = 0;
+					if ((is_array($comments) && !empty($comments)) || (is_object($comments) && !empty((array)$comments))) {
+						foreach ( $comments as $timestamp => $c ) {
+							$cstatus         = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
+							$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
+							$comment_status  = isset( $c['status'] ) ? $c['status'] : '';
+							$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
+							if ( 'publish' === $comment_status && ! empty( $c['editedTime'] ) ) {
+								$cstatus = __( 'edited', 'content-collaboration-inline-commenting' );
+							}
+							// Stop displaying history of comments in draft mode.
+							if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
+								continue;
+							}
+
+							$udata = ! empty( $c['userData'] ) ? $c['userData'] : '';
+
+							if ( ! array_key_exists( $udata, $userData ) ) {
+								$user_info = get_userdata( $udata );
+
+								$userData[ $udata ]['username']   = $username    = isset( $user_info->display_name ) ? $user_info->display_name : '';
+								$userData[ $udata ]['profileURL'] = $profile_url = isset( $user_info->user_email ) ? get_avatar_url( $user_info->user_email ) : '';
+								$userData[ $udata ]['userrole']   = $userrole       = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
+							} else {
+								$username    = $userData[ $udata ]['username'];
+								$profile_url = $userData[ $udata ]['profileURL'];
+								$userrole    = $userData[ $udata ]['userrole'];
+							}
+
+							$thread = ! empty( $c['thread'] ) ? $c['thread'] : '';
+
+							$edited_timestamp = isset( $c['editedTimestamp'] ) ? (int) $c['editedTimestamp'] : '';
+
+							if ( ! empty( $edited_timestamp ) ) {
+								$dtTime = gmdate( $time_format . ' ' . $date_format, $edited_timestamp );
+							} else {
+								$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
+							}
+
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['userrole']          = $userrole;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $cstatus;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['blockType']         = $blockType;
+							$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['resolved']          = $resolved;
+							$comment_count ++;
+							$total_comments ++;
+						}
 					}
-
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dataid']            = $dataid;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['commented_on_text'] = $commented_on_text;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['username']          = $username;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['profileURL']        = $profile_url;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['userrole']          = $userrole;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['dtTime']            = $dtTime;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['blockType']         = $blockType;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata ]['status']            = __( 'resolved thread', 'content-collaboration-inline-commenting' );
-
-				}
-
-				$comment_count = 0;
-				foreach ( $comments as $timestamp => $c ) {
-					$cstatus         = 0 === $comment_count ? __( 'commented', 'content-collaboration-inline-commenting' ) : __( 'replied', 'content-collaboration-inline-commenting' );
-					$cstatus        .= __( ' on', 'content-collaboration-inline-commenting' );
-					$comment_status  = isset( $c['status'] ) ? $c['status'] : '';
-					$cstatus         = 'deleted' === $comment_status ? __( 'deleted comment of', 'content-collaboration-inline-commenting' ) : $cstatus;
-					if ( 'publish' === $comment_status && ! empty( $c['editedTime'] ) ) {
-						$cstatus = __( 'edited', 'content-collaboration-inline-commenting' );
-					}
-					// Stop displaying history of comments in draft mode.
-					if ( 'draft' === $comment_status || 'permanent_draft' === $comment_status ) {
-						continue;
-					}
-
-					$udata = ! empty( $c['userData'] ) ? $c['userData'] : '';
-
-					if ( ! array_key_exists( $udata, $userData ) ) {
-						$user_info = get_userdata( $udata );
-
-						$userData[ $udata ]['username']   = $username    = isset( $user_info->display_name ) ? $user_info->display_name : '';
-						$userData[ $udata ]['profileURL'] = $profile_url = isset( $user_info->user_email ) ? get_avatar_url( $user_info->user_email ) : '';
-						$userData[ $udata ]['userrole']   = $userrole       = isset( $user_info->roles ) ? implode( ', ', $user_info->roles ) : '';
-					} else {
-						$username    = $userData[ $udata ]['username'];
-						$profile_url = $userData[ $udata ]['profileURL'];
-						$userrole    = $userData[ $udata ]['userrole'];
-					}
-
-					$thread = ! empty( $c['thread'] ) ? $c['thread'] : '';
-
-					$edited_timestamp = isset( $c['editedTimestamp'] ) ? (int) $c['editedTimestamp'] : '';
-
-					if ( ! empty( $edited_timestamp ) ) {
-						$dtTime = gmdate( $time_format . ' ' . $date_format, $edited_timestamp );
-					} else {
-						$dtTime = gmdate( $time_format . ' ' . $date_format, $timestamp );
-					}
-
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dataid']            = $dataid;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['commented_on_text'] = $commented_on_text;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['username']          = $username;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['profileURL']        = $profile_url;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['userrole']          = $userrole;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['thread']            = $thread;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['dtTime']            = $dtTime;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['status']            = $cstatus;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['blockType']         = $blockType;
-					$prepareDataTable[ $timestamp ][ $dataid . '_' . $udata . '_' . $comment_count ]['resolved']          = $resolved;
-					$comment_count ++;
-					$total_comments ++;
 				}
 			}
 		}
@@ -233,39 +237,42 @@ class Commenting_block_Functions {
 			if ( 0 !== $total_comments ) {
 
 				$count = 0;
+				if ((is_array($prepareDataTable) && !empty($prepareDataTable)) || (is_object($prepareDataTable) && !empty((array)$prepareDataTable))) {
+					foreach ( $prepareDataTable as $timestamp => $comments ) {
+						if ((is_array($comments) && !empty($comments)) || (is_object($comments) && !empty((array)$comments))) {
+							foreach ( $comments as $c ) {
+								// Limit the number of characters of 'Commented On' Text.
+								$limit             = 50;
+								$commented_on_text = $c['commented_on_text'];
+								if ( $limit < strlen( $commented_on_text ) ) {
+									$commented_on_text = substr( $commented_on_text, 0, $limit ) . '...';
+								}
+								$c['thread'] = isset( $c['thread'] ) ? $c['thread'] : '';
+								$count ++;
 
-				foreach ( $prepareDataTable as $timestamp => $comments ) {
-					foreach ( $comments as $c ) {
-						// Limit the number of characters of 'Commented On' Text.
-						$limit             = 50;
-						$commented_on_text = $c['commented_on_text'];
-						if ( $limit < strlen( $commented_on_text ) ) {
-							$commented_on_text = substr( $commented_on_text, 0, $limit ) . '...';
-						}
-						$c['thread'] = isset( $c['thread'] ) ? $c['thread'] : '';
-						$count ++;
+								$html .= "<div class='user-data-row'>";
+								$html .= "<div class='user-data-box'>";
+								$html .= "<div class='user-avatar'><img src='" . esc_url( $c['profileURL'] ) . "' alt='" . esc_attr( $c['username'] ) . "'/></div>";
+								$html .= "<div class='user-title'>
+											<span class='user-name'>" . esc_html( $c['username'] ) . ' ' . esc_html( $c['status'] ) . '</span> ';
 
-						$html .= "<div class='user-data-row'>";
-						$html .= "<div class='user-data-box'>";
-						$html .= "<div class='user-avatar'><img src='" . esc_url( $c['profileURL'] ) . "' alt='" . esc_attr( $c['username'] ) . "'/></div>";
-						$html .= "<div class='user-title'>
-									<span class='user-name'>" . esc_html( $c['username'] ) . ' ' . esc_html( $c['status'] ) . '</span> ';
+								if ( 'deleted comment of' === $c['status'] || __( 'resolved thread', 'content-collaboration-inline-commenting' ) === $c['status'] || 'true' === $c['resolved'] ) {
+									$html .= esc_html( $commented_on_text );
+								} else {
+									$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . '</a>';
+								}
 
-						if ( 'deleted comment of' === $c['status'] || __( 'resolved thread', 'content-collaboration-inline-commenting' ) === $c['status'] || 'true' === $c['resolved'] ) {
-							$html .= esc_html( $commented_on_text );
-						} else {
-							$html .= "<a href='javascript:void(0)' data-id='" . esc_attr( $c['dataid'] ) . "' class='user-commented-on'>" . esc_html( $commented_on_text ) . '</a>';
-						}
+								$html .= "<div class='user-comment'> " . wp_kses( $c['thread'], wp_kses_allowed_html( 'post' ) ) . '</div>
+										</div>';
 
-						$html .= "<div class='user-comment'> " . wp_kses( $c['thread'], wp_kses_allowed_html( 'post' ) ) . '</div>
-								</div>';
+								$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . '</div>';
+								$html .= '</div>';
+								$html .= '</div>';
 
-						$html .= "<div class='user-time'>" . esc_html( $c['dtTime'] ) . '</div>';
-						$html .= '</div>';
-						$html .= '</div>';
-
-						if ( $count >= $limit ) {
-							break;
+								if ( $count >= $limit ) {
+									break;
+								}
+							}
 						}
 					}
 				}

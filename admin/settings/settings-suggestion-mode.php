@@ -53,15 +53,17 @@
 					<select class="cf-specific-post-categories-multiple" name="cf_specific_post_categories_values[]" multiple="multiple">
 						<option value=""><?php esc_html_e( 'Please select a category', 'content-collaboration-inline-commenting' ); ?></option>
 						<?php
-						foreach ( $cf_categories as $cf_categories_info ) {
-							?>
-								<option value="<?php echo esc_attr( $cf_categories_info->term_id ); ?>" 
-															<?php
-															if ( ! empty( $cf_specific_post_categories_values ) && in_array( (string) $cf_categories_info->term_id, $cf_specific_post_categories_values, true ) ) {
-																echo esc_html( 'selected' ); }
-															?>
-								><?php echo esc_html( $cf_categories_info->name ); ?></option>
-							<?php
+						if ((is_array($cf_categories) && !empty($cf_categories)) || (is_object($cf_categories) && !empty((array)$cf_categories))) {
+							foreach ( $cf_categories as $cf_categories_info ) {
+								?>
+									<option value="<?php echo esc_attr( $cf_categories_info->term_id ); ?>" 
+																<?php
+																if ( ! empty( $cf_specific_post_categories_values ) && in_array( (string) $cf_categories_info->term_id, $cf_specific_post_categories_values, true ) ) {
+																	echo esc_html( 'selected' ); }
+																?>
+									><?php echo esc_html( $cf_categories_info->name ); ?></option>
+								<?php
+							}
 						}
 						?>
 					</select>
@@ -99,7 +101,7 @@
 					<select class="cf-specific-post-type-multiple" name="cf_specific_post_types_values[]" multiple="multiple">
 						<option value=""><?php esc_html_e( 'Please select a post type', 'content-collaboration-inline-commenting' ); ?></option>
 						<?php
-						if ( ! empty( $post_types ) ) {
+						if ((is_array($post_types) && !empty($post_types)) || (is_object($post_types) && !empty((array)$post_types))) {
 							foreach ( $post_types as $key => $post_types_values ) {
 								if ( 'attachment' !== $key ) {
 									?>

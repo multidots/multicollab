@@ -22,26 +22,28 @@
 	?>
 	<ul>
 		<?php
-		foreach ( $supported_lan as $key => $val ) {
-			?>
-				<li><input type="checkbox" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" disabled 
-														  <?php
-															if ( $lang === $val ) {
-																echo esc_html( 'checked' ); }
-															?>
-				>
-				<label for="<?php echo esc_attr( $key ); ?>">
-					<?php
-					if ( $lang === $val ) {
-						?>
-						<?php esc_html_e( $key, 'content-collaboration-inline-commenting' ); ?>
+		if ((is_array($supported_lan) && !empty($supported_lan)) || (is_object($supported_lan) && !empty((array)$supported_lan))) {
+			foreach ( $supported_lan as $key => $val ) {
+				?>
+					<li><input type="checkbox" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" disabled 
+															  <?php
+																if ( $lang === $val ) {
+																	echo esc_html( 'checked' ); }
+																?>
+					>
+					<label for="<?php echo esc_attr( $key ); ?>">
 						<?php
-					} else {
-						esc_html_e( $key, 'content-collaboration-inline-commenting' );
-					}
-					?>
-				</label></li>
-				<?php
+						if ( $lang === $val ) {
+							?>
+							<?php esc_html_e( $key, 'content-collaboration-inline-commenting' ); ?>
+							<?php
+						} else {
+							esc_html_e( $key, 'content-collaboration-inline-commenting' );
+						}
+						?>
+					</label></li>
+					<?php
+			}
 		}
 		?>
 	</ul>

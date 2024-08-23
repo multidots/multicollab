@@ -80,7 +80,7 @@ class Commenting_Block_Email_Templates {
 			$html .= '</td></tr></table>';
 			$html .= '  </div>';
 			$html .= '<div>
-			<p style="color: #5f6368; font-size: 12px; line-height: 16px; letter-spacing: .3px; margin-bottom: 0;">' . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . '<a style="color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;" href="' . esc_url( 'https://www.notion.so/mdnotes/Getting-Started-5103a8f3be084fc0880039161a49e23a' ) . '">' . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . '</a>' . __( ' to notify you of a collaboration activity on this post of ', 'content-collaboration-inline-commenting' ) . '<span><a href="' . esc_url( get_site_url() ) . '" style="color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;">' . esc_html( $http_host ) . '</a>.</span></p>
+			<p style="color: #5f6368; font-size: 12px; line-height: 16px; letter-spacing: .3px; margin-bottom: 0;margin-top:15px;">' . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . '<a style="color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;" href="' . esc_url( 'https://www.multicollab.com' ) . '">' . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . '</a>' . __( ' to notify you of a collaboration activity on this post of ', 'content-collaboration-inline-commenting' ) . '<span><a href="' . esc_url( get_site_url() ) . '" style="color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;">' . esc_html( $http_host ) . '</a>.</span></p>
 			<p style="color: #5f6368; font-size: 12px; line-height: 16px; letter-spacing: .3px; margin: 0;">' . __( 'You have received this email because you are either mentioned or a participant in the post.', 'content-collaboration-inline-commenting' ) . '</p>';
 			$html .= '</div>'; // .comment-box-body end
 			$html .= '</div>'; // .comment-box end
@@ -96,8 +96,9 @@ class Commenting_Block_Email_Templates {
 
 			// Limit the page and site titles for Subject.
 			$r_subject = $this->cf_email_prepare_subject( __( 'Comment Resolved', 'content-collaboration-inline-commenting' ), $p_title, $site_title );
-
-            wp_mail($users_emails, $r_subject, $html, $headers); // phpcs:ignore
+			if($users_emails){
+	            wp_mail($users_emails, $r_subject, $html, $headers); // phpcs:ignore
+	        }
 		}
 	}
 
@@ -125,9 +126,9 @@ class Commenting_Block_Email_Templates {
 	 */
 	private function cf_email_prepare_subject( $pre_subject, $p_title, $site_title ) {
 		$site_title   = $this->cf_limit_characters( $site_title, 20 );
-		$post_subject = ! empty( $p_title ) ? $this->cf_limit_characters( $p_title, 30 ) . ' — ' . $site_title : $site_title;
+		$post_subject = ! empty( $p_title ) ? $this->cf_limit_characters( $p_title, 30 ) . ' | ' . $site_title : $site_title;
 
-		return sprintf( __( '%1$s — %2$s', 'content-collaboration-inline-commenting' ), $pre_subject, $post_subject );
+		return sprintf( __( '%1$s | %2$s', 'content-collaboration-inline-commenting' ), $pre_subject, $post_subject );
 	}
 
 	/**
@@ -154,7 +155,7 @@ class Commenting_Block_Email_Templates {
 		$pattern = '/data-email=\"([a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?)\"/i';
 		preg_match_all( $pattern, $str, $matches );
 		$refined_user_email = array();
-		if ( ! empty( $matches[1] ) ) {
+		if ((is_array($matches[1]) && !empty($matches[1])) || (is_object($matches[1]) && !empty((array)$matches[1]))) {
 			foreach ( $matches[1] as $user_email ) {
 				$refined_user_email[] = $user_email;
 			}
@@ -196,12 +197,13 @@ class Commenting_Block_Email_Templates {
 
 		$find_mentions     = '';
 		$find_new_mentions = '';
-
-		foreach ( $list_of_comments as $timestamp => $comment ) {
-			if ( isset( $comment['status'] ) && 'publish' === $comment['status'] ) {
-				$find_mentions .= !empty( $comment['thread'] ) ? $comment['thread'] : '';
-				if ( in_array( $timestamp, $new_comments, true ) ) {
-					$find_new_mentions .= !empty( $comment['thread'] ) ? $comment['thread'] : '';
+		if ((is_array($list_of_comments) && !empty($list_of_comments)) || (is_object($list_of_comments) && !empty((array)$list_of_comments))) {
+			foreach ( $list_of_comments as $timestamp => $comment ) {
+				if ( isset( $comment['status'] ) && 'publish' === $comment['status'] ) {
+					$find_mentions .= !empty( $comment['thread'] ) ? $comment['thread'] : '';
+					if ( in_array( $timestamp, $new_comments, true ) ) {
+						$find_new_mentions .= !empty( $comment['thread'] ) ? $comment['thread'] : '';
+					}
 				}
 			}
 		}
@@ -220,7 +222,7 @@ class Commenting_Block_Email_Templates {
 		$newly_mentioned_emails = $this->cf_find_mentioned_emails( $find_new_mentions );
 		$mentioned_user_name = array();
 		// Unset the newly mentioned emails from the list.
-		if ( ! empty( $newly_mentioned_emails ) ) {
+		if ((is_array($newly_mentioned_emails) && !empty($newly_mentioned_emails)) || (is_object($newly_mentioned_emails) && !empty((array)$newly_mentioned_emails))) {	
 			foreach ( $newly_mentioned_emails as $newly_mentioned ) {
 				if ( ! empty( $email_list ) ) {
 					$key = array_search( $newly_mentioned, $email_list, true );
@@ -304,7 +306,7 @@ class Commenting_Block_Email_Templates {
                 </div>
 				<div>
 					<p style='color: #5f6368;font-size: 12px;
-					line-height: 16px;letter-spacing: .3px;margin-bottom:0;'>" . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . "<a style='color: #4B1BCE;font-size: 12px;line-height: 16px;letter-spacing: .3px;text-decoration: none;' href='" . esc_url( 'https://www.notion.so/mdnotes/Getting-Started-5103a8f3be084fc0880039161a49e23a' ) . "'>" . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . "</a>
+					line-height: 16px;letter-spacing: .3px;margin-bottom:0;margin-top:15px;'>" . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . "<a style='color: #4B1BCE;font-size: 12px;line-height: 16px;letter-spacing: .3px;text-decoration: none;' href='" . esc_url( 'https://www.multicollab.com' ) . "'>" . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . "</a>
 					" . __( 'to notify you of a collaboration activity on this post of', 'content-collaboration-inline-commenting' ) . " <span><a href='" . esc_url( get_site_url() ) . "' style='color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;'>" . esc_html( $http_host ) . "</a>.</span></p>
 					<p style='color: #5f6368;font-size: 12px; line-height: 16px; letter-spacing: .3px;margin:0;'>" . __( 'You have received this email because you are either mentioned or a participant in the post.', 'content-collaboration-inline-commenting' ) . "</p>
 				</div>
@@ -315,18 +317,8 @@ class Commenting_Block_Email_Templates {
 			$mentioned_html .= "
 			<div class='comment-box new-comment' style='background:#fff;width:95%;font-family:Arial,serif;padding-top:40px;padding-right:10px;padding-bottom:20px;padding-left:10px;'>
 				<div class='comment-box-header' style='margin-bottom:30px;'>
-					<p style='font-size:18px;color:#000;line-height:normal;margin:0;margin-bottom:20px'><span class='commenter-name' style='text-transform: capitalize;font-weight: 700;display: inline-block;'>" . esc_html( $current_user_display_name ) . '</span>';
-
-			if ( ! empty( $assigned_user ) ) {
-				// If $assigned_user is not empty, display assigned text.
-				$mentioned_html .= __( ' assigned you in a comment on this post.', 'content-collaboration-inline-commenting' );
-			} elseif ( ! empty( $newly_mentioned_emails ) ) {
-				// If $newly_mentioned_emails is not empty, display mentioned text.
-				$mentioned_html .= __( ' mentioned <span class="mentioed-name" style="text-transform: capitalize;font-weight: 700;display: inline-block;">'. implode( ', ', $mentioned_user_name ) .'</span> in a comment on this post.', 'content-collaboration-inline-commenting' );
-			}
-
-			$mentioned_html .= "
-						</p>
+					<p style='font-size:18px;color:#000;line-height:normal;margin:0;margin-bottom:20px'><span class='commenter-name' style='text-transform: capitalize;font-weight: 700;display: inline-block;'>" . esc_html( $current_user_display_name ) . "</span>"
+						 . __( ' mentioned you in a comment on this post.', 'content-collaboration-inline-commenting' ) . "</p>
 						<div style='display: flex;align-items: center;justify-content:space-between;flex-wrap: wrap;gap:20px;'>
 							<div class='comment-box-header-right'>
 								{$site_title_html}
@@ -347,7 +339,7 @@ class Commenting_Block_Email_Templates {
 						{$comment_list_html}
 					</div>
 					<div>
-						<p style='color: #5f6368;font-size: 12px;line-height: 16px;letter-spacing: .3px;margin-bottom:0;'>" . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . "<a style='color: #4B1BCE;font-size: 12px;line-height: 16px;letter-spacing: .3px;text-decoration: none;' href='" . esc_url( 'https://www.notion.so/mdnotes/Getting-Started-5103a8f3be084fc0880039161a49e23a' ) . "'>" . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . "</a>
+						<p style='color: #5f6368;font-size: 12px;line-height: 16px;letter-spacing: .3px;margin-bottom:0;margin-top:15px;'>" . __( 'This email is sent by ', 'content-collaboration-inline-commenting' ) . "<a style='color: #4B1BCE;font-size: 12px;line-height: 16px;letter-spacing: .3px;text-decoration: none;' href='" . esc_url( 'https://www.multicollab.com' ) . "'>" . __( 'Multicollab', 'content-collaboration-inline-commenting' ) . "</a>
 							" . __( 'to notify you of a collaboration activity on this post of', 'content-collaboration-inline-commenting' ) . " <span><a href='" . esc_url( get_site_url() ) . "' style='color: #4B1BCE; font-size: 12px; line-height: 16px; letter-spacing: .3px; text-decoration: none;'>" . esc_html( $http_host ) . "</a>.</span></p>
 						<p style='color: #5f6368;font-size: 12px;line-height: 16px;letter-spacing: .3px;margin:0;'>" . __( 'You have received this email because you are either mentioned or a participant in the post.', 'content-collaboration-inline-commenting' ) . "</p>
 					</div>
@@ -363,11 +355,12 @@ class Commenting_Block_Email_Templates {
 					$assigned_user = get_user_by( 'ID', $el_obj['assigned_to'] );
 					if ( ! empty( $assigned_user ) ) {
 						$assigned_to_email = $assigned_user->user_email;
+						$assigned_html = str_replace('mentioned you in a comment on this post.', 'assigned you in a comment on this post.', $mentioned_html);
 
 						// Limit the page and site titles for Subject.
 						$subject = $this->cf_email_prepare_subject( __( 'Assigned to You', 'content-collaboration-inline-commenting' ), $p_title, $site_title );
 
-                        wp_mail($assigned_to_email, $subject, $mentioned_html, $headers); // phpcs:ignore
+                        wp_mail($assigned_to_email, $subject, $assigned_html, $headers); // phpcs:ignore
 					}
 					// Updating after sending the email.
 					$el_obj['sent_assigned_email'] = true;

@@ -1130,8 +1130,8 @@
                 }
 
             });
-            // Restrict Br in newline in firefox
-            if ('firefox' === browser || 'safari' === browser) {
+            // Restrict Br in newline in firefox with resolved git issue #728 @author: Nirav Soni / since 4.7
+            if ('firefox' !== browser) {    
                 $(document.body).on("keydown", '.cf-share-comment', function (e) {
                     if (e.keyCode == 13 && !e.shiftKey) {
                         document.execCommand('insertHTML', false, '<br><br>');

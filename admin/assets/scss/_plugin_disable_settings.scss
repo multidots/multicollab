@@ -10,6 +10,9 @@
 					text-decoration: none;
 				}
 				.cf_premium_star {
+					outline: none;
+					box-shadow: none;
+					
 					&:hover {
 						background-color: #4B1BCE;
 						color: #fff;
@@ -46,8 +49,8 @@
 			fill: #939393;
 		}
 		.md-plugin-tooltip {
-			pointer-events: none;
-			cursor: none;
+			pointer-events: auto;
+			cursor: pointer;
 		}
 		.cf-board-premi-btn {
 			pointer-events: all;

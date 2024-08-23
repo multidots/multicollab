@@ -122,12 +122,16 @@ class Commenting_block_Loader
      */
     public function run()
     {
-        foreach ($this->filters as $hook) {
-            add_filter($hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args']);
+        if ((is_array($this->filters) && !empty($this->filters)) || (is_object($this->filters) && !empty((array)$this->filters))) {
+            foreach ($this->filters as $hook) {
+                add_filter($hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args']);
+            }
         }
 
-        foreach ($this->actions as $hook) {
-            add_action($hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args']);
+        if ((is_array($this->actions) && !empty($this->actions)) || (is_object($this->actions) && !empty((array)$this->actions))) {
+            foreach ($this->actions as $hook) {
+                add_action($hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args']);
+            }
         }
     }
 }

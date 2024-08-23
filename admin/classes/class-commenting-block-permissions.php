@@ -23,16 +23,18 @@ class Commenting_Block_Permissions extends Commenting_block_Functions {
 		$all_roles      = $wp_roles->roles;
 		$data           = array();
 		$editable_roles = apply_filters( 'editable_roles', $all_roles );
-		foreach ( $editable_roles as $key => $role ) {
+		if ((is_array($editable_roles) && !empty($editable_roles)) || (is_object($editable_roles) && !empty((array)$editable_roles))) {
+			foreach ( $editable_roles as $key => $role ) {
 
-			$data[ $key ]                        = array();
-			$data[ $key ]['role']                = $role;
-			$data[ $key ]['add_comment']         = '';
-			$data[ $key ]['resolved_comment']    = '';
-			$data[ $key ]['hide_comment']        = '';
-			$data[ $key ]['add_suggestion']      = '';
-			$data[ $key ]['resolved_suggestion'] = '';
-			$data[ $key ]['hide_suggestion']     = '';
+				$data[ $key ]                        = array();
+				$data[ $key ]['role']                = $role;
+				$data[ $key ]['add_comment']         = '';
+				$data[ $key ]['resolved_comment']    = '';
+				$data[ $key ]['hide_comment']        = '';
+				$data[ $key ]['add_suggestion']      = '';
+				$data[ $key ]['resolved_suggestion'] = '';
+				$data[ $key ]['hide_suggestion']     = '';
+			}
 		}
 
 		return $data;

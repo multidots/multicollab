@@ -1,13 +1,28 @@
 .multicollab_body_class {
-	#cf-activity-center\:cf-activity-center {
-		.components-panel > .components-panel__body.is-opened {
+	.cf-activity_center__panel {
+		&.components-panel__body.is-opened {
 			padding: 0;
 			border-top: none;
-			.my-tab-panel {
-				.components-tab-panel__tabs {
+
+			.cf-review_Suggestion__title {
+				padding: 16px 16px 0 16px;
+				margin-bottom: 0;
+
+				+ .accordian-panel{
 					border-bottom: 1px solid #e0e0e0;
 				}
+
+				+ .my-tab-panel {
+					border-top: 1px solid #e0e0e0;
+					.components-tab-panel__tabs {
+						border-bottom: none;
+					}
+				}
 			}
+			.components-tab-panel__tabs {
+				border-bottom: 1px solid #e0e0e0;
+			}
+			
 		}
 	}
 	.cf-share-comment {

@@ -47,7 +47,7 @@ $side_time_format   = 'g:i a F j, Y';
 $count_iterations   = 0;
 $previousPostId     = '';
 
-if ( ! empty( $this->cf_activities ) ) {
+if ((is_array($this->cf_activities) && !empty($this->cf_activities)) || (is_object($this->cf_activities) && !empty((array)$this->cf_activities))) {
 	foreach ( $this->cf_activities as $meta_single ) { //phpcs:ignore
 
 		if ( isset( $meta_single->post_id ) ) {
