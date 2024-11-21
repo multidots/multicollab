@@ -42,7 +42,7 @@ if ( 'detail-view' === $activity_view ) {
 
 $post_ids           = array();
 $new_date_displayed = true;
-$board_position     = $board_position ?? 'board-pos-right';  //phpcs:ignore  
+$board_position     = $board_position ?? 'cf-dashboard-panel__row-rhs';  //phpcs:ignore  
 $side_time_format   = 'g:i a F j, Y';
 $count_iterations   = 0;
 $previousPostId     = '';
@@ -117,7 +117,7 @@ if ((is_array($this->cf_activities) && !empty($this->cf_activities)) || (is_obje
 			if ( ! in_array( $date_displaying, $date_displayed, true ) && ! $date_continue_in_loadmore ) {
 				$date_displayed[] = $date_displaying;
 
-				echo "<h4 class='board-items-day'>" . esc_html( $date_displaying ) . '</h4>';
+				echo "<h4 class='cf-dashboard-panel__board-day'>" . esc_html( $date_displaying ) . '</h4>';
 				$new_date_displayed = true;
 
 				// Force the post title to be displayed.
@@ -132,7 +132,7 @@ if ((is_array($this->cf_activities) && !empty($this->cf_activities)) || (is_obje
 			|| ( ! $its_loadmore && ( ! $title_displayed_already || $new_date_displayed ) )
 			|| ( $previousPostId !== $post_id )
 			) {
-				$board_position = 'board-pos-left' === $board_position ? 'board-pos-right' : 'board-pos-left';
+				$board_position = 'cf-dashboard-panel__row-lhs' === $board_position ? 'cf-dashboard-panel__row-rhs' : 'cf-dashboard-panel__row-lhs';
 			}
 
 			// fix to separate comment by post id
@@ -165,16 +165,16 @@ if ((is_array($this->cf_activities) && !empty($this->cf_activities)) || (is_obje
 				}
 
 				?>
-			<div class="board-cnt-main 
+			<div class="cf-dashboard-panel__board-row 
 				<?php
 				esc_attr_e( $board_position );
 				echo $date_continue_in_loadmore ? ' date_continued' : '';
 				?>
 				<?php echo $post_continue_in_loadmore ? 'post_continued' : ''; ?>">
-				<div class="board-cnt-inner">
-					<div class="board-cnt-wrap">
+				<div class="cf-dashboard-panel__row-inner">
+					<div class="cf-dashboard-panel__row-wrap">
 						<?php if ( ! $title_displayed_already ) { ?>
-							<h4 class="board-items-page"><a href="javascript:void(0)" class="show_activity_details" data-id="<?php esc_attr_e( $post_id ); ?>"><?php esc_html_e( $post_title ); ?></a></h4>
+							<h4 class="cf-dashboard-panel__row-title"><a href="javascript:void(0)" class="show_activity_details" data-id="<?php esc_attr_e( $post_id ); ?>"><?php esc_html_e( $post_title ); ?></a></h4>
 						<?php } ?>
 						<div class="user-data-row">
 							<?php

@@ -2,2192 +2,1467 @@
  * Main function to be called for required JS actions.
  */
 
+const { __ } = wp.i18n;
+
+// Define process env for util.js error.
+window.process = {
+	env: {
+		NODE_ENV: "development",
+	},
+};
+
 (function ($) {
-    'use strict';
-    const { __ } = wp.i18n;
-    /**
-     * All of the code for the admin-facing JavaScript source
-     * should reside in this file.
-     *
-     * Note: It has been assumed you will write jQuery code here, so the
-     * $ function reference has been prepared for usage within the scope
-     * of this function.
-     *
-     */
-
-    window.process = {
-        env: {
-            NODE_ENV: 'development',
-        },
-    };
-
-    /*  Trigger to close sidebar on post editor focus */
-    window.addEventListener('click', function (e) {
-        if (jQuery('.edit-post-layout').hasClass('is-sidebar-opened')) {
-            jQuery('.interface-interface-skeleton__sidebar').removeClass('cf-sidebar-closed');
-        }
-        if (document.getElementsByClassName('edit-post-visual-editor').length > 0 && document.getElementsByClassName('edit-post-visual-editor')[0].contains(e.target)) {
-            jQuery('.interface-interface-skeleton__sidebar').addClass('cf-sidebar-closed');
-            // Clicked in editor
-            closeMulticollabSidebar();
-        }
-    });
-
-    // To remove blank suggestions board after changing block. // @author - Mayank @since3.4
-    $(document).on('click', '.cls-board-outer', function (event) {
-        const suggestion_id = $(this).attr('data-sid') || '';
-        if (suggestion_id) {
-            let sgAlignsElements = document.querySelector(`[lock_sg_id="${suggestion_id}"]`) || document.querySelector(`[textAlign_sg_id="${suggestion_id}"]`) || document.querySelector(`[align_sg_id="${suggestion_id}"]`); // For the block level align, lock suggestions @author - Mayank / since 3.6
-            let element = document.querySelector(`[suggestion_id="${suggestion_id}"]`) || document.querySelector(`[id="${suggestion_id}"]`) || sgAlignsElements;
-            if (!element) {
-                $(this).remove();
-            }
-        }
-    });
-
-    /** last suggestion reply button tooltip */
-    $(document).on('mouseover', '.shareCommentContainer .btn', function () {
-        var boxHeight = jQuery(this).parents(".cls-board-outer").outerHeight() + 30;
-        var parentHeight = jQuery("#cf-comments-suggestions__parent").outerHeight() - boxHeight - 50;
-        var boxPosition = jQuery(this).parents(".cls-board-outer").css('top');
-        if (parentHeight < parseInt(boxPosition) - boxHeight + 30) {
-            var currentTop = jQuery(this).parents(".cls-board-outer").css('top');
-            currentTop = parseInt(currentTop.replace('px', '')) - 50;
-            jQuery(this).parents(".cls-board-outer").css('top', currentTop + 'px');
-        }
-    });
-    /* Trigger to add/remove class from block
-       when block level sugggestions are created  */
-    /* <fs_premium_only> */
-    $(document).on("onBlockLevelSuggestionUpdate", function () {
-        const checkHTMLNodes = ['UL', 'FIGURE', 'BLOCKQUOTE', 'DIV', 'NAV'];
-        $(".wp-block").each(function () {
-
-
-            if (($(this).find('.wp-block').length === 0 || $(this).find('.wp-block').length === 2) && $(this).find('.alignupdate').length > 0 || $(this).find('.textalignupdate').length > 0) { // To resolve the border issue #495. @author - Mayank / since 3.5
-                $(this).addClass('mdaligned');
-                //fix for 5.6
-                $(this).attr('data-sgalign', true);
-            } else {
-                $(this).removeClass('mdaligned');
-                //fix for 5.6
-                $(this).removeAttr('data-sgalign');
-            }
-
-            if (($(this).find('.wp-block').length === 0 || $(this).find('.wp-block').length === 2 || $(this).find('.wp-block').length === 1) && $(this).find('.lockupdate').length > 0) { // To resolve the border issue #495. @author - Mayank / since 3.5
-                $(this).addClass('mdformatblockClass');
-            } else {
-                $(this).removeClass('mdformatblockClass');
-            }
-
-            if (!$(this).hasClass('blockAdded') && $(this).attr('data-block')) { // To solve the custom Block add suggestion problem @Author Mayank
-                const blockDetail = wp.data.select('core/block-editor').getBlock($(this).attr('data-block'));
-                if (blockDetail) {
-                    const blockClasses = blockDetail?.attributes?.className;
-                    if (blockClasses && blockClasses.includes('blockAdded')) {
-                        $(this).addClass(blockClasses);
-                    }
-                }
-
-            }
-
-            // Code optimized for user id @author - Mayank / since 3.5
-            let user_id = '';
-            if ($(this).hasClass('blockAdded') || $(this).hasClass('blockremove')) {
-                const $spanElement = $(this);
-                // Loop through the classes on the span element
-                $spanElement.each(function () {
-                    const classes = $(this).attr('class').split(' ');
-                    $.each(classes, function (i, className) {
-                        // Check if the class matches the user_id or unique_id pattern
-                        if (className.match(/^user_id-\d+$/)) {
-                            // This is a user_id class, get the random number and save it to a variable
-                            user_id = className.split('-')[1] ?? '';
-                        }
-                    });
-                });
-            }
-
-            if ($(this).find('.wp-block').length === 0 && $(this).hasClass('blockAdded')) {
-
-                if (user_id) {
-                    $(this).attr('data-uid', user_id);
-                }
-
-                //fix for 5.6
-                $(this).attr('data-sgblockAdded', true);
-
-            } else if ($(this).find('.wp-block').length > 0 && checkHTMLNodes.includes($(this).first().prop("nodeName")) && $(this).hasClass('blockAdded')) {
-
-                if (user_id) {
-                    $(this).attr('data-uid', user_id);
-                }
-
-                //fix for 5.6
-                $(this).attr('data-sgblockAdded', true);
-
-            } else {
-                //fix for 5.6
-                $(this).removeAttr('data-sgblockAdded');
-            }
-
-            if ($(this).find('.wp-block').length === 0 && $(this).find('.headingupdate').length > 0) {
-                $(this).addClass('mdheading');
-                //fix for 5.6
-                $(this).attr('data-sgheading', true);
-            } else {
-                $(this).removeClass('mdheading');
-                //fix for 5.6
-                $(this).removeAttr('data-sgheading');
-            }
-
-            if (!$(this).hasClass('blockremove') && $(this).attr('data-block')) { // To solve the custom Block remove suggestion problem @Author Mayank
-                const blockDetail = wp.data.select('core/block-editor').getBlock($(this).attr('data-block'));
-                if (blockDetail) {
-                    const blockClasses = blockDetail?.attributes?.className;
-                    if (blockClasses && blockClasses.includes('blockremove')) {
-                        $(this).addClass(blockClasses);
-                    }
-                }
-
-            }
-
-            if ($(this).find('.wp-block').length === 0 && $(this).hasClass('blockremove')) {
-                if (user_id) {
-                    $(this).attr('data-uid', user_id);
-                }
-                $(this).addClass('mdremoved');
-                $(this).addClass('mdBlockremoved');
-                //fix for 5.6
-                $(this).attr('data-sgremove', true);
-            } else if ($(this).find('.wp-block').length > 0 && checkHTMLNodes.includes($(this).first().prop("nodeName")) && $(this).hasClass('blockremove')) {
-                if (user_id) {
-                    $(this).attr('data-uid', user_id);
-                }
-                $(this).addClass('mdremoved');
-                $(this).addClass('mdBlockremoved');
-                //fix for 5.6
-                $(this).attr('data-sgremove', true);
-            } else {
-                $(this).removeClass('mdremoved');
-                //fix for 5.6
-                $(this).removeAttr('data-sgremove');
-            }
-
-        });
-
-
-        //focus remove block or block alignment suggestion when block is focused
-        $(".wp-block.focus-visible").each(function () {
-
-            if (($(this).find('.blockremove').length > 0 || $(this).find('.alignupdate').length > 0)
-                && $('#cf-span__comments .cls-board-outer.focus').length === 0) {
-                var $this = $(this);
-                setTimeout(function () {
-                    $('#cf-span__comments .cls-board-outer').removeAttr('style');
-                    $('#cf-span__comments .cls-board-outer').removeClass('focus');
-                    $('#cf-span__comments .cls-board-outer').removeClass('is-open');
-                    let suggestionId;
-                    if ($this.find('.blockremove').length > 0) {
-                        suggestionId = $this.find('.blockremove').attr('id');
-                    } else if ($this.find('.alignupdate').length > 0) {
-                        suggestionId = $this.find('.alignupdate').attr('id');
-                    }
-                    $('#sg' + suggestionId).addClass('focus');
-                    $('#cf-span__comments .cls-board-outer:not(.focus)').css('opacity', '0.4');
-                    $('#sg' + suggestionId).offset({ top: $this.offset().top });
-                    wp.data.dispatch('mdstore').setDataText(['sg', suggestionId].join());
-                }, 200);
-            }
-        });
-    });
-
-
-    // Trigger to remove onGoing class from suggestion board after
-    // text add or delete is finished
-    let timerID;
-    $(document).on("removeOngoingClass", function () {
-        clearTimeout(timerID);
-        timerID = setTimeout(() => {
-            $('#cf-span__comments .cls-board-outer.sg-board').removeClass('onGoing');
-        }, 1000);
-    });
-    /* </fs_premium_only> */
-
-    // Display Delete Overlay Box 
-    $(document).on('click', '.js-resolve-comment', function () {
-        $(this).parents(".commentContainer").siblings().find(".comment-delete-overlay").removeClass("show");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text(__('Delete this thread?', 'content-collaboration-inline-commenting'));
-    });
-
-    $(document).on('click', '.resolve-cb', function () {
-        $(this).parents(".commentContainer").siblings().find(".comment-delete-overlay").removeClass("show");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text(__('Resolve this thread?', 'content-collaboration-inline-commenting'));
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-delete").text(__('Yes', 'content-collaboration-inline-commenting'));
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-cancel").text(__('No', 'content-collaboration-inline-commenting'));
-        $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
-    });
-
-    $(document).on('click', '.js-trash-comment', function () {
-        $(this).parents(".commentContainer").siblings().find(".comment-delete-overlay").removeClass("show");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
-    });
-
-    $(document).on('click', '.js-trash-suggestion', function () {
-        $(this).parents(".commentContainer").siblings().find(".comment-delete-overlay").removeClass("show");
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .comment-overlay-text").text(__('Delete this Suggestion?', 'content-collaboration-inline-commenting'));
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-delete").text(__('Yes', 'content-collaboration-inline-commenting'));
-        $(this).parents(".commentContainer").find(".comment-delete-overlay .btn-cancel").text(__('No', 'content-collaboration-inline-commenting'));
-        $(this).parents(".commentContainer").find(".comment-delete-overlay").addClass("show");
-    });
-
-    $(document).on('click', '.comment-delete-overlay .btn-cancel', function () {
-        $(this).parents(".commentContainer").find(".comment-delete-overlay").removeClass("show");
-        $(this).parents(".commentContainer").find(".comment-resolve .resolve-cb").prop("checked", false);
-    });
-
-    // show hide toggle for commentendOn text in dashboard activity log
-    $(document).on('click', '#cf-dashboard .user-data-row .cf-show-more', function () {
-
-        var $this = $(this);
-        if ($this.closest('.user-commented-on').find(".show-all").hasClass('js-hide')) {
-            $this.closest('.user-commented-on').find(".show-all").removeClass('js-hide');
-            $this.closest('.user-commented-on').find(".show-less").addClass('js-hide');
-            $(this).text(__('Show less', 'content-collaboration-inline-commenting'));
-        } else {
-            $this.closest('.user-commented-on').find(".show-all").addClass('js-hide');
-            $this.closest('.user-commented-on').find(".show-less").removeClass('js-hide');
-            $(this).text(__('Show more', 'content-collaboration-inline-commenting'));
-        }
-    });
-
-
-    /* Hide/Show comments on board trigger   */
-    $(document).on("showHideComments", function () {
-        if (!$("#cf-span__comments").is(':empty')) {
-            $("#cf-span__comments .cls-board-outer:not(.focus)").each(function () {
-                let commentCount = parseInt($(this).find('.boardTop .commentContainer').length);
-
-                if (commentCount > getCommentsLimit() && !$(this).hasClass('focus')) {
-                    $(this).find('.show-all-comments').html(`${sprintf(__('Show all %d replies', 'content-collaboration-inline-commenting'), commentCount - 1)}`); //phpcs:ignore
-                    $(this).find('.show-all-comments').show(); //phpcs:ignore
-                    $(this).find('.boardTop .commentContainer').hide();
-                    $(this).find('.boardTop .commentContainer').slice(0, getCommentsLimit()).show();
-                } else {
-                    $(this).find('.boardTop .commentContainer').show();
-                    $(this).find('.show-all-comments').hide();
-                }
-            });
-        }
-    });
-
-    // show all comment on button click
-    $(document).on("click", "#cf-span__comments .cls-board-outer .show-all-comments", function () {
-        $(this).parents(".boardTop").find(".commentContainer").show();
-    });
-    // show all comment on button click
-    $(document).on("click", "#cf-dashboard .user-data-row .show-all-comments", function () {
-        $(this).parents(".user-data-row").find(".user-data-box").show();
-        $(this).hide();
-    });
-
-    // show all comment on button click in activity center
-    $(document).on("click", ".js-activity-centre .user-data-row .show-all-comments", function () {
-        $(this).parents(".user-data-row").find(".user-data-box").show();
-        $(this).parents(".user-data-row").find(".show-all-comments").hide();
-    });
-
-    function addBorderToAlignmentBlock(block) {  // Resolved #633 issue @author - Mayank
-        var children = block.querySelectorAll('*');
-        for (var i = 0; i < children.length; i++) {
-          if (children[i].classList.contains('alignupdate') || children[i].classList.contains('textalignupdate') || children[i].classList.contains('lockupdate') || children[i].classList.contains('headingupdate')) {
-            block.style.border = '2px solid #188651';
-            break;
-          }
-        }
-    }
-
-    /* editor layout update action trigger for commentOn class  */
-    $(document).on("editorLayoutUpdate", function () {
-
-        if ($("#cf-span__comments").is(':empty') ||
-            ($('body').hasClass('hide-sg') && $('body').hasClass('hide-comments'))
-        ) {
-            $('body').removeClass("commentOn");
-        } else {
-
-            if ((!$('body').hasClass('hide-sg') && $("#cf-span__comments .sg-board").length > 0) ||
-                (!$('body').hasClass('hide-comments') && $("#cf-span__comments .cm-board").length > 0)) {
-                $('body').addClass("commentOn");
-            } else if (($('body').hasClass('hide-comments') && !$('body').hasClass('hide-sg') && $("#cf-span__comments .sg-board").length === 0) ||
-                ($('body').hasClass('hide-sg') && !$('body').hasClass('hide-comments') && $("#cf-span__comments .cm-board").length === 0)) {
-                $('body').removeClass("commentOn");
-            }
-        }
-        // Resolved #633 issue @author - Mayank
-        var browser = (function (agent) {
-            switch (true) {
-                case agent.indexOf("firefox") > -1: return "firefox";
-                default: return "other";
-            }
-        })(window.navigator.userAgent.toLowerCase());
-        if ('firefox' === browser) {
-            document.querySelectorAll('.wp-block').forEach(addBorderToAlignmentBlock);  // Resolved #633 issue @author - Mayank
-        }
-    });
-
-    // alert(  );
-    // Stripping out unwanted <mdspan> tags from the content.
-    $(window).on('load', function () {
-
-        var findMdSpan = 'mdspan';
-        $(findMdSpan).each(function () {
-            var datatext = $(this).attr('datatext');
-
-            if (undefined === datatext) {
-                $(this).replaceWith(DOMPurify.sanitize($(this).text())); // phpcs:ignore
-            }
-
-        });
-
-    })
-
-    // Resetting All Class From Activity Center
-    $(document).on('click', '.cls-board-outer', function () {
-        var boardID = $(this).attr('id');
-
-        $('.js-activity-centre .user-data-row').removeClass('active');
-        $(`#cf-${boardID}`).addClass('active');
-        $('.commentIcon').removeClass('is-selected');
-        wp.data.dispatch('mdstore').setDataText(boardID);
-        //check if URL has a datatext param
-        const queryString = window.location.search; //phpcs:ignore
-        const urlParams = new URLSearchParams(queryString);
-        const current_url = urlParams.get('current_url');
-        let shareUrl = getCookie("current_url");
-
-        if (current_url) {
-            urlParams.delete('current_url');
-            window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
-        }
-        if (shareUrl) {
-            deleteCookie('current_url');
-
-        }
-
-        $('[datatext="' + boardID + '"]').addClass('is-selected');
-        jQuery.event.trigger({ type: "showHideComments" });
-
-    });
-    $(document).on('focus', '.cf-share-comment', function () {
-        $('.cf-share-comment').addClass('comment-focus');
-
-        // Solved overlap issue for adding comment on suggestion. @author: Rishi Shah.
-        $('.cls-board-outer').removeClass('focus onGoing');
-        $(this).parent().closest('.cls-board-outer').addClass('focus onGoing');
-
-        // commented for (save button activated when mention user available at last and press arrow keys) /@author Meet Mehta /@since VIP Plan
-        //$('.js-cf-edit-comment a.js-mentioned').css('white-space', 'pre-wrap');
-        $('.btn-wrapper').css('display', 'block');
-
-        // Add space between suggestion and comment loating board. @author: Rishi Shah.
-        $('.cls-board-outer').css('opacity', '0.4');
-        //var focusParentElement = $(this).parent().parent().parent().parent().attr('id');
-        var focusParentElement = $(this).closest('.cls-board-outer').attr('id');
-        $('#' + focusParentElement).css('opacity', '1');
-        //$('#' + focusParentElement).css('z-index', '999999');
-        $(".cls-board-outer:not(#" + focusParentElement + ")").css('top', '0');
-
-    })
-    $(document).on('focusout', '.cf-share-comment', function () {
-        $('.cf-share-comment').removeClass('comment-focus');
-
-    })
-
-    $(document).on('click', '.cf-sidebar-settings', function () {
-        if ($('body').hasClass('commentOn')) {
-            // $('.comment-toggle .components-form-toggle').removeClass('is-checked'); // commented this to resolve comment toggle issue.
-            //$('.comment-toggle .components-base-control__help').html('All comments will show on the content area.');
-        }
-    })
-
-    // Add temporary style tag to hide resolved tag color on load.
-    //comment below line to resolved copy url board hilight issue.
-    //$('html').prepend('<style id="loader_style">body mdspan{background: transparent !important;}.components-editor-notices__dismissible{display: none !important;</style>');
-    // On Document Ready Event.
-    $(document).ready(function () {
-
-        // Editor layout width changes sidebar multicollab btn click @author: Minal Diwan @since-3.3
-        $(document).on('click', '.interface-pinned-items .components-button,.edit-post-header-toolbar__inserter-toggle,.editor-document-tools__inserter-toggle', function (e) {
-            setTimeout(handleEditorLayoutChange, 200);
-         });
-
-        // Add loader on setting page loading. @author: Rishi @since-3.0
-        $(".cf_settings_loader").delay(100).fadeOut("slow");
-        $('body').css('overflow-y', 'unset');
-
-        let doingAjax = false;
-        // If thread focused via an activity center,
-        // it is in lock mode, so clicking any para
-        // would unlock it.
-        $(document).on('click', '.block-editor-block-list__layout .wp-block', function (e) {
-
-            if ($('.cls-board-outer').hasClass('locked')) {
-
-                // Reset Comments Float. This will reset the positions of all comments.
-                $('#cf-span__comments .cls-board-outer').css('opacity', '1');
-                $('#cf-span__comments .cls-board-outer').removeClass('focus');
-                $('#cf-span__comments .cls-board-outer').removeClass('is-open');
-                $('#cf-span__comments .cls-board-outer').removeAttr('style');
-                $('#cf-span__comments .cls-board-outer .buttons-wrapper').removeClass('active');
-
-                if (e.target.localName === 'mdspan') {
-                    const dataid = $(e.target).attr('datatext');
-                    // Trigger card click to focus.
-                    $('#' + dataid).trigger('click');
-                }
-                $('.cls-board-outer').removeClass('locked');
-            }
-        });
-
-
-        // Show/Hide comment toggler if the counter value is zero.
-        $(document.body).on('click', '#history-toggle', function () {
-            var dataCount = $(this).attr('data-count');
-            if (0 >= dataCount) {
-                $('#comments-toggle').hide();
-            } else {
-                $('#comments-toggle').show();
-            }
-        })
-
-        // Settings page tabs toggle.
-        $(document).on('click', '.cf-tabs span', function () {
-            const tabID = $(this).data('id');
-            $('.cf-tab-inner').hide();
-            $('#' + tabID).show();
-        });
-
-        // Dashboard features popup /@Minal Diwan Version 3.0
-        $(document).on('click', '.cf-board-overlap-feature .cf-board-overlapbox', function () {
-            //  e.preventDefault();
-            $('.cf-board-overlapboxhover').not($(this).find('.cf-board-overlapboxhover')).hide();
-            $(this).find('.cf-board-overlapboxhover').toggle();
-        });
-
-
-        // Save General Settings.
-        $('#cf_settings').on('submit', function (e) {
-            e.preventDefault();
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_save_settings',
-                'formData': $(this).serialize()
-            };
-            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
-                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                $('#cf_settings .cf-success').slideDown(300);
-                setTimeout(function () {
-                    $('#cf_settings .cf-success').slideUp(300);
-                }, 3000);
-            });
-        });
-        // Uncheck other suggestion setting if select one.
-        $('input.cf_suggestion_stop_publish_options').on('change', function () {
-            $('input.cf_suggestion_stop_publish_options').not(this).prop('checked', false);
-        });
-
-        // On change event for suggestion mode options.
-        $(document).on('change', 'input.cf_suggestion_mode_options', function () {
-
-            //Uncheck other options.
-            $('input.cf_suggestion_mode_options').not(this).prop('checked', false);
-
-            var val = $('input.cf_suggestion_mode_options:checked').val();
-            if (val) {
-                if ('cf_suggestion_specific_post_categories' === val) {
-                    //jQuery('.cf_specific_post_categories_section').css('display', 'block');
-                    jQuery('.cf_specific_post_categories_section').show();
-                } else {
-                    jQuery('.cf_specific_post_categories_section').hide();
-                }
-
-                if ('cf_suggestion_specific_post_types' === val) {
-                    //jQuery('.cf_specific_post_categories_section').css('display', 'block');
-                    jQuery('.cf_specific_post_type_section').show();
-                } else {
-                    jQuery('.cf_specific_post_type_section').hide();
-                }
-
-            } else {
-                jQuery('.cf_specific_post_categories_section').hide();
-                jQuery('.cf_specific_post_type_section').hide();
-            }
-        });
+		$(document).ready(function () {
+
+			$(document).on('click', '#cf-comment-board-wrapper .cls-board-outer:not(.focus)', function (e) {
+
+				closeMulticollabSidebar();
+				// Exclude focus on specific elements.
+				var target = $(e.target);
+				if (target.is(".commentContainer .comment-actions, .commentContainer .comment-actions *")) {
+						return;
+				}
+				const _this = $(this);
+				// Reset Comments Float.
+				$('#cf-comment-board-wrapper .cls-board-outer').removeAttr('style');
+				$('#cf-comment-board-wrapper .cls-board-outer').removeClass('focus');
+				$('#cf-comment-board-wrapper .cls-board-outer').removeClass('is-open');
+				$('#cf-comment-board-wrapper .comment-delete-overlay').removeClass('show');
+				$('#cf-comment-board-wrapper .comment-resolve .resolve-cb').prop("checked", false);
+				$('#cf-comment-board-wrapper .cls-board-outer .buttons-wrapper').removeClass('active');
+				$('#cf-comment-board-wrapper .cls-board-outer').css('opacity', '0.4');
+				
+				$('.btn-wrapper').css('display', 'none');
+				
+
+				const selectedText = _this.attr('id');
+				const currentUser = wp.data.select('core').getCurrentUser()?.id;
+				
+				removeFloatingIcon();
+				_this.addClass('focus');
+				_this.addClass('is-open');
+				_this.css('opacity', '1');
+
+				
+				let topOfText;
+				if (selectedText.match(/^el/m) !== null) {
+						topOfText = $('[datatext="' + selectedText + '"]').offset().top;
+						if ($('[datatext="' + selectedText + '"]').hasClass('cf-icon-wholeblock__comment')) { // To support block suggetion and whole block comment @author - Mayank / since 3.5
+								$('[datatext="' + selectedText + '"]').addClass('focus');
+						}
+				} else {
+						let sid = $('#' + selectedText).attr('data-sid');
+						topOfText = $('[id="' + sid + '"]').offset()?.top;
+						if (!topOfText) { // To support block suggetion and whole block comment @author - Mayank / since 3.5
+								topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
+								$('[data-suggestion_id="' + sid + '"]').addClass('focus');
+						}
+						$('#' + sid).addClass('sg-format-class');
+
+				}
+
+				setTimeout(function () {
+						scrollBoardToPosition(topOfText);
+						_this.offset({ top: topOfText });
+				}, 800);
+
+				$('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
+				$('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
+
+				if ($(`#${selectedText}`).hasClass('sg-board')) {
+						let sid = $(`#${selectedText}`).attr('data-sid');
+						$(`#${sid}`).attr('data-rich-text-format-boundary', 'true');
+				}
+
+			});
+	});
+})(jQuery);
+
+window.addEventListener("click", function (e) {
+		// Trigger to close sidebar on post editor focus
+		const editPostLayout = document.querySelector(".edit-post-layout");
+		const sidebar = document.querySelector(
+			".interface-interface-skeleton__sidebar"
+		);
+		const visualEditor = document.querySelector(".edit-post-visual-editor");
+	
+		if (
+			editPostLayout &&
+			editPostLayout.classList.contains("is-sidebar-opened")
+		) {
+			sidebar.classList.remove("cf-sidebar-closed");
+		}
+	
+		if (visualEditor && visualEditor.contains(e.target)) {
+			sidebar.classList.add("cf-sidebar-closed");
+			closeMulticollabSidebar();
+		}
+	});
+
+	window.addEventListener("load", function () {
+		/**
+		 * Strips out unwanted <mdspan> tags from the content.
+		 * This function finds all elements with the 'mdspan' tag, and if the 'datatext' attribute is null, it sanitizes the text content of the element and replaces the element with the sanitized text.
+		 */
+		var findMdSpan = "mdspan";
+		document.querySelectorAll(findMdSpan).forEach(function (element) {
+			var datatext = element.getAttribute("datatext");
+			if (datatext === null) {
+				var sanitizedText = DOMPurify.sanitize(element.textContent); //phpcs:ignore
+				element.replaceWith(document.createTextNode(sanitizedText));
+			}
+		});
+	
+		// Storing necessary user info in local storage.
+		fetch(ajaxurl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+			},
+			body: new URLSearchParams({
+				action: "cf_get_user",
+				nonce: multicollab_general_nonce.nonce,
+			}),
+		})
+			.then((response) => response.json())
+			.then((user) => {
+				localStorage.setItem("userID", user.id);
+				localStorage.setItem("userName", user.name);
+				localStorage.setItem("userRole", user.role);
+				localStorage.setItem("userURL", user.url);
+			})
+			.catch((error) => console.error("Error:", error));
+		// comment below code due to performance issue / Since 4.8
+		/* commentedId = adminLocalizer.comment_id;
+		if (commentedId) {
+			setTimeout(function () {
+				const editCommentButton = document.querySelector(
+					`#${commentedId} .js-edit-comment`
+				);
+				if (editCommentButton) {
+					editCommentButton.click();
+				}
+				const commentedElement = document.getElementById(commentedId);
+				if (commentedElement) {
+					commentedElement.classList.add("comment-flash");
+				}
+			}, 2000);
+			setTimeout(function () {
+				const commentedElement = document.getElementById(commentedId);
+				if (commentedElement) {
+					commentedElement.classList.remove("comment-flash");
+				}
+			}, 4000);
+		}*/
+	});
+
+	document.addEventListener("DOMContentLoaded", function () {
+	    /**
+	     * Sets a cookie to track whether a promotional banner has been shown to the user.
+	     *
+	     * The cookie is set for each element with the class 'onBannerCookieSet', and the cookie name includes the value of the 'attr-value' attribute of the element.
+	     * The cookie is set to expire in 7 days.
+	     */
+	    var onBannerCookieSet = document.querySelectorAll(".onBannerCookieSet");
+	    if (null !== onBannerCookieSet) {
+	      Array.from(onBannerCookieSet).forEach((element, index) => {
+	        var date = new Date();
+	        date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
+	  
+	        document.cookie =
+	          "banner_show_" +
+	          element.getAttribute("attr-value") +
+	          "=yes; expires=" +
+	          date +
+	          ";";
+	        document.cookie =
+	          "banner_show_once_" + element.getAttribute("attr-value") + "=yes;";
+	      });
+	    }
+	  
+	    setTimeout(function () {
+	      if (
+	        "remind" === multicollab_cf_alert.cf_give_alert_message ||
+	        "stop" === multicollab_cf_alert.cf_give_alert_message
+	      ) {
+	        var publishBtn = document.querySelector(
+	          ".editor-post-publish-button__button"
+	        );
+	        if (publishBtn) {
+	          publishBtn.addEventListener("click", publishBtnClick);
+	        }
+	      }
+	    }, 1000);
+	  
+	    // Set body overflow-y to unset
+	    document.body.style.overflowY = "unset";
+	  
+	    // Save show_avatar option in a localstorage.
+	    const data = {
+	      action: "cf_store_in_localstorage",
+	      nonce: multicollab_general_nonce.nonce,
+	    };
+	    fetch(ajaxurl, {
+	      method: "POST",
+	      headers: {
+	        "Content-Type": "application/x-www-form-urlencoded",
+	      },
+	      body: new URLSearchParams(data).toString(),
+	    })
+	      .then((response) => response.json())
+	      .then((response) => {
+	        localStorage.setItem("showAvatars", response.showAvatars);
+	        localStorage.setItem("commentingPluginUrl", response.commentingPluginUrl);
+	      })
+	      .catch((error) => console.error("Error:", error));
+	  
+	    document
+	      .querySelectorAll(".shareCommentContainer textarea")
+	      .forEach(function (textarea) {
+	        textarea.addEventListener("click", function () {
+	          this.parentElement.classList.add("hovered");
+	        });
+	      });
+	  
+	    // Get Caret Position
+	    var ie =
+	      typeof document.selection != "undefined" &&
+	      document.selection.type != "Control" &&
+	      true;
+	    var w3 = typeof window.getSelection != "undefined" && true;
+	    var cursorPos = 0;
+	    var range = "";
+	  
+	    // Get the overlay, popup, and close button elements
+	    var overlay = document.querySelector(".cf-plugin-dashboard-overlay");
+	    var popup = document.querySelector(".cf-plugin-dashboard-popup");
+	    var closeButton = document.querySelector(".cf_plugin_btncls");
+	    var cfSettingsButton = document.getElementById("cf-settings-button");
+	  
+	    // Function to open the popup and show the overlay
+	    function openPopup() {
+	      overlay.style.display = "flex";
+	      popup.style.display = "block";
+	    }
+	  
+	    // Function to close the popup and hide the overlay
+	    function closePopup() {
+	      popup.style.display = "none";
+	      overlay.style.display = "none";
+	  
+	      // Do AJAX call to update the settings.
+	      var data = new FormData();
+	      data.append("action", "cf_guide_popup_reset");
+	      data.append("nonce", adminLocalizer.nonce);
+	  
+	      fetch(ajaxurl, {
+	        method: "POST",
+	        body: data,
+	      })
+	        .then((response) => response.json())
+	        .then((res) => {
+	          // Handle success
+	        })
+	        .catch((err) => {
+	          console.error(err);
+	        });
+	    }
+	  
+	    // Add click event listener to the close button
+	    if (closeButton) {
+	      closeButton.addEventListener("click", closePopup);
+	    }
+	  
+	    // Add click event listener to the cf-settings button
+	    if (cfSettingsButton) {
+	      cfSettingsButton.addEventListener("click", openPopup);
+	    }
+
+	    document.addEventListener("editorLayoutUpdate", function () {
+	      var commentBoardWrapper = document.getElementById(
+	        "cf-comment-board-wrapper"
+	      );
+	      var commentSidebarCount = document.getElementById(
+	        "cf-comment-board-wrapper"
+	      )?.children.length;
+	      var body = document.body;
+	  
+	      if (body.classList.contains("commentOn") && commentSidebarCount > 0) {
+	        return;
+	      }
+	  
+	      if (
+	        !commentBoardWrapper ||
+	        commentBoardWrapper.innerHTML.trim() === "" ||
+	        (body.classList.contains("hide-sg") &&
+	          body.classList.contains("hide-comments"))
+	      ) {
+	        body.classList.remove("commentOn");
+	      } else {
+	        var sgBoard = commentBoardWrapper.querySelector(".sg-board");
+	        var cmBoard = commentBoardWrapper.querySelector(".cm-board");
+	  
+	        if (
+	          (!body.classList.contains("hide-sg") && sgBoard) ||
+	          (!body.classList.contains("hide-comments") && cmBoard)
+	        ) {
+	          body.classList.add("commentOn");
+	        } else if (
+	          (body.classList.contains("hide-comments") &&
+	            !body.classList.contains("hide-sg") &&
+	            !sgBoard) ||
+	          (body.classList.contains("hide-sg") &&
+	            !body.classList.contains("hide-comments") &&
+	            !cmBoard)
+	        ) {
+	          body.classList.remove("commentOn");
+	        }
+	      }
+	  
+	      // Resolved #633 issue @author - Mayank
+	      var browser = (function (agent) {
+	        if (agent.indexOf("firefox") > -1) {
+	          return "firefox";
+	        } else {
+	          return "other";
+	        }
+	      })(window.navigator.userAgent.toLowerCase());
+	  
+	      if (browser === "firefox") {
+	        document.querySelectorAll(".wp-block").forEach(addBorderToAlignmentBlock); // Resolved #633 issue @author - Mayank
+	      }
+	  
+	      // Call the function to apply the styles
+	      addBorderStyle();
+	    });
+	  
+	    // Event listener for showHideComments
+	    document.addEventListener("showHideComments", function () {
+	      var commentBoardWrapper = document.getElementById(
+	        "cf-comment-board-wrapper"
+	      );
+	  
+	      // Check if the comment board is not empty
+	      if (commentBoardWrapper && commentBoardWrapper.innerHTML.trim() !== "") {
+	        var commentBoardItems = document.querySelectorAll(
+	          "#cf-comment-board-wrapper .cls-board-outer:not(.focus)"
+	        );
+	  
+	        commentBoardItems.forEach(function (item) {
+	          var commentContainers = item.querySelectorAll(
+	            ".boardTop .commentContainer"
+	          );
+	          var commentCount = commentContainers.length;
+	  
+	          // If the number of comments exceeds the limit and the item does not have the 'focus' class
+	          if (
+	            commentCount > getCommentsLimit() &&
+	            !item.classList.contains("focus")
+	          ) {
+	            var showAllComments = item.querySelector(".show-all-comments");
+	            if (showAllComments) {
+	              // Update the text to show how many replies are hidden
+	              showAllComments.innerHTML = sprintf(
+	                __(
+	                  "Show all %d replies",
+	                  "content-collaboration-inline-commenting"
+	                ),
+	                commentCount - 1
+	              );
+	              showAllComments.style.display = "block"; // Make the "Show all comments" visible
+	            }
+	  
+	            // Hide all comments and then show only up to the comment limit
+	            commentContainers.forEach(function (container, index) {
+	              if (index >= getCommentsLimit()) {
+	                container.style.display = "none";
+	              } else {
+	                container.style.display = "block";
+	              }
+	            });
+	          } else {
+	            // Show all comments and hide the "Show all comments" link
+	            commentContainers.forEach(function (container) {
+	              container.style.display = "block";
+	            });
+	            var showAllComments = item.querySelector(".show-all-comments");
+	            if (showAllComments) {
+	              showAllComments.style.display = "none";
+	            }
+	          }
+	        });
+	      }
+	    });
+	  
+	    assignThisToUser();
+	    showAssignableEmailList();
+	    createAutoEmailMention();
+	 });
+	
+
+	document.addEventListener("click", function (event) {
+		// Display Delete Overlay Box
+		if (event.target.closest(".js-resolve-comment")) {
+			const commentContainer = event.target.closest(".commentContainer");
+			if(commentContainer){
+				commentContainer
+					.siblings()
+					.forEach((sibling) =>
+						sibling
+							.querySelectorAll(".comment-delete-overlay")
+							.forEach((overlay) => overlay.classList.remove("show"))
+					);
+				commentContainer
+					.querySelector(".comment-delete-overlay")
+					.classList.add("show");
+				commentContainer
+					.querySelector(".buttons-wrapper")
+					.classList.remove("active");
+				commentContainer.querySelector(
+					".comment-delete-overlay .comment-overlay-text"
+				).textContent = __(
+					"Delete this thread?",
+					"content-collaboration-inline-commenting"
+				);
+			}
+		}
+	
+		if (event.target.closest(".resolve-cb")) {
+			const commentContainer = event.target.closest(".commentContainer");
+			if(commentContainer){
+				commentContainer
+					.siblings()
+					.forEach((sibling) =>
+						sibling
+							.querySelectorAll(".comment-delete-overlay")
+							.forEach((overlay) => overlay.classList.remove("show"))
+					);
+				commentContainer.querySelector(
+					".comment-delete-overlay .comment-overlay-text"
+				).textContent = __(
+					"Resolve this thread?",
+					"content-collaboration-inline-commenting"
+				);
+				commentContainer.querySelector(
+					".comment-delete-overlay .btn-delete"
+				).textContent = __("Yes", "content-collaboration-inline-commenting");
+				commentContainer.querySelector(
+					".comment-delete-overlay .btn-cancel"
+				).textContent = __("No", "content-collaboration-inline-commenting");
+				commentContainer
+					.querySelector(".comment-delete-overlay")
+					.classList.add("show");
+			}
+		}
+	
+		if (event.target.closest(".js-trash-comment")) {
+			const commentContainer = event.target.closest(".commentContainer");
+			if(commentContainer){
+				commentContainer
+					.siblings()
+					.forEach((sibling) =>
+						sibling
+							.querySelectorAll(".comment-delete-overlay")
+							.forEach((overlay) => overlay.classList.remove("show"))
+					);
+				commentContainer
+					.querySelector(".comment-delete-overlay")
+					.classList.add("show");
+				commentContainer
+					.querySelector(".buttons-wrapper")
+					.classList.remove("active");
+			}
+		}
+	
+		if (event.target.closest(".js-trash-suggestion")) {
+			const commentContainer = event.target.closest(".commentContainer");
+			if(commentContainer){
+				commentContainer
+					.siblings()
+					.forEach((sibling) =>
+						sibling
+							.querySelectorAll(".comment-delete-overlay")
+							.forEach((overlay) => overlay.classList.remove("show"))
+					);
+				commentContainer.querySelector(
+					".comment-delete-overlay .comment-overlay-text"
+				).textContent = __(
+					"Delete this Suggestion?",
+					"content-collaboration-inline-commenting"
+				);
+				commentContainer.querySelector(
+					".comment-delete-overlay .btn-delete"
+				).textContent = __("Yes", "content-collaboration-inline-commenting");
+				commentContainer.querySelector(
+					".comment-delete-overlay .btn-cancel"
+				).textContent = __("No", "content-collaboration-inline-commenting");
+				commentContainer
+					.querySelector(".comment-delete-overlay")
+					.classList.add("show");
+				commentContainer
+					.querySelector(".buttons-wrapper")
+					.classList.remove("active");
+			}    
+		}
+	
+		if (event.target.closest(".comment-delete-overlay .btn-cancel")) {
+			const commentContainer = event.target.closest(".commentContainer");
+			if(commentContainer){
+			commentContainer
+				.querySelector(".comment-delete-overlay")
+				.classList.remove("show");
+			}
+			const resolveCheckbox = commentContainer.querySelector(
+				".comment-resolve .resolve-cb"
+			);
+			if (resolveCheckbox) {
+				resolveCheckbox.checked = false; // Set checked to false only if the element exists
+			}
+		}
+		// show hide toggle for commentendOn text in dashboard activity log in commented section very long text
+		if (event.target.matches("#cf-dashboard .user-data-row .cf-show-more")) {
+			const button = event.target;
+			const userCommentedOn = button.closest(".user-commented-on");
+			const showAll = userCommentedOn.querySelector(".show-all");
+			const showLess = userCommentedOn.querySelector(".show-less");
+	
+			if (showAll.classList.contains("js-hide")) {
+				showAll.classList.remove("js-hide");
+				showLess.classList.add("js-hide");
+				button.textContent = __(
+					"Show less",
+					"content-collaboration-inline-commenting"
+				);
+			} else {
+				showAll.classList.add("js-hide");
+				showLess.classList.remove("js-hide");
+				button.textContent = __(
+					"Show more",
+					"content-collaboration-inline-commenting"
+				);
+			}
+		}
+	
+		// Editor layout width changes sidebar multicollab btn click
+		if (
+			event.target.closest(
+				".interface-pinned-items .components-button, .edit-post-header-toolbar__inserter-toggle, .editor-document-tools__inserter-toggle"
+			)
+		) {
+			setTimeout(handleEditorLayoutChange, 100);
+		}
+	
+		// If thread focused via an activity center
+		if (event.target.closest(".block-editor-block-list__layout .wp-block")) {
+			if (
+				document.querySelector(".cls-board-outer")?.classList.contains("locked")
+			) {
+				// Reset Comments Float. This will reset the positions of all comments.
+				document.querySelector(
+					"#cf-comment-board-wrapper .cls-board-outer"
+				).style.opacity = "1";
+				cfRemoveClass(
+					"#cf-comment-board-wrapper .cls-board-outer",
+					"is-open focus"
+				);
+				// document.querySelector('#cf-comment-board-wrapper .cls-board-outer').classList.remove('focus');
+				// document.querySelector('#cf-comment-board-wrapper .cls-board-outer').classList.remove('is-open');
+				document
+					.querySelector("#cf-comment-board-wrapper .cls-board-outer")
+					.removeAttribute("style");
+				document
+					.querySelector(
+						"#cf-comment-board-wrapper .cls-board-outer .buttons-wrapper"
+					)
+					.classList.remove("active");
+	
+				if (e.target.localName === "mdspan") {
+					const dataid = e.target.getAttribute("datatext");
+					// Trigger card click to focus.
+					document.getElementById(dataid).click();
+				}
+				document.querySelectorAll(".cls-board-outer").forEach(function (element) {
+					element.classList.remove("locked");
+				});
+			}
+		}
+	
+		// Show/Hide comment toggler if the counter value is zero.
+		/*if (event.target.matches('#history-toggle')) {
+					var dataCount = event.target.getAttribute('data-count');
+					if (0 >= dataCount) {
+							document.getElementById('comments-toggle').style.display = 'none';
+					} else {
+							document.getElementById('comments-toggle').style.display = 'block';
+					}
+			}*/
+	
+		// Settings page tabs toggle.
+		// if (event.target.matches('.cf-dashboard-layout__tabs-list span')) {
+		//     const tabID = event.target?.dataset?.id;
+		//     document.querySelectorAll('.cf-dashboard-layout__tabs-wrap-inner').forEach(function (element) {
+		//         element.style.display = 'none';
+		//     });
+		//     document.getElementById(tabID).style.display = 'block';
+		// }
+	
+		// Scroll to the commented text and its popup from History Popup.
+		const scrollCommentTarget = event.target.closest(".user-commented-on");
+		if (scrollCommentTarget) {
+			event.preventDefault();
+	
+			document
+				.querySelectorAll(
+					"#custom-history-popup, #history-toggle, .custom-buttons"
+				)
+				.forEach((el) => {
+					el.classList.toggle("active");
+				});
+	
+			// Triggering comments-toggle if it is closed when clicking on a particular commented link from activity center.
+			const commentsToggle = document.getElementById("comments-toggle");
+			if (commentsToggle && commentsToggle.classList.contains("active")) {
+				commentsToggle.click();
+			}
+	
+			const dataid = scrollCommentTarget.getAttribute("data-id");
+	
+			// Trigger card click to focus.
+			const card = document.getElementById(dataid);
+			if (card) {
+				card.click();
+			}
+	
+			// Focus and Lock the popup to prevent on hover issue.
+			document.querySelectorAll(".cls-board-outer").forEach((el) => {
+				el.classList.remove("locked");
+			});
+			if (card) {
+				card.classList.add("locked");
+			}
+	
+			const dataTextElements = document.querySelectorAll(
+				`[datatext="${dataid}"]`
+			);
+			dataTextElements.forEach((el) => {
+				el.classList.add("focus");
+			});
+	
+			setTimeout(function () {
+				dataTextElements.forEach((el) => {
+					el.classList.remove("focus");
+				});
+			}, 1500);
+		}
+	
+		if (event.target.matches(".readmoreComment, .readlessComment")) {
+			const commentText = event.target.closest(".commentText");
+			if (commentText) {
+				const readLess = event.target?.closest(".readlessTxt");
+				const readMore = event.target?.closest(".readmoreTxt");
+				if (readLess) {
+					readLess.classList.remove("active");
+					commentText.querySelector(".readmoreTxt").classList.add("active");
+				}
+				if (readMore) {
+					readMore.classList.remove("active");
+					commentText.querySelector(".readlessTxt").classList.add("active");
+				}
+			}
+		}
+	
+		if (event.target.matches(".cls-board-outer .buttons-wrapper")) {
+			const target = event.target;
+	
+			if (target.classList.contains("active")) {
+				target.classList.toggle("active");
+				const commentContainer = target.closest(".commentContainer");
+				if (commentContainer) {
+					const siblings = Array.from(
+						commentContainer.parentElement.children
+					).filter((child) => child !== commentContainer);
+					siblings.forEach((sibling) => {
+						const buttonsWrapper = sibling.querySelector(".buttons-wrapper");
+						if (buttonsWrapper) {
+							buttonsWrapper.classList.remove("active");
+						}
+					});
+				}
+			} else {
+				document
+					.querySelectorAll(
+						"#cf-comment-board-wrapper .cls-board-outer .buttons-wrapper"
+					)
+					.forEach((el) => {
+						el.classList.remove("active");
+					});
+				target.classList.toggle("active");
+			}
+		}
+	
+		if (
+			!event.target.closest(".cls-board-outer .commentContainer .buttons-wrapper")
+		) {
+			document
+				.querySelectorAll(".cls-board-outer .commentContainer .buttons-wrapper")
+				.forEach(function (element) {
+					element.classList.remove("active");
+				});
+		}
+	
+		if (event.target.matches(".cf-slack-integration-box__acc-setting")) {
+			const target = event.target;
+			const cfCntBoxBody = target.closest(".cf-settings-panel__repeater-body");
+	
+			if (cfCntBoxBody) {
+				const cfSlackInnerIntegrationBox = cfCntBoxBody.querySelector(
+					".cf-slack-integration-innerbox"
+				);
+	
+				if (cfSlackInnerIntegrationBox) {
+					cfSlackInnerIntegrationBox.classList.toggle("hidden");
+				}
+			}
+		}
+	
+		if (event.target.matches(".md-plugin-tooltip svg")) {
+			event.preventDefault();
+			// Hide all .cf-suggestion-tooltip-box elements except the one within the clicked .md-plugin-tooltip
+			document
+				.querySelectorAll(".cf-suggestion-tooltip-box")
+				.forEach(function (tooltipBox) {
+					const parentTooltip = event.target.closest(".md-plugin-tooltip");
+					if (!parentTooltip.contains(tooltipBox)) {
+						tooltipBox.style.display = "none";
+					}
+				});
+	
+			// Toggle the .cf-suggestion-tooltip-box within the clicked .md-plugin-tooltip
+			const targetTooltipBox = event.target
+				.closest(".md-plugin-tooltip")
+				.querySelector(".cf-suggestion-tooltip-box");
+			if (targetTooltipBox) {
+				if (
+					targetTooltipBox.style.display === "none" ||
+					targetTooltipBox.style.display === ""
+				) {
+					targetTooltipBox.style.display = "block";
+				} else {
+					targetTooltipBox.style.display = "none";
+				}
+			}
+	
+			// Hide all .cf_feedback_layout elements within .cf-feedback-dashboard
+			document
+				.querySelectorAll(".cf-feedback-dashboard .cf_feedback_layout")
+				.forEach(function (feedbackLayout) {
+					feedbackLayout.style.display = "none";
+				});
+		}
+	
+		const handleShowAllComments = (
+			selector,
+			parentSelector,
+			targetSelector,
+			hideSelf = false
+		) => {
+			if (event.target.matches(selector)) {
+				const button = event.target;
+				const parent = button.closest(parentSelector);
+				if (parent) {
+					parent
+						.querySelectorAll(targetSelector)
+						.forEach((element) => (element.style.display = "block"));
+					if (hideSelf) {
+						button.style.display = "none";
+					}
+				}
+			}
+		};
+	
+		// Show all comments in #cf-comment-board-wrapper
+		handleShowAllComments(
+			"#cf-comment-board-wrapper .cls-board-outer .show-all-comments",
+			".boardTop",
+			".commentContainer",
+			true
+		);
+		// Show all comments in #cf-dashboard
+		handleShowAllComments(
+			"#cf-dashboard .user-data-row .show-all-comments",
+			".user-data-row",
+			".user-data-box",
+			true
+		);
+		// Show all comments in activity center
+		handleShowAllComments(
+			".js-activity-centre .user-data-row .show-all-comments",
+			".user-data-row",
+			".user-data-box",
+			true
+		);
+		handleShowAllComments(
+			".js-activity-centre .user-data-row .show-all-comments",
+			".user-data-row",
+			".show-all-comments",
+			true
+		);
+	
+		/**
+		 * Resets the classes on various elements in the activity center when a board element is clicked.
+		 * This function performs the following actions:
+		 * - Removes the "is-selected" class from specific elements like "cf-bodyrowupdate", "cf-columnalign", etc.
+		 * - Adds the "is-selected" class to the row or column elements that match the clicked board element.
+		 * - Removes the "active" class from all user data rows and adds it to the specific user data row.
+		 * - Removes the "is-selected" class from all comment icons.
+		 * - Updates the "datatext" attribute on elements to match the clicked board element.
+		 * - Triggers a custom "showHideComments" event.
+		 *
+		 */
+		const boardElement = event.target?.closest(".cls-board-outer");
+		if (boardElement) {
+			const boardID = boardElement.getAttribute("id");
+			const cleanedBoardID = boardID.replace("sg", "");
+			const cList = document.getElementById(cleanedBoardID)?.classList;
+	
+			// Remove "is-selected" class from specific elements
+			document
+				.querySelectorAll(
+					".cf-bodyrowupdate, .cf-columnalign, .cf-bodycolumnupdate, .cf-bodycolumndelete, .cf-bodyrowdeleteupdate"
+				)
+				.forEach((element) => {
+					element.classList.remove("is-selected");
+				});
+	
+			// Add "is-selected" class to rows
+			if (
+				!document.body.classList.contains("hide-sg") &&
+				(cList?.contains("bodyupdate-row") ||
+					cList?.contains("bodyupdate-delete-row"))
+			) {
+				if (
+					cList.contains("bodyupdate-row") ||
+					cList.contains("bodyupdate-delete-row")
+				) {
+					document
+						.getElementById(cleanedBoardID)
+						.closest("tr")
+						.classList.add("is-selected");
+				}
+			}
+	
+			// Add "is-selected" class to columns
+			if (
+				!document.body.classList.contains("hide-sg") &&
+				(cList?.contains("bodyupdate-column") ||
+					cList?.contains("bodyupdate-delete-column") ||
+					cList?.contains("columnalign"))
+			) {
+				document
+					.querySelectorAll(`[id="${cleanedBoardID}"]`)
+					.forEach((element) => {
+						element.closest("td").classList.add("is-selected");
+					});
+			}
+	
+			// Remove "active" class from user data rows
+			document
+				.querySelectorAll(".js-activity-centre .user-data-row")
+				.forEach((element) => {
+					element.classList.remove("active");
+				});
+	
+			// Remove "is-selected" class from comment icons
+			document.querySelectorAll(".commentIcon").forEach((element) => {
+				element.classList.remove("is-selected");
+			});
+	
+			// Dispatch data text
+			wp.data.dispatch("mdstore").setDataText(boardID);
+	
+			// Check if URL has a datatext param
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);
+			const current_url = urlParams.get("current_url");
+			const shareUrl = getCookie("current_url");
+	
+			if (current_url) {
+				urlParams.delete("current_url");
+				window.history.replaceState({}, "", `${location.pathname}?${urlParams}`);
+			}
+	
+			if (shareUrl) {
+				deleteCookie("current_url");
+			}
+	
+			// Add "is-selected" class to elements with datatext attribute
+			document.querySelectorAll(`[datatext="${boardID}"]`).forEach((element) => {
+				element.classList.add("is-selected");
+			});
+	
+			// Trigger custom event
+			const event = new Event("showHideComments");
+			document.dispatchEvent(event);
+		}
+	
+		/**
+		 * Handles the click event on the CF tabs in the dashboard.
+		 * Redirects the user to the appropriate page based on the selected tab.
+		 *
+		 * @param {Event} event - The click event object.
+		 */
+		if (
+			event.target.closest(
+				".cf-dashboard-layout__tabs-list li:not(.cf_subscription_tab)"
+			)
+		) {
+			var dataId = document
+				.querySelector(".cf-tab-active a")
+				.getAttribute("data-id");
+			var queryString = window.location.search;
+			var urlParams = new URLSearchParams(queryString);
+			var current_url = urlParams.get("page");
+			var curruntUrl =
+				location.protocol +
+				"//" +
+				location.host +
+				location.pathname +
+				"?page=" +
+				current_url;
+	
+			if ("cf-dashboard" === dataId) {
+				window.location.href = curruntUrl + "&view=web-activity";
+			} else if ("cf-reports" === dataId) {
+				window.location.href = curruntUrl + "&view=post-activity";
+			} else if ("cf-settings" === dataId) {
+				window.location.href = curruntUrl + "&view=settings";
+			} else if ("cf-roles-slack-integration" === dataId) {
+				window.location.href = curruntUrl + "&view=intigrations";
+			}
+		}
+	
+		if (event.target.matches(".markup")) {
+			document.querySelectorAll(".markup").forEach(function (element) {
+				element.classList.remove("my-class");
+				element.removeAttribute("data_name");
+			});
+			event.target.setAttribute("data_name", true);
+			event.target.classList.add("my-class");
+		}
+	
+		if (event.target.matches(".dashicon.dashicons-ellipsis")) {
+			var buttonsHolder = event.target.closest(".buttons-holder");
+			if (buttonsHolder) {
+				buttonsHolder.classList.toggle("is_active");
+			}
+			event.stopPropagation();
+		} else {
+			document.querySelectorAll(".buttons-holder").forEach(function (element) {
+				element.classList.remove("is_active");
+			});
+		}
+	
+		if (event.target.closest(".js-cf-hide-assign-list")) {
+			event.preventDefault();
+			const target = event.target.closest(".js-cf-hide-assign-list");
+			const el = target.closest(".cls-board-outer").id;
+			const assignableListPopup = document.querySelector(
+				`#${el} .cf-assignable-list-popup`
+			);
+			if (assignableListPopup) {
+				assignableListPopup.remove();
+			}
+			target.classList.remove("js-cf-hide-assign-list");
+			target.classList.add("js-cf-show-assign-list");
+		}
+	});
+
+	document.addEventListener("focusin", function (event) {
+		if (event.target.matches(".cf-share-comment")) {
+			event?.target?.classList.add("comment-focus");
+			// Solved overlap issue for adding comment on suggestion.
+			cfRemoveClass(".cls-board-outer", "focus onGoing");
+			const boardOuter = event?.target?.closest(".cls-board-outer");
+			if (boardOuter) {
+				boardOuter.classList.add("focus", "onGoing");
+			}
+			const nextElement = event?.target?.nextElementSibling;
+	
+			const shareCommentContainer = event?.target?.closest(
+				".shareCommentContainer"
+			);
+			const btnWrapper = shareCommentContainer
+				? shareCommentContainer.querySelector(".btn-wrapper")
+				: null;
+			if (btnWrapper) {
+				btnWrapper.style.display = "block";
+			}
+	
+			const focusParentElement = boardOuter
+				? boardOuter.getAttribute("id")
+				: null;
+			if (focusParentElement) {
+				// Float board when we click on second board for comment over suggestion feature
+				if (document.querySelectorAll(".cls-board-outer.is-open").length) {
+					const focusParentElementWithoutSg = focusParentElement.replace(
+						"sg",
+						""
+					);
+					floatCommentsBoard(focusParentElementWithoutSg);
+				}
+				// remove scroll position effect when we click on board @author:Nirav Soni/since @4.8
+				/*const dataTextElement = document.querySelector(`[datatext="${focusParentElement}"]`);
+							if (dataTextElement && dataTextElement.classList.contains('cf-onwhole-block__comment')) {
+									const topOfText = dataTextElement.getBoundingClientRect().top + window.scrollY;
+									document.getElementById(focusParentElement).style.top = `${topOfText}px`;
+							}*/
+			}
+		}
+		if (event.target.matches(".js-cf-edit-comment")) {
+			// Disable reply box when we focus on edit input box
+			document.querySelectorAll(".cls-board-outer").forEach((element) => {
+				element.classList.remove("cf-removeReply");
+			});
+	
+			const boardOuter = event.target.closest(".cls-board-outer");
+			if (boardOuter) {
+				boardOuter.classList.add("cf-removeReply");
+			}
+		}
+	});
+
+	document.addEventListener("focusout", function (event) {
+		if (event.target.matches(".cf-share-comment")) {
+			event.target.classList.remove("comment-focus");
+		}
+		if (event.target.matches(".js-cf-edit-comment")) {
+			const boardOuter = event.target.closest(".cls-board-outer");
+			if (boardOuter) {
+				boardOuter.classList.remove("cf-removeReply");
+			}
+		}
+	});
+
+	// Helper function to get siblings
+Element.prototype.siblings = function () {
+		return Array.prototype.filter.call(
+			this.parentNode.children,
+			function (child) {
+				return child !== this;
+			},
+			this
+		);
+	};
+
+/**
+ * Checks if the given element is currently in the viewport.
+ *
+ * @param {Element} elem - The element to check.
+ * @returns {boolean} - True if the element is in the viewport, false otherwise.
+ */
+function isIntoView(elem) {
+		var documentViewTop = window.scrollY;
+		var documentViewBottom = documentViewTop + window.innerHeight;
+	
+		var elementTop = elem.getBoundingClientRect().top + window.scrollY;
+		var elementBottom = elementTop + elem.offsetHeight;
+	
+		return elementBottom <= documentViewBottom && elementTop >= documentViewTop;
+	}
+
+	/**
+ * Removes a <mdspan> tag from a block's attributes.
+ *
+ * This function is responsible for removing a specific <mdspan> tag from the attributes of a block. It first finds the block element in the DOM, then checks the block type to determine the appropriate removal logic. For core/gallery and core/table blocks, it calls dedicated removal functions. For ACF blocks, it calls a separate removal function. For all other blocks, it iterates through the allowed attribute tags and removes the specified tag from the block's content.
+ *
+ * @param {string} elIDRemove - The ID of the tag to remove.
+ */
+function removeTag(elIDRemove) {
+		// eslint-disable-line
+	
+		const element = document.querySelector('[datatext="' + elIDRemove + '"]');
+		const clientId = element?.closest("[data-block]").getAttribute("data-block");
+		var blockType = element?.closest("[data-block]").getAttribute("data-type");
+		const findAttributes = window.adminLocalizer.allowed_attribute_tags;
+		const blockAttributes = wp.data
+			.select("core/block-editor")
+			.getBlockAttributes(clientId); // eslint-disable-line
+		var prefixAcf = "acf/";
+	
+		if ("core/gallery" === blockType) {
+			removeGalleryTag(blockAttributes, clientId, elIDRemove);
+		}
+		if ("core/table" === blockType) {
+			removeTableTag(blockAttributes, clientId, elIDRemove);
+		}
+		if (blockType?.startsWith(prefixAcf)) {
+			removeAcfTag(blockAttributes, clientId, elIDRemove);
+		}
+	
+		if (null !== blockAttributes && !blockType.startsWith(prefixAcf)) {
+			findAttributes.forEach(function (attrb) {
+				var content = blockAttributes[attrb];
+	
+				if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+					if ("" !== content) {
+						let tempDiv = document.createElement("div");
+						tempDiv.innerHTML = content; // phpcs:ignore
+						let childElements = tempDiv.getElementsByTagName("mdspan");
+						for (let i = 0; i < childElements.length; i++) {
+							if (elIDRemove === childElements[i].attributes.datatext.value) {
+								// Change logic to keep other HTML Tag in content..only remove mdspan tag
+	
+								var parent = childElements[i].parentNode;
+	
+								while (childElements[i].firstChild) {
+									parent.insertBefore(
+										childElements[i].firstChild,
+										childElements[i]
+									); // phpcs:ignore
+								}
+								parent.removeChild(childElements[i]);
+	
+								const finalContent = tempDiv.innerHTML;
+	
+								if (findAttributes.indexOf(attrb) !== -1) {
+									wp.data
+										.dispatch("core/editor")
+										.updateBlock(
+											clientId,
+											createNewAttributeWithFinalContent(attrb, finalContent)
+										);
+								}
+								break;
+							}
+						}
+					}
+				}
+			});
+		}
+	}
+
+/**
+ * Recursively removes 'mdspan' tags with a specific 'datatext' attribute value from the 'data' property of a block's attributes.
+ *
+ * @param {Object} blockAttributes - The block attributes object.
+ * @param {string} clientId - The unique identifier of the block.
+ * @param {string} elIDRemove - The 'datatext' attribute value to be removed.
+ * @returns {Object} The updated block attributes object.
+ */
+function removeAcfTag(blockAttributes, clientId, elIDRemove) {
+		const updatedAttributes = {
+			data: deepCopy(blockAttributes.data), // Ensure that the original object is not mutated
+		};
+	
+		let targetObject = null;
+	
+		// Recursive function to traverse nested objects
+		const checkAndRemoveDatatext = (obj, parentObject, parentKey) => {
+			for (const key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					const value = obj[key];
+	
+					// Check if the attribute value contains both 'mdspan' and 'datatext'
+					if (
+						typeof value === "string" &&
+						value.includes("<mdspan") &&
+						value.includes('datatext="' + elIDRemove + '"')
+					) {
+						// Use DOM manipulation to remove mdspan tags only for the specific datatext value
+						const tempDiv = document.createElement("div");
+						tempDiv.innerHTML = value; // phpcs:ignore
+	
+						const mdspans = tempDiv.querySelectorAll(
+							'mdspan[datatext="' + elIDRemove + '"]'
+						);
+						for (let i = 0; i < mdspans.length; i++) {
+							const mdspan = mdspans[i];
+							// Replace mdspan with its content (keeping only the text content)
+							mdspan.parentNode.replaceChild(
+								document.createTextNode(mdspan.textContent),
+								mdspan
+							);
+						}
+						targetObject = parentObject;
+	
+						var $currentElement = jQuery('[datatext="' + elIDRemove + '"]');
+						var $currentMdspan = $currentElement.closest("mdspan");
+						$currentMdspan.replaceWith($currentMdspan.contents()); // phpcs:ignore
+	
+						const matchnum = key.match(/(\d+)_/);
+						const numericValue = matchnum ? matchnum[1] : null;
+						const matchResult = key.match(/\d+_(.+)/);
+						const dataName = matchResult ? matchResult[1] : key;
+	
+						let selector = key.startsWith("field_")
+							? `[data-key="${key}"]`
+							: `[data-name="${dataName}"]`;
+						if (parentKey !== null) {
+							selector += `${selector} input[type="text"][id*="${parentKey}"], ${selector} textarea[id*="${parentKey}"]`;
+						} else {
+							if (numericValue !== null) {
+								selector += `${selector} input[type="text"][id*="row-${numericValue}"], ${selector} textarea[id*="row-${numericValue}"]`;
+							} else {
+								selector += `${selector} input[type="text"], ${selector} textarea`;
+							}
+						}
+						const $inputField = jQuery(selector);
+						$inputField.val(tempDiv.innerHTML);
+	
+						obj[key] = tempDiv.innerHTML;
+					} else if (typeof value === "object") {
+						// If the value is an object, recursively check and remove datatext
+						checkAndRemoveDatatext(value, obj, key);
+					}
+				}
+			}
+		};
+	
+		// Start the recursive check
+		checkAndRemoveDatatext(updatedAttributes.data, null, null);
+	
+		// Update block attributes if needed
+		wp.data
+			.dispatch("core/block-editor")
+			.updateBlockAttributes(clientId, updatedAttributes);
+	
+		return targetObject;
+	}
+	
+	/**
+	 * Removes the 'mdspan' tags from the captions of images in a gallery block.
+	 *
+	 * @param {Object} blockAttributes - The attributes of the gallery block.
+	 * @param {string} clientId - The ID of the gallery block.
+	 * @param {string} elIDRemove - The ID of the 'mdspan' element to be removed.
+	 */
+	function removeGalleryTag(blockAttributes, clientId, elIDRemove) {
+		document.querySelectorAll(".blocks-gallery-item").forEach(function (el) {
+			if (el.querySelector("figure figcaption")) {
+				blockAttributes.images?.forEach((image) => {
+					const caption = image.caption;
+					let tempDiv = document.createElement("div");
+					tempDiv.innerHTML = caption; // phpcs:ignore
+					let childElements = tempDiv.getElementsByTagName("mdspan");
+					for (let i = 0; i < childElements.length; i++) {
+						if (elIDRemove === childElements[i].attributes.datatext.value) {
+							// Change logic to keep other HTML Tag in content..only remove mdspan tag
+	
+							var parent = childElements[i].parentNode;
+	
+							while (childElements[i].firstChild) {
+								parent.insertBefore(
+									childElements[i].firstChild,
+									childElements[i]
+								); // phpcs:ignore
+							}
+							parent.removeChild(childElements[i]);
+							image.caption = tempDiv.innerHTML;
+							wp.data.dispatch("core/editor").updateBlockAttributes(clientId, {
+								images: blockAttributes.images.map((img) =>
+									img.id === image.id ? { ...img, caption: image.caption } : img
+								),
+							});
+	
+							break;
+						}
+					}
+				});
+			}
+		});
+	}
+	
+	/**
+	 * Removes the 'mdspan' tags from the content of table cells in a table block.
+	 *
+	 * This function iterates through the 'head', 'body', and 'foot' sections of a table block, and for each cell, it removes any 'mdspan' tags that match the provided 'elIDRemove' parameter.
+	 *
+	 * @param {Object} blockAttributes - The attributes of the table block.
+	 * @param {string} clientId - The ID of the table block.
+	 * @param {string} elIDRemove - The ID of the 'mdspan' element to be removed.
+	 */
+	function removeTableTag(blockAttributes, clientId, elIDRemove) {
+		let table_attrb = ["head", "body", "foot"];
+		table_attrb.forEach(function (attrb) {
+			blockAttributes[attrb]?.forEach((tableCells) => {
+				var cells = tableCells.cells;
+				cells.forEach(function (data) {
+					var content = data.content;
+	
+					if ("" !== content) {
+						let tempDiv = document.createElement("div");
+						tempDiv.innerHTML = content; // phpcs:ignore
+						let childElements = tempDiv.getElementsByTagName("mdspan");
+						for (let i = 0; i < childElements.length; i++) {
+							if (elIDRemove === childElements[i].attributes.datatext.value) {
+								// Change logic to keep other HTML Tag in content..only remove mdspan tag
+	
+								var parent = childElements[i].parentNode;
+	
+								while (childElements[i].firstChild) {
+									parent.insertBefore(
+										childElements[i].firstChild,
+										childElements[i]
+									); // phpcs:ignore
+								}
+	
+								parent.removeChild(childElements[i]);
+								data.content = tempDiv.innerHTML;
+								wp.data.dispatch("core/editor").updateBlockAttributes(clientId, {
+									[attrb]: blockAttributes[attrb].map((tc) =>
+										tc === tableCells
+											? {
+													...tc,
+													cells: tc.cells.map((cell) =>
+														cell === data
+															? { ...cell, content: data.content }
+															: cell
+													),
+												}
+											: tc
+									),
+								});
+							}
+						}
+					}
+				});
+			});
+		});
+	}
+	
+	function deepCopy(obj) {
+		if (obj) {
+			return JSON.parse(JSON.stringify(obj));
+		} else {
+			return obj;
+		}
+	}
+	
+	function getCommentsLimit() {
+		return 5;
+	}
+	
+ /**
+ * Formats a timestamp into a human-readable time ago string.
+ *
+ * This function takes a timestamp and converts it into a string that represents the time since that timestamp, such as "few seconds ago", "about a minute ago", or "2 minutes ago". It also handles cases where the timestamp is from today or yesterday.
+ *
+ * @param {number} time - The timestamp to format.
+ * @returns {string} - A human-readable time ago string.
+ */
+function timeAgo(time) {
+		try {
+			/* for time formats of time in seconds and minutes */
+			var templates = {
+				prefix: "",
+				suffix: wp.i18n.__(" ago", "content-collaboration-inline-commenting"),
+				seconds: wp.i18n.__(
+					"few seconds",
+					"content-collaboration-inline-commenting"
+				),
+				minute: wp.i18n.__(
+					"about a minute",
+					"content-collaboration-inline-commenting"
+				),
+				minutes: wp.i18n.__(
+					"%d minutes",
+					"content-collaboration-inline-commenting"
+				),
+			};
+			/* for time format like hrs + today */
+			var forhrsToday = function (timeInHrs) {
+				return (
+					timeInHrs +
+					" " +
+					wp.i18n.__("Today", "content-collaboration-inline-commenting")
+				);
+			};
+			var template = function (t, n) {
+				return (
+					templates[t] && templates[t].replace(/%d/i, Math.abs(Math.round(n)))
+				);
+			};
+	
+			if (!time) return;
+			/* function for converting timestamp into required format */
+			var convertedDatetime = function (date) {
+				date = new Date(date * 1000);
+				let dateFormat = "m/d/Y";
+				let timeFormat = "H:i:s";
+				let dateTime = wp.date.gmdate(dateFormat + " " + timeFormat, date);
+				return dateTime;
+			};
+			let newtime;
+			var convertedTime = convertedDatetime(time);
+			time = new Date(convertedTime * 1000 || convertedTime);
+			var now = new Date(convertedDatetime(getTimestampWithTimezone()));
+			var timeinDate = String(time).split(" ");
+			var dispTime = String(time);
+			dispTime = dispTime.match(/\s([A-z]*)\s[0-9]{1,2}/g);
+			dispTime =
+				time.toLocaleString("en-US", {
+					minute: "numeric",
+					hour: "numeric",
+					hour12: true,
+				}) + dispTime[0];
+			if (timeinDate[2] != now.getDate()) {
+				if (now.getTime() - time.getTime() < 0) {
+					return dispTime;
+				} else {
+					if (
+						timeinDate[2] < now.getDate() &&
+						parseInt(now.getDate()) - parseInt(timeinDate[2]) < 2
+					) {
+						newtime = time.toLocaleString("en-US", {
+							minute: "numeric",
+							hour: "numeric",
+							hour12: true,
+						});
+						newTimeString =
+							translateTimeString(newtime) +
+							" " +
+							wp.i18n.__("Yesterday", "content-collaboration-inline-commenting");
+						return newTimeString;
+					} else {
+						return dispTime;
+					}
+				}
+			} else {
+				if (now.getTime() - time.getTime() < 0) {
+					newtime = time.toLocaleString("en-US", {
+						minute: "numeric",
+						hour: "numeric",
+						hour12: true,
+					});
+					newTimeString =
+						translateTimeString(newtime) +
+						" " +
+						wp.i18n.__("Today", "content-collaboration-inline-commenting");
+					return newTimeString;
+				} else {
+					var seconds = ((now.getTime() - time) * 0.001) >> 0;
+					var minutes = seconds / 60;
+					var hrsFormat = translateTimeString(
+						time.toLocaleString("en-US", {
+							minute: "numeric",
+							hour: "numeric",
+							hour12: true,
+						})
+					);
+					return (
+						templates.prefix +
+						((seconds < 60 && template("seconds", seconds)) ||
+							(minutes < 60 && template("minutes", minutes)) ||
+							(minutes > 60 && forhrsToday(hrsFormat))) +
+						(minutes < 60 ? templates.suffix : "")
+					);
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	} 
  
-        // Save Publishing Settings.
-        $('#cf_suggestion_settings').on('submit', function (e) {
-            e.preventDefault();
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_save_suggestions',
-                'formData': $(this).serialize()
-            };
-            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
-                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                $('#cf_suggestion_settings .cf-success').slideDown(300);
-                setTimeout(function () {
-                    $('#cf_suggestion_settings .cf-success').slideUp(300);
-                }, 3000);
-            });
-        });
-
-        // Save Publishing Settings.
-        $('#cf_email_notification').on('submit', function (e) {
-            e.preventDefault();
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_save_email_notification',
-                'formData': $(this).serialize()
-            };
-            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
-                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                $('#cf_email_notification .cf-success').slideDown(300);
-                setTimeout(function () {
-                    $('#cf_email_notification .cf-success').slideUp(300);
-                }, 3000);
-            });
-        });
-
-        $('.cf-specific-post-categories-multiple').select2({
-            placeholder: __('Please select a category', 'content-collaboration-inline-commenting')
-        });
-
-        $('.cf-specific-post-type-multiple').select2({
-            placeholder: __('Please select a post type', 'content-collaboration-inline-commenting')
-        });
-
-        // Save Suggestion Mode.
-        $('#cf_suggestion_mode').on('submit', function (e) {
-            e.preventDefault();
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_save_suggestions_mode',
-                'formData': $(this).serialize()
-            };
-
-            $.post(ajaxurl, settingsData, function (data) { // eslint-disable-line
-                if ('saved' === data) {
-                    $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                    $('#cf_suggestion_mode .cf-success').slideDown(300);
-                    setTimeout(function () {
-                        $('#cf_suggestion_mode .cf-success').slideUp(300);
-                    }, 3000);
-                } else {
-                    $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                    $('#cf_suggestion_mode .cf-error').slideDown(300);
-                    setTimeout(function () {
-                        $('#cf_suggestion_mode .cf-error').slideUp(300);
-                    }, 3000);
-                }
-            });
-        });
-
-        $(document).on('click', '.reset-filter', function () {
-            $(this).parent().find('select').prop('selectedIndex', 0);
-            $(this).parent().submit();
-        });
-        // Uncheck other suggestion setting if select one.
-        $('input.cf_suggestion_stop_publish_options').on('change', function () {
-            $('input.cf_suggestion_stop_publish_options').not(this).prop('checked', false);
-        });
-
-        // Save Settings for slack intigration.
-        $('#cf_slack_intigration').on('submit', function (e) {
-            e.preventDefault();
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_save_slack_intigration',
-                'formData': $(this).serialize()
-            };
-            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
-                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                $('#cf-slack-notice .cf-success').slideDown(300);
-                setTimeout(function () {
-                    $('#cf-slack-notice .cf-success').slideUp(300);
-                }, 3000);
-            });
-        });
-
-        // Add slect2 for channel selectbox.
-        jQuery('#cf_slack_channels').select2({
-            templateResult: formatState,
-            templateSelection: formatState
-        });
-
-        function formatState(opt) {
-            if (!opt.id) {
-                return opt.text.toLowerCase();
-            }
-
-            var optimage = $(opt.element).attr('data-image');
-            if (!optimage) {
-                return opt.text.toLowerCase();
-            } else {
-                var span = document.createElement('span');
-                var img = document.createElement('img');
-                img.setAttribute('src', optimage);
-                img.setAttribute('width', '12px');
-                img.innerHTML = opt.text.toLowerCase();
-                span.appendChild(img);
-                var $opt = $(span);
-                return $opt;
-            }
-        };
-
-
-
-        // Slack test intigration.
-        $('#cf-slack-integration-disconnect').on('click', function (e) {
-
-            var hidden_site_url = jQuery('.hidden_site_url').val();
-
-            const settingsData = {
-                'action': 'cf_slack_intigration_revoke',
-            };
-            $.post(ajaxurl, settingsData, function (data) { // eslint-disable-line
-                if ('ok' === data) {
-                    jQuery('.cf-slack-integration-button').html('<a href="https://slack.com/oauth/v2/authorize?client_id=3297732204756.3694963903943&scope=incoming-webhook,chat:write,commands&user_scope=groups:write,channels:read,groups:read,channels:write&state=' + hidden_site_url + '" class="cf-slack-integration-connect">' + __('Connect', 'content-collaboration-inline-commenting') + '</a>'); // phpcs:ignore
-                    jQuery('.cf_slack_channel_setting').hide();
-                }
-            });
-        });
-
-        // Activate license.
-        $('#cf_license').on('submit', function (e) {
-            e.preventDefault();
-
-            jQuery('.cf-license-notices').hide();
-            jQuery('.cf-license-notices').html('');
-            jQuery('.cf-license-sucess').hide();
-            jQuery('.cf-license-sucess').html('');
-            jQuery('#cf-license-activator-submit').attr('disabled', "disabled");
-
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_license_activation',
-                'formData': $(this).serialize()
-            };
-            $.post(ajaxurl, settingsData, function (response) { // eslint-disable-line
-                if ('invalid' === response) {
-                    jQuery('.cf-license-notices').html('<div class="cf-notice notice notice-error is-dismissible"><p>The license failed to activate, due to a status of <code>invalid</code>.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                    jQuery('.cf-license-notices').show();
-                    jQuery('.license_check_status').hide();
-
-                } else if ('deactivated' === response) {
-
-                    jQuery('#cf-license-activator').val('');
-
-                    // jQuery('.cf-license-sucess').html('<span>License key is deactivated.</span>');
-                    // jQuery('.cf-license-sucess').show();
-                    window.location.href += '&view=license';
-                    // Change button text.
-                    edd_change_active_license_text();
-
-                } else if ('expired' === response) {
-
-                    jQuery('#cf-license-activator').val('');
-
-                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>License key is expired please try with different key.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                    jQuery('.cf-license-sucess').show();
-
-                    // Change button text.
-                    edd_change_active_license_text();
-
-                } else if ('revoked' === response) {
-
-                    jQuery('#cf-license-activator').val('');
-
-                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has been disabled.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                    jQuery('.cf-license-sucess').show();
-
-                    // Change button text.
-                    edd_change_active_license_text();
-
-                } else if ('missing' === response) {
-
-                    jQuery('#cf-license-activator').val('');
-
-                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Invalid license.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                    jQuery('.cf-license-sucess').show();
-
-                    // Change button text.
-                    edd_change_active_license_text();
-
-                } else if ('no_activations_left' === response) {
-
-                    jQuery('#cf-license-activator').val('');
-
-                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license key has reached its activation limit.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                    jQuery('.cf-license-sucess').show();
-
-                    // Change button text.
-                    edd_change_active_license_text();
-
-                } else if ('site_inactive' === response) {
-
-                    jQuery('#cf-license-activator').val('');
-
-                    jQuery('.cf-license-sucess').html('<div class="cf-notice notice notice-error is-dismissible"><p>Your license is not active for this URL.<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button></p></div>');
-                    jQuery('.cf-license-sucess').show();
-
-                    // Change button text.
-                    edd_change_active_license_text();
-
-                } else {
-
-                    // jQuery('.cf-license-sucess').html('<span>License key is activated.</span>');
-                    // jQuery('.cf-license-sucess').show();
-
-                    jQuery('#cf-license-deactivate-submit').val('Deactivate License');
-                    jQuery('#cf-license-deactivate-submit').attr('data-activate', 'Deactivate License');
-                    jQuery('#cf_license_action').val('deactivate');
-                    jQuery('.license_check_status').show();
-                    window.location.href += '&view=license';
-
-                }
-
-                jQuery('#cf-license-activator-submit').removeAttr('disabled');
-
-            });
-        });
-
-
-        $(document).on('click', '.reset-filter', function () {
-            $(this).parent().find('select').prop('selectedIndex', 0);
-            $(this).parent().submit();
-        });
-        // Save permissions.
-        $('#cf_permissions').on('submit', function (e) {
-            e.preventDefault();
-            $(this).find('[type="submit"]').addClass('loading');
-            const settingsData = {
-                'action': 'cf_save_permissions',
-                'formData': $(this).serialize()
-            };
-            $.post(ajaxurl, settingsData, function () { // eslint-disable-line
-                $('.cf-cnt-box-body').find('[type="submit"]').removeClass('loading');
-                $('#cf-permissions-notice .cf-success').slideDown(300);
-                setTimeout(function () {
-                    $('#cf-permissions-notice .cf-success').slideUp(300);
-                }, 3000);
-            });
-        });
-
-        // Save show_avatar option in a localstorage.
-        const data = {
-            'action': 'cf_store_in_localstorage'
-        };
-        $.post(ajaxurl, data, function (response) { // eslint-disable-line
-            response = JSON.parse(response);
-            localStorage.setItem("showAvatars", response.showAvatars);
-            localStorage.setItem("commentingPluginUrl", response.commentingPluginUrl);
-        });
-
-        // Focus comment popup on click.
-
-        $(document).on('click', '#cf-span__comments .cls-board-outer:not(.focus)', function (e) {
-            closeMulticollabSidebar();
-            // Exclude focus on specific elements.
-            var target = $(e.target);
-            if (target.is(".commentContainer .comment-actions, .commentContainer .comment-actions *")) {
-                return;
-            }
-            const _this = $(this);
-            // Reset Comments Float.
-            $('#cf-span__comments .cls-board-outer').removeAttr('style');
-            $('#cf-span__comments .cls-board-outer').removeClass('focus');
-            $('#cf-span__comments .cls-board-outer').removeClass('is-open');
-            $('#cf-span__comments .comment-delete-overlay').removeClass('show');
-            $('#cf-span__comments .comment-resolve .resolve-cb').prop("checked", false);
-            $('#cf-span__comments .cls-board-outer .buttons-wrapper').removeClass('active');
-            $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
-            
-            $('.btn-wrapper').css('display', 'none');
-            
-
-            const selectedText = _this.attr('id');
-            const currentUser = wp.data.select('core').getCurrentUser()?.id;
-             
-            removeFloatingIcon();
-            _this.addClass('focus');
-            _this.addClass('is-open');
-            _this.css('opacity', '1');
-
-            
-            let topOfText;
-            if (selectedText.match(/^el/m) !== null) {
-                topOfText = $('[datatext="' + selectedText + '"]').offset().top;
-                if ($('[datatext="' + selectedText + '"]').hasClass('cf-icon-wholeblock__comment')) { // To support block suggetion and whole block comment @author - Mayank / since 3.5
-                    $('[datatext="' + selectedText + '"]').addClass('focus');
-                }
-            } else {
-                let sid = $('#' + selectedText).attr('data-sid');
-                topOfText = $('[id="' + sid + '"]').offset()?.top;
-                if (!topOfText) { // To support block suggetion and whole block comment @author - Mayank / since 3.5
-                    topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
-                    $('[data-suggestion_id="' + sid + '"]').addClass('focus');
-                }
-                $('#' + sid).addClass('sg-format-class');
-
-            }
-
-            setTimeout(function () {
-                scrollBoardToPosition(topOfText);
-                _this.offset({ top: topOfText });
-            }, 800);
-
-            $('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
-            $('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
-
-            if ($(`#${selectedText}`).hasClass('sg-board')) {
-                let sid = $(`#${selectedText}`).attr('data-sid');
-                $(`#${sid}`).attr('data-rich-text-format-boundary', 'true');
-            }
-
-        });
-
-        // Scroll to the commented text and its popup from History Popup.
-        $(document.body).on('click', '.user-commented-on', function (e) {
-            $('#custom-history-popup, #history-toggle, .custom-buttons').toggleClass('active');
-            e.preventDefault();
-
-            // Triggering comments-toggle if it is closed when clicking on a particular commented link from activity center.
-            if ($('#comments-toggle').hasClass('active')) {
-                $('#comments-toggle').trigger('click');
-            }
-
-            const dataid = $(this).attr('data-id');
-
-            // Trigger card click to focus.
-            $('#' + dataid).trigger('click');
-
-            // Focus and Lock the popup to prevent on hover issue.
-            $('.cls-board-outer').removeClass('locked');
-            $('#' + dataid).addClass('locked');
-
-            $('[datatext="' + dataid + '"]').addClass('focus');
-            setTimeout(function () {
-                $('[datatext="' + dataid + '"]').removeClass('focus');
-            }, 1500);
-
-        });
-
-        $('.shareCommentContainer textarea').on('click', function () {
-            $(this).parent().addClass('hovered');
-        });
-
-        //Set board top offset from activity center @author: Minal Diwan @since-3.4
-        $(document).on('click', '.user-commented-on,.cf-activity-centre .user-action a', function (e) {
-            var elID = e.target.dataset.elid;
-            if (elID) {
-                elID = elID.replace('cf-', '');
-                $(`#${elID}`).trigger('click');
-                setTimeout(function () {
-                    let topOfText;
-                    if (elID.match(/^el/m) !== null) {
-                        topOfText = $('[datatext="' + elID + '"]').offset().top;
-                    } else {
-                        let sid = $('#' + elID).attr('data-sid');
-                        topOfText = $('[id="' + sid + '"]').offset()?.top;
-                        if (!topOfText) {
-                            topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
-                        }
-                        $('#' + sid).addClass('sg-format-class');
-
-                    }
-                    $('#cf-span__comments .cls-board-outer').removeAttr('style');
-                    $('#cf-span__comments .cls-board-outer').removeClass('focus');
-                    $('#cf-span__comments .cls-board-outer').removeClass('is-open');
-                    $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
-
-                    const currentUser = wp.data.select('core').getCurrentUser()?.id;
-                     
-                    $('#' + elID + '.cls-board-outer').addClass('focus');
-                    $('#' + elID + '.cls-board-outer').addClass('is-open');
-                    $('#' + elID + '.cls-board-outer').css('opacity', '1');
-
-
-                    scrollBoardToPosition(topOfText);
-
-                    $('#' + elID + '.cls-board-outer').offset({ top: topOfText });
-
-                }, 800);
-            }
-        });
-
-        // Email List Template Function.
-        var emailList = function (appendTo, data) {
-            setTimeout(function () {
-                var listItem = '';
-                if (data.length > 0) {
-                    data.forEach(function (user, listIndex) {
-                        if (listIndex == 0) {
-                            listItem += `
-                            <li class="cf-user-list-item active" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
-                                <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
-                                <div class="cf-user-info">
-                                    <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
-                                </div>
-                            </li>`;
-                        } else {
-                            listItem += `
-                            <li class="cf-user-list-item" role="option" data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}" data-full-name="${user.full_name}">
-                                <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
-                                <div class="cf-user-info">
-                                    <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
-                                </div>
-                            </li>`;
-                        }
-                    })
-                    var emailList = `
-                        <div class="cf-mentioned-user-popup">
-                            <ul class="cf-system-user-email-list" role="listbox" tabindex="0">
-                                ${listItem}
-                            </ul>
-                        </div>
-                    `;
-                    emailList = DOMPurify.sanitize(emailList);
-
-                    $(emailList).insertAfter(appendTo); // phpcs:ignore
-                }
-            }, 100);
-        }
-
-
-        // Make matched text highlighted.
-        var makeMatchedTextHighlighted = function (term, markEmail, markName) {
-            term = term.substring(1);
-            var $markEmail = $(markEmail);
-            var $markName = $(markName);
-
-            if (term) {
-                $markEmail.mark(term);
-                $markName.mark(term);
-            }
-        }
-
-        // Detect Browser.
-        var browser = (function (agent) {
-            switch (true) {
-                case agent.indexOf("edge") > -1: return "MS Edge (EdgeHtml)";
-                case agent.indexOf("edg") > -1: return "MS Edge Chromium";
-                case agent.indexOf("opr") > -1 && !!window.opr: return "opera";
-                case agent.indexOf("chrome") > -1 && !!window.chrome: return "chrome";
-                case agent.indexOf("trident") > -1: return "Internet Explorer";
-                case agent.indexOf("firefox") > -1: return "firefox";
-                case agent.indexOf("safari") > -1: return "safari";
-                default: return "other";
-            }
-        })(window.navigator.userAgent.toLowerCase());
-
-        // Get Caret Position
-        var ie = (typeof document.selection != "undefined" && document.selection.type != "Control") && true;
-        var w3 = (typeof window.getSelection != "undefined") && true;
-        var cursorPos = 0;
-        var range = '';
-
-
-        var getCaretPosition = function (editableDiv) {
-            var caretPos = 0, sel;
-            if (window.getSelection) {
-                sel = window.getSelection();
-
-                if (sel.rangeCount) {
-
-                    range = sel.getRangeAt(0);
-                    if (range.commonAncestorContainer.parentNode === editableDiv) {
-
-                        caretPos = range.endOffset;
-
-                    }else if (range.commonAncestorContainer.ownerDocument.activeElement === editableDiv) {
-                        caretPos = sel.focusOffset;
-                    }
-                }
-            } else if (document.selection && document.selection.createRange) {
-                range = document.selection.createRange();
-                if (range.parentElement() === editableDiv) {
-                    var tempEl = document.createElement("span");
-                    editableDiv.insertBefore(tempEl, editableDiv.firstChild); // phpcs:ignore
-                    var tempRange = range.duplicate();
-                    tempRange.moveToElementText(tempEl);
-                    tempRange.setEndPoint("EndToEnd", range);
-                    caretPos = tempRange.text.length;
-                }
-            }
-            return caretPos;
-        }
-        // Insert Display Name.
-        var insertDisplayName = function (setRange, email, userId, fullName, displayName) {
-
-            var gapElContent = document.createTextNode("\u00A0"); // Adding whitespace after the name.
-            var anchor = document.createElement('a');
-
-            var splitDisplayName = displayName.split(' ');
-            anchor.setAttribute('contenteditable', false);
-            anchor.setAttribute('href', `mailto:${email}`);
-            anchor.setAttribute('title', fullName);
-            anchor.setAttribute('data-email', email);
-            anchor.setAttribute('class', 'js-mentioned');
-            anchor.setAttribute('data-display-name', displayName.substr(1));
-            anchor.setAttribute('data-user-id', userId);
-            var anchorContent = document.createTextNode(splitDisplayName[0]);
-            anchor.appendChild(anchorContent);
-            setRange.insertNode(anchor);
-            anchor.after(gapElContent); // phpcs:ignore
-
-        }
-
-        // Cases when we should show the suggestion list.
-        var showSuggestion = function (tracker) {
-            var allowedStrings = ['', '@', ' @', ';', '>'];
-            if (allowedStrings.includes(tracker)) {
-                return true;
-            }
-            return false;
-
-        }
-        // Format Pasted Content.
-        /*var formatPastedContent = function () {
-            $(document.body).on('paste', '.js-cf-share-comment, .js-cf-edit-comment', function (e) {
-                e.preventDefault();
-                let paste = (e.originalEvent || e).clipboardData.getData('text/plain');
-                const selection = window.getSelection();
-                const pastedRange = selection.getRangeAt(0);
-                if (!selection.rangeCount) return false;
-                selection.deleteFromDocument();
-                pastedRange.insertNode(document.createTextNode(paste));
-                pastedRange.collapse(false);
-                selection.removeAllRanges();
-                selection.addRange(pastedRange);
-                e.preventDefault();
-            })
-
-        }
-        formatPastedContent();*/
-        // Create @mentioning email features.
-        var createAutoEmailMention = function () {
-            var el = '';
-            var currentBoardID = '';
-            var currentCommentBoardID = '';
-            var typedText = '';
-            var trackedStr = '';
-            var isEmail = false;
-            var createTextarea = '';
-            var appendIn = '';
-            var assignablePopup = '';
-            var editLink = '';
-            var keysToAvoid = ['Enter', 'Tab', 'Shift', 'Control', 'Alt', 'CapsLock', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-            var currentPostID = $('#post_ID').val();
-            var parentBoardClass = '.cls-board-outer';
-            var mood = 'create';
-            //var cachedUsersList       = adminLocalizer.cached_users_list;
-
-
-            // Grab the current board ID.
-            $(document.body).on('click', parentBoardClass, function () {
-                el = $(this).attr('id');
-                currentBoardID = `#${el}`;
-                appendIn = `${currentBoardID} .cf-mentioned-user-popup`;
-                assignablePopup = `${currentBoardID} .cf-assignable-list-popup`;
-                editLink = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
-                mood = 'create';
-                // Issue no. 579 solved At mention functionality. @author: Nirav Soni.
-                if ('create' === mood && '' === createTextarea) {
-                    createTextarea = `${currentBoardID} .js-cf-share-comment`;
-                }
-            });
-            if ('' === el) {
-                $(document.body).on('focus', '.shareCommentContainer', function () {
-                    el = $(this).parents(parentBoardClass).attr('id');
-                    currentBoardID = `#${el}`;
-                    appendIn = `${currentBoardID} .cf-mentioned-user-popup`;
-                    assignablePopup = `${currentBoardID} .cf-assignable-list-popup`;
-                    editLink = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
-                    mood = 'create';
-                    if ('create' === mood) {
-                        createTextarea = `${currentBoardID} .js-cf-share-comment`;
-                    }
-                })
-            }
-            $(document.body).on('focus keyup paste', '.js-cf-edit-comment', function () {
-                mood = 'edit';
-                el = $(this).parents(parentBoardClass).attr('id');
-                currentCommentBoardID = $(this).parents('.commentContainer').attr('id');
-                if ('edit' === mood) {
-                    createTextarea = `#${currentCommentBoardID} .js-cf-edit-comment`;
-                }
-
-            });
-            // Restrict Br in newline in firefox with resolved git issue #728 @author: Nirav Soni / since 4.7
-            if ('firefox' !== browser) {    
-                $(document.body).on("keydown", '.cf-share-comment', function (e) {
-                    if (e.keyCode == 13 && !e.shiftKey) {
-                        document.execCommand('insertHTML', false, '<br><br>');
-                        return false;
-                    }
-                });
-            }
-
-            // Clearing out assignable dom on edit save or edit cancel.
-            // remove body from document.body - modified by /@author Meet Mehta/@since VIP Plan
-            $(document).on('click', `${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`, function () {
-                $(`${currentBoardID} .cf-assign-to`).remove();
-            })
-
-            // Remove emails list on edit link click.
-            $(document.body).on('click', editLink, function () {
-                $(appendIn).remove();
-                $(assignablePopup).remove();
-            });
-            var mentioncounter = 0;
-            $(document.body).on('click', '.cls-board-outer, .commentInnerContainer .btn-comment, .cf-share-comment-wrapper .btn, .block-editor-writing-flow .is-root-container', function () {
-                mentioncounter = 0;
-                removeFloatingIcon();
-            });
-            /**
-             * ========================================
-             * Triggering textarea keyup event.
-             * ========================================
-             */
-            $(document.body).on('keyup keypress', createTextarea, function (e) {
-
-                var _self = $(createTextarea);
-                var that = this;
-                typedText = _self.html();
-
-                // Clearing out any junk left when clearing the textarea.
-                if ('<br>' === _self.html() || '&nbsp;' === _self.html()) {
-
-                    typedText = '';
-                    $(createTextarea).html('');
-                }
-
-
-
-                // Removing assignable checkbox if that user's email is not in the content or removed.
-
-                if (undefined !== typedText && typedText.length > 0) {
-                    var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
-                    var emailSet = typedText.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm);
-                    emailSet = new Set(emailSet);
-                    var emailAddresses = Array.from(emailSet);
-
-                    // Get the assigner email of the current board.
-                    var currentBoardAssingerEmail = $(`${currentBoardID} .cf-board-assigned-to`).data('user-email');
-
-                    if (undefined !== emailAddresses && emailAddresses.length > 0) {
-                        if (assignCheckBoxId.length > 0) {
-                            var assignCheckBoxUserEmail = $(assignCheckBoxId).attr('data-user-email');
-
-                            let checkEmailPattern = new RegExp(assignCheckBoxUserEmail, 'igm');
-                            let isThere = typedText.match(checkEmailPattern);
-                            if (!isThere && !doingAjax) {
-
-                                doingAjax = true;
-                                var appendInCheckbox = [];
-                                $.ajax({
-                                    url: ajaxurl, // eslint-disable-line
-                                    type: 'post',
-                                    data: {
-                                        action: 'cf_get_user_email_list',
-                                        postID: currentPostID,
-                                        nonce: adminLocalizer.nonce, // eslint-disable-line
-                                    },
-                                    beforeSend: function () { },
-                                    success: function (res) {
-                                        $(appendIn).remove(); // Remove previous DOM.
-                                        $(assignablePopup).remove(); // Remove previous DOM.
-                                        var data = JSON.parse(res);
-
-                                        data.forEach(function (item) {
-                                            if (currentBoardAssingerEmail === emailAddresses[0]) {
-                                                if (item.user_email === emailAddresses[1]) {
-                                                    appendInCheckbox.push(item);
-
-                                                }
-                                            } else {
-                                                if (item.user_email === emailAddresses[0]) {
-                                                    appendInCheckbox.push(item);
-
-                                                }
-                                            }
-
-                                        })
-                                        if (appendInCheckbox.length > 0) {
-                                            $(assignCheckBoxId).prop('checked', false);
-                                            $(assignCheckBoxId).data('user-email', appendInCheckbox[0].user_email)
-                                            $(assignCheckBoxId).val(appendInCheckbox[0].ID);
-
-                                            // code - added by meet - solution of assign to when delete
-                                            $(assignCheckBoxId).next('i').text(`${sprintf(__('Assign to %s', 'content-collaboration-inline-commenting'), appendInCheckbox[0].display_name)}`);
-                                        }
-
-                                    }
-                                })
-
-                            }
-                        }
-                    } else {
-                        $(`${currentBoardID} .cf-assign-to`).remove();
-                    }
-
-                    // Remove assigner dom if there is not email in the editor.
-                    var findEmails = typedText.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i);
-
-                    if (!findEmails || undefined === findEmails) {
-                        $(`${currentBoardID} .cf-assign-to`).remove();
-                    }
-
-                    // Removing assinger chcekbox if it is matched with current board assignees email.
-                    if (emailAddresses.length === 1 && emailAddresses[0] === currentBoardAssingerEmail) {
-                        $(`${currentBoardID} .cf-assign-to`).remove();
-                    }
-
-                }
-
-                // If textarea is blank then remove email list.
-                if (undefined !== typedText && typedText.length <= 0) {
-                    $(appendIn).remove();
-                    $(assignablePopup).remove();
-                    $('.cf-assign-to').remove();
-                }
-
-                if (typedText && typedText.length > 0) {
-                    var refinedText = typedText.replace(/<br>/igm, '');
-                    typedText = refinedText;
-                }
-
-                // Handeling space. As if someone type space has no intension to write email.
-                // So we make isEmail false and trackedStr to blank.
-                if (32 === e.which) {
-                    isEmail = false;
-                    trackedStr = '';
-                }
-
-                // Get current cursor position.
-                var el = $(createTextarea).get(0);
-                cursorPos = getCaretPosition(el);
-
-                // If @ is pressed and shiftkey is true.remove true === e.shiftKey to support swiss keyboard.
-
-                // var charCode = (e.which) ? e.which : e.keyCode;
-                // if (String.fromCharCode(charCode).match(/[^0-9]/g)){
-                //     return false;
-                // }
-
-
-                var keynum;
-                if (window.event) { // IE                  
-                    keynum = e.keyCode;
-                } else if (e.which) { // Netscape/Firefox/Opera                 
-                    keynum = e.which;
-                }
-
-                if ('@' === String.fromCharCode(keynum) || '@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true && '2' !== e.key) { // Removed 'KeyG' === e.code consition in first or consitions. @author: Rishi Shah.
-                    doingAjax = true;
-                    // Fetch all email list.
-                    doingAjax = false;
-                    var prevCharOfEmailSymbol;
-                    mentioncounter++;
-                    var showSuggestionFunc;
-                    if (undefined !== typedText) {
-                        prevCharOfEmailSymbol = typedText.substr(-1, 1);
-
-                        if ('@' === prevCharOfEmailSymbol) {
-                            showSuggestionFunc = showSuggestion(prevCharOfEmailSymbol);
-                        } else {
-                            var index = typedText.indexOf("@");
-                            var preText = typedText.charAt(index);
-
-                            if (preText.indexOf(" ") > 0 || preText.length > 0) {
-                                var words = preText.split(" ");
-                                var prevWords = (words[words.length - 1]);
-                            }
-                            if ('@' === prevWords || ('keypress' === e.type && '@' === String.fromCharCode(keynum))) {
-                                prevWords = '@';
-                                showSuggestionFunc = showSuggestion(prevWords);
-                            }
-
-                        }
-                    }
-                    if (showSuggestionFunc && mentioncounter <= 1 && !doingAjax) {
-                        if ('keypress' === e.type || 'keyup' === e.type) {
-                            mentioncounter = 0;
-                        }
-                        if ('keypress' === e.type && true === $(createTextarea).is(':focus')) {
-                            isEmail = true;
-
-                            $.ajax({
-                                url: ajaxurl, // eslint-disable-line
-                                type: 'post',
-                                data: {
-                                    action: 'cf_get_user_email_list',
-                                    postID: currentPostID,
-                                    nonce: adminLocalizer.nonce, // eslint-disable-line
-                                },
-                                beforeSend: function () { },
-                                success: function (res) {
-                                    $(appendIn).remove(); // Remove previous DOM.
-                                    $(assignablePopup).remove(); // Remove previous DOM.
-                                    var data = JSON.parse(res);
-                                    emailList(createTextarea, data);
-                                    mentioncounter = 0;  // Issue solved for add 2 mentions continues without space. @author: Rishi Shah.
-                                }
-                            })
-                        }
-                    } else {
-                        $(appendIn).remove();
-                        $(assignablePopup).remove();
-                    }
-                }
-
-                if ('keypress' !== e.type && 'Backspace' === e.key && (typedText && typedText.length > 0)) {
-                    let currentTextAt = typedText.substr(-1, 1);
-                    var sel = document.getSelection();
-                    var selNodeChar = sel?.baseNode?.data?.charAt(sel.anchorOffset - 1) || sel?.anchorNode?.data?.charAt(sel.anchorOffset - 1);
-                    var startTextAt = sel?.baseNode?.data?.charAt(0) || sel?.anchorNode?.data?.charAt(0);
-                    
-                    if ('@' === startTextAt || '@' === currentTextAt || '@' === typedText.charAt(cursorPos - 1) || '@' === selNodeChar) {
-                        isEmail = true;
-
-                        $.ajax({
-                            url: ajaxurl, // eslint-disable-line
-                            type: 'post',
-                            data: {
-                                action: 'cf_get_user_email_list',
-                                postID: currentPostID,
-                                nonce: adminLocalizer.nonce, // eslint-disable-line
-                            },
-                            beforeSend: function () { },
-                            success: function (res) {
-                                $(appendIn).remove(); // Remove previous DOM.
-                                $(assignablePopup).remove(); // Remove previous DOM.
-                                var data = JSON.parse(res);
-                                emailList(createTextarea, data);
-                                mentioncounter = 0;  // Issue solved for add 2 mentions continues without space. @author: Rishi Shah.
-                            }
-                        })
-                    }
-                    // resolved git issue #920 @author: Nirav Soni / since 4.6.
-                    if (sel.rangeCount > 0) {
-                        var range = sel.getRangeAt(0);
-                        if (range.startContainer.nodeType === Node.TEXT_NODE) {
-                            var parent = range.startContainer.parentElement;
-                            if (parent.tagName.toLowerCase() === 'a' && parent.className === 'js-mentioned') {
-                                while (parent.firstChild) {
-                                    parent.removeChild(parent.firstChild);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if ((32 === e.which) || (13 === e.which) || (8 === e.which)) {
-                    mentioncounter = 0;
-                }
-
-                // Issue solved after backspace and last work @. @author: Rishi Shah.
-                if ('Backspace' === e.key) {
-                    if (!$(createTextarea).text()) {
-                        trackedStr = '';
-                    }
-                }
-
-                if (true === isEmail && (typedText && typedText.length > 0) && $(createTextarea).is(':focus') === true) {
-                    var checkKeys = function (key) {
-                        if (key === e.key) {
-                            return true;
-                        }
-                        return false;
-                    }
-
-                    if (!keysToAvoid.find(checkKeys)) {
-
-                        // Check for backspace.
-                        if ('keypress' !== e.type) {
-                            if ('Backspace' === e.key) {
-                                //alert("single backspace");
-                                let prevCharOfEmailSymbol = typedText.substr(-1, 1);
-                                //trackedStr = '';
-                                if ('@' === prevCharOfEmailSymbol) {
-                                    //trackedStr = '';
-                                    trackedStr = '@'; // Issue solved after backspace and last work @. @author: Rishi Shah.
-                                } else {
-                                    trackedStr = trackedStr.slice(0, -1);
-                                }
-                            } else if (50 === e.which) {
-                                if ('@' !== trackedStr) {
-                                    trackedStr += '@';
-                                }
-                            } else {
-                                if (50 !== e.which) {
-                                    trackedStr += e.key;
-                                }
-                            }
-                        }
-
-                        //trackedStr.replace("@@", "@");
-
-                        // Check for ctrl+backspace.
-                        // if ('Backspace' === e.key && true === e.ctrlKey) {
-                        //     //alert("Cntl backspace");
-                        //     let prevCharOfEmailSymbol = typedText.substr(-1, 1);
-                        //     //trackedStr = '';
-                        //     if ('@' === prevCharOfEmailSymbol) {
-
-                        //         if ('' !== typedText) {
-                        //             trackedStr = '@';
-                        //         } else {
-                        //             trackedStr = '';
-                        //         }
-                        //     } else {
-                        //         trackedStr = '';
-                        //     }
-                        // }
-                    }
-                    if (13 === e.which) {
-                        $(appendIn).remove();
-                        $(assignablePopup).remove();
-                    }
-                    doingAjax = false;
-                    // If trackedStr contains other chars with @ as well.
-                    if ('@' !== trackedStr && $(createTextarea).is(':focus') === true) {
-
-                        let checkEmailSymbol = trackedStr.match(/^@\w+$/ig);
-                        if (checkEmailSymbol && cursorPos != 0) {
-                            var refinedCachedusersList = [];
-                            let niddle = trackedStr.substr(1);
-                            if ('' !== niddle && niddle.length > 2) {
-                                // Sending Ajax Call to get the matched email list(s).
-                                $.ajax({
-                                    url: ajaxurl, // eslint-disable-line
-                                    type: 'post',
-                                    data: {
-                                        action: 'cf_get_matched_user_email_list',
-                                        niddle: trackedStr,
-                                        postID: currentPostID,
-                                        nonce: adminLocalizer.nonce, // eslint-disable-line
-                                    },
-                                    success: function (res) {
-                                        $(appendIn).remove(); // Remove user list popup DOM.
-                                        $(assignablePopup).remove(); // Remove assignable user list popup DOM.
-                                        var data = JSON.parse(res);
-                                        emailList(createTextarea, data);
-                                        makeMatchedTextHighlighted(trackedStr, '.cf-user-email', '.cf-user-display-name');
-                                    }
-                                })
-
-                            }
-                        } else {
-                            $(appendIn).remove(); // Remove user list popup DOM.
-                            $(assignablePopup).remove(); // Remove assignable user list popup DOM.
-
-                        }
-                    }
-
-                    // Clearing the popups when trackedStr is empty.
-                    if (!trackedStr || '' === trackedStr) {
-                        $(appendIn).remove();
-                        $(assignablePopup).remove();
-                    }
-                }
-
-                // Clearing popup when user types any space or use enterkey.
-                if (32 === e.which) {
-                    $(appendIn).remove();
-                    $(assignablePopup).remove();
-                }
-            });
-            // email list controlling by keyboard keys
-            $(document.body).on('keydown', `.cf-share-comment`, function (e) {
-                // Replace '>' with '<' for UP and DOWN arrow key not working in Comment/Reply Board /@author Meet Mehta /@since VIP Plan
-                if ([38, 40].indexOf(e.keyCode) < -1) {
-                    e.preventDefault();
-                }
-                if (e.which == 40) {
-                    $("li.cf-user-list-item.active").removeClass('active');
-                    $(".cf-system-user-email-list").find('.cf-user-list-item:eq(1)').addClass('active');
-                    $(".cf-share-comment").focusout();
-                    $(".cf-system-user-email-list").focus();
-                }
-            });
-            $(document.body).on('keydown', `.cf-mentioned-user-popup .cf-system-user-email-list`, function (e) {
-                const firstIndex = $(this).find('.cf-user-list-item').first().index();
-                const lastIndex = $(this).find('.cf-user-list-item').last().index();
-                var index = $(this).children('li.cf-user-list-item.active').index();
-
-                if ([38, 40].indexOf(e.keyCode) > -1) {
-                    e.preventDefault();
-                }
-                switch (e.which) {
-                    case 38:
-                        index = (index == firstIndex ? lastIndex : index - 1);
-                        $(".cf-system-user-email-list").focus();
-                        e.stopPropagation();
-                        break;
-                    case 40:
-                        index = (index == lastIndex ? 0 : index + 1);
-                        $(".cf-system-user-email-list").focus();
-                        break;
-                    case 13:
-                        var fullName = $(this).find('.cf-user-list-item:eq( ' + index + ' )').attr("data-full-name");
-                        var displayName = '@' + $(this).find('.cf-user-list-item:eq( ' + index + ' )').attr("data-display-name");
-                        var email = $(this).find('.cf-user-list-item:eq( ' + index + ' )').attr("data-email");
-                        var userId = $(this).find('.cf-user-list-item:eq( ' + index + ' )').attr("user-id");
-                        // Insert Display Name.
-                        insertDisplayName(range, email, userId, fullName, displayName, createTextarea);
-                        var typedContent = $(createTextarea).html();
-                        // Remove @ before display name anchor tag and insterted in to anchor tag
-                        // commented this below line because of bug fixing of <br> removing after user tag
-                        //typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
-                        typedContent = typedContent.replace(/@<a/g, '<a');
-                        if ('firefox' !== browser) {
-                            typedContent = chromeEdgeClearFix(typedContent);
-                        }
-                        var refinedContent = typedContent.replace(/(^@|\s@)([a-z0-9]\w*)/gim, ' ');
-                        refinedContent = typedContent.replace(/@\w+<a/gim, ' <a');
-                        var fragments = document.createRange().createContextualFragment(refinedContent);
-                        var getCurrentTextAreaID = $(createTextarea).attr('id');
-                        var currentTextAreaNode = document.getElementById(getCurrentTextAreaID);
-                        currentTextAreaNode.innerHTML = '';
-                        currentTextAreaNode.appendChild(fragments);
-                        $(appendIn).remove();
-                        $(assignablePopup).remove();
-                        trackedStr = '';
-                        // Setup the caret position after appending the Display Name.
-                        var getCurrentTextAreaID = $(createTextarea).attr('id');
-                        var currentTextareaNode = document.getElementById(getCurrentTextAreaID);
-                        var children = currentTextareaNode.lastElementChild;
-                        //Add fix to remove last <br> tag after appending the Display Name.
-                        if (children.tagName && children.tagName === "BR") {
-                            currentTextareaNode.removeChild(children)
-                        }
-                        e.preventDefault();
-                        // commented this below line because of bug fixing of board gets shifted issue #997. @author - Nirav Soni Since-4.3 
-                        //$(".cf-share-comment").focus();
-                        var selectChild = currentTextareaNode.childNodes.length - 1;
-                        var el = currentTextareaNode.childNodes[selectChild];
-                        var cursorSel = window.getSelection();
-                        range = cursorSel.rangeCount ? cursorSel.getRangeAt(0) : null;
-
-                        //remove condition to set cursore position in firefox
-                        range.setStart(el, range.startOffset);
-                        range.collapse(true);
-                        cursorSel.removeAllRanges();
-                        cursorSel.addRange(range);
-                        break;
-                }
-
-                $(this).find('.active').removeClass('active');
-                $(this).find('.cf-user-list-item:eq( ' + index + ' )').addClass('active');
-
-            });
-
-            // Append email in textarea.
-            $(document.body).on('click keypress', '.cf-system-user-email-list li', function (e) {
-                e.stopPropagation();
-
-
-                if (e.which === 1) {
-                    var fullName = $(this).data('full-name');
-                    var displayName = '@' + $(this).data('display-name');
-                    var email = $(this).data('email');
-                    var userId = $(this).data("user-id");
-                    // Insert Display Name.
-                    insertDisplayName(range, email, userId, fullName, displayName, createTextarea);
-
-                    var typedContent = $(createTextarea).html();
-                    // Remove @ before display name anchor tag and insterted in to anchor tag
-                    // commented this below line because of bug fixing of <br> removing after user tag
-                    //typedContent = typedContent.replace(/[<]br[^>]*[>]<a/gim,"<a");
-                    typedContent = typedContent.replace(/@<a/g, '<a');
-                    typedContent = typedContent.replace(/<\/?span .[^>]*>/g, '');
-                    typedContent = typedContent.replaceAll("</span>", "");
-
-                    if ('firefox' !== browser) {
-                        typedContent = chromeEdgeClearFix(typedContent);
-                    }
-
-                    var refinedContent = typedContent.replace(/(^@|\s@)([a-z0-9]\w*)/gim, ' ');
-                    refinedContent = typedContent.replace(/@\w+<a/gim, ' <a');
-                    var fragments = document.createRange().createContextualFragment(refinedContent);
-                    var getCurrentTextAreaID = $(createTextarea).attr('id');
-                    var currentTextAreaNode = document.getElementById(getCurrentTextAreaID);
-                    currentTextAreaNode.innerHTML = '';
-                    currentTextAreaNode.appendChild(fragments);
-                    $(appendIn).remove();
-                    $(assignablePopup).remove();
-                    trackedStr = '';
-                }
-                // Setup the caret position after appending the Display Name.
-                var getCurrentTextAreaID = $(createTextarea).attr('id');
-                var currentTextareaNode = document.getElementById(getCurrentTextAreaID);
-                var children = currentTextareaNode.lastElementChild;
-                //Add fix to remove last <br> tag after appending the Display Name.
-                if (children.tagName && children.tagName === "BR") {
-
-                    currentTextareaNode.removeChild(children)
-                }
-
-                var selectChild = currentTextareaNode.childNodes.length - 1;
-                var el = currentTextareaNode.childNodes[selectChild];
-                var cursorSel = window.getSelection();
-                range = cursorSel.getRangeAt(0);
-                //remove condition to set cursore position in firefox
-                range.setStart(el, range.startOffset);
-                range.collapse(true);
-                cursorSel.removeAllRanges();
-                cursorSel.addRange(range);
-
-            });
-        }
-        createAutoEmailMention();
-        // Chrome, Edge Clearfix.
-        var chromeEdgeClearFix = function (typedContent) {
-            typedContent = typedContent.replace(/(<div>)/ig, '<br>');
-            typedContent = typedContent.replace(/(<\/div>)/ig, '');
-            return typedContent;
-        }
-        $(document.body).on('keydown', '.cf-system-user-email-list', function (e) {
-            let el = '';
-            let checkbox;
-            var parentBoardClass = '.cls-board-outer';
-            let appendTo = '.cf-share-comment';
-            var mentionedEmail = '.cf-system-user-email-list li';
-            let checkBoxContainer = '.cf-assign-to';
-            if (e.which == 13) {
-                el = $(".cls-board-outer.focus.is-open").attr('id');
-                let thisUserId = $(this).find(".cf-user-list-item.active").attr('data-user-id');
-                let thisDisplayName = $(this).find(".cf-user-list-item.active").attr('data-display-name');
-                let thisUserEmail = $(this).find(".cf-user-list-item.active").attr('data-email');
-                let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).attr('data-user-id');
-                const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                
-                checkbox = `
-                <div class="cf-assign-to">
-                <div class="cf-assign-to-inner">
-                    <label for="${el}-cf-assign-to-user">
-                        <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                    </label>
-                    <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                </div>
-                <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
-                </div>`;
-
-                if ('' !== el) {
-                    if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
-                        $(`#${el} ${checkBoxContainer}`).empty();
-                        checkbox = DOMPurify.sanitize(checkbox);
-                        $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
-                    }
-                }
-            }
-
-        });
-        // User Assign Function.
-        var assignThisToUser = function () {
-            let el = '';
-            var parentBoardClass = '.cls-board-outer';
-            let appendTo = '.cf-share-comment';
-            var mentionedEmail = '.cf-system-user-email-list li';
-            let checkBoxContainer = '.cf-assign-to';
-
-            // Grab the current board ID.
-            $(document.body).on('focus', appendTo, function () {
-                el = $(this).parents(parentBoardClass).attr('id');
-            })
-
-            // On Suggested Email Click.
-            $(document.body).on('click', mentionedEmail, function () {
-                let checkbox;
-                let thisUserId = $(this).data('user-id');
-                let thisDisplayName = $(this).data('display-name');
-                let thisUserEmail = $(this).data('email');
-                let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).data('user-id');
-                const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                
-                let assignToElement = $(`#${el} ${checkBoxContainer}`);
-                if (assignToElement.length === 0) {
-                    checkbox = `
-                    <div class="cf-assign-to">
-                    <div class="cf-assign-to-inner">
-                        <label for="${el}-cf-assign-to-user">
-                            <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                        </label>
-                        <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                    </div>
-                    <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
-                    </div>`;
-                    // Get the assigner id of the current board. @author - Nirav Soni Since-4.0.1 
-                    
-                    let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
-                    if (thisUserId !== currentBoardAssingerID) {
-                        if ('' !== el) {
-                            if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
-                                $(`#${el} ${checkBoxContainer}`).empty();
-                                checkbox = DOMPurify.sanitize(checkbox);
-                                $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
-                            }
-                        }
-                    }
-                }
-                
-                //change assignee message when checkbox selected
-                
-                $(document).on("click", '#' + el + '-cf-assign-to-user', function () {
-                    var checked = $('#' + el + ' .cf-assign-to-user').is(':checked');
-                    $('#' + el + ' .assignMessage').text(checked ? __('The Assigned person will be notified and responsible for marking as done.', 'content-collaboration-inline-commenting') : __('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting'));
-                });
-                
-            });
-
-             // paste comment text with check assign user @author - Nirav Soni Since-4.0.1
-            $(document.body).on('keyup paste', '.js-cf-share-comment, .js-cf-edit-comment', function (e) {
-
-                if( $('.js-cf-share-comment a').hasClass('js-mentioned') || $('.js-cf-edit-comment a').hasClass('js-mentioned') ){
-                    
-                    let checkbox;
-                    let thisUserId = $(this).parents('.shareCommentContainer').find('a.js-mentioned').data('user-id');
-                    let thisDisplayName = $(this).parents('.shareCommentContainer').find('a.js-mentioned').data('display-name');
-                    let thisUserEmail = $(this).parents('.shareCommentContainer').find('a.js-mentioned').data('email');
-                    let currentBoardAssinger = $(`#${el} .cf-board-assigned-to`).data('user-id');
-                    const assigntoText = (currentBoardAssinger) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-
-                    let assignToElement = $(`#${el} ${checkBoxContainer}`);
-                    if (assignToElement.length === 0) {
-                        checkbox = `
-                        <div class="cf-assign-to">
-                        <div class="cf-assign-to-inner">
-                            <label for="${el}-cf-assign-to-user">
-                                <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                            </label>
-                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
-                        </div>
-                        <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>     
-                        </div>`;
-
-                        let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
-                        if (thisUserId !== currentBoardAssingerID) {
-                            if ('' !== el) {
-                                if ($(`#${el} ${checkBoxContainer}`).children().length <= 1) {
-                                    $(`#${el} ${checkBoxContainer}`).empty();
-                                    checkbox = DOMPurify.sanitize(checkbox);
-                                    $(checkbox).insertAfter(`#${el} ${appendTo}`); // phpcs:ignore
-                                }
-                            }
-                        }
-                    }
-
-                    //change assignee message when checkbox selected
-
-                    $(document).on("click", '#' + el + '-cf-assign-to-user', function () {
-                        var checked = $('#' + el + ' .cf-assign-to-user').is(':checked');
-                        $('#' + el + ' .assignMessage').text(checked ? __('The Assigned person will be notified and responsible for marking as done.', 'content-collaboration-inline-commenting') : __('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting'));
-                    });
-               }
-            })
-
-            // On Assignable Email Click.
-            $(document.body).on('click', '.cf-assignable-list li', function (e) {
-
-                if ($(this).parents(parentBoardClass).hasClass('cm-board')) {
-                    // e.preventDefault();
-                    el = $(this).parents(parentBoardClass).attr('id');
-                    let checkbox;
-                    let appendTo = `#${el} .cf-assign-to`;
-                    let assignablePopup = `#${el} .cf-assignable-list-popup`;
-                    let thisUserId = $(this).data('user-id');
-                    let thisUserEmail = $(this).data('email');
-                    let thisDisplayName = $(this).data('display-name');
-                    let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
-                    const assigntoText = (currentBoardAssingerID) ? __('Reassign to', 'content-collaboration-inline-commenting') : __('Assign to', 'content-collaboration-inline-commenting');
-                    
-                    checkbox = `
-                        <div class="cf-assign-to-inner">
-                            <label for="${el}-cf-assign-to-user">
-                                <input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(__('%1$s %2$s', 'content-collaboration-inline-commenting'), assigntoText, thisDisplayName)}</i>
-                            </label>
-                            <span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
-                        </div>    
-                        <span class="assignMessage">${__('Your @mention will add people to this discussion and send an email.', 'content-collaboration-inline-commenting')}</span>  
-                    `;
-                   
-                    let checkboxFragments = document.createRange().createContextualFragment(checkbox);
-                    let appendToSelector = document.querySelector(appendTo);
-                    appendToSelector.innerHTML = '';
-                    appendToSelector.appendChild(checkboxFragments);
-                    $(assignablePopup).remove();
-                }
-            });
-
-        }
-        assignThisToUser();
-
-        // Asignable Email List Template.
-        var assignalbeList = function (_self, data) {
-            var listItem = '';
-            if (data.length > 0) {
-                listItem += `<ul class="cf-assignable-list">`;
-                data.forEach(function (user) {
-                    listItem += `
-                    <li data-user-id="${user.ID}" data-email="${user.user_email}" data-display-name="${user.display_name}">
-                        <img src="${user.avatar}" alt="${user.display_name}" width="24" height="24" />
-                        <div class="cf-user-info">
-                            <p class="cf-user-display-name">${user.display_name} <small class="cf-user-role">${userroleDisplay(user.role)}</small></p>
-                        </div>
-                    </li>
-                    `;
-                });
-                listItem += `</ul>`
-            } else {
-                listItem += `<strong class="cf-no-assignee"> ${__('Sorry! No user found!', 'content-collaboration-inline-commenting')} </strong>`;
-            }
-            var assignListTemplate = `
-                <div class="cf-assignable-list-popup">
-                    ${listItem}
-                </div>
-            `;
-            assignListTemplate = DOMPurify.sanitize(assignListTemplate);
-            setTimeout(function () {
-                $(assignListTemplate).insertAfter(_self + ' .cf-assign-to-inner'); // phpcs:ignore
-            }, 200)
-        }
-
-        // Show Assiganable Email List
-        var showAssingableEmailList = function () {
-            var triggerLink = '.js-cf-show-assign-list';
-            var textarea = '';
-            var appendTo = '';
-            var parentBoardClass = '.cls-board-outer';
-
-            $(document.body).on('click', triggerLink, function (e) {
-                e.preventDefault();
-                var el = $(this).parents(parentBoardClass).attr('id');
-                textarea = `#${el} .js-cf-share-comment`;
-                appendTo = `#${el} .shareCommentContainer .cf-assign-to`;
-                var content = $(textarea).html();
-
-                $(this).removeClass('js-cf-show-assign-list').addClass('js-cf-hide-assign-list');
-
-                // Get the assigner id of the current board.
-                let currentBoardAssingerID = $(`#${el} .cf-board-assigned-to`).data('user-id');
-
-                // Checked cached user list first.
-                var emailSet = content.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm);
-                emailSet = new Set(emailSet);
-                var emailAddresses = Array.from(emailSet);
-                var dataItems = [];
-                // Send Ajax Request.
-                $.ajax({
-                    url: ajaxurl, // eslint-disable-line
-                    type: 'post',
-                    data: {
-                        action: 'cf_get_assignable_user_list',
-                        content: content,
-                        nonce: adminLocalizer.nonce // eslint-disable-line
-                    },
-                    beforeSend: function () { },
-                    success: function (res) {
-                        var data = JSON.parse(res);
-                        emailAddresses.forEach(function (email) {
-                            var pattern = new RegExp(email)
-                            data.forEach(function (item) {
-                                var userEmail = item.user_email;
-                                var isMatched = userEmail.match(pattern);
-                                if (isMatched) {
-                                    if (item.ID !== currentBoardAssingerID) {
-
-                                        dataItems.push(item);
-
-                                    }
-                                }
-                            })
-                        });
-                        assignalbeList(appendTo, dataItems);
-                    }
-                })
-            })
-        }
-        showAssingableEmailList();
-
-        // Hide Assignable Email list.
-        var hideAssignableEmailList = function () {
-            var el = '';
-            var triggerLink = '.js-cf-hide-assign-list';
-            var parentBoardClass = '.cls-board-outer';
-            var assignableListPopup = '';
-            $(document.body).on('click', triggerLink, function (e) {
-                e.preventDefault();
-                el = $(this).parents(parentBoardClass).attr('id');
-                assignableListPopup = `#${el} .cf-assignable-list-popup`;
-                $(assignableListPopup).remove();
-                $(this).removeClass('js-cf-hide-assign-list').addClass('js-cf-show-assign-list');
-            })
-        }
-        hideAssignableEmailList();
-        // Open comment box when user redirect from email.
-        var openComment = function () {
-            var commentedId = adminLocalizer.comment_id; // eslint-disable-line
-            $(window).load(function () {
-                setTimeout(function () {
-                    $(`#${commentedId} .js-edit-comment`).trigger('click');
-                    $(`#${commentedId}`).addClass('comment-flash');
-                }, 2000);
-                setTimeout(function () {
-                    $(`#${commentedId}`).removeClass('comment-flash');
-                }, 4000);
-            })
-        }
-        openComment();
-
-        // Dealing with content-editable console issue.
-        var manageContentEditableConsoleIssue = function () {
-            console.error = (function () {
-                var error = console.error;
-                return function (exception) {
-                    if ((exception + '').indexOf('Warning: A component is `contentEditable`') != 0) {
-                        error.apply(console, arguments);
-                    }
-                }
-            })();
-        }
-        // manageContentEditableConsoleIssue();
-
-        // Read More Comments
-        $(document).on('click', '.readmoreComment, .readlessComment', function () {
-            $(this).parents('.commentText').find('.readMoreSpan').toggleClass('active');
-        });
-
-        // More options toggle event
-        $(document).on("click", ".cls-board-outer .buttons-wrapper", function () {
-
-            if ($(this).hasClass('active')) {
-                $(this).toggleClass("active").parents(".commentContainer").siblings().find(".buttons-wrapper").removeClass("active");
-            } else {
-                $('#cf-span__comments .cls-board-outer .buttons-wrapper').removeClass('active');
-                $(this).toggleClass("active");
-            }
-
-        });
-        // Remove active class when click outside
-        var removeactiveClassout = function () {
-            $('.cls-board-outer .commentContainer .buttons-wrapper').removeClass('active');
-        }
-        $(document).click(function (event) {
-            if (!$(event.target).closest('.cls-board-outer .commentContainer .buttons-wrapper').length) {
-                removeactiveClassout();
-            }
-        });
-
-        // Enable/Disable comment button
-        var adjustSuccessButtonStatus = function () {
-            $(window).on("load", function () {
-                setTimeout(function () {
-                    let commentBox = $(".cls-board-outer .board").find(".cf-share-comment");
-                    if (commentBox.html() === '') {
-                        commentBox.parents(".shareCommentContainer").find(".btn-success").addClass('btn-disabled');
-                        commentBox.parents(".commentContainer").find(".save-btn").addClass('btn-disabled');
-                    } else {
-                        commentBox.parents(".shareCommentContainer").find(".btn-success").removeClass('btn-disabled');
-                    }
-                }, 2000);
-            });
-            $(document).on("keyup paste", ".cf-share-comment-wrapper .cf-share-comment", function (e) {
-                let commentVal = $(this).html();
-                if (32 !== e.which) {
-                    if (commentVal === '') {
-                        $(this).parents(".shareCommentContainer").find(".btn-success").addClass('btn-disabled');
-                        $(this).parents(".commentContainer").find(".save-btn").addClass('btn-disabled');
-                    } else {
-                        $(this).parents(".shareCommentContainer").find(".btn-success").removeClass('btn-disabled');
-                        $(this).parents(".commentContainer").find(".save-btn").removeClass('btn-disabled');
-                    }
-                }
-            });
-            $(document).on("click", ".shareCommentContainer .btn-success", function () {
-                let commentBox = $(".cls-board-outer .board").find(".cf-share-comment");
-                if (commentBox.html() === '') {
-                    commentBox.parents(".shareCommentContainer").find(".btn-success").addClass('btn-disabled');
-                    commentBox.parents(".commentContainer").find(".save-btn").addClass('btn-disabled');
-                } else {
-                    commentBox.parents(".shareCommentContainer").find(".btn-success").removeClass('btn-disabled');
-                    commentBox.parents(".commentContainer").find(".save-btn").removeClass('btn-disabled');
-                }
-            });
-        }
-        //adjustSuccessButtonStatus();
-        $(document).on("click", ".slack-accordion-settings", function () {
-            $(this).parents(".cf-cnt-box-body").find(".cf-slack-inner-integration-box").slideToggle();
-        });
-
-
-    });
-
-    // On Window Load Event.
-    $(window).on('load', function () {
-        $('.cid_popup_hover').parents('.wp-block.editor-block-list__block.block-editor-block-list__block').addClass('parent_cid_popup_hover');
-
-        // Storing necessary user info in local storage.
-        $.post(ajaxurl, { // eslint-disable-line
-            'action': 'cf_get_user'
-        }, function (user) {
-            user = JSON.parse(user);
-            localStorage.setItem("userID", user.id);
-            localStorage.setItem("userName", user.name);
-            localStorage.setItem("userRole", user.role);
-            localStorage.setItem("userURL", user.url);
-        });
-    });
-
-    $(document).on('click', '.load-more-activity', function () {
-        let pointer = $(this).attr('data-pointer');
-        let date = $(this).attr('data-date');
-        let postID = $(this).attr('data-post');
-        let categoryID = $(this).attr('data-category');
-        let cpt = $(this).attr('data-cpt');
-        let boardPosition = $(this).attr('data-board-position');
-
-        // Get all printed dates.
-        var displayedDates = [];
-        $('.board-items-day').each(function () {
-            displayedDates.push($(this).text());
-        });
-        displayedDates = displayedDates.join('|');
-
-        $('.load-more-activity').remove();
-
-        $.ajax({
-            url: ajaxurl, // eslint-disable-line
-            type: 'post',
-            data: {
-                action: 'cf_get_activities',
-                pointer: pointer,
-                date: date,
-                postID: postID,
-                categoryID: categoryID,
-                cpt: cpt,
-                boardPosition: boardPosition,
-                displayedDates: displayedDates,
-            },
-            success: function (result) {
-                $('#cf-dashboard .board-items-main.list-view').append(result); //phpcs:ignore
-            }
-        });
-    });
-
-    function isIntoView(elem) {
-        var documentViewTop = $(window).scrollTop();
-        var documentViewBottom = documentViewTop + $(window).height();
-
-        var elementTop = $(elem).offset().top;
-        var elementBottom = elementTop + $(elem).height();
-
-        return ((elementBottom <= documentViewBottom) && (elementTop >= documentViewTop));
-    }
-
-    $(window).scroll(function () {
-        if (0 !== $('.load-more-activity').length) {
-            if (isIntoView($('.load-more-activity'))) {
-                $('.load-more-activity').trigger('click');
-            }
-        }
-    });
-
-    $(document).on('click', '.show_activity_details', function () {
-        let postID = $(this).attr('data-id');
-        $.ajax({
-            url: ajaxurl, // eslint-disable-line
-            type: 'post',
-            data: {
-                action: 'cf_get_activity_details',
-                postID: postID,
-            },
-            success: function (result) {
-                $("html, body").animate({ scrollTop: 200 });
-                $('.board-items-main.list-view').fadeOut();
-                $('.board-items-main.detail-view').fadeIn();
-                $('#board-item-detail').fadeIn().html(result); //phpcs:ignore
-                $('.bulkactions').hide();
-            }
-        });
-    });
-
-    $(document).on('click', '.cf-tabs li:not(.cf_subscription_tab)', function () {
-        var dataId = jQuery('.cf-tab-active a').attr('data-id');
-        var queryString = window.location.search;
-        var urlParams = new URLSearchParams(queryString);
-        var current_url = urlParams.get('page');
-        var curruntUrl = location.protocol + '//' + location.host + location.pathname + '?page=' + current_url;
-
-        if ('cf-dashboard' === dataId) {
-            window.location.href = curruntUrl + '&view=web-activity';
-        } else if ('cf-reports' === dataId) {
-            window.location.href = curruntUrl + '&view=post-activity';
-        } else if ('cf-settings' === dataId) {
-            window.location.href = curruntUrl + '&view=settings';
-        } else if ('cf-roles-slack-integration' === dataId) {
-            window.location.href = curruntUrl + '&view=intigrations';
-        }
-    });
-
-    $(document).on('click', '#activity-go-back', function () {
-        $('.board-items-main.list-view').fadeIn();
-        $('.board-items-main.detail-view').fadeOut();
-        $('#board-item-detail').fadeIn().html('');
-        $('.bulkactions').show();
-    });
-
-
-    $(document).on('click', '.markup', function () {
-        $('.markup').removeClass('my-class');
-        $(this).attr('data_name', true);
-        $(this).addClass('my-class');
-    });
-    $(document).mouseup(function (e) {
-        var container = $(".edit-popup-option");
-        var markup = $(".markup");
-        // if the target of the click isn't the container nor a descendant of the container
-        if (!container.is(e.target) && container.has(e.target).length === 0) {
-            markup.attr('data_name', false);
-            markup.removeClass('my-class');
-        }
-    });
-    $(document).on('click', '.dashicon.dashicons-ellipsis', function (e) {
-        $(this).parents('.buttons-holder').toggleClass('is_active');
-        e.stopPropagation();
-    });
-
-    $(document).on('click', function (e) {
-        if ($(e.target).is(".dashicon.dashicons-ellipsis") === false) {
-            $(".buttons-holder").removeClass('is_active');
-        }
-    });
-
-    $(document).ready(function () {
-
-        //Show hide notification Tooltip /@author Minal Diwan/@since VIP Plan
-        $(document).on('click', '.md-plugin-tooltip svg', function (e) {
-            e.preventDefault();
-            $('.cf_suggestion-tooltip-box').not($(e.target).parents('.md-plugin-tooltip').find('.cf_suggestion-tooltip-box')).hide();
-            $(e.target).parents('.md-plugin-tooltip').find('.cf_suggestion-tooltip-box').toggle();
-        });
-    });
-
-
-})(jQuery); // eslint-disable-line
-
 /**
  * Creates a new "attributes" object to update, based on the passed attribute name and final content
  *
@@ -2195,1008 +1470,1226 @@
  * @param string finalContent The final content generated by cleaning out the string from mdspan
  * @return {object}
  */
-var createNewAttributeWithFinalContent = function (attributeName, finalContent) {
-    const conf = {
-        attributes: {
-        }
-    };
-    conf.attributes[attributeName] = finalContent;
-    return conf;
-}
+function createNewAttributeWithFinalContent(attributeName, finalContent) {
+		const conf = {
+			attributes: {},
+		};
+		conf.attributes[attributeName] = finalContent;
+		return conf;
+	}  
+
+	function emailList(appendTo, data) {
+		setTimeout(function () {
+			var listItem = "";
+			if (data.length > 0) {
+				data.forEach(function (user, listIndex) {
+					if (listIndex == 0) {
+						listItem += `
+											<li class="cf-user-list-item active" role="option" data-user-id="${
+												user.ID
+											}" data-email="${user.user_email}" data-display-name="${
+							user.display_name
+						}" data-full-name="${user.full_name}">
+													<img src="${user.avatar}" alt="${
+							user.display_name
+						}" width="24" height="24" />
+													<div class="cf-user-info">
+															<p class="cf-user-display-name">${
+																user.display_name
+															} <small class="cf-user-role">${userroleDisplay(
+							user.role
+						)}</small></p>
+													</div>
+											</li>`;
+					} else {
+						listItem += `
+											<li class="cf-user-list-item" role="option" data-user-id="${
+												user.ID
+											}" data-email="${user.user_email}" data-display-name="${
+							user.display_name
+						}" data-full-name="${user.full_name}">
+													<img src="${user.avatar}" alt="${
+							user.display_name
+						}" width="24" height="24" />
+													<div class="cf-user-info">
+															<p class="cf-user-display-name">${
+																user.display_name
+															} <small class="cf-user-role">${userroleDisplay(
+							user.role
+						)}</small></p>
+													</div>
+											</li>`;
+					}
+				});
+				var emailList = `
+									<div class="cf-mentioned-user-popup">
+											<ul class="cf-system-user-email-list" role="listbox" tabindex="0">
+													${listItem}
+											</ul>
+									</div>
+							`;
+				emailList = DOMPurify.sanitize(emailList);
+				document
+					.querySelector(appendTo)
+					?.insertAdjacentHTML("afterend", emailList);
+			}
+		}, 100);
+	}
+
+// Make matched text highlighted.
+function makeMatchedTextHighlighted(term, markEmail, markName) {
+		term = term.substring(1);
+		var markEmailElement = document.querySelector(markEmail);
+		var markNameElement = document.querySelector(markName);
+	
+		if (term) {
+			if (markEmailElement) {
+				mark(markEmailElement, term);
+			}
+			if (markNameElement) {
+				mark(markNameElement, term);
+			}
+		}
+	}
+	function mark(element, term) {
+		var innerHTML = element.innerHTML;
+		var regex = new RegExp(`(${term})`, "gi");
+		element.innerHTML = innerHTML.replace(regex, "<mark>$1</mark>");
+	}
+	
+	function getCaretPosition(editableDiv) {
+		var caretPos = 0,
+			sel;
+		if (window.getSelection) {
+			sel = window.getSelection();
+	
+			if (sel.rangeCount) {
+				range = sel.getRangeAt(0);
+				if (range.commonAncestorContainer.parentNode === editableDiv) {
+					caretPos = range.endOffset;
+				} else if (
+					range.commonAncestorContainer.ownerDocument.activeElement ===
+					editableDiv
+				) {
+					caretPos = sel.focusOffset;
+				}
+			}
+		} else if (document.selection && document.selection.createRange) {
+			range = document.selection.createRange();
+			if (range.parentElement() === editableDiv) {
+				var tempEl = document.createElement("span");
+				editableDiv.insertBefore(tempEl, editableDiv.firstChild); // phpcs:ignore
+				var tempRange = range.duplicate();
+				tempRange.moveToElementText(tempEl);
+				tempRange.setEndPoint("EndToEnd", range);
+				caretPos = tempRange.text.length;
+			}
+		}
+		return caretPos;
+	}
+// Insert Display Name.
+function insertDisplayName(setRange, email, userId, fullName, displayName) {
+		var gapElContent = document.createTextNode("\u00A0"); // Adding whitespace after the name.
+		var anchor = document.createElement("a");
+	
+		var splitDisplayName = displayName.split(" ");
+		anchor.setAttribute("contenteditable", false);
+		anchor.setAttribute("href", `mailto:${email}`);
+		anchor.setAttribute("title", fullName);
+		anchor.setAttribute("data-email", email);
+		anchor.setAttribute("class", "js-mentioned");
+		anchor.setAttribute("data-display-name", displayName.substr(1));
+		anchor.setAttribute("data-user-id", userId);
+		var anchorContent = document.createTextNode(splitDisplayName[0]);
+		anchor.appendChild(anchorContent);
+		setRange.insertNode(anchor);
+		anchor.after(gapElContent); // phpcs:ignore
+	}
+	// Cases when we should show the suggestion list.
+	function showSuggestion(tracker) {
+		var allowedStrings = ["", "@", ";", ">"];
+		if (allowedStrings.includes(tracker)) {
+			return true;
+		}
+		return false;
+	}
+// Chrome, Edge Clearfix.
+function chromeEdgeClearFix(typedContent) {
+		if (typedContent) {
+			typedContent = typedContent.replace(/(<div>)/gi, "<br>");
+			typedContent = typedContent.replace(/(<\/div>)/gi, "");
+		}
+		return typedContent;
+	}
+	function assignThisToUser() {
+		let el = "";
+		const parentBoardClass = ".cls-board-outer";
+		const appendTo = ".cf-share-comment";
+		const mentionedEmail = ".cf-system-user-email-list li";
+		const checkBoxContainer = ".cf-assign-to";
+	
+		// Grab the current board ID.
+		document.body.addEventListener(
+			"focus",
+			function (event) {
+				if (event.target.matches(appendTo)) {
+					el = event.target.closest(parentBoardClass).id;
+				}
+			},
+			true
+		);
+	
+		// On Suggested Email Click.
+		document.body.addEventListener("click", function (event) {
+			if (event.target.closest(mentionedEmail)) {
+				const target = event.target.closest(mentionedEmail);
+				const thisUserId = target?.dataset?.userId;
+				const thisDisplayName = target?.dataset?.displayName;
+				const thisUserEmail = target?.dataset?.email;
+				const currentBoardAssinger = document.querySelector(
+					`#${el} .cf-board-assigned-to`
+				)?.dataset?.userId;
+				const assigntoText = currentBoardAssinger
+					? __("Reassign to", "content-collaboration-inline-commenting")
+					: __("Assign to", "content-collaboration-inline-commenting");
+	
+				const assignToElement = document.querySelector(
+					`#${el} ${checkBoxContainer}`
+				);
+	
+				if (!assignToElement) {
+					let checkbox = `
+									<div class="cf-assign-to">
+									<div class="cf-assign-to-inner">
+											<label for="${el}-cf-assign-to-user">
+													<input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(
+						__("%1$s %2$s", "content-collaboration-inline-commenting"),
+						assigntoText,
+						thisDisplayName
+					)}</i>
+											</label>
+											<span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+									</div>
+									<span class="assignMessage">${__(
+										"Your @mention will add people to this discussion and send an email.",
+										"content-collaboration-inline-commenting"
+									)}</span>     
+									</div>`;
+					const currentBoardAssingerID = document.querySelector(
+						`#${el} .cf-board-assigned-to`
+					)?.dataset?.userId;
+	
+					if (thisUserId !== currentBoardAssingerID) {
+						if (el !== "") {
+							const checkBoxContainerElement = document.querySelector(
+								`#${el} ${checkBoxContainer}`
+							);
+	
+							if (
+								checkBoxContainerElement?.children.length <= 1 ||
+								null === checkBoxContainerElement
+							) {
+								if (checkBoxContainerElement) {
+									checkBoxContainerElement.innerHTML = "";
+								}
+								checkbox = DOMPurify.sanitize(checkbox);
+								const targetElement = document.querySelector(
+									`#${el} ${appendTo}`
+								);
+								targetElement.insertAdjacentHTML("afterend", checkbox);
+							}
+						}
+					}
+				}
+	
+				// Change assignee message when checkbox selected
+				document.addEventListener("click", function (event) {
+					if (event.target.matches(`#${el}-cf-assign-to-user`)) {
+						const checked = document.querySelector(
+							`#${el} .cf-assign-to-user`
+						).checked;
+						document.querySelector(`#${el} .assignMessage`).textContent = checked
+							? __(
+									"The Assigned person will be notified and responsible for marking as done.",
+									"content-collaboration-inline-commenting"
+								)
+							: __(
+									"Your @mention will add people to this discussion and send an email.",
+									"content-collaboration-inline-commenting"
+								);
+					}
+				});
+			}
+		});
+	
+		// Paste comment text with check assign user
+		document.body.addEventListener("keyup", handleCommentEvent);
+		document.body.addEventListener("paste", handleCommentEvent);
+	
+		function handleCommentEvent(event) {
+			if (event.target.matches(".js-cf-share-comment, .js-cf-edit-comment")) {
+				if (
+					document.querySelector(".js-cf-share-comment a.js-mentioned") ||
+					document.querySelector(".js-cf-edit-comment a.js-mentioned")
+				) {
+					const thisUserId = event.target
+						.closest(".shareCommentContainer")
+						?.querySelector("a.js-mentioned")?.dataset?.userId;
+					const thisDisplayName = event.target
+						.closest(".shareCommentContainer")
+						?.querySelector("a.js-mentioned")?.dataset?.displayName;
+					const thisUserEmail = event.target
+						.closest(".shareCommentContainer")
+						?.querySelector("a.js-mentioned")?.dataset?.email;
+					const currentBoardAssinger = document.querySelector(
+						`#${el} .cf-board-assigned-to`
+					)?.dataset?.userId;
+					const assigntoText = currentBoardAssinger
+						? __("Reassign to", "content-collaboration-inline-commenting")
+						: __("Assign to", "content-collaboration-inline-commenting");
+	
+					const assignToElement = document.querySelector(
+						`#${el} ${checkBoxContainer}`
+					);
+					if (!assignToElement) {
+						let checkbox = `
+											<div class="cf-assign-to">
+											<div class="cf-assign-to-inner">
+													<label for="${el}-cf-assign-to-user">
+															<input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(
+							__("%1$s %2$s", "content-collaboration-inline-commenting"),
+							assigntoText,
+							thisDisplayName
+						)}</i>
+													</label>
+													<span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
+											</div>
+											<span class="assignMessage">${__(
+												"Your @mention will add people to this discussion and send an email.",
+												"content-collaboration-inline-commenting"
+											)}</span>     
+											</div>`;
+						const currentBoardAssingerID = document.querySelector(
+							`#${el} .cf-board-assigned-to`
+						)?.dataset?.userId;
+						if (thisUserId !== currentBoardAssingerID) {
+							if (el !== "") {
+								const checkBoxContainerElement = document.querySelector(
+									`#${el} ${checkBoxContainer}`
+								);
+								if (checkBoxContainerElement?.children?.length <= 1) {
+									checkBoxContainerElement.innerHTML = "";
+									checkbox = DOMPurify.sanitize(checkbox);
+									const targetElement = document.querySelector(
+										`#${el} ${appendTo}`
+									);
+									targetElement.insertAdjacentHTML("afterend", checkbox);
+								}
+							}
+						}
+					}
+	
+					// Change assignee message when checkbox selected
+					document.addEventListener("click", function (event) {
+						if (event.target.matches(`#${el}-cf-assign-to-user`)) {
+							const checked = document.querySelector(
+								`#${el} .cf-assign-to-user`
+							).checked;
+							document.querySelector(`#${el} .assignMessage`).textContent =
+								checked
+									? __(
+											"The Assigned person will be notified and responsible for marking as done.",
+											"content-collaboration-inline-commenting"
+										)
+									: __(
+											"Your @mention will add people to this discussion and send an email.",
+											"content-collaboration-inline-commenting"
+										);
+						}
+					});
+				}
+			}
+		}
+	
+		// On Assignable Email Click.
+		document.body.addEventListener("click", function (event) {
+			if (event.target.closest(".cf-assignable-list li")) {
+				const target = event.target.closest(".cf-assignable-list li");
+				if (target.closest(parentBoardClass).classList.contains("cm-board")) {
+					el = target.closest(parentBoardClass).id;
+					const thisUserId = target?.dataset?.userId;
+					const thisUserEmail = target?.dataset?.email;
+					const thisDisplayName = target?.dataset?.displayName;
+					const currentBoardAssingerID = document.querySelector(
+						`#${el} .cf-board-assigned-to`
+					)?.dataset?.userId;
+					const assigntoText = currentBoardAssingerID
+						? __("Reassign to", "content-collaboration-inline-commenting")
+						: __("Assign to", "content-collaboration-inline-commenting");
+	
+					const checkbox = `
+											<div class="cf-assign-to-inner">
+													<label for="${el}-cf-assign-to-user">
+															<input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(
+						__("%1$s %2$s", "content-collaboration-inline-commenting"),
+						assigntoText,
+						thisDisplayName
+					)}</i>
+													</label>
+													<span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
+											</div>    
+											<span class="assignMessage">${__(
+												"Your @mention will add people to this discussion and send an email.",
+												"content-collaboration-inline-commenting"
+											)}</span>  
+									`;
+	
+					const checkboxFragments = document
+						.createRange()
+						.createContextualFragment(checkbox);
+					const appendToSelector = document.querySelector(`#${el} .cf-assign-to`);
+					appendToSelector.innerHTML = "";
+					appendToSelector.appendChild(checkboxFragments);
+					document.querySelector(`#${el} .cf-assignable-list-popup`)?.remove();
+				}
+			}
+		});
+	}
+	function assignableList(_self, data) {
+		let listItem = "";
+		if (data.length > 0) {
+			listItem += `<ul class="cf-assignable-list">`;
+			data.forEach((user) => {
+				listItem += `
+							<li data-user-id="${user.ID}" data-email="${
+					user.user_email
+				}" data-display-name="${user.display_name}">
+									<img src="${user.avatar}" alt="${
+					user.display_name
+				}" width="24" height="24" />
+									<div class="cf-user-info">
+											<p class="cf-user-display-name">${
+												user.display_name
+											} <small class="cf-user-role">${userroleDisplay(
+					user.role
+				)}</small></p>
+									</div>
+							</li>
+							`;
+			});
+			listItem += `</ul>`;
+		} else {
+			listItem += `<strong class="cf-no-assignee"> ${__(
+				"Sorry! No user found!",
+				"content-collaboration-inline-commenting"
+			)} </strong>`;
+		}
+		let assignListTemplate = `
+					<div class="cf-assignable-list-popup">
+							${listItem}
+					</div>
+			`;
+		assignListTemplate = DOMPurify.sanitize(assignListTemplate);
+		setTimeout(() => {
+			const assignListTargetElement = document.querySelector(
+				`${_self} .cf-assign-to-inner`
+			);
+			assignListTargetElement.insertAdjacentHTML("afterend", assignListTemplate);
+		}, 200);
+	}
+// Show Assignable Email List
+function showAssignableEmailList() {
+		const triggerLink = ".js-cf-show-assign-list";
+		const parentBoardClass = ".cls-board-outer";
+	
+		document.body.addEventListener("click", function (e) {
+			if (e.target.closest(triggerLink)) {
+				e.preventDefault();
+				const el = e.target.closest(parentBoardClass).id;
+				const textarea = `#${el} .js-cf-share-comment`;
+				const appendTo = `#${el} .shareCommentContainer .cf-assign-to`;
+				const content = document.querySelector(textarea).innerHTML;
+	
+				e.target.classList.remove("js-cf-show-assign-list");
+				e.target.classList.add("js-cf-hide-assign-list");
+	
+				// Get the assigner id of the current board.
+				const currentBoardAssingerID = document.querySelector(
+					`#${el} .cf-board-assigned-to`
+				)?.dataset?.userId;
+	
+				// Checked cached user list first.
+				let emailSet = content.match(
+					/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/gim
+				);
+				emailSet = new Set(emailSet);
+				const emailAddresses = Array.from(emailSet);
+				const dataItems = [];
+	
+				// Send Ajax Request.
+				fetch(ajaxurl, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+					},
+					body: new URLSearchParams({
+						action: "cf_get_assignable_user_list",
+						content: content,
+						nonce: adminLocalizer.nonce,
+					}),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						emailAddresses.forEach((email) => {
+							const pattern = new RegExp(email);
+							data.forEach((item) => {
+								const userEmail = item.user_email;
+								const isMatched = userEmail.match(pattern);
+								if (isMatched && item.ID !== currentBoardAssingerID) {
+									dataItems.push(item);
+								}
+							});
+						});
+						assignableList(appendTo, dataItems);
+					});
+			}
+		});
+	}
+	function createAutoEmailMention() {
+		let el = "";
+		let currentBoardID = "";
+		let currentCommentBoardID = "";
+		let typedText = "";
+		let trackedStr = "";
+		let isEmail = false;
+		let createTextarea = "";
+		let appendIn = "";
+		let assignablePopup = "";
+		let editLink = "";
+		let doingAjax = false;
+		const keysToAvoid = [
+			"Enter",
+			"Tab",
+			"Shift",
+			"Control",
+			"Alt",
+			"CapsLock",
+			"Meta",
+			"ArrowLeft",
+			"ArrowRight",
+			"ArrowUp",
+			"ArrowDown",
+		];
+		const currentPostID = document.getElementById("post_ID")?.value;
+		const parentBoardClass = ".cls-board-outer";
+		let mood = "create";
+	
+		// Grab the current board ID.
+		document.body.addEventListener("click", function (event) {
+			if (event.target.closest(parentBoardClass)) {
+				el = event.target.closest(parentBoardClass).id;
+				currentBoardID = `#${el}`;
+				appendIn = `${currentBoardID} .cf-mentioned-user-popup`;
+				assignablePopup = `${currentBoardID} .cf-assignable-list-popup`;
+				editLink = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
+				mood = "create";
+				if ("create" === mood && "" === createTextarea) {
+					createTextarea = `${currentBoardID} .js-cf-share-comment`;
+				}
+			}
+		});
+	
+		if ("" === el) {
+			document.body.addEventListener(
+				"focus",
+				function (event) {
+					if (event.target.closest(".shareCommentContainer")) {
+						el = event.target.closest(parentBoardClass).id;
+						currentBoardID = `#${el}`;
+						appendIn = `${currentBoardID} .cf-mentioned-user-popup`;
+						assignablePopup = `${currentBoardID} .cf-assignable-list-popup`;
+						editLink = `${currentBoardID} .comment-actions .buttons-wrapper .js-edit-comment`;
+						mood = "create";
+						if ("create" === mood) {
+							createTextarea = `${currentBoardID} .js-cf-share-comment`;
+						}
+					}
+				},
+				true
+			);
+		}
+	
+		document.body.addEventListener(
+			"focus",
+			function (event) {
+				if (event.target.matches(".js-cf-edit-comment")) {
+					mood = "edit";
+					el = event.target.closest(parentBoardClass).id;
+					currentCommentBoardID = event.target?.id;
+					if ("edit" === mood) {
+						if (currentCommentBoardID) {
+							createTextarea = `#${currentCommentBoardID}.js-cf-edit-comment`;
+						}
+					}
+				}
+			},
+			true
+		);
+	
+		if (navigator.userAgent.toLowerCase().indexOf("firefox") === -1) {
+			document.body.addEventListener("keydown", function (event) {
+				if (
+					event.target.matches(".cf-share-comment") &&
+					event.keyCode === 13 &&
+					!event.shiftKey
+				) {
+					document.execCommand("insertHTML", false, "<br><br>");
+					event.preventDefault();
+				}
+			});
+		}
+	
+		document.addEventListener("click", function (event) {
+			if (
+				event.target.matches(
+					`${currentBoardID} .js-cancel-comment, ${currentBoardID} .save-btn`
+				)
+			) {
+				document
+					.querySelectorAll(`${currentBoardID} .cf-assign-to`)
+					.forEach((el) => el.remove());
+			}
+		});
+	
+		document.body.addEventListener("click", function (event) {
+			if (typeof editLink !== "undefined" && editLink !== "") {
+				if (event.target.matches(editLink)) {
+					document.querySelectorAll(appendIn).forEach((el) => el.remove());
+					document.querySelectorAll(assignablePopup).forEach((el) => el.remove());
+				}
+			}
+		});
+	
+		let mentioncounter = 0;
+		document.body.addEventListener("click", function (event) {
+			if (
+				event.target.closest(
+					".cls-board-outer, .commentInnerContainer .btn-comment, .cf-share-comment-wrapper .btn, .block-editor-writing-flow .is-root-container"
+				)
+			) {
+				mentioncounter = 0;
+				removeFloatingIcon();
+			}
+		});
+	
+		jQuery(document.body).on('keyup keypress', createTextarea, function (e) {
+
+	        var _self = jQuery(createTextarea);
+	        var that = this;
+	        typedText = _self.html();
+
+	        // Clearing out any junk left when clearing the textarea.
+	        if ('<br>' === _self.html() || '&nbsp;' === _self.html()) {
+
+	            typedText = '';
+	            jQuery(createTextarea).html('');
+	        }
+
+	        // Removing assignable checkbox if that user's email is not in the content or removed.
+
+	        if (undefined !== typedText && typedText.length > 0) {
+	            var assignCheckBoxId = `${currentBoardID}-cf-assign-to-user`;
+	            var emailSet = typedText.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/igm);
+	            emailSet = new Set(emailSet);
+	            var emailAddresses = Array.from(emailSet);
+
+	            // Get the assigner email of the current board.
+	            var currentBoardAssingerEmail = jQuery(`${currentBoardID} .cf-board-assigned-to`).data('user-email');
+
+	            if (undefined !== emailAddresses && emailAddresses.length > 0) {
+	                if (assignCheckBoxId.length > 0) {
+	                    var assignCheckBoxUserEmail = jQuery(assignCheckBoxId).attr('data-user-email');
+
+	                    let checkEmailPattern = new RegExp(assignCheckBoxUserEmail, 'igm');
+	                    let isThere = typedText.match(checkEmailPattern);
+	                    if (!isThere && !doingAjax) {
+
+	                        doingAjax = true;
+	                        var appendInCheckbox = [];
+	                        jQuery.ajax({
+	                            url: ajaxurl, // eslint-disable-line
+	                            type: 'post',
+	                            data: {
+	                                action: 'cf_get_user_email_list',
+	                                postID: currentPostID,
+	                                nonce: adminLocalizer.nonce, // eslint-disable-line
+	                            },
+	                            beforeSend: function () { },
+	                            success: function (res) {
+	                                jQuery(appendIn).remove(); // Remove previous DOM.
+	                                jQuery(assignablePopup).remove(); // Remove previous DOM.
+	                                var data = JSON.parse(res);
+
+	                                data.forEach(function (item) {
+	                                    if (currentBoardAssingerEmail === emailAddresses[0]) {
+	                                        if (item.user_email === emailAddresses[1]) {
+	                                            appendInCheckbox.push(item);
+	                                        }
+	                                    } else {
+	                                        if (item.user_email === emailAddresses[0]) {
+	                                            appendInCheckbox.push(item);
+	                                        }
+	                                    }
+
+	                                })
+	                                if (appendInCheckbox.length > 0) {
+	                                    jQuery(assignCheckBoxId).prop('checked', false);
+	                                    jQuery(assignCheckBoxId).data('user-email', appendInCheckbox[0].user_email)
+	                                    jQuery(assignCheckBoxId).val(appendInCheckbox[0].ID);
+
+	                                    // code - added by meet - solution of assign to when delete
+	                                    jQuery(assignCheckBoxId).next('i').text(`${sprintf(__('Assign to %s', 'content-collaboration-inline-commenting'), appendInCheckbox[0].display_name)}`);
+	                                }
+
+	                            }
+	                        })
+
+	                    }
+	                }
+	            } else {
+	                jQuery(`${currentBoardID} .cf-assign-to`).remove();
+	            }
+
+	            // Remove assigner dom if there is no email in the editor.
+	            var findEmails = typedText.match(/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i);
+
+	            if (!findEmails || undefined === findEmails) {
+	                jQuery(`${currentBoardID} .cf-assign-to`).remove();
+	            }
+
+	            // Removing assigner checkbox if it is matched with current board assignees email.
+	            if (emailAddresses.length === 1 && emailAddresses[0] === currentBoardAssingerEmail) {
+	                jQuery(`${currentBoardID} .cf-assign-to`).remove();
+	            }
+
+	        }
+
+	        // If textarea is blank then remove email list.
+	        if (undefined !== typedText && typedText.length <= 0) {
+	            jQuery(appendIn).remove();
+	            jQuery(assignablePopup).remove();
+	            jQuery('.cf-assign-to').remove();
+	        }
+
+	        if (typedText && typedText.length > 0) {
+	            var refinedText = typedText.replace(/<br>/igm, '');
+	            typedText = refinedText;
+	        }
+
+	        // Handling space. As if someone types space with no intention to write email.
+	        // So we make isEmail false and trackedStr to blank.
+	        if (32 === e.which) {
+	            isEmail = false;
+	            trackedStr = '';
+	        }
+
+	        // Get current cursor position.
+	        var el = jQuery(createTextarea).get(0);
+	        cursorPos = getCaretPosition(el);
+
+	        var keynum;
+	        if (window.event) { // IE                  
+	            keynum = e.keyCode;
+	        } else if (e.which) { // Netscape/Firefox/Opera                 
+	            keynum = e.which;
+	        }
+
+	        if ('@' === String.fromCharCode(keynum) || '@' === e.key || 50 === e.which && (typedText && typedText.length > 0) && jQuery(createTextarea).is(':focus') === true && '2' !== e.key) { 
+	            doingAjax = true;
+	            // Fetch all email list.
+	            doingAjax = false;
+	            var prevCharOfEmailSymbol;
+	            mentioncounter++;
+	            var showSuggestionFunc;
+
+	            if (undefined !== typedText) {
+	                prevCharOfEmailSymbol = typedText.substr(-1, 1);
+	                if ('@' === prevCharOfEmailSymbol) {
+	                    showSuggestionFunc = showSuggestion(prevCharOfEmailSymbol);
+	                } else {
+	                    var index = typedText.indexOf("@");
+	                    var preText = typedText.charAt(index);
+	                    if (preText.indexOf(" ") > 0 || preText.length > 0) {
+	                        var words = preText.split(" ");
+	                        var prevWords = (words[words.length - 1]);
+	                    }
+	                    if ('@' === prevWords || ('keypress' === e.type && '@' === String.fromCharCode(keynum))) {
+	                        prevWords = '@';
+	                        showSuggestionFunc = showSuggestion(prevWords);
+	                    }
+	                }
+	            }
+
+	            if (showSuggestionFunc && mentioncounter <= 1 && !doingAjax) {
+	                if ('keypress' === e.type || 'keyup' === e.type) {
+	                    mentioncounter = 0;
+	                }
+	                if ('keypress' === e.type && true === jQuery(createTextarea).is(':focus')) {
+	                    isEmail = true;
+
+	                    jQuery.ajax({
+	                        url: ajaxurl, // eslint-disable-line
+	                        type: 'post',
+	                        data: {
+	                            action: 'cf_get_user_email_list',
+	                            postID: currentPostID,
+	                            nonce: adminLocalizer.nonce, // eslint-disable-line
+	                        },
+	                        beforeSend: function () { },
+	                        success: function (res) {
+	                            jQuery(appendIn).remove(); // Remove previous DOM.
+	                            jQuery(assignablePopup).remove(); // Remove previous DOM.
+	                            var data = JSON.parse(res);
+	                            emailList(createTextarea, data);
+	                            mentioncounter = 0;  // Issue solved for adding 2 mentions consecutively without space.
+	                        }
+	                    })
+	                }
+	            } else {
+	                jQuery(appendIn).remove();
+	                jQuery(assignablePopup).remove();
+	            }
+	        }
+
+	        if ('keypress' !== e.type && 'Backspace' === e.key && (typedText && typedText.length > 0)) {
+	            let currentTextAt = typedText.substr(-1, 1);
+	            var sel = document.getSelection();
+	            var selNodeChar = sel?.baseNode?.data?.charAt(sel.anchorOffset - 1) || sel?.anchorNode?.data?.charAt(sel.anchorOffset - 1);
+	            var startTextAt = sel?.baseNode?.data?.charAt(0) || sel?.anchorNode?.data?.charAt(0); 
+
+	            if ('@' === startTextAt || '@' === currentTextAt || '@' === typedText.charAt(cursorPos - 1) || '@' === selNodeChar) {
+	                isEmail = true;
+
+	                jQuery.ajax({
+	                    url: ajaxurl, // eslint-disable-line
+	                    type: 'post',
+	                    data: {
+	                        action: 'cf_get_user_email_list',
+	                        postID: currentPostID,
+	                        nonce: adminLocalizer.nonce, // eslint-disable-line
+	                    },
+	                    beforeSend: function () { },
+	                    success: function (res) {
+	                        jQuery(appendIn).remove(); // Remove previous DOM.
+	                        jQuery(assignablePopup).remove(); // Remove previous DOM.
+	                        var data = JSON.parse(res);
+	                        emailList(createTextarea, data);
+	                        mentioncounter = 0;  // Issue solved for adding 2 mentions consecutively without space.
+	                    }
+	                })
+	            }
+	            // resolved git issue #920
+	            if (sel.rangeCount > 0) {
+	                var range = sel.getRangeAt(0);
+	                if (range.startContainer.nodeType === Node.TEXT_NODE) {
+	                    var parent = range.startContainer.parentElement;
+	                    if (parent.tagName.toLowerCase() === 'a' && parent.className === 'js-mentioned') {
+	                        while (parent.firstChild) {
+	                            parent.removeChild(parent.firstChild);
+	                        }
+	                    }
+	                }
+	            }
+	        }
+
+	        if ((32 === e.which) || (13 === e.which) || (8 === e.which)) {
+	            mentioncounter = 0;
+	        }
+
+	        if ('Backspace' === e.key) {
+	            if (!jQuery(createTextarea).text()) {
+	                trackedStr = '';
+	            }
+	        }
+
+	        if (true === isEmail && (typedText && typedText.length > 0) && jQuery(createTextarea).is(':focus') === true) {
+	            var checkKeys = function (key) {
+	                if (key === e.key) {
+	                    return true;
+	                }
+	                return false;
+	            }
+	            if (!keysToAvoid.find(checkKeys)) {
+
+	                // Check for backspace.
+	                if ('keypress' !== e.type) {
+	                    if ('Backspace' === e.key) {
+	                        let prevCharOfEmailSymbol = typedText.substr(-1, 1);
+	                        trackedStr = (prevCharOfEmailSymbol === '@') ? '@' : trackedStr.slice(0, -1);
+	                    } else if (50 === e.which) {
+	                        if ('@' !== trackedStr) {
+	                            trackedStr += '@';
+	                        }
+	                    } else {
+	                        if (50 !== e.which) {
+	                            trackedStr += e.key;
+	                        }
+	                    }
+	                }
+	            }
+	            if (13 === e.which) {
+	                jQuery(appendIn).remove();
+	                jQuery(assignablePopup).remove();
+	            }
+	            doingAjax = false;
+	            if ('@' !== trackedStr && jQuery(createTextarea).is(':focus') === true) {
+
+	                let checkEmailSymbol = trackedStr.match(/^@\w+$/ig);
+	                if (checkEmailSymbol && cursorPos != 0) {
+	                    var refinedCachedusersList = [];
+	                    let niddle = trackedStr.substr(1);
+	                    if ('' !== niddle && niddle.length > 2) {
+	                        // Sending Ajax Call to get the matched email list(s).
+	                        jQuery.ajax({
+	                            url: ajaxurl, // eslint-disable-line
+	                            type: 'post',
+	                            data: {
+	                                action: 'cf_get_matched_user_email_list',
+	                                niddle: trackedStr,
+	                                postID: currentPostID,
+	                                nonce: adminLocalizer.nonce, // eslint-disable-line
+	                            },
+	                            success: function (res) {
+	                                jQuery(appendIn).remove(); // Remove user list popup DOM.
+	                                jQuery(assignablePopup).remove(); // Remove assignable user list popup DOM.
+	                                var data = JSON.parse(res);
+	                                emailList(createTextarea, data);
+	                                makeMatchedTextHighlighted(trackedStr, '.cf-user-email', '.cf-user-display-name');
+	                            }
+	                        })
+	                    }
+	                } else {
+	                    jQuery(appendIn).remove(); // Remove user list popup DOM.
+	                    jQuery(assignablePopup).remove(); // Remove assignable user list popup DOM.
+	                }
+	            }
+
+	            if (!trackedStr || '' === trackedStr) {
+	                jQuery(appendIn).remove();
+	                jQuery(assignablePopup).remove();
+	            }
+	        }
+
+	        if (32 === e.which) {
+	            jQuery(appendIn).remove();
+	            jQuery(assignablePopup).remove();
+	        }
+	  	});
+	
+		document.body.addEventListener("keydown", function (event) {
+			if (event.target.matches(".cf-share-comment")) {
+				if ([38, 40].indexOf(event.keyCode) > -1) {
+					event.preventDefault();
+				}
+				if (event.which === 40) {
+					document
+						.querySelectorAll("li.cf-user-list-item.active")
+						.forEach((el) => el.classList.remove("active"));
+					document
+						.querySelector(".cf-system-user-email-list")
+						?.querySelector(".cf-user-list-item:nth-child(2)")
+						.classList.add("active");
+					document.querySelector(".cf-share-comment")?.blur();
+					document.querySelector(".cf-system-user-email-list")?.focus();
+				}
+			}
+		});
+	
+		document.body.addEventListener("keydown", function (e) {
+			const popupSelector = ".cf-mentioned-user-popup .cf-system-user-email-list";
+			const userListItemSelector = ".cf-user-list-item";
+			const activeItemSelector = "li.cf-user-list-item.active";
+	
+			if (e.target.closest(popupSelector)) {
+				const popup = e.target.closest(popupSelector);
+				const userListItems = popup.querySelectorAll(userListItemSelector);
+				const firstIndex = 0;
+				const lastIndex = userListItems.length - 1;
+				let index = Array.from(userListItems).findIndex((item) =>
+					item.classList.contains("active")
+				);
+	
+				if ([38, 40].includes(e.keyCode)) {
+					e.preventDefault();
+				}
+	
+				switch (e.which) {
+					case 38: // Up arrow
+						index = index === firstIndex ? lastIndex : index - 1;
+						document.querySelector(".cf-system-user-email-list").focus();
+						e.stopPropagation();
+						break;
+					case 40: // Down arrow
+						index = index === lastIndex ? 0 : index + 1;
+						document.querySelector(".cf-system-user-email-list").focus();
+						break;
+					case 13: // Enter key
+						const selectedItem = userListItems[index];
+						const fullName = selectedItem.getAttribute("data-full-name");
+						const displayName =
+							"@" + selectedItem.getAttribute("data-display-name");
+						const email = selectedItem.getAttribute("data-email");
+						const userId = selectedItem.getAttribute("user-id");
+	
+						// Insert Display Name.
+						insertDisplayName(
+							range,
+							email,
+							userId,
+							fullName,
+							displayName,
+							createTextarea
+						);
+	
+						const createTextareaText = document.querySelector(createTextarea);
+						let typedContent = createTextareaText.innerHTML;
+						typedContent = typedContent.replace(/@<a/g, "<a");
+						var browserType = browser(window.navigator.userAgent.toLowerCase());
+						if ("firefox" !== browserType) {
+							typedContent = chromeEdgeClearFix(typedContent);
+						}
+						let refinedContent = typedContent.replace(
+							/(^@|\s@)([a-z0-9]\w*)/gim,
+							" "
+						);
+						refinedContent = refinedContent.replace(/@\w+<a/gim, " <a");
+						const fragments = document
+							.createRange()
+							.createContextualFragment(refinedContent);
+						const getCurrentTextAreaID = createTextareaText.id;
+						const currentTextAreaNode =
+							document.getElementById(getCurrentTextAreaID);
+						currentTextAreaNode.innerHTML = "";
+						currentTextAreaNode.appendChild(fragments);
+						document.querySelector(appendIn)?.remove();
+						document.querySelector(assignablePopup)?.remove();
+						trackedStr = "";
+	
+						// Setup the caret position after appending the Display Name.
+						const children = currentTextAreaNode.lastElementChild;
+						if (children && children.tagName === "BR") {
+							currentTextAreaNode.removeChild(children);
+						}
+						e.preventDefault();
+	
+						const selectChild = currentTextAreaNode.childNodes.length - 1;
+						const el = currentTextAreaNode.childNodes[selectChild];
+						const cursorSel = window.getSelection();
+						range = cursorSel.getRangeAt(0);
+	
+						// Ensure the offset is within the valid range
+						const offset = Math.min(range.startOffset, el.textContent.length);
+						range.setStart(el, offset);
+						range.collapse(true);
+						cursorSel.removeAllRanges();
+						cursorSel.addRange(range);
+						break;
+				}
+	
+				userListItems.forEach((item) => item.classList.remove("active"));
+				userListItems[index].classList.add("active");
+			}
+		});
+	
+		document.body.addEventListener("click", handleUserListClick);
+		document.body.addEventListener("keypress", handleUserListClick);
+	
+		function handleUserListClick(e) {
+			if (e.target.closest(".cf-system-user-email-list li")) {
+				e.stopPropagation();
+	
+				if (e.which === 1) {
+					const target = e.target.closest(".cf-system-user-email-list li");
+					const fullName = target.getAttribute("data-full-name");
+					const displayName = "@" + target.getAttribute("data-display-name");
+					const email = target.getAttribute("data-email");
+					const userId = target.getAttribute("user-id");
+					// Insert Display Name.
+					insertDisplayName(
+						range,
+						email,
+						userId,
+						fullName,
+						displayName,
+						createTextarea
+					);
+					const createTextareaText = document.querySelector(createTextarea);
+					let typedContent = createTextareaText.innerHTML;
+					if (typedContent) {
+						typedContent = typedContent.replace(/@<a/g, "<a");
+						typedContent = typedContent.replace(/<\/?span .[^>]*>/g, "");
+						typedContent = typedContent.replaceAll("</span>", ""); // phpcs:ignore
+	
+						var browserType = browser(window.navigator.userAgent.toLowerCase());
+						if ("firefox" !== browserType) {
+							typedContent = chromeEdgeClearFix(typedContent);
+						}
+	
+						let refinedContent = typedContent.replace(
+							/(^@|\s@)([a-z0-9]\w*)/gim,
+							" "
+						);
+						refinedContent = refinedContent.replace(/@\w+<a/gim, "<a");
+						const fragments = document
+							.createRange()
+							.createContextualFragment(refinedContent);
+						const getCurrentTextAreaID = createTextareaText.id;
+	
+						const currentTextAreaNode =
+							document.getElementById(getCurrentTextAreaID);
+						currentTextAreaNode.innerHTML = "";
+						currentTextAreaNode.appendChild(fragments);
+						document.querySelector(appendIn)?.remove();
+						document.querySelector(assignablePopup)?.remove();
+						trackedStr = "";
+	
+						// Setup the caret position after appending the Display Name.
+						const children = currentTextAreaNode.lastElementChild;
+						if (children && children.tagName === "BR") {
+							currentTextAreaNode.removeChild(children);
+						}
+	
+						const selectChild = currentTextAreaNode.childNodes.length - 1;
+						const el = currentTextAreaNode.childNodes[selectChild];
+						const cursorSel = window.getSelection();
+						range = cursorSel.getRangeAt(0);
+	
+						// Ensure the offset is within the valid range
+						const offset = Math.min(range.startOffset, el.textContent.length);
+						range.setStart(el, offset);
+						range.collapse(true);
+						cursorSel.removeAllRanges();
+						cursorSel.addRange(range);
+					}
+				}
+			}
+		}
+	}
 
 /**
- * Remove the <mdspan> tag from the text.
- *
- * @param sting elIDRemove The ID of the comment thread.
+ * Detects the browser type based on the user agent string.
+ * @returns {string} The name of the detected browser.
  */
-var removeTag = function (elIDRemove) { // eslint-disable-line
-
-    const clientId = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-block'); // eslint-disable-line
-    var blockType = jQuery('[datatext="' + elIDRemove + '"]').parents('[data-block]').attr('data-type'); // eslint-disable-line
-    const findAttributes = window.adminLocalizer.allowed_attribute_tags;
-    const blockAttributes = wp.data.select('core/block-editor').getBlockAttributes(clientId); // eslint-disable-line
-    var prefixAcf = 'acf/';
-    
-    if ('core/gallery' === blockType) {
-        removeGalleryTag(blockAttributes, clientId, elIDRemove)
-    }
-    if ('core/table' === blockType) {
-        removeTableTag(blockAttributes, clientId, elIDRemove)
-    }
-    if ( blockType?.startsWith( prefixAcf ) ) {
-        removeAcfTag(blockAttributes, clientId, elIDRemove)
-    }
-
-    if (null !== blockAttributes && !blockType.startsWith( prefixAcf ) ) {
-
-        jQuery(findAttributes).each(function (i, attrb) { // eslint-disable-line
-            var content = blockAttributes[attrb];
-
-            if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-
-                if ('' !== content) {
-                    let tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content; // phpcs:ignore
-                    let childElements = tempDiv.getElementsByTagName('mdspan');
-
-                    for (let i = 0; i < childElements.length; i++) {
-                        if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            //Change logic to keep other HTML Tag in content..only remove mdspan tag
-
-                            var parent = childElements[i].parentNode;
-
-                            while (childElements[i].firstChild) {
-                                parent.insertBefore(childElements[i].firstChild, childElements[i]); //phpcs:ignore
-                            }
-                            parent.removeChild(childElements[i]);
-
-                            const finalContent = tempDiv.innerHTML;
-
-                            if (findAttributes.indexOf(attrb) !== -1) {
-                                wp.data.dispatch('core/editor').updateBlock(clientId, createNewAttributeWithFinalContent(attrb, finalContent));
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-    }
-}
-
-var removeAcfTag = function (blockAttributes, clientId, elIDRemove) {
-    const updatedAttributes = {
-        data: deepCopy(blockAttributes.data), // Ensure that the original object is not mutated
-    };
-
-    let targetObject = null;
-
-    // Recursive function to traverse nested objects
-    const checkAndRemoveDatatext = (obj, parentObject, parentKey) => {
-        for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                const value = obj[key];
-
-                // Check if the attribute value contains both 'mdspan' and 'datatext'
-                if (typeof value === 'string' && value.includes('<mdspan') && value.includes('datatext="' + elIDRemove + '"')) {
-                    // Use DOM manipulation to remove mdspan tags only for the specific datatext value
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = value;
-
-                    const mdspans = tempDiv.querySelectorAll('mdspan[datatext="' + elIDRemove + '"]');
-                    for (let i = 0; i < mdspans.length; i++) {
-                        const mdspan = mdspans[i];
-                        // Replace mdspan with its content (keeping only the text content)
-                        mdspan.parentNode.replaceChild(document.createTextNode(mdspan.textContent), mdspan);
-                    }
-                    targetObject = parentObject;
-
-                    var $currentElement = jQuery('[datatext="' + elIDRemove + '"]');
-                    var $currentMdspan = $currentElement.closest('mdspan');
-                    $currentMdspan.replaceWith($currentMdspan.contents());
-
-                    const matchnum = key.match(/(\d+)_/);
-                    const numericValue = matchnum ? matchnum[1] : null;
-                    const matchResult = key.match(/\d+_(.+)/);
-                    const dataName = matchResult ? matchResult[1] : key;
-
-                    let selector = key.startsWith('field_') ? `[data-key="${key}"]` : `[data-name="${dataName}"]`;
-                    if (parentKey !== null) {
-                        selector += `${selector} input[type="text"][id*="${parentKey}"], ${selector} textarea[id*="${parentKey}"]`;
-                    } else {
-                        if (numericValue !== null) {
-                            selector += `${selector} input[type="text"][id*="row-${numericValue}"], ${selector} textarea[id*="row-${numericValue}"]`;
-                        } else {
-                            selector += `${selector} input[type="text"], ${selector} textarea`;
-                        }
-                    }
-                    const $inputField = jQuery(selector);
-                    $inputField.val(tempDiv.innerHTML);
-
-                    obj[key] = tempDiv.innerHTML;
-
-                } else if (typeof value === 'object') {
-                    // If the value is an object, recursively check and remove datatext
-                    checkAndRemoveDatatext(value, obj, key);
-                }
-            }
-        }
-    };
-
-    // Start the recursive check
-    checkAndRemoveDatatext(updatedAttributes.data, null, null);
-
-    // Update block attributes if needed
-    wp.data.dispatch('core/block-editor').updateBlockAttributes(clientId, updatedAttributes);
-
-    return targetObject;
-}
-
-// Deep copy function to avoid mutating the original object
-function deepCopy(obj) { 
-    if( obj ) {
-        return JSON.parse(JSON.stringify(obj));
-    } else {
-        return obj;
-    }
-}
-
-var removeGalleryTag = function (blockAttributes, clientId, elIDRemove) {
-    jQuery('.blocks-gallery-item').each(function (index, el) {
-        if (jQuery(el).find('figure figcaption').length) {
-            blockAttributes.images?.forEach((image) => {
-                const caption = image.caption;
-                let tempDiv = document.createElement('div');
-                tempDiv.innerHTML = caption; // phpcs:ignore
-                let childElements = tempDiv.getElementsByTagName('mdspan');
-                for (let i = 0; i < childElements.length; i++) {
-                    if (elIDRemove === childElements[i].attributes.datatext.value) {
-                        //Change logic to keep other HTML Tag in content..only remove mdspan tag
-
-                        var parent = childElements[i].parentNode;
-
-                        while (childElements[i].firstChild) {
-                            parent.insertBefore(childElements[i].firstChild, childElements[i]); //phpcs:ignore
-                        }
-                        parent.removeChild(childElements[i]);
-                        image.caption = tempDiv.innerHTML;
-                        wp.data.dispatch('core/editor').updateBlockAttributes(clientId, {
-                            attributes: {
-                                images: {
-                                    id: image.id,
-                                    caption: image.caption,
-                                },
-                            },
-                        });
-
-                        break;
-                    }
-                }
-            })
-        }
-    });
-}
-var removeTableTag = function (blockAttributes, clientId, elIDRemove) {
-    let table_attrb = ['head', 'body', 'foot'];
-    jQuery(table_attrb).each(function (i, attrb) {
-
-        blockAttributes[attrb]?.forEach((tableCells) => {
-            var cells = tableCells.cells;
-            cells.forEach(function (data) {
-                var content = data.content;
-
-                if ('' !== content) {
-                    let tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content; // phpcs:ignore
-                    let childElements = tempDiv.getElementsByTagName('mdspan');
-                    for (let i = 0; i < childElements.length; i++) {
-                        if (elIDRemove === childElements[i].attributes.datatext.value) {
-                            //Change logic to keep other HTML Tag in content..only remove mdspan tag
-
-                            var parent = childElements[i].parentNode;
-
-                            while (childElements[i].firstChild) {
-                                parent.insertBefore(childElements[i].firstChild, childElements[i]); //phpcs:ignore
-                            }
-
-                            parent.removeChild(childElements[i]);
-                            data.content = tempDiv.innerHTML;
-                            wp.data.dispatch('core/editor').updateBlockAttributes(clientId, {
-                                attributes: {
-                                    attrb: {
-                                        content: data.content
-                                    },
-                                },
-                            });
-                        }
-                    }
-                }
-
-            })
-        })
-    })
-}
-var getCommentsLimit = function () {
-    return 5;
-}
-
-/* function for calculating diff of time. */
-var timeAgo = function (time) {
-
-    try {
-        /* for time formats of time in seconds and minutes */
-        var templates = {
-            prefix: "",
-            suffix: wp.i18n.__(' ago', 'content-collaboration-inline-commenting'),
-            seconds: wp.i18n.__('few seconds', 'content-collaboration-inline-commenting'),
-            minute: wp.i18n.__('about a minute', 'content-collaboration-inline-commenting'),
-            minutes: wp.i18n.__('%d minutes', 'content-collaboration-inline-commenting')
-        };
-        /* for time format like hrs + today */
-        var forhrsToday = function (timeInHrs) {
-            return timeInHrs + ' ' + wp.i18n.__('Today', 'content-collaboration-inline-commenting');
-        }
-        var template = function (t, n) {
-            return templates[t] && templates[t].replace(/%d/i, Math.abs(Math.round(n)));
-        };
-
-        if (!time) return;
-        /* function for converting timestamp into required format */
-        var convertedDatetime = function (date) {
-            date = new Date(date * 1000);
-            let dateFormat = 'm/d/Y';
-            let timeFormat = 'H:i:s';
-            let dateTime = wp.date.gmdate(dateFormat + ' ' + timeFormat, date);
-            return dateTime;
-        }
-        let newtime;
-        var convertedTime = convertedDatetime(time);
-        time = new Date(convertedTime * 1000 || convertedTime);
-        var now = new Date(convertedDatetime(getTimestampWithTimezone()));
-        var timeinDate = String(time).split(" ");
-        var dispTime = String(time);
-        dispTime = dispTime.match(/\s([A-z]*)\s[0-9]{1,2}/g);
-        dispTime = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true }) + dispTime[0];
-        if (timeinDate[2] != now.getDate()) {
-            if ((now.getTime() - time.getTime()) < 0) {
-                return dispTime;
-            } else {
-                if (timeinDate[2] < now.getDate() && (parseInt(now.getDate()) - parseInt(timeinDate[2])) < 2) {
-                    newtime = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true });
-                    newTimeString = translateTimeString(newtime) + ' ' + wp.i18n.__('Yesterday', 'content-collaboration-inline-commenting');
-                    return newTimeString;
-                } else {
-                    return dispTime;
-                }
-            }
-        } else {
-            if ((now.getTime() - time.getTime()) < 0) {
-                newtime = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true });
-                newTimeString = translateTimeString(newtime) + ' ' + wp.i18n.__('Today', 'content-collaboration-inline-commenting');
-                return newTimeString;
-            } else {
-                var seconds = ((now.getTime() - time) * .001) >> 0;
-                var minutes = seconds / 60;
-                var hrsFormat = translateTimeString(time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true }));
-                return templates.prefix + (
-                    seconds < 60 && template('seconds', seconds) || minutes < 60 && template('minutes', minutes) || minutes > 60 && forhrsToday(hrsFormat)) + (minutes < 60 ? templates.suffix : "");
-            }
-        }
-    } catch (error) {
-        console.log(error);
-    }
-
-}
-
-function getTimestampWithTimezone() {
-    return Math.floor((new Date()).getTime() / 1000) + (3600 * wp_time_setting.timezoneOffset);
-}
-
-function convertedDatetime(date) {
-    date = new Date(date * 1000);
-    let dateFormat = wp_time_setting ? wp_time_setting.dateFormat : 'F j, Y';
-    let timeFormat = wp_time_setting ? wp_time_setting.timeFormat : 'g:i a';
-    let dateTime = wp.date.gmdate(timeFormat + ' ' + dateFormat, date);
-
-    return dateTime;
-}
-
-function translateTimeString(time) {
-
-    let newtime = time.toLocaleString('en-US', { minute: 'numeric', hour: 'numeric', hour12: true });
-    splitarray = newtime.split(" ");
-    newTimeString = splitarray[0] + ' ' + wp.i18n.__(splitarray[1], 'content-collaboration-inline-commenting');
-    return newTimeString;
-}
-
-function getCurrentUserId() {
-    return parseInt(currentUserData.id);
-}
-function getCurrentUserInfoById() {
-
-    let userInfo = new Array();
-    userInfo['id'] = parseInt(currentUserData.id);
-    userInfo['username'] = currentUserData.username;
-    userInfo['avtarUrl'] = currentUserData.avtarUrl;
-    userInfo['role'] = currentUserData.role;
-
-    return userInfo;
-}
-function scrollBoardToPosition(topOfText) {
-    var scrollTopClass = '';
-    if (0 !== jQuery('.interface-interface-skeleton__content').length) {
-        // Latest WP Version
-        scrollTopClass = '.interface-interface-skeleton__content';
-
-    } else if (0 !== jQuery('.block-editor-editor-skeleton__content').length) {
-        // Latest WP Version
-        scrollTopClass = '.block-editor-editor-skeleton__content';
-
-    } else if (0 !== jQuery('.edit-post-layout__content').length) {
-        // Old WP Versions
-        scrollTopClass = '.edit-post-layout__content';
-
-    } else {
-        // Default
-        scrollTopClass = 'body';
-    }
-
-    topOfText = topOfText + jQuery(scrollTopClass).scrollTop();
-
-    jQuery(scrollTopClass).stop(true).animate({
-        scrollTop: topOfText - 320
-    }, 1000);
-}
-
-function removeFloatingIcon() {
-    var floatingNode = document.getElementsByClassName('cf-floating__wrapper');
-
-    if (floatingNode.length > 0) {
-        jQuery(floatingNode).remove()
-    }
-}
-
-function translateStringFormat(str) {
-    let translatedStringFormats = str;
-    let splitString, concatBreakedString, removedHTMLTag;
-    if (translatedStringFormats?.includes("Space (")) {
-        splitString = translatedStringFormats.split(" ");
-        translatedStringFormats = sprintf('%s %s %s', wp.i18n.__(splitString[0], 'content-collaboration-inline-commenting'), splitString[1], wp.i18n.__(splitString[2], 'content-collaboration-inline-commenting'));
-    } else if (translatedStringFormats?.includes("Remove Link with URL")) {
-        splitString = translatedStringFormats.split("Remove Link with URL ");
-        translatedStringFormats = sprintf('%s %s', wp.i18n.__('Remove Link with URL', 'content-collaboration-inline-commenting'), splitString[1]);
-    } else if (translatedStringFormats?.includes("with URL")) {
-        splitString = translatedStringFormats.split("with URL ");
-        translatedStringFormats = sprintf('%s %s', wp.i18n.__('with URL', 'content-collaboration-inline-commenting'), splitString[1]);
-    } else if (translatedStringFormats?.includes("Replace")) {
-        splitString = translatedStringFormats.split(" ");
-        translatedStringFormats = sprintf('%s %s %s %s', wp.i18n.__('Replace', 'content-collaboration-inline-commenting'), splitString[1], wp.i18n.__('to', 'content-collaboration-inline-commenting'), splitString[3]);
-    } else if (translatedStringFormats?.includes("Line Break (")) {
-        splitString = translatedStringFormats.split(" ");
-        concatBreakedString = splitString[0] + ' ' + splitString[1];
-        translatedStringFormats = sprintf('%s %s %s', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), splitString[2], wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'));
-    } else if (translatedStringFormats?.includes("Block Alignment")) {
-        removedHTMLTag = translatedStringFormats.replace(/<[^>]*>/g, '');
-        splitString = removedHTMLTag.split(" ");
-        concatBreakedString = splitString[0] + ' ' + splitString[1];
-        translatedStringFormats = sprintf('%s <em>%s</em> %s <em>%s</em>', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[2], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[4], 'content-collaboration-inline-commenting'));
-    } else if (translatedStringFormats?.includes("Change Heading")) {
-        removedHTMLTag = translatedStringFormats.replace(/<[^>]*>/g, '');
-        splitString = removedHTMLTag.split(" ");
-        concatBreakedString = splitString[0] + ' ' + splitString[1];
-        translatedStringFormats = sprintf('%s <em> %s %s </em> %s <em> %s %s </em>', wp.i18n.__(concatBreakedString, 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[3], 'content-collaboration-inline-commenting'), splitString[4], wp.i18n.__(splitString[5], 'content-collaboration-inline-commenting'), wp.i18n.__(splitString[7], 'content-collaboration-inline-commenting'), splitString[8]);
-    }
-    str = translatedStringFormats;
-    return str;
-}
-
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-
-function filterTextBeforeSave(newText) {
-    newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
-    newText = newText.replace(/<br>/igm, ' <br> ');
-    if (isSafari || isChrome) {
-        newText = newText.replace(/<div>/igm, '<br>');
-        newText = newText.replace(/<\/div>/igm, '');
-        newText = newText.replace(/<br> <br>/igm, '<br>');
-        newText = newText.replace(/<\/?span[^>]*>/g, ''); // Resolved #512 multiline comment bug @author - Mayank / since 3.6        
-    }
-    var link;
-    // Adding anchor tag around the linkable text.
-    // For bug fixing of semicolon there is a little chnage in regex   
-
-    newText = newText.replace(/<a\s.*?>(.*?)<\/a>/g, function (match) {
-        return ' ' + match + ' ';
-    });
-
-         // Detect Browser.
-         var browser = (function (agent) {
-            switch (true) {
-                case agent.indexOf("firefox") > -1: return "firefox";
-                default: return "other";
-            }
-        })(window.navigator.userAgent.toLowerCase());
-    
-        if ('firefox' === browser) {
-            newText = newText.replace(/<a\s.*?>(.*?)<\/a>/g, function (match) {
-            return ' ' + `${match}\u00a0` + ' ';
-          });
-        }
-
-    // replace nbsp; with space for separate links
-    //newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');
-
-
-    //newText = newText.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function (match) {
-    newText = newText.replace(/(?!]*>[^<])(((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?))(?![^<]*<\/a>)/gi, function (match) {     
-        link = match;
-        if ((link.includes("www.") || link.includes("WWW.")) && !link.includes("http://") && !link.includes("https://")) {
-            link = link.replace('WWW.', 'http://')
-            link = link.replace('www.', 'http://')
-        }
-
-        return `<a href="${link}" target="_blank">${match}</a>`;
-    });
-
-
-
-    newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');
-    newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, '');
-    newText.trim();
-
-    return newText;
-}
-
-function removeLinkFromEditableText(editedValue) {
-
-    // Filtering anchor tag and return the url text only.
-    // For bug fixing of semicolon there is a little chnage in regex
-    // this wont apply over mentioned user link
-    editedValue = editedValue.replace(/<a href=\"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)([^&nbsp;|^<br>])\" target=\"_blank\">https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)([^&nbsp;|^<br>])<\/a>/igm, function (match) {
-        return match.replace(/(<([^>]+)>)/ig, '');
-    });
-
-    // regex to remove anchor tag with target
-    editedValue = editedValue.replace(/(<a([^>]+)target=([^>]+)>)([^<]+)<\/a>/ig, function (match) {
-        return match.replace(/(<([^>]+)>)/ig, '');
-    });
-
-    editedValue.trim();
-
-    return editedValue;
-}
-
-function filterTextForEdit(newText) {
-
-    newText = newText.replace(/  +/g, ' ');
-    // Added for remove br and div for line breaks and button gets enable/@author Meet Mehta /@since VIP Plan
-    if (isSafari || isChrome) {
-        newText = newText.replace(/<\/?div[^>]*>/g, '');
-        newText = newText.replace(/<\/?span[^>]*>/g, '');
-    }
-    newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');
-    newText = newText.replace(/^\s*(?:<br\s*\/?\s*>\s*)+|(?:<br\s*\/?\s*>\s*)+\s*$/gi, '');
-    newText = newText.replace(/\s/g, '');
-    newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
-    newText = newText.trim();
-    return newText;
-}
-
-function validateCommentReplyText(newText) {
-
-    if (isSafari || isChrome) {
-        newText = newText.replace(/<div>/igm, ' <br> ');
-        newText = newText.replace(/<\/div>/igm, '');
-    }
-    newText = newText.replace(/<br>/igm, '');
-    newText = newText.replace(/&nbsp;|&nbsp/igm, '');
-    newText = newText.replace(/\s/igm, '');
-    newText = newText.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/gi, '');
-    newText = newText.trim();
-
-    return newText;
-}
-
-
-
-// display ... if multiple user exists.
-function userroleDisplay(myStr) {
-    let newRole;
-    let myRole = myStr.split(",");
-    if (myRole.length > 1) {
-        newRole = myRole[0] + '...';
-    } else {
-        newRole = myRole[0];
-    }
-    return newRole;
-}
-
-function closeMulticollabSidebar() {
-
-    //to close sidebar in gutenberg
-    //const isSidebarOpened = wp.data.select( 'core/edit-post' ).isEditorSidebarOpened();
-    const sidebarName = wp.data.select('core/edit-post').getActiveGeneralSidebarName();
-    if (sidebarName === 'cf-activity-center/cf-activity-center') {
-        wp.data.dispatch('core/edit-post').closeGeneralSidebar();
-    }
-}
-
-function getPostSaveStatus() {
-    const isNew = wp.data.select('core/editor').isEditedPostNew();
-    const isDirty = wp.data.select('core/editor').isEditedPostDirty();
-    const isSaving = wp.data.select('core/editor').isSavingPost();
-    const isSaved = (!isNew && !isDirty);
-    const isSavedState = isSaving || isSaved;
-    return isSavedState;
-}
-
-function appendInfoBoardDiv() {
-    var postStatusLabel = getPostStatuslabel();
-    var pinboardNode = document.createElement('div');
-    pinboardNode.setAttribute("id", 'cf-span__status');
-    pinboardNode.setAttribute("class", 'cf-board__notice');
-    pinboardNode.setAttribute('style', 'display:none');
-    pinboardNode.innerHTML = sprintf('%s <span>x</span> %s <br> %s <strong>%s</strong> %s', wp.i18n.__('You have', 'content-collaboration-inline-commenting'), wp.i18n.__('unsaved comments.', 'content-collaboration-inline-commenting'), wp.i18n.__('Click', 'content-collaboration-inline-commenting'), wp.i18n.__(postStatusLabel, 'content-collaboration-inline-commenting'), wp.i18n.__('to save.', 'content-collaboration-inline-commenting'));
-    var parentNodeRef = document.getElementById('cf-comments-suggestions__parent');
-    if (null !== parentNodeRef) {
-        parentNodeRef.appendChild(pinboardNode);
-    }
-}
-
-function getPostStatuslabel() {
-
-    var postStatus = wp.data.select('core/editor').getEditedPostAttribute('status');
-    var postStatusLabel = '';
-
-    if( postStatus === 'private' ){
-        postStatusLabel = 'Privately Published'; 
-    }else if( postStatus === 'publish' ){
-        postStatusLabel = 'Published / Update';
-    }else if( postStatus === 'future' || postStatus === 'scheduled' ){
-        postStatusLabel = 'Scheduled';
-    }else if( postStatus === 'draft' ){
-        postStatusLabel = 'Save draft';
-    }else if( postStatus === 'pending' ){
-        postStatusLabel = 'Pending Review';
-    }else{
-        postStatusLabel = postStatus;
-    }
-
-    return postStatusLabel;
-}
-
-function appendNoticeBoardDiv() {
-    var noticeboardNode = document.createElement('div');
-    noticeboardNode.setAttribute("id", 'cf-board__notice');
-    noticeboardNode.setAttribute("class", 'cf-board__notice');
-    noticeboardNode.setAttribute('style', 'display:none');
-    noticeboardNode.innerHTML = 'default notice here';
-    var parentNodeRef = document.getElementById('cf-comments-suggestions__parent');
-    if (null !== parentNodeRef) {
-        parentNodeRef.appendChild(noticeboardNode);
-    }
-}
-
-function showNoticeBoardonNewComments() {
-    appendNoticeBoardDiv();
-    wp.data.subscribe(function () {
-
-        let noticeboard = document.getElementById("cf-board__notice");
-        if (null === noticeboard) {
-            appendNoticeBoardDiv();
-            noticeboard = document.getElementById("cf-board__notice");
-        }
-        setTimeout(function () {
-            if (noticeboard !== null) {
-                // if( noticeboard.innerHTML === "" ){
-                //     noticeboard.setAttribute('style','display:none');
-                // } else {
-                //    noticeboard.setAttribute('style','display:block');
-                // }
-            }
-
-        }, 300);
-
-    });
-}
-
-function getSelectionHtml() {
-    var html = "";
-    if (typeof window.getSelection != "undefined") {
-        var sel = window.getSelection();
-        if (sel.rangeCount) {
-            var container = document.createElement("div");
-            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-                container.appendChild(sel.getRangeAt(i).cloneContents());
-            }
-            html = container.innerHTML;
-
-        }
-    } else if (typeof document.selection != "undefined") {
-        if (document.selection.type == "Text") {
-            html = document.selection.createRange().htmlText;
-        }
-    }
-    return html;
-}
-function cf_removeAllNotices() {
-    var notices = wp.data.select('core/notices').getNotices();
-    if (undefined !== notices) {
-        notices.forEach(function (data) {
-            wp.data.dispatch('core/notices').removeNotice(data.id);
-        })
-    }
-
-}
-jQuery(document).ready(function () {
-
-     // Set cookie for promotional banner show.
-     var onBannerCookieSet = document.querySelectorAll( '.onBannerCookieSet' );
-     if( null !== onBannerCookieSet ) {
-         Array.from(onBannerCookieSet).forEach((element,index) => {
-             var date = new Date();
-             date.setTime(date.getTime() + 7*24*60*60*1000);
-
-             document.cookie = 'banner_show_' + element.getAttribute( 'attr-value' ) + '=yes; expires='+date+';';
-             document.cookie = 'banner_show_once_' + element.getAttribute( 'attr-value' ) + '=yes;';
-         });
-     }
-
-});
-
-
-function displaySuggestionBoards() {
-
-    wp.domReady(function () {
-        wp.data.dispatch('core/editor').editPost({
-            meta: { _sb_show_suggestion_boards: false },
-        });
-    });
-
-    jQuery('body').removeClass('hide-sg');
-}
-function createCommentNode() {
-    var parentNode = document.createElement('div');
-    parentNode.setAttribute("id", 'cf-comments-suggestions__parent');
-    var referenceNode = document.querySelector('.edit-post-visual-editor');
-    if (null !== referenceNode) {
-        referenceNode.appendChild(parentNode);
-        var commentNode = document.createElement('div');
-        commentNode.setAttribute("id", 'cf-span__comments');
-        var parentNodeRef = document.getElementById('cf-comments-suggestions__parent');
-        parentNodeRef.appendChild(commentNode);
-    }
-}
-//set cookies
-function setCookie(name, value, minutes) {
-    var expires = "";
-    if (minutes) {
-        var date = new Date();
-        date.setTime(date.getTime() + (minutes * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-function deleteCookie(name) {
-    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-function readCookie(name) {
-    var nameEQ = encodeURIComponent(name) + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === ' ')
-            c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0)
-            return decodeURIComponent(c.substring(nameEQ.length, c.length));
-    }
-    return null;
-}
-
-function fetchBoardsCommonCode() {
-    let selectedNontextblock = [];
-      let selectedDataText;
-  
-      // ====== FOR Add block suggestion functionality. @author Mayank Jain since 3.4
-      jQuery(".wp-block").each(function () {
-        let uniqueId;
-        if ( jQuery(this).hasClass("blockAdded") ) {
-            uniqueId = jQuery(this).attr("suggestion_id");
-        } else if( jQuery(this).hasClass("blockremove") ) {
-            uniqueId = $(this).attr("suggestion_id");
-        } else if (jQuery(this).attr("align_sg_id") !== undefined) {
-            uniqueId = jQuery(this).attr("align_sg_id");
-        } else if (jQuery(this).attr("textAlign_sg_id") !== undefined) {
-            uniqueId = jQuery(this).attr("textAlign_sg_id");
-        } else if (jQuery(this).attr("lock_sg_id") !== undefined) {
-            uniqueId = jQuery(this).attr("lock_sg_id");
-        }
-        selectedNontextblock.push(uniqueId);
-      });
-  
-      jQuery(
-        ".commentIcon, .wp-block mdspan,.cf-onwhole-block__comment, .wp-block .mdadded, .wp-block .mdmodified, .wp-block .mdremoved"
-      ).each(function () {
-        if (
-          jQuery(this).hasClass("mdadded") ||
-          jQuery(this).hasClass("mdremoved") ||
-          jQuery(this).hasClass("mdmodified")
-        ) {
-          selectedDataText = $(this).attr("id");
-          if (
-            jQuery(this).has("suggestion_id") &&
-            jQuery(this).hasClass("cf-onwhole-block__comment")
-          ) {
-            selectedDataText = jQuery(this).attr("datatext");
-          }
-        } else {
-          selectedDataText = jQuery(this).attr("datatext");
-        }
-        selectedNontextblock.push(selectedDataText);
-      });
-  
-      return selectedNontextblock;
-  
-}
-  
-  function floatCommentsBoard(selectedText) {
-
-    jQuery('.cls-board-outer').removeClass('focus');
-    jQuery('.cls-board-outer').removeClass('is-open');
-    jQuery('.cls-board-outer').removeClass('onGoing');
-    jQuery('.cf-icon__addBlocks, .cf-icon__removeBlocks').removeClass('focus');
-    jQuery('.cf-icon-wholeblock__comment,.cf-onwhole-block__comment').removeClass('focus');
-    
-    jQuery('#cf-span__comments .comment-delete-overlay').removeClass('show');
-    jQuery('#cf-span__comments .comment-resolve .resolve-cb').prop("checked", false);
-    jQuery('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
-
-    var singleBoardId = selectedText;
-    let topOfTextSingleBoard;
-    let singleBoardIdWithSg;
-   
-    
-    if(undefined !== singleBoardId ){
-        if (singleBoardId.match(/^el/m) === null) {
-            if(document.querySelector(`[suggestion_id="${singleBoardId}"]`)) {
-                topOfTextSingleBoard = jQuery(`[suggestion_id="${singleBoardId}"]`).offset()?.top;
-            } else if(document.querySelector(`[align_sg_id="${singleBoardId}"]`)) {     // Added for the align block level suggestions @author - Mayank / since 3.6
-                topOfTextSingleBoard = jQuery(`[align_sg_id="${singleBoardId}"]`).offset()?.top;
-            } else if(document.querySelector(`[textAlign_sg_id="${singleBoardId}"]`)) { // Added for the text align block level suggestions @author - Mayank / since 3.6
-                topOfTextSingleBoard = jQuery(`[textAlign_sg_id="${singleBoardId}"]`).offset()?.top;
-            } else if(document.querySelector(`[lock_sg_id="${singleBoardId}"]`)) { // Added for the lock level suggestions @author - Mayank / since 3.6
-                topOfTextSingleBoard = jQuery(`[lock_sg_id="${singleBoardId}"]`).offset()?.top;
-            } else {
-                topOfTextSingleBoard = jQuery('#' + singleBoardId + '').offset()?.top;
-            }
-            singleBoardIdWithSg = 'sg' + singleBoardId;
-
-            // Add active class on activity bar. @author: Rishi Shah @since: 3.4
-            jQuery(`#cf-sg${singleBoardId}`).addClass('active');
-            
-        } else {
-            topOfTextSingleBoard = jQuery('[datatext="' + singleBoardId + '"]').offset().top;
-            singleBoardIdWithSg = singleBoardId;
-        }
-    }
-    
-    jQuery('#' + singleBoardIdWithSg).css('opacity', '1');
-    jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').addClass('is-open');
-    jQuery('#' + singleBoardIdWithSg).addClass('focus onGoing');
-    jQuery('#' + singleBoardIdWithSg).offset({ top: topOfTextSingleBoard });
-
-    var underlineAllAttr = document.querySelectorAll('[data-rich-text-format-boundary="true"]');
-    if( underlineAllAttr ) {
-        for (var singleElement = 0; singleElement < underlineAllAttr.length; ++singleElement) {
-            if( underlineAllAttr[singleElement].classList.contains('mdadded') || underlineAllAttr[singleElement].classList.contains('mdremoved') ) {
-                if( singleBoardId !== underlineAllAttr[singleElement].id ) {
-                    jQuery( '#' + underlineAllAttr[singleElement].id ).attr('data-rich-text-format-boundary', false);
-                } else {
-                    jQuery( '#' + underlineAllAttr[singleElement].id ).attr('data-rich-text-format-boundary', true);
-                }
-            } else if( underlineAllAttr[singleElement].parentNode.classList.contains('mdmodified') ) {
-                if( singleBoardId !== underlineAllAttr[singleElement].parentNode.id ) {
-                    jQuery( '#' + underlineAllAttr[singleElement].parentNode.id ).children().attr('data-rich-text-format-boundary', false);
-                } else {
-                    jQuery( '#' + underlineAllAttr[singleElement].parentNode.id ).children().attr('data-rich-text-format-boundary', true);
-                }
-            } else if( underlineAllAttr[singleElement].classList.contains('mdspan-comment') ) {
-                var suggestionId = underlineAllAttr[singleElement].getAttribute('datatext');
-                if( singleBoardId !== suggestionId ) {
-                    jQuery('[datatext="'+suggestionId+'"]').attr('data-rich-text-format-boundary', false);
-                } else {
-                    jQuery('[datatext="'+suggestionId+'"]').attr('data-rich-text-format-boundary', true);
-                }
-                
-            }
-        }
-    }
-    scrollBoardToPosition(topOfTextSingleBoard);   
-}
-
-function showNoticeMsg() {
-    const { __ } = wp.i18n;
-    var noticeMsg = __(
-        "Multiple comments are not possible on the same block.",
-        "content-collaboration-inline-commenting"
-    );
-    document.getElementById("cf-board__notice").innerHTML = noticeMsg;
-    document
-        .getElementById("cf-board__notice")
-        .setAttribute("style", "display:block");
-    setTimeout(function () {
-        document
-            .getElementById("cf-board__notice")
-            .setAttribute("style", "display:none");
-        document.getElementById("cf-board__notice").innerHTML = "";
-    }, 3000);
-}
-
-function nonTextNoticeMsg() {
-    const { __ } = wp.i18n;
-    var noticeMsg = __(
-        "Please Select a Text",
-        "content-collaboration-inline-commenting"
-    );
-    document.getElementById("cf-board__notice").innerHTML = noticeMsg;
-    document
-        .getElementById("cf-board__notice")
-        .setAttribute("style", "display:block");
-    setTimeout(function () {
-        document
-            .getElementById("cf-board__notice")
-            .setAttribute("style", "display:none");
-        document.getElementById("cf-board__notice").innerHTML = "";
-    }, 3000);
-}
-
-//Calculated layout width function @ Minal Diwan
-function mdboardOffset() {
-    const elid = jQuery('#cf-span__comments').find('.cls-board-outer.focus').attr('id');
-    setTimeout(function () {
-
-        const totalOpenBoardsIds = document.querySelectorAll('.cls-board-outer.focus');
-        let counter = 0;
-
-        if (totalOpenBoardsIds.length >= 2 ) {
-            let topOfTextSingleBoardSuggestion;
-            let topOfTextSingleBoardComment;
-            let SuggestionBoardOuterHeight;
-            let singleBoardIdSuggestion;
-            let singleBoardIdComment;
-            let combineBoardId;
-            let FirstsingleBoardIdSuggestion;
-            let FirstSuggestionBoardOuterHeight;
-
-            totalOpenBoardsIds.forEach(board => {
-                const singleBoardId = board.id;
-                if (singleBoardId) {
-                    if (singleBoardId.match(/^el/m) === null) {
-                        topOfTextSingleBoardSuggestion = jQuery('#' + singleBoardId).offset().top;
-                        singleBoardIdSuggestion = 'sg' + singleBoardId;
-                        if (counter === 0) {
-                            FirstsingleBoardIdSuggestion = 'sg' + singleBoardId;
-                        }
-                        combineBoardId = 'sg' + singleBoardId;
-                        counter++;
-                    } else {
-                        topOfTextSingleBoardComment = jQuery('[datatext="' + singleBoardId + '"]').offset().top;
-                        singleBoardIdComment = singleBoardId;
-                        combineBoardId = singleBoardId;
-                    }
-                    jQuery('#' + combineBoardId).css('opacity', '1').addClass('is-open focus onGoing');
-                }
-                if (FirstsingleBoardIdSuggestion) {
-                    FirstSuggestionBoardOuterHeight = document.querySelector('#' + FirstsingleBoardIdSuggestion)?.offsetHeight;
-                }
-            });
-
-            if (document.querySelector('#' + singleBoardIdSuggestion)) {
-                SuggestionBoardOuterHeight = document.querySelector('#' + singleBoardIdSuggestion).offsetHeight;
-                jQuery('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
-
-                // Add floating board adjustment for multi-suggestion. @author: Rishi Shah @since: 3.4
-                if (counter === 2 && FirstsingleBoardIdSuggestion) {
-                    jQuery('#' + FirstsingleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion });
-                    jQuery('#' + singleBoardIdSuggestion).offset({ top: topOfTextSingleBoardSuggestion + FirstSuggestionBoardOuterHeight + 20 });
-                }
-
-                if (!jQuery('#' + singleBoardIdComment + ', .board').hasClass('fresh-board')) {
-                    if (counter === 2 && FirstsingleBoardIdSuggestion) {
-                        jQuery('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + FirstSuggestionBoardOuterHeight + 40 });
-                    } else {
-                        jQuery('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion + SuggestionBoardOuterHeight + 20 });
-                    }
-                } else {
-                    jQuery('#' + singleBoardIdComment).offset({ top: topOfTextSingleBoardSuggestion });
-                }
-
-                document.querySelectorAll('[data-rich-text-format-boundary="true"]').forEach(attr => {
-                    if (attr.classList.contains('mdadded') || attr.classList.contains('mdremoved')) {
-                        const id = attr.id;
-                        if (singleBoardId !== id) {
-                            jQuery('#' + id).attr('data-rich-text-format-boundary', false);
-                        } else {
-                            jQuery('#' + id).attr('data-rich-text-format-boundary', true);
-                        }
-                    } else if (attr.parentNode.classList.contains('mdmodified')) {
-                        const id = attr.parentNode.id;
-                        if (singleBoardId !== id) {
-                            jQuery('#' + id).children().attr('data-rich-text-format-boundary', false);
-                        } else {
-                            jQuery('#' + id).children().attr('data-rich-text-format-boundary', true);
-                        }
-                    } else if (attr.classList.contains('mdspan-comment')) {
-                        const suggestionId = attr.getAttribute('datatext');
-                        if (singleBoardId !== suggestionId) {
-                            jQuery('[datatext="' + suggestionId + '"]').attr('data-rich-text-format-boundary', false);
-                        } else {
-                            jQuery('[datatext="' + suggestionId + '"]').attr('data-rich-text-format-boundary', true);
-                        }
-                    }
-                });
-
-
-                scrollBoardToPosition(topOfTextSingleBoardSuggestion);
-            }
-        } else if (jQuery('#cf-span__comments').find('.cls-board-outer').hasClass('focus')) {
-            if (elid && elid.match(/^el/m) !== null) {
-                topOfText = jQuery('[datatext="' + elid + '"]').offset()?.top;
-            } else {
-                const sid = jQuery('#' + elid).attr('data-sid');
-                topOfText = jQuery('[id="' + sid + '"]').offset()?.top;
-                cfgetCustomAttribute().forEach(attrValue => {
-                    if (!topOfText && jQuery(`[${attrValue}="${sid}"]`).length > 0) {
-                        topOfText = jQuery(`[${attrValue}="${sid}"]`).offset()?.top;
-                    }
-                });
-            }
-            jQuery('#cf-span__comments').find('.cls-board-outer.focus').offset({ top: topOfText });
-            scrollBoardToPosition(topOfText);
-        }
-    }, 800);
-}
-
-function setContainerDimensions(width, maxWidth) {
-    const rootContainer = document.querySelector(".is-root-container");
-    if (rootContainer) {
-        rootContainer.style.width = width;
-        rootContainer.style.maxWidth = maxWidth;
-        if (window.innerWidth > 680) {
-            rootContainer.style.minWidth = "440px";
-        }
-    }
-}
-
-// Function to handle layout changes
-function handleEditorLayoutChange() {
-    const notCommentOncls = document.querySelector(".multicollab_body_class");
-    var checkCommntAval = !notCommentOncls?.classList?.contains('commentOn');
-    const ediLayot = document.querySelector(".editor-styles-wrapper");
-    const cmntLayout = document.querySelector("#cf-comments-suggestions__parent");
-    const ediLayotWidth = ediLayot?.offsetWidth;
-    const cmntLyotWidth = cmntLayout?.offsetWidth;
-    const calcLyotWidth = ediLayotWidth - cmntLyotWidth;
-    const editSidebarchck = document.querySelector(".edit-post-layout");
-    const blockinsertchck = document.querySelector(".interface-interface-skeleton__body");
-    const firstChild = blockinsertchck?.firstElementChild;
-    if (!checkCommntAval) {
-       if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild) {
-        mdboardOffset();
-        setContainerDimensions(`${calcLyotWidth}px`, "unset");
-       }
-    } else {
-        setContainerDimensions("auto", `${calcLyotWidth}px`);
-    }
-}
+ function browser(agent) {
+	 switch (true) {
+		 case agent.indexOf("edge") > -1:
+			 return "MS Edge (EdgeHtml)";
+		 case agent.indexOf("edg") > -1:
+			 return "MS Edge Chromium";
+		 case agent.indexOf("opr") > -1 && !!window.opr:
+			 return "opera";
+		 case agent.indexOf("chrome") > -1 && !!window.chrome:
+			 return "chrome";
+		 case agent.indexOf("trident") > -1:
+			 return "Internet Explorer";
+		 case agent.indexOf("firefox") > -1:
+			 return "firefox";
+		 case agent.indexOf("safari") > -1:
+			 return "safari";
+		 default:
+			 return "other";
+	 }
+ }
+// Function to add border to alignment blocks based on certain class conditions
+function addBorderToAlignmentBlock(block) {
+		// Select all child elements inside the block
+		var children = block.querySelectorAll("*");
+	
+		// Loop through each child to check if it contains any specific class
+		for (var i = 0; i < children.length; i++) {
+			if (
+				children[i].classList.contains("alignupdate") ||
+				children[i].classList.contains("textalignupdate") ||
+				children[i].classList.contains("lockupdate") ||
+				children[i].classList.contains("headingupdate")
+			) {
+				// If any of the conditions match, add a border to the block
+				block.style.border = "2px solid #188651";
+				break; // Exit the loop as we only need to add the border once
+			}
+		}
+	}
+	
+	// Function to update and apply border styles to table rows and cells based on certain conditions
+	function addBorderStyle() {
+		// Helper function to apply the border style updates
+		function updateBorderStyle() {
+			// Select all table rows
+			var tableRows = document.querySelectorAll("tr");
+	
+			// Loop through each row
+			tableRows.forEach(function (row) {
+				var hasBodyRowUpdate = false; // Flag to check if 'bodyupdate-row' span is found
+				var hasBodyDeleteRowUpdate = false; // Flag for delete row updates
+				var tableCells = row.querySelectorAll("td"); // Get all cells in the current row
+	
+				// Loop through each cell in the row
+				tableCells.forEach(function (cell) {
+					// Check for specific spans inside the cell to determine the class to add/remove
+					var spanBodyRowUpdate = cell.querySelector("span.bodyupdate-row");
+					var spanBodyDeleteRowUpdate = cell.querySelector(
+						"span.bodyupdate-delete-row"
+					);
+					var spanBodyDeleteColumnUpdate = cell.querySelector(
+						"span.bodyupdate-delete-column"
+					);
+					var spanBodyColumnUpdate = cell.querySelector("span.bodyupdate-column");
+					var spanColumnAlign = cell.querySelector("span.columnalign");
+	
+					// Set flags based on the presence of specific spans
+					if (spanBodyRowUpdate) {
+						hasBodyRowUpdate = true;
+					}
+					if (spanBodyDeleteRowUpdate) {
+						hasBodyDeleteRowUpdate = true;
+					}
+	
+					// Add or remove class based on the presence of respective spans
+					if (spanBodyColumnUpdate) {
+						cell.classList.add("cf-bodycolumnupdate");
+					} else {
+						cell.classList.remove("cf-bodycolumnupdate");
+					}
+	
+					if (spanColumnAlign) {
+						cell.classList.add("cf-columnalign");
+					} else {
+						cell.classList.remove("cf-columnalign");
+					}
+	
+					if (spanBodyDeleteColumnUpdate) {
+						cell.classList.add("cf-bodycolumndelete");
+					} else {
+						cell.classList.remove("cf-bodycolumndelete");
+					}
+				});
+	
+				// Add or remove the 'cf-bodyrowupdate' class to the row based on the flag
+				if (hasBodyRowUpdate) {
+					row.classList.add("cf-bodyrowupdate");
+				} else {
+					row.classList.remove("cf-bodyrowupdate");
+				}
+	
+				// Add or remove the 'cf-bodyrowdeleteupdate' class based on the delete row update flag
+				if (hasBodyDeleteRowUpdate) {
+					row.classList.add("cf-bodyrowdeleteupdate");
+				} else {
+					row.classList.remove("cf-bodyrowdeleteupdate");
+				}
+			});
+		}
+	
+		// Call the update function to apply the styles
+		updateBorderStyle();
+	}

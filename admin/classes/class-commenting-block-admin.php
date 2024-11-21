@@ -117,8 +117,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		add_filter( 'cron_schedules', array( $this, 'cf_free_cron_job_recurrence' ) );
 		add_filter( 'plugin_action_links_' . COMMENTING_BLOCK_BASE, array( $this, 'cf_custom_plugin_action_links' ), 10, 4 );
-		add_filter( "register_block_type_args", array( $this, "cf_modify_block_type_args_defaults" ), 10, 2 );
-		add_filter( "wp_kses_allowed_html", array( $this, "cf_add_allowed_iframe_tag" ), 10, 2 );
+		add_filter( 'register_block_type_args', array( $this, 'cf_modify_block_type_args_defaults' ), 10, 2 );
+		add_filter( 'wp_kses_allowed_html', array( $this, 'cf_add_allowed_iframe_tag' ), 10, 2 );
 	}
 
 	/**
@@ -274,7 +274,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		$feedback_api_url = CF_STORE_URL . '/wp-json/edd-add-free-user-contact/v2/edd-add-free-user-contact';
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
-		
+
 		if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
 			$response = vip_safe_wp_remote_get( $query_url, 3, 1, 20 );
 		} else {
@@ -289,16 +289,17 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			wp_schedule_event( time(), 'daily', 'cf_daily_license_checker' );
 		}
 
-		$args = array(
-			'title' => 'Getting Started with Multicollab',
-			'post_type'         => 'post',
-			'post_status'       => 'draft',
+		$args        = array(
+			'title'       => 'Getting Started with Multicollab',
+			'post_type'   => 'post',
+			'post_status' => 'draft',
 		);
 		$posts_array = get_posts( $args );
-		if( empty( $posts_array ) ){
+		if ( empty( $posts_array ) ) {
 			$wizard_redirect_link = site_url() . '/wp-admin/admin.php?page=editorial-comments&view=web-activity';
 		} else {
-			$wizard_redirect_link = $url = get_edit_post_link( $posts_array[0]->ID );;
+			$wizard_redirect_link = $url = get_edit_post_link( $posts_array[0]->ID );
+
 		}
 
 		echo esc_html( $wizard_redirect_link );
@@ -358,7 +359,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$posts_counts    = count( $all_posts_id );
 		$comments_counts = 0;
 
-		if ((is_array($all_posts_id) && !empty($all_posts_id)) || (is_object($all_posts_id) && !empty((array)$all_posts_id))) {
+		if ( ( is_array( $all_posts_id ) && ! empty( $all_posts_id ) ) || ( is_object( $all_posts_id ) && ! empty( (array) $all_posts_id ) ) ) {
 
 			foreach ( $all_posts_id as $id ) {
 
@@ -451,22 +452,22 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		ob_start();
 
 		/**
-		 * Get all public, non-builtin post types. 
+		 * Get all public, non-builtin post types.
 		 * Loop through each post type and add 'custom-fields' support.
 		 * This allows custom fields to be used on all public, non-builtin post types.
 		 */
 		$args = array(
 			'public'   => true,
-			'_builtin' => false
+			'_builtin' => false,
 		);
 
-		$output = '';
+		$output   = '';
 		$operator = 'and';
 
-		$post_types = get_post_types($args, $output, $operator);
-		if (isset($post_types) && !empty($post_types)) {
-			foreach ($post_types as $post_type) {
-				add_post_type_support($post_type->name, 'custom-fields');
+		$post_types = get_post_types( $args, $output, $operator );
+		if ( isset( $post_types ) && ! empty( $post_types ) ) {
+			foreach ( $post_types as $post_type ) {
+				add_post_type_support( $post_type->name, 'custom-fields' );
 			}
 		}
 
@@ -552,9 +553,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	public function cf_columns_head( $defaults ) {
 		$all_post_type            = get_post_types_by_support( array( 'editor' ) );
 		$post_type                = filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_SPECIAL_CHARS );
-		$post_type 				  = isset( $post_type ) ? trim( $post_type ) : '';
+		$post_type                = isset( $post_type ) ? trim( $post_type ) : '';
 		$type                     = get_post_type();
-		$type 					  = isset( $type ) ? trim( $type ) : '';
+		$type                     = isset( $type ) ? trim( $type ) : '';
 		$cf_hide_editorial_column = get_option( 'cf_hide_editorial_column' );
 		if ( empty( $cf_hide_editorial_column ) ) {
 			if ( ( in_array( $post_type, $all_post_type, true ) ) || ( in_array( $type, $all_post_type, true ) ) ) {
@@ -732,14 +733,14 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	public function cf_post_status_changes( $post_ID, $post ) {
 
 		if ( 'revision' === $post->post_type ) {
-            // Get the parent post ID from the revision
-            $parent_post_ID = wp_is_post_revision( $post_ID );
-            if ( $parent_post_ID ) {
-            	$post_ID = $parent_post_ID;
-                
-            }
-        }
-        
+			// Get the parent post ID from the revision
+			$parent_post_ID = wp_is_post_revision( $post_ID );
+			if ( $parent_post_ID ) {
+				$post_ID = $parent_post_ID;
+
+			}
+		}
+
 		$metas      = get_post_meta( $post_ID );
 		$p_content  = is_object( $post ) ? $post->post_content : $post;
 		$p_link     = get_edit_post_link( $post_ID );
@@ -767,13 +768,13 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			foreach ( $deleted_drafts as $el => $timestamps ) {
 				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
-				if ((is_array($timestamps) && !empty($timestamps)) || (is_object($timestamps) && !empty((array)$timestamps))) {
+				if ( ( is_array( $timestamps ) && ! empty( $timestamps ) ) || ( is_object( $timestamps ) && ! empty( (array) $timestamps ) ) ) {
 					foreach ( $timestamps as $key => $t ) {
 
 						$local_time        = current_datetime();
 						$deleted_timestamp = $local_time->getTimestamp() + $local_time->getOffset() + $key;
 						// Update the timestamp of deleted comment.
-						$previous_comment = !empty( $prev_state['comments'][ $t ] ) ? $prev_state['comments'][ $t ] : '';
+						$previous_comment = ! empty( $prev_state['comments'][ $t ] ) ? $prev_state['comments'][ $t ] : '';
 						if ( ! empty( $previous_comment ) ) {
 							$prev_state['comments'][ $deleted_timestamp ]               = $previous_comment;
 							$prev_state['comments'][ $deleted_timestamp ]['status']     = 'deleted';
@@ -810,7 +811,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					$prev_state   = $metas[ $el ][0];
 					$prev_state   = maybe_unserialize( $prev_state );
 					$new_comments = array();
-					if ((is_array($drafts) && !empty($drafts)) || (is_object($drafts) && !empty((array)$drafts))) {
+					if ( ( is_array( $drafts ) && ! empty( $drafts ) ) || ( is_object( $drafts ) && ! empty( (array) $drafts ) ) ) {
 						foreach ( $drafts as $d ) {
 							$prev_state['comments'][ $d ]['status'] = 'publish';
 							$new_comments[]                         = $d;
@@ -830,7 +831,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			foreach ( $edited_drafts as $el => $timestamps ) {
 				$prev_state = $metas[ $el ][0];
 				$prev_state = maybe_unserialize( $prev_state );
-				if ((is_array($timestamps) && !empty($timestamps)) || (is_object($timestamps) && !empty((array)$timestamps))) {
+				if ( ( is_array( $timestamps ) && ! empty( $timestamps ) ) || ( is_object( $timestamps ) && ! empty( (array) $timestamps ) ) ) {
 					foreach ( $timestamps as $t ) {
 						$edited_draft      = $prev_state['comments'][ $t ]['draft_edits']['thread'];
 						$edited_attachment = $prev_state['comments'][ $t ]['draft_edits']['attachmentText'];
@@ -879,7 +880,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		if ( ! empty( $current_drafts['deleted'] ) ) {
 			foreach ( $current_drafts['deleted'] as $key => $value ) {
 				$comment = get_post_meta( $post_ID, $key, true );
-				if ((is_array($value) && !empty($value)) || (is_object($value) && !empty((array)$value))) {
+				if ( ( is_array( $value ) && ! empty( $value ) ) || ( is_object( $value ) && ! empty( (array) $value ) ) ) {
 					foreach ( $value as $delete_key ) {
 						unset( $comment['comments'][ $delete_key ] );
 					}
@@ -903,7 +904,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				$prev_state   = $metas[ $el ][0];
 				$prev_state   = maybe_unserialize( $prev_state );
 				$new_comments = array();
-				if ((is_array($drafts) && !empty($drafts)) || (is_object($drafts) && !empty((array)$drafts))) {
+				if ( ( is_array( $drafts ) && ! empty( $drafts ) ) || ( is_object( $drafts ) && ! empty( (array) $drafts ) ) ) {
 					foreach ( $drafts as $d ) {
 						$prev_state['comments'][ $d ]['status'] = 'publish';
 						$new_comments[]                         = $d;
@@ -998,7 +999,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		// Enque de-active pro plugin JS.
 		if ( 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
-			wp_enqueue_script( 'wp-deactivation-message', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/comenting-block-deactive-free.js', array( 'jquery' ), wp_rand(), false );
+			// wp_enqueue_script( 'wp-deactivation-message', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/src/dashboard/comenting-block-deactive-free.js', array( 'jquery' ), wp_rand(), false );
 			wp_localize_script(
 				'wp-deactivation-message',
 				'multicollab_plugin_path',
@@ -1009,17 +1010,36 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			);
 		}
 
+		$cf_edd     = new CF_EDD();
+		$cf_fs_data = array(
+			'current_plan' => $cf_edd->get_plan_name(),
+		);
+
 		if ( ( $screen->is_block_editor && 'site-editor' !== $screen->base && 'widgets' !== $screen->base ) || ( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base ) ) {
 			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false );
 			wp_enqueue_script( 'es5-js', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/commenting-broser-details.js', array( 'jquery' ), wp_rand(), false );
 			wp_enqueue_script( 'cf-mark', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-dom-purify', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( 'font-awesome-free', 'https://kit.fontawesome.com/cfc6818450.js' );
 			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'wp-i18n', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false );
-
+			wp_enqueue_script( $this->plugin_name . '-functions', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin-functions.js', array(), wp_rand(), false );
 			// Add wizard JS.
-			wp_enqueue_script( 'commenting-block-wizard-js', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-wizard.js', array( 'jquery' ), wp_rand(), false );
 
+			/**
+			 * Enqueues a JavaScript file for the commenting block wizard and localizes it with a nonce.
+			 *
+			 * This function is called when the current admin screen is 'admin_page_multicollab_setup_wizard'.
+			 * It enqueues the 'commenting-block-wizard-js' script and localizes it with a nonce for the 'multi_settings_nonce' action.
+			 */
+			// if ('admin_page_multicollab_setup_wizard' === $screen->base) {
+			// 	// wp_enqueue_script('commenting-block-wizard-js', trailingslashit(COMMENTING_BLOCK_URL) . 'admin/assets/js/src/dashboard/commenting-block-wizard.js', array('jquery'), wp_rand(), false);
+			// 	// wp_localize_script(
+			// 	// 	'commenting-block-wizard-js',
+			// 	// 	'commenting_block_wizard',
+			// 	// 	array(
+			// 	// 		'nonce'       =>  wp_create_nonce('multi_settings_nonce'),
+			// 	// 	)
+			// 	// );
+			// }	
 			wp_enqueue_script(
 				'content-collaboration-inline-commenting',
 				trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/block.build.min.js',
@@ -1056,6 +1076,13 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					'comment_id'             => isset( $comment_id ) ? $comment_id : null,
 					'allowed_attribute_tags' => apply_filters( 'commenting_block_allowed_attr_tags', static::$allowed_attribute_tags ),
 					'cf_permission_options'  => apply_filters( 'commenting_block_permission_options', static::$cf_permission_options ),
+				)
+			);
+			wp_localize_script(
+				$this->plugin_name,
+				'multicollab_general_nonce',
+				array(
+					'nonce' => wp_create_nonce( 'multicollab_general_nonce' ),
 				)
 			);
 			// set edit time timezone
@@ -1109,11 +1136,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				)
 			);
 
-			$cf_edd     = new CF_EDD();
-			$cf_fs_data = array(
-				'current_plan' => $cf_edd->get_plan_name(),
-			);
-
 			wp_localize_script( $this->plugin_name, 'multicollab_fs', $cf_fs_data );
 			$cf_give_alert_message = array(
 				'cf_give_alert_message' => get_option( 'cf_give_alert_message' ),
@@ -1148,17 +1170,17 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 					wp_enqueue_script( 'cf-block-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/activityCentre.build.min.js', array(), wp_rand(), true );
 
-					$cf_protocol_remove = array("http://","https://");
+					$cf_protocol_remove = array( 'http://', 'https://' );
 
 					wp_localize_script(
 						'cf-block-script',
 						'activityLocalizer',
 						array(
-							'nonce'                  => wp_create_nonce( 'wp_rest' ),
-							'apiUrl'                 => rtrim( get_rest_url(), '/\\'), // No nedded to pass wp-json inside this function as it is already giving same path.
-							'ajaxUrl'                => admin_url( 'admin-ajax.php' ),
-							'currentUserID'          => get_current_user_id(),
-							'cf_site_url' => str_replace( $cf_protocol_remove,"",site_url() ),
+							'nonce'         => wp_create_nonce( 'wp_rest' ),
+							'apiUrl'        => rtrim( get_rest_url(), '/\\' ), // No nedded to pass wp-json inside this function as it is already giving same path.
+							'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
+							'currentUserID' => get_current_user_id(),
+							'cf_site_url'   => str_replace( $cf_protocol_remove, '', site_url() ),
 						)
 					);
 
@@ -1167,10 +1189,35 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		wp_enqueue_script( 'cf-select2-js', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/select2.min.js', array( 'jquery' ), wp_rand(), true );
 
 		wp_enqueue_script( $this->plugin_name . '-general', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin-general.js', array(), wp_rand(), false );
-        
-		if ( isset($_GET['page']) && $_GET['page'] === 'editorial-comments' && isset($_GET['view']) && $_GET['view'] === 'settings' || isset($_GET['view']) && $_GET['view'] === 'intigrations' ) {
+		if( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base || 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
+			//wp_enqueue_script( $this->plugin_name . '-setttings-dashboard', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/src/dashboard/commenting-block-admin-setttings-dashboard.js', array(), wp_rand(), false );
+
+			wp_enqueue_script( 'cf-dashboard-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/dashboard.build.min.js', array(), wp_rand(), true );
+
+			wp_localize_script(
+				'cf-dashboard-script',
+				'commenting_block_wizard',
+				array(
+					'nonce'       =>  wp_create_nonce('multi_settings_nonce'),
+				)
+			);
+
+			wp_localize_script(
+				'cf-dashboard-script',
+				'multicollab_plugin_path',
+				array(
+					'plugin_path' => COMMENTING_BLOCK_BASE,
+					'nonce'       => wp_create_nonce( 'multicollab_plugin_path' ),
+				)
+			);
+
+			wp_localize_script( 'cf-dashboard-script', 'multicollab_fs', $cf_fs_data );
+
+		}
+
+		if ( isset( $_GET['page'] ) && $_GET['page'] === 'editorial-comments' && isset( $_GET['view'] ) && $_GET['view'] === 'settings' || isset( $_GET['view'] ) && $_GET['view'] === 'intigrations' ) {
 			wp_enqueue_script( $this->plugin_name . '-upgrade-pro-modal', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin-upgrade-pro-modal.js', array(), wp_rand(), false );
-		}			
+		}
 	}
 
 	/**
@@ -1198,12 +1245,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
 		$arr             = array();
 
-		if (!empty($commentList)){
+		if ( ! empty( $commentList ) ) {
 			$commentList = end( $commentList );
 		}
-		$metaId      = filter_input( INPUT_POST, 'metaId', FILTER_SANITIZE_SPECIAL_CHARS );
-		$blockType   = filter_input( INPUT_POST, 'blockType', FILTER_SANITIZE_SPECIAL_CHARS );
-		$login_user  = wp_get_current_user();
+		$metaId     = filter_input( INPUT_POST, 'metaId', FILTER_SANITIZE_SPECIAL_CHARS );
+		$blockType  = filter_input( INPUT_POST, 'blockType', FILTER_SANITIZE_SPECIAL_CHARS );
+		$login_user = wp_get_current_user();
 		// If 'commented on' text is blank, stop process.
 		if ( empty( $commentList['commentedOnText'] ) ) {
 			echo wp_json_encode( array( 'error' => 'Please select a block, text or media to comment on.' ) );
@@ -1295,7 +1342,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				'timestamp'    => $timestamp,
 				'assignedTo'   => $assigned_to,
 				'assignedText' => $assigned_text,
-				'arr' => $arr,
+				'arr'          => $arr,
 			)
 		);
 
@@ -1335,14 +1382,14 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	public function cf_secure_content( $content ) {
 		$allowed_tags = array(
 			'a'   => array(
-				'contenteditable' 	=> array(),
-				'href'            	=> array(),
-				'target'          	=> array(),
-				'style'           	=> array(),
-				'class'           	=> array( 'js-mentioned' ),
-				'data-email'      	=> array(),
+				'contenteditable'   => array(),
+				'href'              => array(),
+				'target'            => array(),
+				'style'             => array(),
+				'class'             => array( 'js-mentioned' ),
+				'data-email'        => array(),
 				'data-display-name' => array(),
-				'data-user-id'	  	=> array(),
+				'data-user-id'      => array(),
 			),
 			'div' => array(
 				'id'    => array(),
@@ -1436,7 +1483,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 						$prev_state = $metas[ $el ][0];
 						$prev_state = maybe_unserialize( $prev_state );
 						// Deleteing comments if users delete comments at the same moment.
-						if ((is_array($timestamps) && !empty($timestamps)) || (is_object($timestamps) && !empty((array)$timestamps))) {
+						if ( ( is_array( $timestamps ) && ! empty( $timestamps ) ) || ( is_object( $timestamps ) && ! empty( (array) $timestamps ) ) ) {
 							foreach ( $timestamps as $t ) {
 								$t       = intval( $t );
 								$get_key = array_search( $t, $current_drafts['comments'][ $el ], true );
@@ -1478,22 +1525,34 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * Save settings of the plugin.
 	 */
 	public function cf_save_settings() {
-		$form_data = array();
-		parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_URL ), $form_data );
+		
+		$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( isset($nonce) && ! wp_verify_nonce( sanitize_key( $nonce ), 'multicollab_general_nonce' ) ) {
+			echo 'failed';
+			wp_die();
+		}
+		if ( ! isset( $nonce ) ) {
+			echo 'failed';
+			wp_die();
+		}
 
-		if ( isset( $form_data['cf_hide_editorial_column'] ) ) {
-			update_option( 'cf_hide_editorial_column', $form_data['cf_hide_editorial_column'] );
+		$cf_hide_editorial_column = filter_input( INPUT_POST, 'cf_hide_editorial_column', FILTER_SANITIZE_SPECIAL_CHARS );
+		$cf_hide_floating_icons = filter_input( INPUT_POST, 'cf_hide_floating_icons', FILTER_SANITIZE_SPECIAL_CHARS );
+		$cf_show_multicollab_sidebar = filter_input( INPUT_POST, 'cf_show_multicollab_sidebar', FILTER_SANITIZE_SPECIAL_CHARS );
+
+		if ( isset( $cf_hide_editorial_column ) ) {
+			update_option( 'cf_hide_editorial_column', $cf_hide_editorial_column );
 		} else {
 			delete_option( 'cf_hide_editorial_column' );
 		}
-		if ( isset( $form_data['cf_hide_floating_icons'] ) ) {
-			update_option( 'cf_hide_floating_icons', $form_data['cf_hide_floating_icons'] );
+		if ( isset( $cf_hide_floating_icons ) ) {
+			update_option( 'cf_hide_floating_icons', $cf_hide_floating_icons );
 		} else {
 			delete_option( 'cf_hide_floating_icons' );
 		}
 
-		if ( isset( $form_data['cf_show_multicollab_sidebar'] ) ) {
-			update_option( 'cf_show_multicollab_sidebar', $form_data['cf_show_multicollab_sidebar'] );
+		if ( isset( $cf_show_multicollab_sidebar ) ) {
+			update_option( 'cf_show_multicollab_sidebar', $cf_show_multicollab_sidebar );
 		} else {
 			update_option( 'cf_show_multicollab_sidebar', 0 );
 		}
@@ -1506,11 +1565,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * Save Publishing settings of the plugin.
 	 */
 	public function cf_save_suggestions() {
-		$form_data = array();
-		parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_URL ), $form_data );
+		
+		$cf_give_alert_message = filter_input( INPUT_POST, 'cf_give_alert_message', FILTER_SANITIZE_SPECIAL_CHARS );
 
-		if ( isset( $form_data['cf_give_alert_message'] ) ) {
-			update_option( 'cf_give_alert_message', $form_data['cf_give_alert_message'] );
+		if ( isset( $cf_give_alert_message ) ) {
+			update_option( 'cf_give_alert_message', $cf_give_alert_message );
 		} else {
 			delete_option( 'cf_give_alert_message' );
 		}
@@ -1523,11 +1582,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * Save email notification settings of the plugin.
 	 */
 	public function cf_save_email_notification() {
-		$form_data = array();
-		parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_URL ), $form_data );
+		
+		$cf_admin_notif = filter_input( INPUT_POST, 'cf_admin_notif', FILTER_SANITIZE_SPECIAL_CHARS );
 
-		if ( isset( $form_data['cf_admin_notif'] ) ) {
-			update_option( 'cf_admin_notif', $form_data['cf_admin_notif'] );
+		if ( isset( $cf_admin_notif ) ) {
+			update_option( 'cf_admin_notif', $cf_admin_notif );
 		} else {
 			delete_option( 'cf_admin_notif' );
 		}
@@ -1540,33 +1599,42 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * Save Suggestion mode settings of the plugin.
 	 */
 	public function cf_save_suggestions_mode() {
-		$form_data = array();
-		parse_str( filter_input( INPUT_POST, 'formData', FILTER_SANITIZE_URL ), $form_data );
+		$cf_suggestion_mode_option_name = filter_input( INPUT_POST, 'cf_suggestion_mode_option_name', FILTER_SANITIZE_SPECIAL_CHARS );
+		$cf_specific_post_categories_values = $_POST['cf_specific_post_categories_values']; //phpcs:ignore
+		$cf_specific_post_types_values = $_POST['cf_specific_post_types_values']; //phpcs:ignore
 
-		if ( 'cf_suggestion_specific_post_types' === $form_data['cf_suggestion_mode_option_name'] && empty( $form_data['cf_specific_post_types_values'] ) ) {
+		if( ! isset( $cf_suggestion_mode_option_name ) ) {
+			delete_option( 'cf_suggestion_mode_option_name' );
+			delete_option( 'cf_specific_post_categories_values' );
+			delete_option( 'cf_specific_post_types_values' );
+			echo 'saved';
+			wp_die();
+		}
+
+		if ( empty( $cf_specific_post_types_values ) && 'cf_suggestion_specific_post_types' === $cf_suggestion_mode_option_name ) {
 			echo 'empty_custom_post_type';
 			wp_die();
 		}
 
-		if ( 'cf_suggestion_specific_post_categories' === $form_data['cf_suggestion_mode_option_name'] && empty( $form_data['cf_specific_post_categories_values'] ) ) {
+		if ( empty( $cf_specific_post_categories_values ) && 'cf_suggestion_specific_post_categories' === $cf_suggestion_mode_option_name ) {
 			echo 'empty_custom_post_type';
 			wp_die();
 		}
 
-		if ( isset( $form_data['cf_suggestion_mode_option_name'] ) ) {
-			update_option( 'cf_suggestion_mode_option_name', $form_data['cf_suggestion_mode_option_name'] );
+		if ( isset( $cf_suggestion_mode_option_name ) ) {
+			update_option( 'cf_suggestion_mode_option_name', $cf_suggestion_mode_option_name );
 		} else {
 			delete_option( 'cf_suggestion_mode_option_name' );
 		}
 
-		if ( isset( $form_data['cf_specific_post_categories_values'] ) ) {
-			update_option( 'cf_specific_post_categories_values', $form_data['cf_specific_post_categories_values'] );
+		if ( isset( $cf_specific_post_categories_values ) ) {
+			update_option( 'cf_specific_post_categories_values', $cf_specific_post_categories_values );
 		} else {
 			delete_option( 'cf_specific_post_categories_values' );
 		}
 
-		if ( isset( $form_data['cf_specific_post_types_values'] ) ) {
-			update_option( 'cf_specific_post_types_values', $form_data['cf_specific_post_types_values'] );
+		if ( isset( $cf_specific_post_types_values ) ) {
+			update_option( 'cf_specific_post_types_values', $cf_specific_post_types_values );
 		} else {
 			delete_option( 'cf_specific_post_types_values' );
 		}
@@ -1619,11 +1687,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$prev_state['resolved']           = 'true';
 		$prev_state['resolved_timestamp'] = $timestamp;
 		$prev_state['resolved_by']        = $user_id;
-		$prev_state['updated_at'] 		  = $timestamp;
+		$prev_state['updated_at']         = $timestamp;
 
 		// Initiate Email Class Object.
 		$this->cf_initiate_email_class();
-		
+
 		update_post_meta( $current_post_id, $metaId, $prev_state );
 		update_post_meta( $current_post_id, 'th' . $metaId, $timestamp );
 
@@ -1694,9 +1762,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$current_post_id = filter_input( INPUT_POST, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
 		$autoDraft_ids          = filter_input(INPUT_POST, 'data', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY); //phpcs:ignore
 		// resolved issue regarding not allowed to edit the _autodraft_ids custom field.
-		if(empty($autoDraft_ids) || $autoDraft_ids === null){
+		if ( empty( $autoDraft_ids ) || $autoDraft_ids === null ) {
 			update_post_meta( $current_post_id, '_autodraft_ids', array() );
-		}else{
+		} else {
 			update_post_meta( $current_post_id, '_autodraft_ids', $autoDraft_ids );
 		}
 		wp_die();
@@ -1827,7 +1895,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$time_format     = get_option( 'time_format' );
 		$login_user      = wp_get_current_user();
 
-		if ((is_array($comments) && !empty($comments)) || (is_object($comments) && !empty((array)$comments))) {
+		if ( ( is_array( $comments ) && ! empty( $comments ) ) || ( is_object( $comments ) && ! empty( (array) $comments ) ) ) {
 			foreach ( $comments as $t => $val ) {
 				if ( isset( $val['editedTime'] ) ) {
 					$val['editedTime'] = $val['editedTime'];
@@ -1936,7 +2004,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			$system_users = $users->get_results();
 			set_transient( 'cf_system_users', $system_users, 30 * MINUTE_IN_SECONDS );
 		}
-		if ((is_array($system_users) && !empty($system_users)) || (is_object($system_users) && !empty((array)$system_users))) {
+		if ( ( is_array( $system_users ) && ! empty( $system_users ) ) || ( is_object( $system_users ) && ! empty( (array) $system_users ) ) ) {
 			foreach ( $system_users as $user ) {
 				$needToSortArray = $this->cf_get_reorder_user_role( $user->roles );
 				$user->roles     = $needToSortArray;
@@ -2002,7 +2070,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			// Fetch out matched user's email.
 			$email_list   = array();
 			$system_users = $users->get_results();
-			if ((is_array($system_users) && !empty($system_users)) || (is_object($system_users) && !empty((array)$system_users))) {
+			if ( ( is_array( $system_users ) && ! empty( $system_users ) ) || ( is_object( $system_users ) && ! empty( (array) $system_users ) ) ) {
 				foreach ( $system_users as $user ) {
 					$needToSortArray = $this->cf_get_reorder_user_role( $user->roles );
 					$user->roles     = $needToSortArray;
@@ -2140,10 +2208,10 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$fs_feedback_message = filter_input( INPUT_POST, 'fs_feedback_message', FILTER_SANITIZE_SPECIAL_CHARS );
 		$current_date        = gmdate( 'Y-m-d' );
 
-		$first_option_value = filter_input( INPUT_POST, 'first_option_value', FILTER_SANITIZE_SPECIAL_CHARS );
+		$first_option_value           = filter_input( INPUT_POST, 'first_option_value', FILTER_SANITIZE_SPECIAL_CHARS );
 		$free_plugin_deactivate_step3 = filter_input( INPUT_POST, 'free_plugin_deactivate_step3', FILTER_SANITIZE_SPECIAL_CHARS );
 
-		if( isset( $first_option_value ) && 'yes' === $first_option_value ) {
+		if ( isset( $first_option_value ) && 'yes' === $first_option_value ) {
 			$data_insert_array = array(
 				'user_name'           => $current_user->display_name,
 				'user_email'          => $current_user->user_email,
@@ -2152,7 +2220,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				'feedback_date'       => $current_date,
 				'free_plugin_version' => COMMENTING_BLOCK_VERSION,
 				'overall_experience'  => 'N/A',
-				'meet_your_needs'     => 'Yes'
+				'meet_your_needs'     => 'Yes',
 			);
 		} else {
 			$data_insert_array = array(
@@ -2163,7 +2231,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				'feedback_date'       => $current_date,
 				'free_plugin_version' => COMMENTING_BLOCK_VERSION,
 				'overall_experience'  => $free_plugin_deactivate_step3,
-				'meet_your_needs'     => 'No'
+				'meet_your_needs'     => 'No',
 			);
 		}
 
@@ -2171,11 +2239,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
 
 		if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
-			$response = vip_safe_wp_remote_get( $query_url);
+			$response = vip_safe_wp_remote_get( $query_url );
 		} else {
 			$response = wp_remote_get( $query_url );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 		}
-		
+
 		$response_body = isset( $response['body'] ) ? $response['body'] : '';
 		if ( 'success' === trim( $response_body ) ) {
 			deactivate_plugins( COMMENTING_BLOCK_BASE );
@@ -2192,16 +2260,16 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * @param [type] $block_type
 	 * @return void
 	 */
-	public function cf_modify_block_type_args_defaults($args, $block_type) { 
+	public function cf_modify_block_type_args_defaults( $args, $block_type ) {
 
-		if( ! array_key_exists( 'datatext', $args['attributes'] ) ) {
-			$args['attributes']['datatext'] = [
+		if ( ! array_key_exists( 'datatext', $args['attributes'] ) ) {
+			$args['attributes']['datatext'] = array(
 				'type'    => 'string',
 				'default' => true,
-			];
+			);
 		}
-	
-		return $args; 
+
+		return $args;
 	}
 
 	/**
@@ -2213,14 +2281,14 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 */
 	public function cf_add_allowed_iframe_tag( $tags, $context ) {
 
-		// allow mdspan for advance cusutom field 
-	    if ( $context === 'acf' ) {
-	        $tags['mdspan'] = array(
-	            'datatext' => true,
-	        );
-	    }
+		// allow mdspan for advance cusutom field
+		if ( $context === 'acf' ) {
+			$tags['mdspan'] = array(
+				'datatext' => true,
+			);
+		}
 
-	    return $tags;
+		return $tags;
 	}
 
 }

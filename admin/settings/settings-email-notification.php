@@ -1,4 +1,4 @@
-<form class="cf-cnt-box-body" method="post" id ="cf_email_notification">
+<form class="cf-settings-panel__repeater-body" method="post" id ="cf_email_notification">
 	<div id="cf-notice">
 		<div class="cf-success notices notice-success" style="display: none">
 			<p><?php esc_html_e( 'Settings saved!', 'content-collaboration-inline-commenting' ); ?></p>

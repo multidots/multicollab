@@ -23,8 +23,8 @@ $cf_post_activity_url                           = add_query_arg( 'view', 'post-a
 $view                       = ( null === $view ) ? 'web-activity' : $view;
 $cf_permissions             = get_option( 'cf_permissions' );
 ?>
-<div class="cf-plugin-settings">
-<div class="cf_settings_loader"></div>
+<div class="cf-dashboard-layout">
+<div class="cf-settings-loader"></div>
 			<?php
 			// Display Promotional Banner.
 			$promotional_banner = cf_dpb_promotional_banner( 'setting' );
@@ -32,10 +32,10 @@ $cf_permissions             = get_option( 'cf_permissions' );
 				echo $promotional_banner; // phpcs:ignore WordPress.Security.EscapeOutput
 			}
 			?>
-			<div class="cf-plugin-header">
-			<div class="cf-plugin-logo">
+			<div class="cf-dashboard-layout__header">
+			<div class="cf-dashboard-layout__header-logo">
 				<a href="https://www.multicollab.com/" target="_blank"><img src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/multicollab_logo.svg' ); ?>"/>
-				<span class="cf-plan-name">
+				<span class="cf-dashboard-layout__header-plan-name">
 					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513">
 					<g id="Group_52550" data-name="Group 52550" transform="translate(-285.455 -280.192)">
 						<path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/>
@@ -46,7 +46,7 @@ $cf_permissions             = get_option( 'cf_permissions' );
 						echo esc_html( 'FREE' );
 					?>
 				</span>
-				<a class="cf-plan-version" href="<?php echo esc_url( 'https://www.multicollab.com/change-log' ); ?>" target="_blank">v <?php echo esc_html( COMMENTING_BLOCK_VERSION ); ?></a>
+				<a class="cf-dashboard-layout__header-plan-version" href="<?php echo esc_url( 'https://www.multicollab.com/change-log' ); ?>" target="_blank">v <?php echo esc_html( COMMENTING_BLOCK_VERSION ); ?></a>
 			</div>
 			<div class="cf-plugin-version">
 				<a href="<?php echo esc_url( 'https://www.multicollab.com/contact/?utm_source=plugin_setting_header_link_contact&utm_medium=header_link_contact&utm_campaign=plugin_setting_header_link_contact&utm_id=plugin_setting_header_link' ); ?>" target="_blank"><?php esc_html_e( 'Contact', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a> | 
@@ -55,10 +55,10 @@ $cf_permissions             = get_option( 'cf_permissions' );
 			</div>
 		</div>
 	
-		<div class="cf-outer">
-			<div class="cf-left cf-pricing-dashboard">
-				<div class="cf-tabs-main">
-				<ul class="cf-tabs">
+		<div class="cf-dashboard-layout__outer">
+			<div class="cf-dashboard-layout__inner">
+				<div class="cf-dashboard-layout__tabs-wrap">
+				<ul class="cf-dashboard-layout__tabs-list">
 					<li class="
 						<?php
 						if ( ( 'dashboard' === $tab_number || empty( $tab_number ) || 'web-activity' === $view ) && 'post-activity' !== $view && 'intigrations' !== $view && 'settings' !== $view && 'integrations' !== $tab_number && 'license' !== $view ) {
@@ -88,8 +88,8 @@ $cf_permissions             = get_option( 'cf_permissions' );
 						<?php endif; ?>
 
 					</ul>
-					<div class="cf-tabs-content">
-						<div id="cf-dashboard" class="cf-tab-inner 
+					<div class="cf-dashboard-layout__tabs-content">
+						<div id="cf-dashboard" class="cf-dashboard-layout__tabs-wrap-inner 
 							<?php
 							if ( ( 'dashboard' === $tab_number || empty( $tab_number ) || 'web-activity' === $view ) && 'post-activity' !== $view && 'intigrations' !== $view && 'settings' !== $view && 'integrations' !== $tab_number && 'license' !== $view ) {
 								echo esc_html( 'cf-tab-active' ); }
@@ -102,7 +102,7 @@ $cf_permissions             = get_option( 'cf_permissions' );
 							?>
 						</div>
 						<?php if ( current_user_can( 'administrator' ) || current_user_can( 'manage_options' ) ) : ?>
-						<div id="cf-reports" class="cf-tab-inner
+						<div id="cf-reports" class="cf-dashboard-layout__tabs-wrap-inner
 							<?php
 							if ( 'post-activity' === $view ) {
 								echo esc_html( 'cf-tab-active' ); }
@@ -116,7 +116,7 @@ $cf_permissions             = get_option( 'cf_permissions' );
 						</div>
 						<?php endif; ?>
 						<?php if ( current_user_can( 'administrator' ) ) : ?>
-							<div id="cf-settings" class="cf-tab-inner
+							<div id="cf-settings" class="cf-dashboard-layout__tabs-wrap-inner
 							<?php
 							if ( 'settings' === $view ) {
 								echo esc_html( 'cf-tab-active' ); 
@@ -124,26 +124,26 @@ $cf_permissions             = get_option( 'cf_permissions' );
 							}
 							?>
 							">
-							<div class="cf-content-box">
-								<div class="cf-cnt-box-header">
+							<div class="cf-settings-panel__repeater">
+								<div class="cf-settings-panel__repeater-header">
 									<h3><?php esc_html_e( 'General', 'content-collaboration-inline-commenting' ); ?></h3>
 								</div>
 								<?php
 									// Get general settings form HTML.
 									require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-general.php';
 								?>
-								<div class="cf-cnt-box-header cf-cnt-pro-migration-header">
+								<div class="cf-settings-panel__repeater-header cf-cnt-pro-migration-header">
 									<h3><?php esc_html_e( 'Migration Setting', 'content-collaboration-inline-commenting' ); ?></h3>
 								</div>
-								<div class="cf-cnt-box-body cf-cnt-pro-migration">
+								<div class="cf-settings-panel__repeater-body cf-cnt-pro-migration">
 									<div id="migration-progress-bar" style="display: none"><span>% completed</span></div>
 									<div id="migration-progress-info"></div>
 									<p class="submit"><a href="javascrpit:void(0)" id="pro-migration-button" class="button button-primary">Migrate</a></p>
 								</div>
 							</div>
 							<?php // Floating Icons/@author Rishi Shah/@since EDD - 3.0.1 ?>
-							<div class="cf-content-box">
-								<div class="cf-cnt-box-header">
+							<div class="cf-settings-panel__repeater">
+								<div class="cf-settings-panel__repeater-header">
 									<h3><?php printf( '%s - <a href="https://docs.multicollab.com/settings/email-notifications" target="_blank"> %s  <img class="cf-external-link-icon" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ) . '" alt="external-link"></a>', esc_html__( 'Email Notification', 'content-collaboration-inline-commenting' ), esc_html__( 'Guide to Setup Email Notifications', 'content-collaboration-inline-commenting' ) ); ?></h3>
 								</div>
 								<?php
@@ -155,8 +155,8 @@ $cf_permissions             = get_option( 'cf_permissions' );
 							$disabled_class = 'cf_disabled_input';
 							?>
 							<div class="cf-suggestion-box <?php echo esc_html( $disabled_class ); ?>">
-								<div class="cf-content-box">
-									<div class="cf-cnt-box-header">
+								<div class="cf-settings-panel__repeater">
+									<div class="cf-settings-panel__repeater-header">
 										<h3>
 											<?php printf( '%s', esc_html__( 'Publishing', 'content-collaboration-inline-commenting' ) ); ?>
 											
@@ -173,8 +173,8 @@ $cf_permissions             = get_option( 'cf_permissions' );
 							<?php // Suggestion Mode/@author Rishi Shah/@since EDD - 3.0.1 ?>
 							<?php $disabled_class = 'cf_disabled_input'; ?>
 							<div class="cf-suggestion-box <?php echo esc_html( $disabled_class ); ?>">
-								<div class="cf-content-box">
-									<div class="cf-cnt-box-header">
+								<div class="cf-settings-panel__repeater">
+									<div class="cf-settings-panel__repeater-header">
 										<h3>
 											<?php printf( '%s', esc_html__( 'Suggestion Mode', 'content-collaboration-inline-commenting' ) ); ?>
 										
@@ -192,8 +192,8 @@ $cf_permissions             = get_option( 'cf_permissions' );
 							<?php // Manage Permissions/@author Rishi Shah/@since EDD - 3.0.1. ?>
 							<?php $disabled_class = 'cf_disabled_input'; ?>
 							<div class="cf-suggestion-box <?php echo esc_html( $disabled_class ); ?>">
-								<div class="cf-content-box">
-									<div class="cf-cnt-box-header">
+								<div class="cf-settings-panel__repeater">
+									<div class="cf-settings-panel__repeater-header">
 										<h3>
 											<?php printf( '%s', esc_html__( 'Manage Permissions', 'content-collaboration-inline-commenting' ) ); ?>
 											
@@ -209,8 +209,8 @@ $cf_permissions             = get_option( 'cf_permissions' );
 							</div>
 							<?php $disabled_class = 'cf_disabled_input'; ?>
 							<div class="cf-content-language-box <?php echo esc_html( $disabled_class ); ?>">
-								<div class="cf-content-box">
-									<div class="cf-cnt-box-header">
+								<div class="cf-settings-panel__repeater">
+									<div class="cf-settings-panel__repeater-header">
 										<h3>
 											<?php printf( '%s', esc_html__( 'Multilingual Options', 'content-collaboration-inline-commenting' ) ); ?>
 											
@@ -228,15 +228,15 @@ $cf_permissions             = get_option( 'cf_permissions' );
 						<?php endif; ?>
 
 						<?php if ( current_user_can( 'administrator' ) ) : ?>
-							<div id="cf-roles-slack-integration" class="cf-tab-inner 
+							<div id="cf-roles-slack-integration" class="cf-dashboard-layout__tabs-wrap-inner 
 							<?php
 							if ( ! empty( $tab_number ) || 'intigrations' === $view ) {
 								echo esc_html( 'cf-tab-active' );
 							}
 							?>
 							">
-								<div class="cf-content-box">
-									<div class="cf-cnt-box-header">
+								<div class="cf-settings-panel__repeater">
+									<div class="cf-settings-panel__repeater-header">
 										<h3><?php esc_html_e( 'Slack', 'content-collaboration-inline-commenting' ); ?>
 										
 										<a href="#" class="cf_premium_star"><?php printf( esc_html__( 'Upgrade to Premium', 'content-collaboration-inline-commenting' ) . '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513"><g id="Group_52542" data-name="Group 52542" transform="translate(-285.455 -280.192)"><path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"/><path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"/></g></svg>' ); ?></a>

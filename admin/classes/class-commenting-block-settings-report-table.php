@@ -4,9 +4,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 class MC_List_Table_Report extends WP_List_Table {
-
 	private $found_data;
-	
 	/**
 	 * Gets column of table.
 	 *
@@ -18,6 +16,7 @@ class MC_List_Table_Report extends WP_List_Table {
 		return array(
 			'title'          => __( 'Title', 'content-collaboration-inline-commenting' ),
 			'comments_count' => __( 'Comments', 'content-collaboration-inline-commenting' ),
+			'collaborators'  => __( 'Collaborators', 'content-collaboration-inline-commenting' ),
 			'activities'     => __( 'Recent Activities', 'content-collaboration-inline-commenting' ),
 		);
 	}
@@ -63,6 +62,7 @@ class MC_List_Table_Report extends WP_List_Table {
 		switch ( $column_name ) {
 			case 'title':
 			case 'comments_count':
+			case 'collaborators':
 			case 'activities':
 			case 'last_updated':
 				return $item[ $column_name ];
@@ -116,7 +116,7 @@ class MC_List_Table_Report extends WP_List_Table {
 									<?php esc_html_e( $month_title . ' ' . $year ); ?>
 								</option>
 
-							<?php 
+								<?php 
 							}
 						} ?>
 					</select>
