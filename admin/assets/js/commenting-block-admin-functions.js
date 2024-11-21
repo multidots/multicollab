@@ -1192,6 +1192,10 @@ function cfgetCustomAttributeId(selectedText) {
         const editSidebarchck = document.querySelector(".edit-post-layout");
         const blockinsertchck = document.querySelector(".interface-interface-skeleton__body");
         const firstChild = blockinsertchck?.firstElementChild;
+
+        const checkVisualedit = wp.data.select("core/edit-post").getEditorMode();
+        const calcAuto = "auto";
+
         if (!checkCommntAval) {
            if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild) {
             mdboardOffset();
@@ -1200,6 +1204,26 @@ function cfgetCustomAttributeId(selectedText) {
         } else {
             setContainerDimensions("auto", `${calcLyotWidth}px`);
         }
+
+        setTimeout(() => {
+            var editorSidebar = document.querySelector('.editor-sidebar');
+            const wrapper = document.querySelector('#cf-comment-board-wrapper');
+            const focusBoard = wrapper.querySelector('.cls-board-outer.focus');
+            if( null !== editorSidebar && null !== focusBoard ) {
+                calcLyotWidth = calcLyotWidth - editorSidebar?.offsetWidth;
+            }
+
+            const editSidebar = wp.data.select("core/edit-post").isEditorSidebarOpened();
+            if (checkVisualedit === "visual") {
+               if (editSidebar === false) {
+                    setContainerDimensions(`${calcLyotWidth}px`, "unset");
+                } else {
+                    jQuery(".is-root-container").width(calcAuto);
+                }
+            }
+
+        }, 500);
+
     }
 
     // Function to load more users
