@@ -96,6 +96,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$result = $wpdb->get_results( $query ); //phpcs:ignore
 		wp_reset_query();
 
+		$cf_edd = new CF_EDD();
 		// The Loop
 		$activities_data = array();
 		if ((is_array($result) && !empty($result)) || (is_object($result) && !empty((array)$result))) {
@@ -196,13 +197,20 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 								} else {
 									$activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</span>';
 								}
-
-								$activity_text .= '</div></div>';
+								if ( $cf_edd->is__premium_only() ) {
+									$activity_text .= ( isset( $item['attachmentText'] ) && '' !== $item['attachmentText'] ) ? "<br/><span class='tbl-user-comment-attachment'>" . wp_kses( $item['attachmentText'], wp_kses_allowed_html( 'post' ) ) . '</span>' : ''; // Removed phpcs:ignore by Rishi Shah.
+								}
+									$activity_text .= '</div></div>';
 							}
 						}
 					}
 				}
 				$prepare_data['activities'] = $activity_text;
+
+				// Collaborators.
+				$collaborators                 = array_unique( $collaborators );
+				$collaborators                 = implode( $collaborators );
+				$prepare_data['collaborators'] = $collaborators;
 
 				if ( ! empty( $activity_text ) ) {
 					$activities_data[] = $prepare_data;
@@ -275,6 +283,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		wp_reset_query();
 
 		// The Loop
+		$cf_edd          = new CF_EDD();
 		$activities_data = array();
 		if ((is_array($result) && !empty($result)) || (is_object($result) && !empty((array)$result))) {
 
@@ -307,6 +316,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 
 				// Activities.
 				$collaborators          = array();
+				$realtime_collaborators = array();
 				$activity_text          = '';
 				$activity_limit         = 3;
 				$activity_count         = 0;
@@ -372,13 +382,51 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 								} else {
 									$activity_text .= "<span class='tbl-user-comment'> " . wp_kses( $thread, wp_kses_allowed_html( 'post' ) ) . '</span>';
 								}
-
-								$activity_text .= '</div></div>';
+								if ( $cf_edd->is__premium_only() ) {
+									$activity_text        .= (isset( $item['attachmentText'] )&& '' !== $item['attachmentText'] ) ? 	"<br/><span class='tbl-user-comment-attachment'>". wp_kses( $item['attachmentText'], wp_kses_allowed_html( 'post' ) ) ."</span>" : ''; //phpcs:ignore
+								}
+									$activity_text .= '</div></div>';
 							}
 						}
 					}
 				}
 				$prepare_data['activities'] = $activity_text;
+
+				$collaboratorHistory = get_post_meta( $current_post_id, '_realtime_collaborators_activity', true );
+				$collaboratorHistory = json_decode( $collaboratorHistory );
+				$collaboratorHistory = (array) $collaboratorHistory;
+				$collaboratorHistory = array_filter(
+					$collaboratorHistory,
+					function ( $value ) {
+						return property_exists( $value, 'timestamp' );
+					}
+				);
+
+				$collaboratorHistory = array_filter(
+					$collaboratorHistory,
+					function ( $collab ) {
+						return $collab->type === 'Joined';
+					}
+				);
+
+				$collaboratorHistory = array_values( $collaboratorHistory );
+
+				if ((is_array($collaboratorHistory) && !empty($collaboratorHistory)) || (is_object($collaboratorHistory) && !empty((array)$collaboratorHistory))) {
+					foreach ( $collaboratorHistory as  $collaborator ) {
+						$collaborator             = (array) $collaborator;
+						$user_info                = get_userdata( $collaborator['userId'] );
+						$profile_url              = isset( $user_info->user_email ) ? get_avatar_url( $user_info->user_email ) : '';
+						$username                 = isset( $user_info->display_name ) ? $user_info->display_name : '';
+						$realtime_collaborators[] = "<span class='tbl-user-avatar'><img src=" . esc_url( $profile_url ) . "  alt='" . esc_attr( $username ) . "' />" . esc_html( $username ) . '</span>';
+					}
+				}
+
+				$collaborators = ! empty( $realtime_collaborators ) ? $realtime_collaborators : $collaborators;
+
+				// Collaborators.
+				$collaborators                 = array_unique( $collaborators );
+				$collaborators                 = implode( $collaborators );
+				$prepare_data['collaborators'] = $collaborators;
 
 				if ( ! empty( $activity_text ) ) {
 					$activities_data[] = $prepare_data;
@@ -432,9 +480,15 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 			$query .= " LEFT JOIN $wpdb->term_relationships as tr ON pm.post_id = tr.object_id";
 		}
 
-		$query .= $wpdb->remove_placeholder_escape( $wpdb->prepare( " WHERE pm.meta_key LIKE '%s' OR pm.meta_key LIKE '%s' AND LENGTH(pm.meta_value) = 10", 'th_rc_joined%', 'th_el%' ) );
+		$cf_edd = new CF_EDD();
+		if ( $cf_edd->is__premium_only() ) {
+			$query .= $wpdb->remove_placeholder_escape( $wpdb->prepare( " WHERE pm.meta_key LIKE '%s' AND LENGTH(pm.meta_value) = 10", 'th_%' ) );
+			$query .= ' AND pm.meta_key NOT IN ('.$autodrat_id_str.')';
+		} else {
+			$query .= $wpdb->remove_placeholder_escape( $wpdb->prepare( " WHERE pm.meta_key LIKE '%s' OR pm.meta_key LIKE '%s' AND LENGTH(pm.meta_value) = 10", 'th_rc_joined%', 'th_el%') );
 
-		$query .= ' AND pm.meta_key NOT IN ('.$autodrat_id_str.')';
+			$query .= ' AND pm.meta_key NOT IN ('.$autodrat_id_str.')';
+		}
 
 		if ( $cat ) {
 			$query .= $wpdb->prepare( ' AND tr.term_taxonomy_id	 = %d', $cat );
@@ -493,13 +547,15 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		$autodraft_ids = array();
 		$meta_key      = '_autodraft_ids';
 		$autodrat_id_str = '';
+
 		$autodrafts_id = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT pm.meta_value as ids  FROM $wpdb->postmeta as pm
 			LEFT JOIN $wpdb->posts as p ON pm.post_id = p.ID
 			WHERE pm.meta_key =  %s",$meta_key)//phpcs:ignore
 		); // db call ok; no-cache ok
-		if ((is_array($autodrafts_id) && !empty($autodrafts_id)) || (is_object($autodrafts_id) && !empty((array)$autodrafts_id))) {
+
+		if ((is_array($autodrafts_id) && !empty($autodrafts_id)) || (is_object($autodrafts_id) && !empty((array)$autodrafts_id))) {	
 			foreach ( $autodrafts_id as $id ) {
 				$ids = ( maybe_unserialize( $id->ids ) );
 				if ( isset( $ids ) && ! empty( $ids ) ) {
@@ -510,7 +566,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 			}
 			$autodrat_id_str = "'" . implode( "', '", $autodraft_ids ) . "'";
 		}
-
+		
 		return $autodrat_id_str;
 	}
 
@@ -518,7 +574,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 		global $wpdb;
 
 		// will be used in the included file.
-		$activity_view = 'detail-view'; // Removed phpcs:ignore by Rishi Shah.
+		$activity_view = 'cf-detail-view'; // Removed phpcs:ignore by Rishi Shah.
 		$post_id       = filter_input( INPUT_POST, 'postID', FILTER_VALIDATE_INT ); // will (also) be used in the included file.
 
 		$all_metas = $wpdb->get_results(
@@ -555,7 +611,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 			$post_ids = $wpdb->get_col(  //phpcs:ignore 
 				$wpdb->prepare( "SELECT DISTINCT p.ID FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as pm ON pm.post_id = p.ID WHERE pm.meta_key LIKE '_el%' $where_suggestions" )); //phpcs:ignore
 
-			if ((is_array($post_ids) && !empty($post_ids)) || (is_object($post_ids) && !empty((array)$post_ids))) {
+			if ((is_array($post_ids) && !empty($post_ids)) || (is_object($post_ids) && !empty((array)$post_ids))) {	
 				foreach ( $post_ids as $post_id ) {
 
 					$total_suggestions = 0;
@@ -605,7 +661,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 				$suggestions_meta = json_decode( $suggestions_meta );
 
 				// Create/Update 'th_*' metas for suggestions.
-				if ((is_array($suggestions_meta) && !empty($suggestions_meta)) || (is_object($suggestions_meta) && !empty((array)$suggestions_meta))) {
+				if ((is_array($suggestions_meta) && !empty($suggestions_meta)) || (is_object($suggestions_meta) && !empty((array)$suggestions_meta))) {	
 					foreach ( $suggestions_meta as $uid => $item ) {
 						$timestamp = $item[0]->updated_at;
 						update_post_meta( $post_id, 'th_' . $uid, $timestamp );
@@ -617,8 +673,7 @@ class Commenting_Block_Activities extends Commenting_block_Functions {
 			$all_comments = $wpdb->get_results(
 				$wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE meta_key LIKE '_el%' AND post_id = %d", $post_id )
 			); // db call ok; no-cache ok
-
-			if ((is_array($all_comments) && !empty($all_comments)) || (is_object($all_comments) && !empty((array)$all_comments))) {
+			if ((is_array($all_comments) && !empty($all_comments)) || (is_object($all_comments) && !empty((array)$all_comments))) {	
 				foreach ( $all_comments as $item ) {
 					$key  = 'th' . $item->meta_key;
 					$data = maybe_unserialize( $item->meta_value );

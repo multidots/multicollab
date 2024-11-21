@@ -1,5 +1,5 @@
-<form class="cf-cnt-box-body cf-slack-integration-form" id="cf_slack_intigration"  method="post">
-	<div class="cf-cnt-box-body">
+<form class="cf-settings-panel__repeater-body cf-slack-integration-form" id="cf_slack_intigration"  method="post">
+	<div class="cf-settings-panel__repeater-body">
 		<div id="cf-slack-notice">
 			<div class="cf-success notices notice-success" style="display: none">
 				<p><?php esc_html_e( 'Settings saved!', 'content-collaboration-inline-commenting' ); ?></p>

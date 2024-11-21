@@ -1,4 +1,4 @@
-<div class="cf-cnt-box-body">
+<div class="cf-settings-panel__repeater-body">
 <p><?php printf( '%s', esc_html__( 'Multicollab defaults to English, syncs with the chosen WordPress Admin language, and supports other languages.', 'content-collaboration-inline-commenting' ) ); ?></p>
 	<?php
 	$lang          = get_bloginfo( 'language' );

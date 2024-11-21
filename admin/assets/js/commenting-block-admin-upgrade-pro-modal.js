@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     
-        modalCloseBtn.addEventListener('click', function () { 
+        modalCloseBtn?.addEventListener('click', function () { 
             modal.classList.remove('cf-active-modal');
             document.querySelector('body').style.overflowY = "unset";
         });

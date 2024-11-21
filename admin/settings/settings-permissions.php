@@ -9,7 +9,7 @@ $disabled_class = 'cf_disabled_input';
 delete_option( 'cf_permissions' );
 
 ?>
-<form class="cf-cnt-box-body" id="cf_permissions"  method="post"> 
+<form class="cf-settings-panel__repeater-body" id="cf_permissions"  method="post"> 
 		<div id="cf-permissions-notice">
 			<div class="cf-success notices notice-success" style="display: none">
 				<p><?php esc_html_e( 'Permissions saved!', 'content-collaboration-inline-commenting' ); ?></p>

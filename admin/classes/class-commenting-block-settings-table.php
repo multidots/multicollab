@@ -18,6 +18,7 @@ class MC_List_Table extends WP_List_Table {
 		return array(
 			'title'          => __( 'Title', 'content-collaboration-inline-commenting' ),
 			'comments_count' => __( 'Comments', 'content-collaboration-inline-commenting' ),
+			'collaborators'  => __( 'Collaborators', 'content-collaboration-inline-commenting' ),
 			'activities'     => __( 'Recent Activities', 'content-collaboration-inline-commenting' ),
 		);
 	}
@@ -63,6 +64,7 @@ class MC_List_Table extends WP_List_Table {
 		switch ( $column_name ) {
 			case 'title':
 			case 'comments_count':
+			case 'collaborators':
 			case 'activities':
 			case 'last_updated':
 				return $item[ $column_name ];
@@ -83,6 +85,7 @@ class MC_List_Table extends WP_List_Table {
 		$cat_filter = filter_input( INPUT_GET, 'cat', FILTER_SANITIZE_SPECIAL_CHARS );
 		$view       = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_SPECIAL_CHARS );
 		$m          = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_SPECIAL_CHARS );
+
 		/* add code to solve get_categories issue */
 		$cat_args   = array(
 			'parent'     => 0,
@@ -110,7 +113,7 @@ class MC_List_Table extends WP_List_Table {
 									<?php esc_html_e( $month_title . ' ' . $year ); ?>
 								</option>
 
-							<?php 
+								<?php 
 							}
 						} ?>
 					</select>

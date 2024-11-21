@@ -1,45 +1,45 @@
 
-<div class="container" id="wizard-main">
+<div class="container" id="cf-wizard-main">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="wizard">
 				<form role="form">
 					<div class="tab-content">
 						<div class="tab-pane active" role="tabpanel" id="step1">
-							<div class="bs-calltoaction-wrap bs-calltoaction-spacewrap">
-								<div class="cf-tab-steps">
-									<ul class="cf-tab-steps-bulletlists">
-										<li class="cf-tab-steps-list cf-tab-step-list-one"><span class="cf-tab-steps-list-number cf-tab-step-list-number-one">1</span></li>
-										<li class="cf-tab-steps-list cf-tab-step-list-two"><span class="cf-tab-steps-list-number cf-tab-step-list-number-two">2</span></li>
-										<li class="cf-tab-steps-list cf-tab-step-list-three"><span class="cf-tab-steps-list-number cf-tab-step-list-number-three">3</span></li>
+							<div class="cf-bs-calltoaction-wrap cf-bs-calltoaction-wrap__space">
+								<div class="cf-bs-calltoaction-wrap__tab-steps">
+									<ul class="cf-bs-calltoaction-wrap__tab-steps-bulletlists">
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-one"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-one">1</span></li>
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-two"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-two">2</span></li>
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-three"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-three">3</span></li>
 									</ul>
 								</div>
-								<div class="bs-calltoaction bs-calltoaction-primary">
+								<div class="cf-bs-calltoaction cf-bs-calltoaction-wrap__info cf-bs-calltoaction-primary">
 									<div class="row">
-										<div class="col-md-12 cta-contents">
-											<img class="bs-calltoaction-logo" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/boarding-multicollablogo.svg' ); ?>"/>
-											<div class="oauth_token_section">
-												<p><?php echo esc_html__( 'Thank you for choosing Multicollab.', 'content-collaboration-inline-commenting' ); ?></p>
+										<div class="col-md-12 cf-bs-calltoaction-wrap__contents">
+											<img class="cf-bs-calltoaction-logo" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/boarding-multicollablogo.svg' ); ?>"/>
+											<div class="oauth_to1ken_section">
+												<p class="cf-bs-calltoaction-wrap__contents-text"><?php echo esc_html__( 'Thank you for choosing Multicollab.', 'content-collaboration-inline-commenting' ); ?></p>
 											</div>
-											<h3 class="cta-title"><?php echo esc_html__( 'Start Collaboration in WordPress', 'content-collaboration-inline-commenting' ); ?></h3>
+											<h3 class="cf-bs-calltoaction-wrap__contents-title"><?php echo esc_html__( 'Start Collaboration in WordPress', 'content-collaboration-inline-commenting' ); ?></h3>
 										</div>
 									</div>
 								</div>
-								<ul class="list-inline">
+								<ul class="cf-bs-calltoaction-wrap__list-inline">
 									<li><button type="button" id="wizard_validate_token" class="btn btn-primary next-step"><?php echo esc_html__( 'Continue', 'content-collaboration-inline-commenting' ); ?><svg xmlns="http://www.w3.org/2000/svg" width="20" height="11.877" viewBox="0 0 20 11.877"><g id="Group_481" data-name="Group 481" transform="translate(0 -17.112)"><path id="Path_10268" data-name="Path 10268" d="M19.062,230.9H.937a.937.937,0,0,1,0-1.875H19.062a.937.937,0,0,1,0,1.875Z" transform="translate(0 -206.909)" fill="#fff"/><path id="Path_10269" data-name="Path 10269" d="M224.637,155.643a.938.938,0,0,1-.663-1.6l4.337-4.337-4.337-4.337a.938.938,0,0,1,1.326-1.326l5,5a.938.938,0,0,1,0,1.326l-5,5A.93.93,0,0,1,224.637,155.643Z" transform="translate(-210.575 -126.655)" fill="#fff"/></g></svg></button></li>
 								</ul>
 							</div>
 						</div>
 						<div class="tab-pane" role="tabpanel" id="step2" style="display: none;">
-							<div class="bs-calltoaction-wrap">
-								<div class="cf-tab-steps">
-									<ul class="cf-tab-steps-bulletlists">
-										<li class="cf-tab-steps-list cf-tab-step-list-one"><span class="cf-tab-steps-list-number cf-tab-step-list-number-one">1</span></li>
-										<li class="cf-tab-steps-list cf-tab-step-list-two"><span class="cf-tab-steps-list-number cf-tab-step-list-number-two">2</span></li>
-										<li class="cf-tab-steps-list cf-tab-step-list-three"><span class="cf-tab-steps-list-number cf-tab-step-list-number-three">3</span></li>
+						<div class="cf-bs-calltoaction-wrap cf-bs-calltoaction-wrap__space">
+								<div class="cf-bs-calltoaction-wrap__tab-steps">
+									<ul class="cf-bs-calltoaction-wrap__tab-steps-bulletlists">
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-one"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-one">1</span></li>
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-two"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-two">2</span></li>
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-three"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-three">3</span></li>
 									</ul>
 								</div>
-								<div class="bs-calltoaction bs-calltoaction-info">
+								<div class="cf-bs-calltoaction cf-bs-calltoaction-info">
 									<div class="row">
 										<div class="col-md-12 cta-contents">
 											<h2 class="cta-title">❤️ <?php echo esc_html__( 'Help us build a better Multicollab!', 'content-collaboration-inline-commenting' ); ?></h2>
@@ -52,28 +52,28 @@
 										</div>
 									</div>
 								</div>
-								<ul class="list-inline">
+								<ul class="cf-bs-calltoaction-wrap__list-inline">
 									<li><button type="button" id="wizard_language_select" class="btn btn-primary next-step"><?php echo esc_html__( 'Continue', 'content-collaboration-inline-commenting' ); ?><svg xmlns="http://www.w3.org/2000/svg" width="20" height="11.877" viewBox="0 0 20 11.877"><g id="Group_481" data-name="Group 481" transform="translate(0 -17.112)"><path id="Path_10268" data-name="Path 10268" d="M19.062,230.9H.937a.937.937,0,0,1,0-1.875H19.062a.937.937,0,0,1,0,1.875Z" transform="translate(0 -206.909)" fill="#fff"/><path id="Path_10269" data-name="Path 10269" d="M224.637,155.643a.938.938,0,0,1-.663-1.6l4.337-4.337-4.337-4.337a.938.938,0,0,1,1.326-1.326l5,5a.938.938,0,0,1,0,1.326l-5,5A.93.93,0,0,1,224.637,155.643Z" transform="translate(-210.575 -126.655)" fill="#fff"/></g></svg></button></li>
 								</ul>
 							</div>
 						</div>
 						<div class="tab-pane active" role="tabpanel" id="step3" style="display: none;">
-							<div class="bs-calltoaction-wrap">
-								<div class="cf-tab-steps">
-									<ul class="cf-tab-steps-bulletlists">
-										<li class="cf-tab-steps-list cf-tab-step-list-one"><span class="cf-tab-steps-list-number cf-tab-step-list-number-one">1</span></li>
-										<li class="cf-tab-steps-list cf-tab-step-list-two"><span class="cf-tab-steps-list-number cf-tab-step-list-number-two">2</span></li>
-										<li class="cf-tab-steps-list cf-tab-step-list-three"><span class="cf-tab-steps-list-number cf-tab-step-list-number-three">3</span></li>
+						<div class="cf-bs-calltoaction-wrap cf-bs-calltoaction-wrap__space">
+								<div class="cf-bs-calltoaction-wrap__tab-steps">
+									<ul class="cf-bs-calltoaction-wrap__tab-steps-bulletlists">
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-one"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-one">1</span></li>
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-two"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-two">2</span></li>
+										<li class="cf-bs-calltoaction-wrap__tab-steps-list cf-tab-step-list-three"><span class="cf-bs-calltoaction-wrap__tab-steps-list-number cf-tab-step-list-number-three">3</span></li>
 									</ul>
 								</div>
-								<div class="bs-calltoaction bs-calltoaction-primary">
+								<div class="cf-bs-calltoaction cf-bs-calltoaction-primary">
 									<div class="row">
 										<div class="col-md-12 cta-contents">
 											<div class="oauth_token_section">
 											<p class="step3-cta-contents-para"><?php echo esc_html__( 'Getting Started with Multicollab.', 'content-collaboration-inline-commenting' ); ?></p>
 											</div>
 										</div>
-										<ul class="list-inline">
+										<ul class="cf-bs-calltoaction-wrap__list-inline">
 											<li><button type="button" id="wizard_language_select" class="btn btn-primary next-step"><?php echo esc_html__( 'Continue', 'content-collaboration-inline-commenting' ); ?><svg xmlns="http://www.w3.org/2000/svg" width="20" height="11.877" viewBox="0 0 20 11.877"><g id="Group_481" data-name="Group 481" transform="translate(0 -17.112)"><path id="Path_10268" data-name="Path 10268" d="M19.062,230.9H.937a.937.937,0,0,1,0-1.875H19.062a.937.937,0,0,1,0,1.875Z" transform="translate(0 -206.909)" fill="#fff"/><path id="Path_10269" data-name="Path 10269" d="M224.637,155.643a.938.938,0,0,1-.663-1.6l4.337-4.337-4.337-4.337a.938.938,0,0,1,1.326-1.326l5,5a.938.938,0,0,1,0,1.326l-5,5A.93.93,0,0,1,224.637,155.643Z" transform="translate(-210.575 -126.655)" fill="#fff"/></g></svg></button></li>
 										</ul>
 									</div>
@@ -96,8 +96,8 @@
 									$country_name = $get_country_name_data['country'];
 								}
 								?>
-								<input type="hidden" class="cf_country_name" value="<?php esc_attr_e( $country_name, 'content-collaboration-inline-commenting' ); ?>">
-								<input type="hidden" class="cf_browser_name_version" value="">
+								<input type="hidden" class="cf-country-name" value="<?php esc_attr_e( $country_name, 'content-collaboration-inline-commenting' ); ?>">
+								<input type="hidden" class="cf-browser-name-version" value="">
 								
 							</div>
 						</div>
