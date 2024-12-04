@@ -529,11 +529,7 @@ function showNoticeBoardonNewComments() {
         }
         setTimeout(function () {
             if (noticeboard !== null) {
-                // if( noticeboard.innerHTML === "" ){
-                //     noticeboard.setAttribute('style','display:none');
-                // } else {
-                //    noticeboard.setAttribute('style','display:block');
-                // }
+               
             }
 
         }, 300);
@@ -1041,6 +1037,7 @@ function cfgetCustomAttributeId(selectedText) {
         const wrapper = document.querySelector('#cf-comment-board-wrapper');
         const focusBoard = wrapper.querySelector('.cls-board-outer.focus');
         const elid = focusBoard ? focusBoard.getAttribute('id') : null;
+        const commentEditFocus = focusBoard?.querySelector('.js-cf-edit-comment.comment-focus');
     
         setTimeout(function () {
     
@@ -1138,8 +1135,9 @@ function cfgetCustomAttributeId(selectedText) {
                             }
                         }
                     });
-    
-                    scrollBoardToPosition(topOfTextSingleBoardSuggestion);
+                    if(commentEditFocus){
+                        scrollBoardToPosition(topOfTextSingleBoardSuggestion);
+                    }
                 }
             } else if (focusBoard) {
                 let topOfText;
@@ -1147,9 +1145,6 @@ function cfgetCustomAttributeId(selectedText) {
                     //topOfText = document.querySelector('[datatext="' + elid + '"]').offsetTop;
                     topOfText = jQuery('[datatext="' + elid + '"]').offset()?.top;
                 } else {
-                    // const sid = document.getElementById(elid)?.getAttribute('data-sid');
-                    // //topOfText = document.querySelector('[id="' + sid + '"]')?.offsetTop;
-                    // topOfText = document.getElementById( elid )?.offsetTop;
                     const sid = jQuery('#' + elid).attr('data-sid');
                     topOfText = jQuery('[id="' + sid + '"]').offset()?.top;
 
@@ -1162,7 +1157,10 @@ function cfgetCustomAttributeId(selectedText) {
                 // const focusBoardElement = document.querySelector('#cf-comment-board-wrapper').querySelector('.cls-board-outer.focus');
                 // focusBoardElement.style.top = topOfText + 'px';
                 jQuery('#cf-span__comments').find('.cls-board-outer.focus').offset({ top: topOfText });
-                scrollBoardToPosition(topOfText);
+                
+                if(commentEditFocus){
+                    scrollBoardToPosition(topOfText);
+                }
             }
         }, 800);
     }   
@@ -1180,7 +1178,9 @@ function cfgetCustomAttributeId(selectedText) {
     }
 
     // Function to handle layout changes
-    function handleEditorLayoutChange() {
+    function handleEditorLayoutChange( fromIconClick = false ) {
+
+        var $ = jQuery;
 
         const notCommentOncls = document.querySelector(".multicollab_body_class");
         var checkCommntAval = !notCommentOncls?.classList?.contains('commentOn');
@@ -1188,13 +1188,15 @@ function cfgetCustomAttributeId(selectedText) {
         const cmntLayout = document.querySelector("#cf-comments-suggestions-parent");
         const ediLayotWidth = ediLayot?.offsetWidth;
         const cmntLyotWidth = cmntLayout?.offsetWidth;
-        const calcLyotWidth = ediLayotWidth - cmntLyotWidth;
+        let calcLyotWidth = ediLayotWidth - cmntLyotWidth;
         const editSidebarchck = document.querySelector(".edit-post-layout");
         const blockinsertchck = document.querySelector(".interface-interface-skeleton__body");
         const firstChild = blockinsertchck?.firstElementChild;
-
         const checkVisualedit = wp.data.select("core/edit-post").getEditorMode();
+        const $boardOuter = document.querySelector( '#cf-comment-board-wrapper .cls-board-outer' );
         const calcAuto = "auto";
+
+        const prevSidebarOpen = document.querySelector('.editor-sidebar');
 
         if (!checkCommntAval) {
            if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild) {
@@ -1204,60 +1206,37 @@ function cfgetCustomAttributeId(selectedText) {
         } else {
             setContainerDimensions("auto", `${calcLyotWidth}px`);
         }
+        if( fromIconClick ) {
 
-        setTimeout(() => {
-            var editorSidebar = document.querySelector('.editor-sidebar');
-            const wrapper = document.querySelector('#cf-comment-board-wrapper');
-            const focusBoard = wrapper.querySelector('.cls-board-outer.focus');
-            if( null !== editorSidebar && null !== focusBoard ) {
-                calcLyotWidth = calcLyotWidth - editorSidebar?.offsetWidth;
-            }
+            setTimeout(function () {
+                const notCommentOncls = document.querySelector(".multicollab_body_class");
+                const $boardOuter = $("#cf-comment-board-wrapper .cls-board-outer");
+                const $hideCheckBox = $(".comment-toggle .is-checked");
+                const $SuggestionCheckBox = $(".suggestion-toggle .is-checked");
+                const ediLayot = document.querySelector(".editor-styles-wrapper");
+                const cmntLayout = document.querySelector("#cf-comments-suggestions-parent");
+                const ediLayotWidth = ediLayot?.offsetWidth;
+                const cmntLyotWidth = cmntLayout?.offsetWidth;
+                const calcLyotWidth = ediLayotWidth - cmntLyotWidth;
+                const calcAuto = "auto";
+                const editSidebarchck = wp.data.select("core/edit-post").isEditorSidebarOpened();
+                const checkVisualedit = wp.data.select("core/edit-post").getEditorMode();
 
-            const editSidebar = wp.data.select("core/edit-post").isEditorSidebarOpened();
-            if (checkVisualedit === "visual") {
-               if (editSidebar === false) {
-                    setContainerDimensions(`${calcLyotWidth}px`, "unset");
-                } else {
-                    jQuery(".is-root-container").width(calcAuto);
+                if (checkVisualedit === "visual") {
+                    if ($boardOuter.length >= 1 && ($hideCheckBox.length !== 1 || $SuggestionCheckBox.length !== 1) && editSidebarchck === true) {
+                        setContainerDimensions(`${calcLyotWidth}px`, "unset");
+                    } else if (!notCommentOncls?.classList?.contains('commentOn') && ($hideCheckBox.length == 0 || $SuggestionCheckBox.length == 0)) {
+                        setTimeout(function () {
+                            setContainerDimensions("auto", `${calcLyotWidth}px`);
+                        }, 100);
+                    } else if (editSidebarchck === false || ($hideCheckBox.length == 0 || $SuggestionCheckBox.length == 0)) {
+                        setContainerDimensions(`${calcLyotWidth}px`, "unset");
+                    } else {
+                        jQuery(".is-root-container").width(calcAuto);
+                    }
                 }
-            }
+            }, 200);
 
-        }, 500);
+        }
 
     }
-
-    // Function to load more users
-    // function loadMoreUsers( loadingUser, post_id, selectedUsers ) {
-    //     var $ = jQuery;
-    //     let page = 1; // Starting page
-    //     const ulElement = $('#select2-guest-email-results');
-    //     console.log('loading more users', page);
-
-    //     if( ! loadingUser ) {
-    //         return;
-    //     }
-
-    //     $.ajax({
-    //         url: '/wp-admin/admin-ajax.php', // Adjust as necessary for your setup
-    //         type: 'POST',
-    //         data: {
-    //             action: 'cf_load_more_users', // Your AJAX action
-    //             page: page,
-    //             post_id: post_id,
-    //             selectedUsers: selectedUsers
-    //         },
-    //         success: function(response) {
-    //             if (response) {
-    //                 ulElement.append(response); // Append the new user entries
-    //                 page++; // Increment the page number for next request
-    //                 loadingUser = false;
-    //             } 
-                
-    //             // else {
-    //             //     // No more users to load
-    //             //     $(window).off('scroll', onScroll);
-    //             // }
-    //         }
-    //     });
-    // }
-    

@@ -62,19 +62,60 @@ window.process = {
 				}
 
 				setTimeout(function () {
-						scrollBoardToPosition(topOfText);
-						_this.offset({ top: topOfText });
+					if (!target.is(".btn-delete")){
+	                  scrollBoardToPosition(topOfText);
+	                }
+					_this.offset({ top: topOfText });
 				}, 800);
 
 				$('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
-				$('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
 
 				if ($(`#${selectedText}`).hasClass('sg-board')) {
 						let sid = $(`#${selectedText}`).attr('data-sid');
 						$(`#${sid}`).attr('data-rich-text-format-boundary', 'true');
 				}
+				$('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
 
 			});
+
+			//Set board top offset from activity center @author: Minal Diwan @since-3.4
+        $(document).on('click', '.user-commented-on,.cf-activity-centre .user-action a', function (e) {
+            var elID = e.target.dataset.elid;
+            if (elID) {
+                elID = elID.replace('cf-', '');
+                $(`#${elID}`).trigger('click');
+                setTimeout(function () {
+                    let topOfText;
+                    if (elID.match(/^el/m) !== null) {
+                        topOfText = $('[datatext="' + elID + '"]').offset().top;
+                    } else {
+                        let sid = $('#' + elID).attr('data-sid');
+                        topOfText = $('[id="' + sid + '"]').offset()?.top;
+                        if (!topOfText) {
+                            topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
+                        }
+                        $('#' + sid).addClass('sg-format-class');
+
+                    }
+                    $('#cf-span__comments .cls-board-outer').removeAttr('style');
+                    $('#cf-span__comments .cls-board-outer').removeClass('focus');
+                    $('#cf-span__comments .cls-board-outer').removeClass('is-open');
+                    $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
+
+                    const currentUser = wp.data.select('core').getCurrentUser()?.id;
+                     
+                    $('#' + elID + '.cls-board-outer').addClass('focus');
+                    $('#' + elID + '.cls-board-outer').addClass('is-open');
+                    $('#' + elID + '.cls-board-outer').css('opacity', '1');
+
+
+                    scrollBoardToPosition(topOfText);
+
+                    $('#' + elID + '.cls-board-outer').offset({ top: topOfText });
+
+                }, 800);
+            }
+        });
 	});
 })(jQuery);
 
@@ -95,6 +136,7 @@ window.addEventListener("click", function (e) {
 	
 		if (visualEditor && visualEditor.contains(e.target)) {
 			sidebar.classList.add("cf-sidebar-closed");
+			setTimeout(handleEditorLayoutChange( true ), 100);
 			closeMulticollabSidebar();
 		}
 	});
@@ -546,11 +588,15 @@ window.addEventListener("click", function (e) {
 		// Editor layout width changes sidebar multicollab btn click
 		if (
 			event.target.closest(
-				".interface-pinned-items .components-button, .edit-post-header-toolbar__inserter-toggle, .editor-document-tools__inserter-toggle"
-			)
-		) {
-			setTimeout(handleEditorLayoutChange, 100);
-		}
+			  ".interface-pinned-items .components-button, .edit-post-header-toolbar__inserter-toggle, .editor-document-tools__inserter-toggle"
+			) ||
+			event.target.closest(
+			  ".editor-document-tools .editor-document-tools__document-overview-toggle"
+			) ||
+			( event.target?.parentElement?.getAttribute("aria-label") === "Close" || event.target?.parentElement?.getAttribute("aria-label") === "Close Settings" || event.target?.parentElement?.getAttribute("aria-label") === "Close plugin" )
+		  ) {
+			setTimeout(handleEditorLayoutChange( true ), 100);
+		  }
 	
 		// If thread focused via an activity center
 		if (event.target.closest(".block-editor-block-list__layout .wp-block")) {
@@ -1019,16 +1065,24 @@ window.addEventListener("click", function (e) {
 			}
 		}
 		if (event.target.matches(".js-cf-edit-comment")) {
-			// Disable reply box when we focus on edit input box
-			document.querySelectorAll(".cls-board-outer").forEach((element) => {
-				element.classList.remove("cf-removeReply");
-			});
-	
-			const boardOuter = event.target.closest(".cls-board-outer");
-			if (boardOuter) {
-				boardOuter.classList.add("cf-removeReply");
-			}
-		}
+		    // Disable reply box when we focus on edit input box
+		    document.querySelectorAll(".cls-board-outer").forEach((element) => {
+		      element.classList.remove("cf-removeReply");
+		      element.style.opacity = "0.4";
+		    });
+
+		    const boardOuter = event.target.closest(".cls-board-outer");
+		    if (boardOuter) {
+		      boardOuter.classList.add("cf-removeReply");
+		      boardOuter.style.opacity = "1.0";
+		      const shareCommentContainer = boardOuter.querySelector(
+		        ".shareCommentContainer"
+		      );
+		      if(shareCommentContainer){
+		        shareCommentContainer.style.display = "none";
+		      }
+		    }
+		  }
 	});
 
 	document.addEventListener("focusout", function (event) {
@@ -2471,8 +2525,10 @@ function showAssignableEmailList() {
 							document.getElementById(getCurrentTextAreaID);
 						currentTextAreaNode.innerHTML = "";
 						currentTextAreaNode.appendChild(fragments);
-						document.querySelector(appendIn)?.remove();
-						document.querySelector(assignablePopup)?.remove();
+						//document.querySelector(appendIn)?.remove();
+						//document.querySelector(assignablePopup)?.remove();
+				        jQuery(appendIn).remove(); // Remove previous DOM.
+				        jQuery(assignablePopup).remove(); // Remove previous DOM.
 						trackedStr = "";
 	
 						// Setup the caret position after appending the Display Name.
@@ -2549,8 +2605,10 @@ function showAssignableEmailList() {
 							document.getElementById(getCurrentTextAreaID);
 						currentTextAreaNode.innerHTML = "";
 						currentTextAreaNode.appendChild(fragments);
-						document.querySelector(appendIn)?.remove();
-						document.querySelector(assignablePopup)?.remove();
+						//document.querySelector(appendIn)?.remove();
+						//document.querySelector(assignablePopup)?.remove();
+				        jQuery(appendIn).remove(); // Remove previous DOM.
+				        jQuery(assignablePopup).remove(); // Remove previous DOM.
 						trackedStr = "";
 	
 						// Setup the caret position after appending the Display Name.
