@@ -252,7 +252,7 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 
 == Changelog ==
 
-= 4.8 - 21.10.2024 =
+= 4.8 - 04.12.2024 =
 * [Enhancements] Significantly improved the performance for faster loading and smoother interaction.
 * [Enhancements] Streamlined script and style loading for better performance.
 * [Enhancements] Enhanced compatibility with the latest WordPress.
