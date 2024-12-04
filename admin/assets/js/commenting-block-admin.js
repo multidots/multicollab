@@ -174,28 +174,6 @@ window.addEventListener("click", function (e) {
 				localStorage.setItem("userURL", user.url);
 			})
 			.catch((error) => console.error("Error:", error));
-		// comment below code due to performance issue / Since 4.8
-		/* commentedId = adminLocalizer.comment_id;
-		if (commentedId) {
-			setTimeout(function () {
-				const editCommentButton = document.querySelector(
-					`#${commentedId} .js-edit-comment`
-				);
-				if (editCommentButton) {
-					editCommentButton.click();
-				}
-				const commentedElement = document.getElementById(commentedId);
-				if (commentedElement) {
-					commentedElement.classList.add("comment-flash");
-				}
-			}, 2000);
-			setTimeout(function () {
-				const commentedElement = document.getElementById(commentedId);
-				if (commentedElement) {
-					commentedElement.classList.remove("comment-flash");
-				}
-			}, 4000);
-		}*/
 	});
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -632,26 +610,7 @@ window.addEventListener("click", function (e) {
 				});
 			}
 		}
-	
-		// Show/Hide comment toggler if the counter value is zero.
-		/*if (event.target.matches('#history-toggle')) {
-					var dataCount = event.target.getAttribute('data-count');
-					if (0 >= dataCount) {
-							document.getElementById('comments-toggle').style.display = 'none';
-					} else {
-							document.getElementById('comments-toggle').style.display = 'block';
-					}
-			}*/
-	
-		// Settings page tabs toggle.
-		// if (event.target.matches('.cf-dashboard-layout__tabs-list span')) {
-		//     const tabID = event.target?.dataset?.id;
-		//     document.querySelectorAll('.cf-dashboard-layout__tabs-wrap-inner').forEach(function (element) {
-		//         element.style.display = 'none';
-		//     });
-		//     document.getElementById(tabID).style.display = 'block';
-		// }
-	
+
 		// Scroll to the commented text and its popup from History Popup.
 		const scrollCommentTarget = event.target.closest(".user-commented-on");
 		if (scrollCommentTarget) {

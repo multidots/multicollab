@@ -78,17 +78,6 @@ if ( ! function_exists( 'cf_custom_plugin_row_meta' ) ) {
  * @author: Rishi Shah
  * @version 3.4
  */
-// $remote_arrd = filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_SPECIAL_CHARS );
-// if ( '127.' === substr( $remote_arrd, 0, 4 ) || '::1' === $remote_arrd ) {
-//     define( 'CF_PROMOTIONAL_BANNER_API_URL', 'https://multicollabstg.wpengine.com/' );
-//     define( 'CF_STORE_URL', 'https://multicollabstg.wpengine.com/' );
-//     define( 'EDD_PLAN_PRO', 2817 );
-// } else {
-//     define( 'CF_PROMOTIONAL_BANNER_API_URL', 'https://www.multicollab.com/' );
-//     define( 'CF_STORE_URL', 'https://www.multicollab.com/' );
-//     define( 'EDD_PLAN_PRO', 3793 );
-// }
-
 define( 'CF_PROMOTIONAL_BANNER_API_URL', 'https://www.multicollab.com/' );
 define( 'CF_STORE_URL', 'https://www.multicollab.com/' );
 define( 'EDD_PLAN_PRO', 3793 );

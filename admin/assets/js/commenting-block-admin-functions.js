@@ -529,7 +529,11 @@ function showNoticeBoardonNewComments() {
         }
         setTimeout(function () {
             if (noticeboard !== null) {
-               
+                // if( noticeboard.innerHTML === "" ){
+                //     noticeboard.setAttribute('style','display:none');
+                // } else {
+                //    noticeboard.setAttribute('style','display:block');
+                // }
             }
 
         }, 300);
@@ -1145,6 +1149,9 @@ function cfgetCustomAttributeId(selectedText) {
                     //topOfText = document.querySelector('[datatext="' + elid + '"]').offsetTop;
                     topOfText = jQuery('[datatext="' + elid + '"]').offset()?.top;
                 } else {
+                    // const sid = document.getElementById(elid)?.getAttribute('data-sid');
+                    // //topOfText = document.querySelector('[id="' + sid + '"]')?.offsetTop;
+                    // topOfText = document.getElementById( elid )?.offsetTop;
                     const sid = jQuery('#' + elid).attr('data-sid');
                     topOfText = jQuery('[id="' + sid + '"]').offset()?.top;
 
@@ -1207,7 +1214,6 @@ function cfgetCustomAttributeId(selectedText) {
             setContainerDimensions("auto", `${calcLyotWidth}px`);
         }
         if( fromIconClick ) {
-
             setTimeout(function () {
                 const notCommentOncls = document.querySelector(".multicollab_body_class");
                 const $boardOuter = $("#cf-comment-board-wrapper .cls-board-outer");
@@ -1240,3 +1246,4 @@ function cfgetCustomAttributeId(selectedText) {
         }
 
     }
+    
