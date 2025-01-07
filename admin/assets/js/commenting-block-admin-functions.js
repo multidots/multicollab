@@ -1214,6 +1214,7 @@ function cfgetCustomAttributeId(selectedText) {
             setContainerDimensions("auto", `${calcLyotWidth}px`);
         }
         if( fromIconClick ) {
+            
             setTimeout(function () {
                 const notCommentOncls = document.querySelector(".multicollab_body_class");
                 const $boardOuter = $("#cf-comment-board-wrapper .cls-board-outer");

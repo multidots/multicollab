@@ -209,12 +209,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		global $wp_version;
 
 		$current_user    = wp_get_current_user();
-		$subscribe_email = filter_input( INPUT_GET, 'subscribe_email', FILTER_SANITIZE_SPECIAL_CHARS );
+		$subscribe_email = filter_input( INPUT_POST, 'subscribe_email', FILTER_SANITIZE_SPECIAL_CHARS );
 		$subscribe_email = ! empty( $subscribe_email ) ? $subscribe_email : '';
 
-		$opt_in      = filter_input( INPUT_GET, 'opt_in', FILTER_SANITIZE_SPECIAL_CHARS );
-		$broser_name = filter_input( INPUT_GET, 'broser_name', FILTER_SANITIZE_SPECIAL_CHARS );
-		$country     = filter_input( INPUT_GET, 'country', FILTER_SANITIZE_SPECIAL_CHARS );
+		$opt_in      = filter_input( INPUT_POST, 'opt_in', FILTER_SANITIZE_SPECIAL_CHARS );
+		$broser_name = filter_input( INPUT_POST, 'broser_name', FILTER_SANITIZE_SPECIAL_CHARS );
+		$country     = filter_input( INPUT_POST, 'country', FILTER_SANITIZE_SPECIAL_CHARS );
 		$user_email  = $current_user->user_email;
 
 		// Get Gutenberg Version.
@@ -2208,19 +2208,19 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$fs_feedback_message = filter_input( INPUT_POST, 'fs_feedback_message', FILTER_SANITIZE_SPECIAL_CHARS );
 		$current_date        = gmdate( 'Y-m-d' );
 
-		$first_option_value           = filter_input( INPUT_POST, 'first_option_value', FILTER_SANITIZE_SPECIAL_CHARS );
+		$first_option_value = filter_input( INPUT_POST, 'first_option_value', FILTER_SANITIZE_SPECIAL_CHARS );
 		$free_plugin_deactivate_step3 = filter_input( INPUT_POST, 'free_plugin_deactivate_step3', FILTER_SANITIZE_SPECIAL_CHARS );
 
-		if ( isset( $first_option_value ) && 'yes' === $first_option_value ) {
+		if( isset( $first_option_value ) && 'yes' === $first_option_value ) {
 			$data_insert_array = array(
 				'user_name'           => $current_user->display_name,
 				'user_email'          => $current_user->user_email,
-				'feedback_type'       => 'N/A',
-				'feedback_message'    => 'N/A',
+				'feedback_type'       => '',
+				'feedback_message'    => '',
 				'feedback_date'       => $current_date,
 				'free_plugin_version' => COMMENTING_BLOCK_VERSION,
-				'overall_experience'  => 'N/A',
-				'meet_your_needs'     => 'Yes',
+				'overall_experience'  => $free_plugin_deactivate_step3,
+				'meet_your_needs'     => 'Yes'
 			);
 		} else {
 			$data_insert_array = array(
@@ -2231,7 +2231,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 				'feedback_date'       => $current_date,
 				'free_plugin_version' => COMMENTING_BLOCK_VERSION,
 				'overall_experience'  => $free_plugin_deactivate_step3,
-				'meet_your_needs'     => 'No',
+				'meet_your_needs'     => 'No'
 			);
 		}
 
@@ -2239,11 +2239,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
 
 		if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
-			$response = vip_safe_wp_remote_get( $query_url );
+			$response = vip_safe_wp_remote_get( $query_url);
 		} else {
 			$response = wp_remote_get( $query_url );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 		}
-
+		
 		$response_body = isset( $response['body'] ) ? $response['body'] : '';
 		if ( 'success' === trim( $response_body ) ) {
 			deactivate_plugins( COMMENTING_BLOCK_BASE );

@@ -1,6 +1,6 @@
 <div class="cf-plugin-deacmodal" tabindex="-1" role="dialog" id="cf-plugin-deacmodal">
 	<div class="cf-plugin-deacmodal__inner" role="document">
-
+		<div class="cf-settings-loader"></div>
 		<div class="cf-plugin-deacmodal__header">
 			<h3 class="modal-title">Did Multicollab meet your needs?</h3>
 		</div>

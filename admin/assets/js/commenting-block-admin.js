@@ -2,7 +2,7 @@
  * Main function to be called for required JS actions.
  */
 
-const { __ } = wp.i18n;
+//const { __ } = wp.i18n;
 
 // Define process env for util.js error.
 window.process = {
@@ -383,7 +383,7 @@ window.addEventListener("click", function (e) {
 	            if (showAllComments) {
 	              // Update the text to show how many replies are hidden
 	              showAllComments.innerHTML = sprintf(
-	                __(
+	                wp.i18n.__(
 	                  "Show all %d replies",
 	                  "content-collaboration-inline-commenting"
 	                ),
@@ -440,7 +440,7 @@ window.addEventListener("click", function (e) {
 					.classList.remove("active");
 				commentContainer.querySelector(
 					".comment-delete-overlay .comment-overlay-text"
-				).textContent = __(
+				).textContent = wp.i18n.__(
 					"Delete this thread?",
 					"content-collaboration-inline-commenting"
 				);
@@ -459,16 +459,16 @@ window.addEventListener("click", function (e) {
 					);
 				commentContainer.querySelector(
 					".comment-delete-overlay .comment-overlay-text"
-				).textContent = __(
+				).textContent = wp.i18n.__(
 					"Resolve this thread?",
 					"content-collaboration-inline-commenting"
 				);
 				commentContainer.querySelector(
 					".comment-delete-overlay .btn-delete"
-				).textContent = __("Yes", "content-collaboration-inline-commenting");
+				).textContent = wp.i18n.__("Yes", "content-collaboration-inline-commenting");
 				commentContainer.querySelector(
 					".comment-delete-overlay .btn-cancel"
-				).textContent = __("No", "content-collaboration-inline-commenting");
+				).textContent = wp.i18n.__("No", "content-collaboration-inline-commenting");
 				commentContainer
 					.querySelector(".comment-delete-overlay")
 					.classList.add("show");
@@ -506,16 +506,16 @@ window.addEventListener("click", function (e) {
 					);
 				commentContainer.querySelector(
 					".comment-delete-overlay .comment-overlay-text"
-				).textContent = __(
+				).textContent = wp.i18n.__(
 					"Delete this Suggestion?",
 					"content-collaboration-inline-commenting"
 				);
 				commentContainer.querySelector(
 					".comment-delete-overlay .btn-delete"
-				).textContent = __("Yes", "content-collaboration-inline-commenting");
+				).textContent = wp.i18n.__("Yes", "content-collaboration-inline-commenting");
 				commentContainer.querySelector(
 					".comment-delete-overlay .btn-cancel"
-				).textContent = __("No", "content-collaboration-inline-commenting");
+				).textContent = wp.i18n.__("No", "content-collaboration-inline-commenting");
 				commentContainer
 					.querySelector(".comment-delete-overlay")
 					.classList.add("show");
@@ -549,14 +549,14 @@ window.addEventListener("click", function (e) {
 			if (showAll.classList.contains("js-hide")) {
 				showAll.classList.remove("js-hide");
 				showLess.classList.add("js-hide");
-				button.textContent = __(
+				button.textContent = wp.i18n.__(
 					"Show less",
 					"content-collaboration-inline-commenting"
 				);
 			} else {
 				showAll.classList.add("js-hide");
 				showLess.classList.remove("js-hide");
-				button.textContent = __(
+				button.textContent = wp.i18n.__(
 					"Show more",
 					"content-collaboration-inline-commenting"
 				);
@@ -610,7 +610,7 @@ window.addEventListener("click", function (e) {
 				});
 			}
 		}
-
+	
 		// Scroll to the commented text and its popup from History Popup.
 		const scrollCommentTarget = event.target.closest(".user-commented-on");
 		if (scrollCommentTarget) {
@@ -1663,8 +1663,8 @@ function chromeEdgeClearFix(typedContent) {
 					`#${el} .cf-board-assigned-to`
 				)?.dataset?.userId;
 				const assigntoText = currentBoardAssinger
-					? __("Reassign to", "content-collaboration-inline-commenting")
-					: __("Assign to", "content-collaboration-inline-commenting");
+					? wp.i18n.__("Reassign to", "content-collaboration-inline-commenting")
+					: wp.i18n.__("Assign to", "content-collaboration-inline-commenting");
 	
 				const assignToElement = document.querySelector(
 					`#${el} ${checkBoxContainer}`
@@ -1676,14 +1676,14 @@ function chromeEdgeClearFix(typedContent) {
 									<div class="cf-assign-to-inner">
 											<label for="${el}-cf-assign-to-user">
 													<input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(
-						__("%1$s %2$s", "content-collaboration-inline-commenting"),
+						wp.i18n.__("%1$s %2$s", "content-collaboration-inline-commenting"),
 						assigntoText,
 						thisDisplayName
 					)}</i>
 											</label>
 											<span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
 									</div>
-									<span class="assignMessage">${__(
+									<span class="assignMessage">${wp.i18n.__(
 										"Your @mention will add people to this discussion and send an email.",
 										"content-collaboration-inline-commenting"
 									)}</span>     
@@ -1722,11 +1722,11 @@ function chromeEdgeClearFix(typedContent) {
 							`#${el} .cf-assign-to-user`
 						).checked;
 						document.querySelector(`#${el} .assignMessage`).textContent = checked
-							? __(
+							? wp.i18n.__(
 									"The Assigned person will be notified and responsible for marking as done.",
 									"content-collaboration-inline-commenting"
 								)
-							: __(
+							: wp.i18n.__(
 									"Your @mention will add people to this discussion and send an email.",
 									"content-collaboration-inline-commenting"
 								);
@@ -1758,8 +1758,8 @@ function chromeEdgeClearFix(typedContent) {
 						`#${el} .cf-board-assigned-to`
 					)?.dataset?.userId;
 					const assigntoText = currentBoardAssinger
-						? __("Reassign to", "content-collaboration-inline-commenting")
-						: __("Assign to", "content-collaboration-inline-commenting");
+						? wp.i18n.__("Reassign to", "content-collaboration-inline-commenting")
+						: wp.i18n.__("Assign to", "content-collaboration-inline-commenting");
 	
 					const assignToElement = document.querySelector(
 						`#${el} ${checkBoxContainer}`
@@ -1770,14 +1770,14 @@ function chromeEdgeClearFix(typedContent) {
 											<div class="cf-assign-to-inner">
 													<label for="${el}-cf-assign-to-user">
 															<input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(
-							__("%1$s %2$s", "content-collaboration-inline-commenting"),
+							wp.i18n.__("%1$s %2$s", "content-collaboration-inline-commenting"),
 							assigntoText,
 							thisDisplayName
 						)}</i>
 													</label>
 													<span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span> 
 											</div>
-											<span class="assignMessage">${__(
+											<span class="assignMessage">${wp.i18n.__(
 												"Your @mention will add people to this discussion and send an email.",
 												"content-collaboration-inline-commenting"
 											)}</span>     
@@ -1810,11 +1810,11 @@ function chromeEdgeClearFix(typedContent) {
 							).checked;
 							document.querySelector(`#${el} .assignMessage`).textContent =
 								checked
-									? __(
+									? wp.i18n.__(
 											"The Assigned person will be notified and responsible for marking as done.",
 											"content-collaboration-inline-commenting"
 										)
-									: __(
+									: wp.i18n.__(
 											"Your @mention will add people to this discussion and send an email.",
 											"content-collaboration-inline-commenting"
 										);
@@ -1837,21 +1837,21 @@ function chromeEdgeClearFix(typedContent) {
 						`#${el} .cf-board-assigned-to`
 					)?.dataset?.userId;
 					const assigntoText = currentBoardAssingerID
-						? __("Reassign to", "content-collaboration-inline-commenting")
-						: __("Assign to", "content-collaboration-inline-commenting");
+						? wp.i18n.__("Reassign to", "content-collaboration-inline-commenting")
+						: wp.i18n.__("Assign to", "content-collaboration-inline-commenting");
 	
 					const checkbox = `
 											<div class="cf-assign-to-inner">
 													<label for="${el}-cf-assign-to-user">
 															<input id="${el}-cf-assign-to-user" data-user-email="${thisUserEmail}" class="cf-assign-to-user" name="cf_assign_to_user" type="checkbox" value="${thisUserId}" /><i>${sprintf(
-						__("%1$s %2$s", "content-collaboration-inline-commenting"),
+						wp.i18n.__("%1$s %2$s", "content-collaboration-inline-commenting"),
 						assigntoText,
 						thisDisplayName
 					)}</i>
 													</label>
 													<span class="js-cf-show-assign-list dashicons dashicons-arrow-down-alt2"></span>
 											</div>    
-											<span class="assignMessage">${__(
+											<span class="assignMessage">${wp.i18n.__(
 												"Your @mention will add people to this discussion and send an email.",
 												"content-collaboration-inline-commenting"
 											)}</span>  
@@ -1892,7 +1892,7 @@ function chromeEdgeClearFix(typedContent) {
 			});
 			listItem += `</ul>`;
 		} else {
-			listItem += `<strong class="cf-no-assignee"> ${__(
+			listItem += `<strong class="cf-no-assignee"> ${wp.i18n.__(
 				"Sorry! No user found!",
 				"content-collaboration-inline-commenting"
 			)} </strong>`;
@@ -2161,7 +2161,7 @@ function showAssignableEmailList() {
 	                                    jQuery(assignCheckBoxId).val(appendInCheckbox[0].ID);
 
 	                                    // code - added by meet - solution of assign to when delete
-	                                    jQuery(assignCheckBoxId).next('i').text(`${sprintf(__('Assign to %s', 'content-collaboration-inline-commenting'), appendInCheckbox[0].display_name)}`);
+	                                    jQuery(assignCheckBoxId).next('i').text(`${sprintf(wp.i18n.__('Assign to %s', 'content-collaboration-inline-commenting'), appendInCheckbox[0].display_name)}`);
 	                                }
 
 	                            }

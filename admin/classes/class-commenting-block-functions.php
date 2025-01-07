@@ -632,7 +632,7 @@ class Commenting_block_Functions {
 			'cf_gen_hide_save_draft_comment'        => $cf_gen_hide_save_draft_comment,
 			'cf_gen_hide_floating_icons'            => $cf_gen_hide_floating_icons,
 			'cf_admin_notification'                 => $cf_admin_notification,
-			'cf-suggestion-option '                  => $cf-suggestion-option ,
+			'cf-suggestion-option '                 => $cf_suggestion_option,
 			'cf_suggestion_mode_option_name'        => $cf_suggestion_mode_option_name,
 			'cf_specific_post_types_values'         => $cf_specific_post_types_values,
 			'cf_specific_post_categories_values'    => $cf_specific_post_categories_values,
