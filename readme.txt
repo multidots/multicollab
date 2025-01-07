@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Collaboration, Editorial comments, Collaborative editing, Editorial, Team Collaboration
 Requires at least: 6.3
 Tested up to: 6.7
-Stable tag: 4.8
+Stable tag: 4.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -251,6 +251,11 @@ Have you had a look at our documentation?
 If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as quickly as possible!
 
 == Changelog ==
+
+= 4.8.1 - 07.01.2025 =
+* [Bug Fixes] - Addressed minor issues to enhance overall stability and user experience.
+* [Enhancements] - Improved the deactivation popup code for better usability and performance.
+* [New] - Added compatibility with Oxygen Builder for seamless integration.
 
 = 4.8 - 04.12.2024 =
 * [Enhancements] Significantly improved the performance for faster loading and smoother interaction.
