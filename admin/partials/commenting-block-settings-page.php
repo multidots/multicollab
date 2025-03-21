@@ -61,7 +61,7 @@ $cf_permissions             = get_option( 'cf_permissions' );
 				<ul class="cf-dashboard-layout__tabs-list">
 					<li class="
 						<?php
-						if ( ( 'dashboard' === $tab_number || empty( $tab_number ) || 'web-activity' === $view ) && 'post-activity' !== $view && 'intigrations' !== $view && 'settings' !== $view && 'integrations' !== $tab_number && 'license' !== $view ) {
+						if ( ( 'dashboard' === $tab_number || empty( $tab_number ) || 'web-activity' === $view ) && 'post-activity' !== $view && 'intigrations' !== $view && 'settings' !== $view && 'integrations' !== $tab_number && 'license' !== $view && 'need-help' !== $view ) {
 							echo esc_html( 'cf-tab-active' ); }
 						?>
 							"><a href="<?php echo esc_url( site_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=web-activity" class="cf-tab-item" data-id="cf-dashboard"><?php esc_html_e( 'Dashboard', 'content-collaboration-inline-commenting' ); ?></a></li>
@@ -85,13 +85,27 @@ $cf_permissions             = get_option( 'cf_permissions' );
 								echo esc_html( 'cf-tab-active' ); }
 							?>
 						"><a href="<?php echo esc_url( site_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=intigrations" class="cf-tab-item" data-id="cf-roles-slack-integration"><?php esc_html_e( 'Integrations', 'content-collaboration-inline-commenting' ); ?></a></li>
+						<li class="cf-dashboard-need-help-tab
+							<?php
+							if ( 'need-help' === $view ) {
+								echo esc_html( 'cf-tab-active' ); 
+							}
+							?>
+						">
+							<a href="<?php echo esc_url( site_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=need-help" class="cf-tab-item" data-id="cf-need-help">
+								<?php
+									echo esc_html( 'Get Started' );
+								?>
+								<!-- <svg height="30px" id="Layer_1" style="enable-background:new 0 0 30px 30px;" version="1.1" viewBox="0 0 512 512" width="30px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><g><path d="M256,48C141.1,48,48,141.1,48,256c0,114.9,93.1,208,208,208c114.9,0,208-93.1,208-208C464,141.1,370.9,48,256,48z      M256,446.7c-105.1,0-190.7-85.5-190.7-190.7c0-105.1,85.5-190.7,190.7-190.7c105.1,0,190.7,85.5,190.7,190.7     C446.7,361.1,361.1,446.7,256,446.7z"/></g></g><g><path d="M259.6,146c-43.2,0-67.3,20.3-67.6,62.2h18.8c-0.6-30.4,15.5-46.5,47.9-46.5c23.2,0,42.6,16.2,42.6,39.8    c0,15.3-8.3,27.7-19.4,38.1c-22.6,20.8-29,36-30.1,64.5h19c1.1-25.8,0.5-30.7,23.3-53.3c15.2-14.2,25.9-28.3,25.9-50.2    C320,166.4,292.6,146,259.6,146z"/><path d="M260.3,332.3c-9.4,0-17,7.5-17,16.8c0,9.3,7.6,16.9,17,16.9c9.4,0,17-7.5,17-16.9C277.3,339.8,269.7,332.3,260.3,332.3z"/></g></g></svg> -->
+							</a>
+						</li>
 						<?php endif; ?>
 
 					</ul>
 					<div class="cf-dashboard-layout__tabs-content">
 						<div id="cf-dashboard" class="cf-dashboard-layout__tabs-wrap-inner 
 							<?php
-							if ( ( 'dashboard' === $tab_number || empty( $tab_number ) || 'web-activity' === $view ) && 'post-activity' !== $view && 'intigrations' !== $view && 'settings' !== $view && 'integrations' !== $tab_number && 'license' !== $view ) {
+							if ( ( 'dashboard' === $tab_number || empty( $tab_number ) || 'web-activity' === $view ) && 'post-activity' !== $view && 'intigrations' !== $view && 'settings' !== $view && 'integrations' !== $tab_number && 'license' !== $view && 'need-help' !== $view ) {
 								echo esc_html( 'cf-tab-active' ); }
 							?>
 						">
@@ -247,6 +261,18 @@ $cf_permissions             = get_option( 'cf_permissions' );
 								</div>
 							</div>
 						<?php endif; ?>
+						<div id="cf-need-help" class="cf-dashboard-layout__tabs-wrap-inner 
+							<?php
+							if ( ! empty( $tab_number ) || 'need-help' === $view ) {
+								echo esc_html( 'cf-tab-active' ); 
+							}
+							?>
+						">
+							<?php
+								// Load "Need Help" content here.
+								require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-need-help.php';
+							?>
+						</div>
 					</div>
 				</div>
 			</div>

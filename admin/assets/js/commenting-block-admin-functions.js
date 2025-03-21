@@ -102,11 +102,19 @@ function scrollBoardToPosition(topOfText) {
     // Add the offset to the topOfText position
     topOfText = topOfText + currentScrollTop;
 
-    jQuery(scrollTopClass).stop(true).animate({
-        scrollTop: topOfText - 320
-    }, 1000);
+    var iframe = jQuery('iframe[name="editor-canvas"]')[0];
+    // Ensure the iframe is loaded and accessible
+    var iframeDoc = iframe?.contentDocument || iframe?.contentWindow?.document;
 
-
+    if(iframeDoc){
+        jQuery(iframeDoc.documentElement).stop(true).animate({
+            scrollTop: topOfText + 50
+        }, 1000);
+    }else{
+        jQuery(scrollTopClass).stop(true).animate({
+            scrollTop: topOfText - 320
+        }, 1000);
+    }
 }
 
 /**
@@ -134,7 +142,7 @@ function getScrollClass(){
  * Removes the floating icon from the DOM.
  */
 function removeFloatingIcon() {
-    var floatingNode = document.getElementsByClassName('cf-floating-wrapper');
+    var floatingNode = document.getElementsByClassName('cf-floating-wrapper-main');
 
     if (floatingNode.length > 0) {
         // Loop through all elements with the class 'cf-floating-wrapper' and remove them
@@ -527,23 +535,31 @@ function showNoticeBoardonNewComments() {
             appendNoticeBoardDiv();
             noticeboard = document.getElementById("cf-board-notice");
         }
-        setTimeout(function () {
-            if (noticeboard !== null) {
-                // if( noticeboard.innerHTML === "" ){
-                //     noticeboard.setAttribute('style','display:none');
-                // } else {
-                //    noticeboard.setAttribute('style','display:block');
-                // }
-            }
-
-        }, 300);
 
     });
 }
 
 function getSelectionHtml() {
+   
+    const iframe = document.querySelector('iframe[name="editor-canvas"]');
     var html = "";
-    if (typeof window.getSelection != "undefined") {
+    
+    // Ensure iframe is available
+    if (iframe && iframe.contentWindow && iframe.contentWindow.getSelection) {
+        var sel = iframe.contentWindow.getSelection();
+        
+        if (sel.rangeCount) {
+            var container = document.createElement("div");
+            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                container.appendChild(sel.getRangeAt(i).cloneContents());
+            }
+            html = container.innerHTML;
+        }
+    } else if (iframe && iframe.contentWindow && iframe.contentWindow.document.selection) {
+        if (iframe.contentWindow.document.selection.type == "Text") {
+            html = iframe.contentWindow.document.selection.createRange().htmlText;
+        }
+    } else if (typeof window.getSelection != "undefined") {
         var sel = window.getSelection();
         if (sel.rangeCount) {
             var container = document.createElement("div");
@@ -558,6 +574,7 @@ function getSelectionHtml() {
             html = document.selection.createRange().htmlText;
         }
     }
+
     return html;
 }
 
@@ -794,7 +811,18 @@ function createCustomAlert() {
  * 
  * @param {string} selectedText - The ID of the text selection to display the board for.
  */
+// Function for display floating suggestion board for redo task. @author: Rishi Shah @since: 3.4
+/**
+ * Displays a floating suggestion board for the given text selection.
+ * 
+ * @param {string} selectedText - The ID of the text selection to display the board for.
+ */
 function floatCommentsBoard(selectedText) {
+    var iframe = jQuery('iframe[name="editor-canvas"]');
+    var iframeDocument = iframe.length ? iframe[0].contentWindow.document : null;
+
+    let boardOuterHeight = 0;
+
     // Remove classes from elements
     document.querySelectorAll('.cls-board-outer').forEach(function(element) {
         element.classList.remove('focus', 'is-open', 'onGoing');
@@ -814,44 +842,90 @@ function floatCommentsBoard(selectedText) {
     });
     document.querySelectorAll('#cf-comment-board-wrapper .cls-board-outer').forEach(function(element) {
         element.style.opacity = '0.4';
+        //element.style.removeProperty('top');
     });
 
     var singleBoardId = selectedText;
-    let topOfTextSingleBoard;
+   
     let singleBoardIdWithSg;
-
-    if (singleBoardId !== undefined) {
-        if (singleBoardId.match(/^el/m) === null) {
-            const customAttrSuggestion = cfgetCustomAttribute();
-            customAttrSuggestion.some((attrValue) => {
-                const element = document.querySelector('[' + attrValue + '="' + singleBoardId + '"]');
-                if (element) {
-                    topOfTextSingleBoard = element.offsetTop;
-                    return true; // exit the loop
-                } else {
-                    topOfTextSingleBoard = document.getElementById(singleBoardId)?.offsetTop;
-                }
-            });
-            singleBoardIdWithSg = 'sg' + singleBoardId;
-
-            // Add active class on activity bar
-            const activeElement = document.querySelector('#cf-sg' + singleBoardId);
-            if (activeElement) {
-                activeElement.classList.add('active');
-            }
-        } else {
-            topOfTextSingleBoard = document.querySelector('[datatext="' + singleBoardId + '"]')?.offsetTop;
-            singleBoardIdWithSg = singleBoardId;
-        }
+    if (singleBoardId.match(/^el/m) === null) {
+        singleBoardIdWithSg = 'sg' + singleBoardId;
+    } else {
+        singleBoardIdWithSg = singleBoardId;
     }
 
-    // Add necessary styles and classes to the selected board
-    const boardElement = document.getElementById(singleBoardIdWithSg);
-    if (boardElement) {
-        boardElement.style.opacity = '1';
-        boardElement.classList.add('is-open', 'focus', 'onGoing');
-        // Comment this code to reoslve board postion issue on new comment text.
-        //jQuery('#' + singleBoardIdWithSg).offset({ top: topOfTextSingleBoard });
+    const elementcombineBoardId = document.getElementById(singleBoardIdWithSg);
+    if (elementcombineBoardId) {
+        elementcombineBoardId.style.opacity = "1";
+        elementcombineBoardId.classList.add("focus", "onGoing", "is-open");
+        let referenceElement = iframeDocument 
+          ? (singleBoardId.match(/^el/m) === null 
+              ? iframeDocument.getElementById(singleBoardId) 
+              : iframeDocument.querySelector(`[datatext="${singleBoardId}"]`)) 
+          : (singleBoardId.match(/^el/m) === null 
+              ? document.getElementById(singleBoardId) 
+              : document.querySelector(`[datatext="${singleBoardId}"]`));
+
+        // Add the 'data-rich-text-format-boundary' attribute with value 'true'
+        if (referenceElement) {
+          referenceElement.dataset.richTextFormatBoundary = 'true';
+        } else {
+            const customAttrSuggestion = cfgetCustomAttribute();
+            let checkExist;
+            customAttrSuggestion.map((attrValue) => {
+                if (iframeDocument) {
+                    checkExist = iframeDocument.querySelector(`[${attrValue}="${singleBoardId}"]`);;
+                    if (checkExist) {
+                        referenceElement = checkExist;
+                    }
+                } else {
+                    checkExist = document.querySelector(`[${attrValue}="${singleBoardId}"]`);;
+                    if (checkExist) {
+                        referenceElement = checkExist;
+                    }
+                }
+            });
+        }
+        var allowedBlocks = allowedMedia();
+        var blockName = wp.data.select( 'core/block-editor' ).getSelectedBlock()?.name;
+        if (singleBoardIdWithSg.match(/^el/m) !== null) {
+            var element = returnCommntTextElement( singleBoardIdWithSg );
+          } else {
+            var sID = singleBoardIdWithSg.replace('sg', '');
+            if( (allowedBlocks.media).includes(blockName) ) {
+                var clientId = wp.data.select('core/block-editor').getSelectedBlockClientId();
+                if( iframeDocument ) {
+                    //const iframeDocument = iframe?.contentDocument || iframe?.contentWindow?.document;
+                    var element = iframeDocument.getElementById( 'block-' + clientId );
+                } else {
+                    var element = document.getElementById( 'block-' + clientId );
+                }
+            } else {
+                if( iframeDocument ) {
+                    //const iframeDocument = iframe?.contentDocument || iframe?.contentWindow?.document;
+                    var element = iframeDocument.getElementById(sID);
+                } else {
+                    var element = document.getElementById(sID);
+                }
+            }
+           
+        }
+        if (element) {
+            element.setAttribute('data-rich-text-format-boundary', 'true');
+            element.scrollIntoView({
+              behavior: "smooth", // Optional: to scroll smoothly (instead of instantly)
+              block: "center" // Optional: specifies vertical alignment (start, center, end, nearest)
+            });
+            setTimeout(() => {
+              const rect = element.getBoundingClientRect();
+              topOfText = rect.top + window.scrollY + 50;  // Adds scroll position to get position relative to the document
+              jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').addClass('focus');
+              jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').addClass('is-open');
+              jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').css('opacity', '1');
+              jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').offset({ top: topOfText });
+            }, 1000);
+                                      
+        }
     }
 
     // Handle rich text format boundaries
@@ -885,9 +959,8 @@ function floatCommentsBoard(selectedText) {
             }
         });
     }
-
     // Optional: Remove scroll position effect (uncomment if needed)
-    // scrollBoardToPosition(topOfTextSingleBoard);
+    //scrollBoardToPosition(topOfTextSingleBoard);
 }
 
 // Generate multi formate suggestion board string/@author:Pooja bhimani/since @3.5
@@ -907,66 +980,7 @@ function tagArrayToString(tagArray) {
     return title;
 }
 
-/**
- * Fetches an array of selected block and text IDs from the editor.
- * 
- * Loops through all blocks and text selections, extracting their unique IDs 
- * and pushing them to an array. Special handling for blocks added/removed via
- * suggestions to get their IDs.
- * 
- * Returns array of selected block and text IDs.
- */
-function fetchBoardsCommonCode() {
-    let selectedNontextblock = [];
-    let selectedDataText;
 
-    // ====== FOR Add block suggestion functionality. @author Mayank Jain since 3.4
-    document.querySelectorAll(".wp-block").forEach(function(element) {
-        let uniqueId;
-        const customAttrSuggestion = cfgetCustomAttribute();
-        
-        customAttrSuggestion.forEach(function(attrValue) {
-            if (element.hasAttribute(attrValue)) {
-                uniqueId = element.getAttribute(attrValue);
-                selectedNontextblock.push(uniqueId);
-            }
-        });
-
-        if (element.classList.contains("blockAdded")) {
-            uniqueId = element.getAttribute("suggestion_id");
-            selectedNontextblock.push(uniqueId);
-        }
-        if (element.classList.contains("blockremove")) {
-            uniqueId = element.getAttribute("suggestion_id");
-            selectedNontextblock.push(uniqueId);
-        }
-    });
-
-    document.querySelectorAll(
-        ".commentIcon, .wp-block mdspan, .cf-onwhole-block__comment, .wp-block .mdadded, .wp-block .mdmodified, .wp-block .mdremoved"
-    ).forEach(function(element) {
-        if (
-            element.classList.contains("mdadded") ||
-            element.classList.contains("mdremoved") ||
-            element.classList.contains("mdmodified")
-        ) {
-            selectedDataText = element.getAttribute("id");
-            if (
-                element.hasAttribute("suggestion_id") &&
-                element.classList.contains("cf-onwhole-block__comment")
-            ) {
-                selectedDataText = element.getAttribute("datatext");
-            }
-        } else {
-            selectedDataText = element.getAttribute("datatext");
-        }
-        selectedNontextblock.push(selectedDataText);
-    });
-
-    return selectedNontextblock;
-}
-
-// return custom attribute /@author:Nirav Soni/since @4.3
 /**
  * Returns an array of custom attribute names used for block suggestions.
  * 
@@ -1038,8 +1052,8 @@ function cfgetCustomAttributeId(selectedText) {
 
     //Calculated layout width function @ Minal Diwan
     function mdboardOffset() {
-        const wrapper = document.querySelector('#cf-comment-board-wrapper');
-        const focusBoard = wrapper.querySelector('.cls-board-outer.focus');
+        const wrapper = document?.querySelector('#cf-comment-board-wrapper');
+        const focusBoard = wrapper?.querySelector('.cls-board-outer.focus');
         const elid = focusBoard ? focusBoard.getAttribute('id') : null;
         const commentEditFocus = focusBoard?.querySelector('.js-cf-edit-comment.comment-focus');
     
@@ -1172,17 +1186,6 @@ function cfgetCustomAttributeId(selectedText) {
         }, 800);
     }   
       
-    
-    function setContainerDimensions(width, maxWidth) {
-        const rootContainer = document.querySelector(".is-root-container");
-        if (rootContainer) {
-            rootContainer.style.width = width;
-           rootContainer.style.maxWidth = maxWidth;
-            if (window.innerWidth > 680) {
-                rootContainer.style.minWidth = "440px";
-            }
-        }
-    }
 
     // Function to handle layout changes
     function handleEditorLayoutChange( fromIconClick = false ) {
@@ -1208,43 +1211,192 @@ function cfgetCustomAttributeId(selectedText) {
         if (!checkCommntAval) {
            if (editSidebarchck?.classList?.contains('is-sidebar-opened') || firstChild) {
             mdboardOffset();
-            setContainerDimensions(`${calcLyotWidth}px`, "unset");
            }
-        } else {
-            setContainerDimensions("auto", `${calcLyotWidth}px`);
-        }
-        if( fromIconClick ) {
-            
-            setTimeout(function () {
-                const notCommentOncls = document.querySelector(".multicollab_body_class");
-                const $boardOuter = $("#cf-comment-board-wrapper .cls-board-outer");
-                const $hideCheckBox = $(".comment-toggle .is-checked");
-                const $SuggestionCheckBox = $(".suggestion-toggle .is-checked");
-                const ediLayot = document.querySelector(".editor-styles-wrapper");
-                const cmntLayout = document.querySelector("#cf-comments-suggestions-parent");
-                const ediLayotWidth = ediLayot?.offsetWidth;
-                const cmntLyotWidth = cmntLayout?.offsetWidth;
-                const calcLyotWidth = ediLayotWidth - cmntLyotWidth;
-                const calcAuto = "auto";
-                const editSidebarchck = wp.data.select("core/edit-post").isEditorSidebarOpened();
-                const checkVisualedit = wp.data.select("core/edit-post").getEditorMode();
-
-                if (checkVisualedit === "visual") {
-                    if ($boardOuter.length >= 1 && ($hideCheckBox.length !== 1 || $SuggestionCheckBox.length !== 1) && editSidebarchck === true) {
-                        setContainerDimensions(`${calcLyotWidth}px`, "unset");
-                    } else if (!notCommentOncls?.classList?.contains('commentOn') && ($hideCheckBox.length == 0 || $SuggestionCheckBox.length == 0)) {
-                        setTimeout(function () {
-                            setContainerDimensions("auto", `${calcLyotWidth}px`);
-                        }, 100);
-                    } else if (editSidebarchck === false || ($hideCheckBox.length == 0 || $SuggestionCheckBox.length == 0)) {
-                        setContainerDimensions(`${calcLyotWidth}px`, "unset");
-                    } else {
-                        jQuery(".is-root-container").width(calcAuto);
-                    }
-                }
-            }, 200);
-
         }
 
     }
+
+
+function getBoardIdFromContent(text, keys) {
+    const results = new Set(); // Set will automatically handle uniqueness
+
+    // 1. Regex to match key-value pairs in the text (both formats)
+    const keyValueRegex = new RegExp(keys.map(key => `"${key}":"([^"]+)"|${key}="([^"]+)"`).join('|'), 'g');
     
+    // 2. Extract values for keys from the provided text
+    let match;
+    while ((match = keyValueRegex.exec(text)) !== null) {
+        for (let i = 1; i < match.length; i++) {
+            if (match[i]) {
+                results.add(match[i].trim());  // Add non-empty value
+            }
+        }
+    }
+    // Combine all tag-based regex patterns for <ins>, <del>, and <span> tags
+    const tagRegex = /<(ins|del)[^>]*\sid="([^"]+)"|<(span)[^>]*(?=.*\b(?:mdadded|mdmodified|mdremoved)\b)(?=.*\b(?:textalignupdate|alignupdate|lockupdate)\b)[^>]*\sid="([^"]+)"/g;
+    
+    // Extract `id` values from <ins>, <del>, and <span> tags with specific classes
+    while ((match = tagRegex.exec(text)) !== null) {
+        const id = match[2] || match[4];  // Either match[2] for <ins>/<del> or match[4] for <span>
+        if (id) {
+            results.add(id.trim());
+        }
+    }
+
+    // Convert the Set to an array and return it
+    return [...results];
+}
+
+/**
+ * Asynchronously opens a comment board by extracting relevant data from the current block editor content.
+ *
+ * This function retrieves the current blocks from the block editor, parses their content to find elements with
+ * specific attributes and classes, and then updates the `mdstore` with the extracted data.
+ *
+ * The extracted data includes:
+ * - Custom attributes defined in `cfgetCustomAttribute()`
+ * - `datatext` attribute values from elements
+ * - `id` attribute values from elements with specific classes (`mdadded`, `mdmodified`, `mdremoved`)
+ *
+ * The extracted data is stored in the `boardIds` array, which is then passed to the `setBoardIds` action
+ * to update the state.
+ */
+async function openCommentBoard() {
+    
+    const { setBoardIds } = wp.data.dispatch('mdstore');
+    const blocks = wp.data.select('core/block-editor').getBlocks();
+    const customAttrSuggestion = cfgetCustomAttribute();
+    customAttrSuggestion.push('datatext');
+
+    const getContentString = wp.data.select('core/editor').getEditedPostAttribute('content') || '';
+    const boardIds = getBoardIdFromContent(getContentString, customAttrSuggestion);
+
+    setBoardIds(boardIds);
+}
+
+/**
+ * Retrieves the client ID associated with the given board ID.
+ *
+ * This function searches the `boardIds` array stored in the `mdstore` state to find the
+ * array element that matches the provided `board_id`. If a match is found, the
+ * corresponding client ID is returned. If no match is found, `null` is returned.
+ *
+ * @param {string} board_id - The board ID to search for.
+ * @returns {string|null} The client ID associated with the given board ID, or `null` if no match is found.
+ */
+function cfGetClientId(board_id) {
+    // Get the boardIds array from the store
+    const openBoardIds = wp.data.select('mdstore').getBoardIds();
+    // Find the array that matches the specific ID
+    const matchedArray = openBoardIds.find(boardId => boardId[0] === board_id);
+
+    // If a match is found, return the client ID
+    if (matchedArray) {
+        return matchedArray[1];
+    }
+
+    // If no match is found, return null or handle accordingly
+    return null;
+}
+
+/**
+ * Adds a new board ID and client ID to the `boardIds` array in the `mdstore` state.
+ *
+ * This function checks if the provided `value` already exists in the `boardIds` array. If it
+ * does not, the function adds a new array with the `value` and `clientId` to the `boardIds`
+ * array, and then updates the `mdstore` state with the new `boardIds` array.
+ *
+ * @param {string} value - The board ID to add to the `boardIds` array.
+ * @param {string} clientId - The client ID to associate with the new board ID.
+ */
+function setBoardIdByValue(value) {
+    const { setBoardIds } = wp.data.dispatch('mdstore');
+    const boardIds = wp.data.select('mdstore').getBoardIds();
+
+    // Check if the value already exists in the boardIds array
+    const valueExists = boardIds.some(board => board === value);
+    if (!valueExists) {
+        // Add the new boardId and clientId to the boardIds array
+        const updatedBoardIds = [...boardIds, value];
+        // Update the state with the updated boardIds array
+        setBoardIds(updatedBoardIds);
+    }   
+}
+
+/**
+ * Removes a board ID and its associated client ID from the `boardIds` array in the `mdstore` state.
+ *
+ * This function takes a `value` parameter, which represents the board ID to be removed. It
+ * retrieves the current `boardIds` array from the `mdstore` state, filters out the array
+ * element that matches the provided `value`, and then updates the `mdstore` state with the
+ * updated `boardIds` array.
+ *
+ * @param {string} value - The board ID to be removed from the `boardIds` array.
+ */
+function unsetBoardIdByValue(value) {
+    const { setBoardIds } = wp.data.dispatch('mdstore');
+    const boardIds = wp.data.select('mdstore').getBoardIds();
+
+    // Remove the boardId and clientId to the boardIds array
+    const updatedBoardIds = boardIds.filter(boardId => boardId !== value);
+
+    // Update the state with the updated boardIds array
+    setBoardIds(updatedBoardIds);
+}
+
+function cfDelay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function returnCommntTextElement( elID ) {
+    const iframe = document.querySelector('[name="editor-canvas"]');
+    let element;
+    if (iframe) {			
+        // Access the iframe's document
+        const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+        
+        // Query inside the iframe's document
+        element = iframeDocument.querySelector('[datatext="' + elID + '"]');
+    } else {
+        // Query in the main document
+        element = document.querySelector('[datatext="' + elID + '"]');				
+    }
+
+    return element;
+}
+
+function isElementCompletelyVisible(el) {
+    const rect = el?.getBoundingClientRect();
+    // Also check if the element's height is greater than 100px
+    const isHeightGreaterThan100 = rect.height > 100;
+    return isHeightGreaterThan100;
+}
+
+
+function allowedMedia() {
+
+    const allowedBlocks = {}
+    //restrict to specific block names
+    allowedBlocks.media = [ 'core/image', 'core/video', 'core/audio' ,'core/gallery', 'core/cover' , 'core/media-text' ];
+    //User can comment on whole block/@author Pooja Bhimani/@since EDD - 3.0.1
+    allowedBlocks.text = ['core/paragraph','core/heading','core/list','core/list-item','core/quote','core/preformatted','core/verse','core/table','core/pullquote','core/file','core/button','core/code', 'core/freeform'];
+    allowedBlocks.excluded = [''];
+
+    return allowedBlocks;
+
+}
+
+function getBoardIds(singleBoardId) {
+
+    let boardIds = { singleBoardIdSuggestion: null, singleBoardIdComment: null, combineBoardId: null };
+  
+    if (singleBoardId.match(/^el/m) === null) {
+      boardIds.singleBoardIdSuggestion = "sg" + singleBoardId;
+      boardIds.combineBoardId = "sg" + singleBoardId;
+    } else {
+      boardIds.singleBoardIdComment = singleBoardId;
+      boardIds.combineBoardId = singleBoardId;
+    }
+  
+    return boardIds;
+}
