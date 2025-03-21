@@ -209,12 +209,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		global $wp_version;
 
 		$current_user    = wp_get_current_user();
-		$subscribe_email = filter_input( INPUT_POST, 'subscribe_email', FILTER_SANITIZE_SPECIAL_CHARS );
+		$subscribe_email = filter_input( INPUT_GET, 'subscribe_email', FILTER_SANITIZE_SPECIAL_CHARS );
 		$subscribe_email = ! empty( $subscribe_email ) ? $subscribe_email : '';
 
-		$opt_in      = filter_input( INPUT_POST, 'opt_in', FILTER_SANITIZE_SPECIAL_CHARS );
-		$broser_name = filter_input( INPUT_POST, 'broser_name', FILTER_SANITIZE_SPECIAL_CHARS );
-		$country     = filter_input( INPUT_POST, 'country', FILTER_SANITIZE_SPECIAL_CHARS );
+		$opt_in      = filter_input( INPUT_GET, 'opt_in', FILTER_SANITIZE_SPECIAL_CHARS );
+		$broser_name = filter_input( INPUT_GET, 'broser_name', FILTER_SANITIZE_SPECIAL_CHARS );
+		$country     = filter_input( INPUT_GET, 'country', FILTER_SANITIZE_SPECIAL_CHARS );
 		$user_email  = $current_user->user_email;
 
 		// Get Gutenberg Version.
@@ -968,12 +968,20 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
+		if ( ! function_exists( 'get_current_screen' ) ) { 
+			require_once ABSPATH . '/wp-admin/includes/screen.php'; 
+		}
 		$screen = get_current_screen();
-		if ( 'site-editor' !== $screen->base ) {
+		if ( ! empty( $screen ) && 'site-editor' !== $screen->base ) {
 
 			wp_enqueue_style( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/editorStyle.build.min.css', array(), wp_rand(), 'all' );
 		}
-		wp_enqueue_style( 'cf-select2', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/css/select2.min.css', array(), wp_rand(), 'all' );
+
+		if ( ( ! empty( $screen ) && $screen->is_block_editor && 'site-editor' !== $screen->base && 'widgets' !== $screen->base ) || ! empty( $screen ) && ( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base ) ) {	
+
+			wp_enqueue_style( 'cf-select2', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/css/select2.min.css', array(), wp_rand(), 'all' );
+		}
+		
 	}
 
 	/**
@@ -994,11 +1002,13 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
+		if ( ! function_exists( 'get_current_screen' ) ) { 
+			require_once ABSPATH . '/wp-admin/includes/screen.php'; 
+		}
 		$screen = get_current_screen();
 
 		// Enque de-active pro plugin JS.
-		if ( 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
+		if ( ! empty( $screen ) && 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
 			// wp_enqueue_script( 'wp-deactivation-message', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/src/dashboard/comenting-block-deactive-free.js', array( 'jquery' ), wp_rand(), false );
 			wp_localize_script(
 				'wp-deactivation-message',
@@ -1015,7 +1025,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			'current_plan' => $cf_edd->get_plan_name(),
 		);
 
-		if ( ( $screen->is_block_editor && 'site-editor' !== $screen->base && 'widgets' !== $screen->base ) || ( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base ) ) {
+		if ( ( ! empty( $screen ) && $screen->is_block_editor && 'site-editor' !== $screen->base && 'widgets' !== $screen->base ) || ! empty( $screen ) && ( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base ) ) {
 			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false );
 			wp_enqueue_script( 'es5-js', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/commenting-broser-details.js', array( 'jquery' ), wp_rand(), false );
 			wp_enqueue_script( 'cf-mark', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false );
@@ -1184,10 +1194,10 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 						)
 					);
 
+			wp_enqueue_script( 'cf-select2-js', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/select2.min.js', array( 'jquery' ), wp_rand(), true );
 		}
 
-		wp_enqueue_script( 'cf-select2-js', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/select2.min.js', array( 'jquery' ), wp_rand(), true );
-
+		
 		wp_enqueue_script( $this->plugin_name . '-general', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin-general.js', array(), wp_rand(), false );
 		if( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base || 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
 			//wp_enqueue_script( $this->plugin_name . '-setttings-dashboard', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/src/dashboard/commenting-block-admin-setttings-dashboard.js', array(), wp_rand(), false );
@@ -1985,7 +1995,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		// WP User Query.
 		$users = new WP_User_Query(
 			array(
-				'number'   => 9999,
+				'number'   => 20,
 				'role__in' => $roles,
 			)
 		);
@@ -2208,7 +2218,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$fs_feedback_message = filter_input( INPUT_POST, 'fs_feedback_message', FILTER_SANITIZE_SPECIAL_CHARS );
 		$current_date        = gmdate( 'Y-m-d' );
 
-		$first_option_value = filter_input( INPUT_POST, 'first_option_value', FILTER_SANITIZE_SPECIAL_CHARS );
+		$first_option_value           = filter_input( INPUT_POST, 'first_option_value', FILTER_SANITIZE_SPECIAL_CHARS );
 		$free_plugin_deactivate_step3 = filter_input( INPUT_POST, 'free_plugin_deactivate_step3', FILTER_SANITIZE_SPECIAL_CHARS );
 
 		if( isset( $first_option_value ) && 'yes' === $first_option_value ) {
@@ -2239,16 +2249,16 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$query_url        = $feedback_api_url . '?' . http_build_query( $data_insert_array );
 
 		if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
-			$response = vip_safe_wp_remote_get( $query_url);
+			$response = vip_safe_wp_remote_get( $query_url );
 		} else {
 			$response = wp_remote_get( $query_url );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 		}
-		
+
 		$response_body = isset( $response['body'] ) ? $response['body'] : '';
-		if ( 'success' === trim( $response_body ) ) {
+		//if ( 'success' === trim( $response_body ) ) {
 			deactivate_plugins( COMMENTING_BLOCK_BASE );
 			echo 'success';
-		}
+		//}
 
 		wp_die();
 	}

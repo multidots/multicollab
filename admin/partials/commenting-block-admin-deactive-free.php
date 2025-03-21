@@ -79,7 +79,7 @@
 
 		<div></div>
 
-		<div class="cf-plugin-deacmodal__footer" style="display: none;">
+		<div class="cf-plugin-deacmodal__footer cf_free" style="display: none;">
 			<div class="cf-plugin-deacmodal__footer-snooze-option" style="display:none">
 				<input type="checkbox" class="snooze_option_checkbox" id="snooze_option_checkbox">
 				<label for="snooze_option_checkbox">Snooze this panel during troubleshooting.</label>

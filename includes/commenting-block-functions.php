@@ -142,10 +142,17 @@ if (!function_exists('cf_dpb_promotional_banner')) {
                 cf_display_promotional_banner_code( $promotional_banner_request_body, $pagenow, $location, $single_new_edit_page, $cf_edd, $dpb_banner_main_class );
             } else {
                 $CF_PROMOTIONAL_BANNER_API_URL = CF_PROMOTIONAL_BANNER_API_URL . 'wp-json/dpb-promotional-banner/v2/dpb-promotional-banner?' . wp_rand();
-                if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
-                    $promotional_banner_request = vip_safe_wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL, 3, 1, 20 );
-                } else {
-                    $promotional_banner_request = wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL );   // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+
+                // Check if cached data (transient) is available
+                $promotional_banner_request = get_transient( 'cf_promotional_banner_data' );
+                if ( false === $promotional_banner_request ) {
+                    if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
+                        $promotional_banner_request = vip_safe_wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL, 3, 1, 20 );
+                    } else {
+                        $promotional_banner_request = wp_remote_get( $CF_PROMOTIONAL_BANNER_API_URL ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+                    }
+                    // Set promotional banner data in transient for 6 hours to restrict API call everytime.
+                    set_transient( 'cf_promotional_banner_data', $promotional_banner_request, 21600 );
                 }
                 
                 ob_start();

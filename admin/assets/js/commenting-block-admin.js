@@ -2,8 +2,6 @@
  * Main function to be called for required JS actions.
  */
 
-//const { __ } = wp.i18n;
-
 // Define process env for util.js error.
 window.process = {
 	env: {
@@ -12,110 +10,430 @@ window.process = {
 };
 
 (function ($) {
-		$(document).ready(function () {
+	$(document).ready(function () {
 
-			$(document).on('click', '#cf-comment-board-wrapper .cls-board-outer:not(.focus)', function (e) {
+		$(document).on('click', '#cf-comment-board-wrapper .cls-board-outer:not(.focus)', function (e) {
 
-				closeMulticollabSidebar();
-				// Exclude focus on specific elements.
-				var target = $(e.target);
-				if (target.is(".commentContainer .comment-actions, .commentContainer .comment-actions *")) {
-						return;
-				}
-				const _this = $(this);
-				// Reset Comments Float.
-				$('#cf-comment-board-wrapper .cls-board-outer').removeAttr('style');
-				$('#cf-comment-board-wrapper .cls-board-outer').removeClass('focus');
-				$('#cf-comment-board-wrapper .cls-board-outer').removeClass('is-open');
-				$('#cf-comment-board-wrapper .comment-delete-overlay').removeClass('show');
-				$('#cf-comment-board-wrapper .comment-resolve .resolve-cb').prop("checked", false);
-				$('#cf-comment-board-wrapper .cls-board-outer .buttons-wrapper').removeClass('active');
-				$('#cf-comment-board-wrapper .cls-board-outer').css('opacity', '0.4');
-				
+			var iframe = $('iframe[name="editor-canvas"]');
+			var iframeDocument = iframe.length ? iframe[0].contentWindow.document : null;
+			const userCapability = wp.data.select('mdstore').getUserCapability()?.capability;
+  
+			if (iframeDocument) {
+			  // Select elements within the iframe document
+			  var elementsWithDataText = iframeDocument.querySelectorAll('[data-rich-text-format-boundary="true"]');
+			  elementsWithDataText.forEach(function(element) {
+				element.removeAttribute('data-rich-text-format-boundary');
+			  });
+			} else {
+			  // Select elements in the main document
+			  var elementsWithDataText = document.querySelectorAll('[data-rich-text-format-boundary="true"]');
+			  elementsWithDataText.forEach(function(element) {
+				element.removeAttribute('data-rich-text-format-boundary');
+			  });
+			}
+  
+			// Exclude focus on specific elements.
+			var target = $(e.target);
+			if (target.is(".commentContainer .comment-actions, .commentContainer .comment-actions *")) {
+				return;
+			}
+			const _this = $(this);
+			// Reset Comments Float.
+			$('#cf-comment-board-wrapper .cls-board-outer').removeAttr('style');
+			cfRemoveClass('#cf-comment-board-wrapper .cls-board-outer', 'is-open focus');
+			cfRemoveClass('#cf-comment-board-wrapper .comment-delete-overlay', 'show');
+			$('#cf-comment-board-wrapper .comment-resolve .resolve-cb').prop("checked", false);
+			$('#cf-comment-board-wrapper .cls-board-outer .buttons-wrapper').removeClass('active');
+			$('#cf-comment-board-wrapper .cls-board-outer').css('opacity', '0.4');
+			let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
+			if(true !== realTimeMode){
 				$('.btn-wrapper').css('display', 'none');
-				
-
-				const selectedText = _this.attr('id');
-				const currentUser = wp.data.select('core').getCurrentUser()?.id;
-				
-				removeFloatingIcon();
-				_this.addClass('focus');
-				_this.addClass('is-open');
-				_this.css('opacity', '1');
-
-				
-				let topOfText;
-				if (selectedText.match(/^el/m) !== null) {
-						topOfText = $('[datatext="' + selectedText + '"]').offset().top;
-						if ($('[datatext="' + selectedText + '"]').hasClass('cf-icon-wholeblock__comment')) { // To support block suggetion and whole block comment @author - Mayank / since 3.5
-								$('[datatext="' + selectedText + '"]').addClass('focus');
-						}
-				} else {
-						let sid = $('#' + selectedText).attr('data-sid');
-						topOfText = $('[id="' + sid + '"]').offset()?.top;
-						if (!topOfText) { // To support block suggetion and whole block comment @author - Mayank / since 3.5
-								topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
-								$('[data-suggestion_id="' + sid + '"]').addClass('focus');
-						}
-						$('#' + sid).addClass('sg-format-class');
-
+			}
+  
+			const selectedText = _this.attr('id');
+			const currentUser = wp.data.select('core').getCurrentUser()?.id;
+			if(realTimeMode){
+			  var hide = commentLock(selectedText, currentUser);
+			  if(hide){
+				  return;
+			  }
+			}
+			if (iframeDocument) {
+				$(iframeDocument).find('.cf-icon__addBlocks, .cf-icon__removeBlocks, .cf-icon-wholeblock__comment').removeClass('focus');
+			} else {
+				$('.cf-icon__addBlocks, .cf-icon__removeBlocks, .cf-icon-wholeblock__comment').removeClass('focus');
+			}
+			removeFloatingIcon();
+  
+			_this.addClass('focus');
+			_this.addClass('is-open');
+			_this.css('opacity', '1');
+			
+			//let referenceElement = document.getElementById(selectedText); 
+			//let boardTopOfText = referenceElement ? referenceElement.getBoundingClientRect().top : 0;
+			const { singleBoardIdSuggestion, singleBoardIdComment, combineBoardId } = getBoardIds(selectedText);
+  
+			const selectedTextWithoutSg = selectedText.replace( 'sg', '' );
+  
+			let referenceElement = iframeDocument 
+			  ? (selectedTextWithoutSg.match(/^el/m) === null 
+				  ? iframeDocument.getElementById(selectedTextWithoutSg) 
+				  : iframeDocument.querySelector(`[datatext="${combineBoardId}"]`)) 
+			  : (selectedTextWithoutSg.match(/^el/m) === null 
+				  ? document.getElementById(selectedTextWithoutSg) 
+				  : document.querySelector(`[datatext="${combineBoardId}"]`));
+  	
+  		if(!referenceElement){
+          cfgetCustomAttribute().forEach((attrValue) => {
+            if(iframeDocument){
+              if (!referenceElement && iframeDocument.querySelector(`[${attrValue}="${selectedTextWithoutSg}"]`)) {
+                referenceElement = iframeDocument.querySelector(`[${attrValue}="${selectedTextWithoutSg}"]`);
+              }
+            }else{
+              if (!referenceElement && document.querySelector(`[${attrValue}="${selectedTextWithoutSg}"]`)) {
+                referenceElement = document.querySelector(`[${attrValue}="${selectedTextWithoutSg}"]`);
+              }
+            }
+            
+          });
+      } 
+			let boardTopOfText = referenceElement ? referenceElement.getBoundingClientRect().top : 0;
+			
+			if (selectedText.match(/^el/m) !== null) {    
+			  if (iframeDocument) {
+				var $element = $(iframeDocument).find('[datatext="' + selectedText + '"]');
+				if ($element.hasClass('cf-icon-wholeblock__comment')) {
+					$element.addClass('focus');
 				}
-
-				setTimeout(function () {
-					if (!target.is(".btn-delete")){
-	                  scrollBoardToPosition(topOfText);
-	                }
-					_this.offset({ top: topOfText });
-				}, 800);
-
-				$('[data-rich-text-format-boundary="true"]').removeAttr('data-rich-text-format-boundary');
-
+			  }else{
+				if ($('[datatext="' + selectedText + '"]').hasClass('cf-icon-wholeblock__comment')) {
+				  $('[datatext="' + selectedText + '"]').addClass('focus');
+				}
+			  }
+			  
+			} else {
+				if (iframeDocument) {
+				  // Inside iframe
+				  var sid = $('#' + selectedText).attr('data-sid');
+				  // Check the element with the matching sid in iframe content
+				  var $sidElement = $(iframeDocument).find('[id="' + sid + '"]');
+				  // Check for custom attribute suggestions inside iframe
+				  const customAttrSuggestion = cfgetCustomAttribute();
+				  customAttrSuggestion.map((attrValue) => {
+					  var checkExist = $(iframeDocument).find('[' + attrValue + '="' + sid + '"]').length > 0;
+					  if (checkExist) {
+						  $(iframeDocument).find('[data-' + attrValue + '="' + sid + '"]').addClass('focus');
+					  }
+				  });
+			  
+				  $(iframeDocument).find('#' + sid).addClass('sg-format-class');
+				} else {
+				  let sid = $('#' + selectedText).attr('data-sid');  
+				  // For the lock, align suggestions @author - Mayank / since 3.6
+				  const customAttrSuggestion = cfgetCustomAttribute();
+				  customAttrSuggestion.map((attrValue) => {
+					  var checkExist = $('[' + attrValue + '="' + sid + '"]').length > 0;
+					  if (checkExist) {
+						  $('[data-' + attrValue + '="' + sid + '"]').addClass('focus');
+					  }
+				  })
+				  $('#' + sid).addClass('sg-format-class');
+				}
+			}  
+			if( ! referenceElement ) {
+			  var blockClientID = wp.data.select( 'core/block-editor' ).getSelectedBlock()?.clientId;
+			  if( iframeDocument ) {
+				referenceElement = iframeDocument.getElementById( 'block-' + blockClientID );
+			  } else {
+				referenceElement = document.getElementById( 'block-' + blockClientID );
+			  }
+			}  
+			if (referenceElement) {
+			  referenceElement?.setAttribute('data-rich-text-format-boundary', 'true');
+			  referenceElement.scrollIntoView({
+				  behavior: "smooth", // Optional: to scroll smoothly (instead of instantly)
+				  block: "center" // Optional: specifies vertical alignment (start, center, end, nearest)
+			  });
+			  
+			  setTimeout(() => {
+				const rect = referenceElement.getBoundingClientRect();
+				boardTopOfText = rect.top + window.scrollY;  // Adds scroll position to get position relative to the document
+				if (iframeDocument) {
+          const elementNotice = document.querySelector('.components-notice-list.components-editor-notices__dismissible');
+          let heightOfelementNotice;
+          if(elementNotice){
+            heightOfelementNotice = elementNotice.offsetHeight;
+          }
+          if('viewer' === userCapability){
+            boardTopOfText = boardTopOfText + heightOfelementNotice;
+          } else {
+            boardTopOfText = boardTopOfText + 60 + heightOfelementNotice;
+          }
+        }
+	  
+				jQuery("#" + selectedText).offset({
+				  top: boardTopOfText,
+				});
+			  }, 1000);
+			}
+			if (iframeDocument) {
+			  if ($(iframeDocument).find(`#${selectedText}`).hasClass('sg-board')) {
+				  let sid = $(iframeDocument).find(`#${selectedText}`).attr('data-sid');
+				  $(iframeDocument).find(`#${sid}`).attr('data-rich-text-format-boundary', 'true');
+			  }
+			  $(iframeDocument).find(`[datatext="${selectedText}"]`).attr('data-rich-text-format-boundary', true);
+			} else {
 				if ($(`#${selectedText}`).hasClass('sg-board')) {
-						let sid = $(`#${selectedText}`).attr('data-sid');
-						$(`#${sid}`).attr('data-rich-text-format-boundary', 'true');
+					let sid = $(`#${selectedText}`).attr('data-sid');
+					$(`#${sid}`).attr('data-rich-text-format-boundary', 'true');
 				}
 				$('[datatext="' + selectedText + '"]').attr('data-rich-text-format-boundary', true);
+			}
+  
+		  });
 
-			});
+		$(document).on('click', '.cf-activity-centre .cls-board-outer:not(.active)', function (e) {
 
-			//Set board top offset from activity center @author: Minal Diwan @since-3.4
-        $(document).on('click', '.user-commented-on,.cf-activity-centre .user-action a', function (e) {
-            var elID = e.target.dataset.elid;
-            if (elID) {
-                elID = elID.replace('cf-', '');
-                $(`#${elID}`).trigger('click');
-                setTimeout(function () {
-                    let topOfText;
-                    if (elID.match(/^el/m) !== null) {
-                        topOfText = $('[datatext="' + elID + '"]').offset().top;
-                    } else {
-                        let sid = $('#' + elID).attr('data-sid');
-                        topOfText = $('[id="' + sid + '"]').offset()?.top;
-                        if (!topOfText) {
-                            topOfText = $('[suggestion_id="' + sid + '"]').offset()?.top;
-                        }
-                        $('#' + sid).addClass('sg-format-class');
+          var iframe = $('iframe[name="editor-canvas"]');
+          var iframeDocument = iframe.length ? iframe[0].contentWindow.document : null;
 
-                    }
-                    $('#cf-span__comments .cls-board-outer').removeAttr('style');
-                    $('#cf-span__comments .cls-board-outer').removeClass('focus');
-                    $('#cf-span__comments .cls-board-outer').removeClass('is-open');
-                    $('#cf-span__comments .cls-board-outer').css('opacity', '0.4');
+          // Exclude focus on specific elements.
+          var target = $(e.target);
+          if (target.is(".commentContainer .comment-actions, .commentContainer .comment-actions *")) {
+              return;
+          }
+          const _this = $(this);
+          const selectedText = _this.attr('id');
+          let referenceElement = document.getElementById(selectedText);
 
-                    const currentUser = wp.data.select('core').getCurrentUser()?.id;
-                     
-                    $('#' + elID + '.cls-board-outer').addClass('focus');
-                    $('#' + elID + '.cls-board-outer').addClass('is-open');
-                    $('#' + elID + '.cls-board-outer').css('opacity', '1');
+          if (referenceElement && referenceElement.classList.contains('is-open')) {
+            _this.addClass('active');
+            return;
+          }
+
+          if (iframeDocument) {
+            // Select elements within the iframe document
+            var elementsWithDataText = iframeDocument.querySelectorAll('[data-rich-text-format-boundary="true"]');
+            elementsWithDataText.forEach(function(element) {
+              element.removeAttribute('data-rich-text-format-boundary');
+            });
+          } else {
+            // Select elements in the main document
+            var elementsWithDataText = document.querySelectorAll('[data-rich-text-format-boundary="true"]');
+            elementsWithDataText.forEach(function(element) {
+              element.removeAttribute('data-rich-text-format-boundary');
+            });
+          }
+
+          // Reset Comments Float.
+          $('.cf-activity-centre .cls-board-outer').removeAttr('style');
+          cfRemoveClass('.cf-activity-centre .cls-board-outer', 'is-open active');
+          //cfRemoveClass('#cf-comment-board-wrapper .comment-delete-overlay', 'show');
+          //$('#cf-comment-board-wrapper .comment-resolve .resolve-cb').prop("checked", false);
+          $('.cf-activity-centre .cls-board-outer .buttons-wrapper').removeClass('active');
+
+          let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
 
 
-                    scrollBoardToPosition(topOfText);
-
-                    $('#' + elID + '.cls-board-outer').offset({ top: topOfText });
-
-                }, 800);
+          
+          const currentUser = wp.data.select('core').getCurrentUser()?.id;
+          if(realTimeMode){
+            var hide = commentLock(selectedText, currentUser);
+            if(hide){
+                return;
             }
-        });
+          }
+          if (iframeDocument) {
+              $(iframeDocument).find('.cf-icon__addBlocks, .cf-icon__removeBlocks, .cf-icon-wholeblock__comment').removeClass('focus');
+          } else {
+              $('.cf-icon__addBlocks, .cf-icon__removeBlocks, .cf-icon-wholeblock__comment').removeClass('focus');
+          }
+          
+
+          _this.addClass('active');
+          _this.addClass('is-open');
+          //_this.css('opacity', '1');
+          
+
+          let boardTopOfText = referenceElement ? referenceElement.getBoundingClientRect().top : 0;
+          
+          let topOfText;
+          if (selectedText.match(/^el/m) !== null) {  
+
+
+            if (iframeDocument) {
+              var $element = $(iframeDocument).find('[datatext="' + selectedText + '"]');
+              topOfText = $element.length ? $element.offset().top - boardTopOfText : null;
+
+              if ($element.hasClass('cf-icon-wholeblock__comment')) {
+                  $element.addClass('focus');
+              }
+            }else{
+              topOfText = $('[datatext="' + selectedText + '"]').offset().top;
+              if ($('[datatext="' + selectedText + '"]').hasClass('cf-icon-wholeblock__comment')) {
+                $('[datatext="' + selectedText + '"]').addClass('focus');
+              }
+            }
+            
+          } else {
+              if (iframeDocument) {
+                // Inside iframe
+                var sid = $('#' + selectedText).attr('data-sid');
+                // Check the element with the matching sid in iframe content
+                var $sidElement = $(iframeDocument).find('[id="' + sid + '"]');
+                topOfText = $sidElement.length ? $sidElement.offset().top - boardTopOfText : null;
+                
+                // Check for custom attribute suggestions inside iframe
+                const customAttrSuggestion = cfgetCustomAttribute();
+                customAttrSuggestion.map((attrValue) => {
+                    var checkExist = $(iframeDocument).find('[' + attrValue + '="' + sid + '"]').length > 0;
+                    if (!topOfText && checkExist) {
+                        topOfText = $(iframeDocument).find('[' + attrValue + '="' + sid + '"]').offset().top - boardTopOfText;
+                        $(iframeDocument).find('[data-' + attrValue + '="' + sid + '"]').addClass('focus');
+                    }
+                });
+            
+                $(iframeDocument).find('#' + sid).addClass('sg-format-class');
+              } else {
+                let sid = $('#' + selectedText).attr('data-sid');
+                topOfText = $('[id="' + sid + '"]').offset()?.top;
+  
+                // For the lock, align suggestions @author - Mayank / since 3.6
+                const customAttrSuggestion = cfgetCustomAttribute();
+                customAttrSuggestion.map((attrValue) => {
+                    var checkExist = $('[' + attrValue + '="' + sid + '"]').length > 0;
+                    if (!topOfText && checkExist) {
+                        topOfText = $('[' + attrValue + '="' + sid + '"]').offset()?.top;
+                        $('[data-' + attrValue + '="' + sid + '"]').addClass('focus');
+                    }
+                })
+                $('#' + sid).addClass('sg-format-class');
+              }
+          }
+          setTimeout(function () {
+              if (!target.is(".btn-delete")){
+              	if (iframeDocument) {
+                  const elementNotice = document.querySelector('.components-notice-list.components-editor-notices__dismissible');
+                  let heightOfelementNotice;
+                  if(elementNotice){
+                    heightOfelementNotice = elementNotice.offsetHeight;
+                  }
+                  topOfText = topOfText + heightOfelementNotice;
+                }
+                scrollBoardToPosition(topOfText);
+              }
+          }, 800);
+          const sgID = selectedText.replace('sg', '');
+          if (iframeDocument) {
+            if ($(iframeDocument).find(`#${sgID}`).length > 0) {
+                $(iframeDocument).find(`#${sgID}`).attr('data-rich-text-format-boundary', 'true');
+            }
+            $(iframeDocument).find(`[datatext="${selectedText}"]`).attr('data-rich-text-format-boundary', true);
+          } else {
+              var targetElement = document.getElementById(sgID);
+              if (targetElement) {
+                  targetElement.setAttribute('data-rich-text-format-boundary', 'true');
+              }
+
+              // Check if the element with the selected text attribute exists
+              var selectedElement = document.querySelector(`[datatext="${selectedText}"]`);
+              if (selectedElement) {
+                  selectedElement.setAttribute('data-rich-text-format-boundary', true);
+              }
+          }
+
+    });
+
+		//Set board top offset from activity center @author: Minal Diwan @since-3.4
+		$(document).on('click', '.user-commented-on,.cf-activity-centre .user-action a', function (e) {
+			var elID = e.target.dataset.elid;
+			var editID = e.target?.dataset?.editid;
+			var deleteID = e.target?.dataset?.deleteid;
+			const iframe = document.querySelector('[name="editor-canvas"]');
+			if (elID) {
+				elID = elID.replace('cf-', '');
+				//$(`#${elID}`).trigger('click');
+
+				setTimeout(function () {
+					let topOfText;
+
+					$('#cf-comment-board-wrapper .cls-board-outer').removeAttr('style');
+					$('#cf-comment-board-wrapper .cls-board-outer').removeClass('focus');
+					$('#cf-comment-board-wrapper .cls-board-outer').removeClass('is-open');
+					$('#cf-comment-board-wrapper .cls-board-outer').css('opacity', '0.4');
+
+					if (elID.match(/^el/m) !== null) {
+						var element = returnCommntTextElement( elID );
+					} else {
+						var sID = elID.replace('sg', '');
+						if( iframe ) {
+						const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+						var element = iframeDocument.getElementById(sID);
+						} else {
+						var element = document.getElementById(sID);
+						}
+					}
+
+					if (element) {
+						element.setAttribute('data-rich-text-format-boundary', 'true');
+						element.scrollIntoView({
+						behavior: "smooth", // Optional: to scroll smoothly (instead of instantly)
+						block: "center" // Optional: specifies vertical alignment (start, center, end, nearest)
+						});
+						setTimeout(() => {
+						const rect = element.getBoundingClientRect();
+						topOfText = rect.top + window.scrollY;  // Adds scroll position to get position relative to the document
+						$('#' + elID + '.cls-board-outer').addClass('focus');
+						$('#' + elID + '.cls-board-outer').addClass('is-open');
+						$('#' + elID + '.cls-board-outer').css('opacity', '1');
+						$('#' + elID + '.cls-board-outer').offset({ top: topOfText });
+						function checkElementAndProceed() {
+							if( isElementCompletelyVisible( document.getElementById(elID) ) ){
+							if( "Reply to this comment" === e.target?.children[0]?.innerText?.trim() ) {
+								if (elID.match(/^el/m) !== null) {
+								jQuery("#txt" + elID).focus();
+								jQuery("#txt" + elID).select(); 
+								} else {
+								jQuery("#txt" + sID).focus();
+								jQuery("#txt" + sID).select();  
+								}
+							} else if( "Edit" === e.target?.children[0]?.innerText?.trim() ) {
+								jQuery("#" + elID + " .shareCommentContainer").hide();
+								jQuery(`#${elID} #${editID} .js-edit-comment`).trigger("click");
+								setTimeout(() => {
+									jQuery("#edit-" + editID).focus();
+									jQuery("#edit-" + editID).select();
+								}, 100);
+							} else if( "Mark as Resolved" === e.target?.children[0]?.innerText?.trim() ) {
+								var elementBoard = document.getElementById(elID);
+								if (elementBoard) {
+									var resolveCheckbox = elementBoard.querySelector('.resolve-cb');
+									if (resolveCheckbox) {
+									resolveCheckbox.click(); // Trigger click on the resolve checkbox
+									}
+								}
+							} else if( "Delete" === e.target?.children[0]?.innerText?.trim() ) {
+								const deleteElement = document.getElementById(deleteID);
+								if (deleteElement) {
+								const deleteOverlay = deleteElement.querySelector(".comment-delete-overlay");
+								if (deleteOverlay) {
+									deleteOverlay.classList.add("show"); // Add 'show' class to overlay
+								}
+								}
+							}
+						} else {
+							setTimeout(() => {
+							checkElementAndProceed();
+							}, 500);
+						}
+						}
+						checkElementAndProceed();
+						}, 1000);
+												
+					}
+				}, 500);
+			}
+		});
 	});
 })(jQuery);
 
@@ -174,6 +492,7 @@ window.addEventListener("click", function (e) {
 				localStorage.setItem("userURL", user.url);
 			})
 			.catch((error) => console.error("Error:", error));
+		
 	});
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -299,62 +618,115 @@ window.addEventListener("click", function (e) {
 	    }
 
 	    document.addEventListener("editorLayoutUpdate", function () {
-	      var commentBoardWrapper = document.getElementById(
-	        "cf-comment-board-wrapper"
-	      );
-	      var commentSidebarCount = document.getElementById(
-	        "cf-comment-board-wrapper"
-	      )?.children.length;
-	      var body = document.body;
-	  
-	      if (body.classList.contains("commentOn") && commentSidebarCount > 0) {
-	        return;
-	      }
-	  
-	      if (
-	        !commentBoardWrapper ||
-	        commentBoardWrapper.innerHTML.trim() === "" ||
-	        (body.classList.contains("hide-sg") &&
-	          body.classList.contains("hide-comments"))
-	      ) {
-	        body.classList.remove("commentOn");
-	      } else {
-	        var sgBoard = commentBoardWrapper.querySelector(".sg-board");
-	        var cmBoard = commentBoardWrapper.querySelector(".cm-board");
-	  
-	        if (
-	          (!body.classList.contains("hide-sg") && sgBoard) ||
-	          (!body.classList.contains("hide-comments") && cmBoard)
-	        ) {
-	          body.classList.add("commentOn");
-	        } else if (
-	          (body.classList.contains("hide-comments") &&
-	            !body.classList.contains("hide-sg") &&
-	            !sgBoard) ||
-	          (body.classList.contains("hide-sg") &&
-	            !body.classList.contains("hide-comments") &&
-	            !cmBoard)
-	        ) {
-	          body.classList.remove("commentOn");
-	        }
-	      }
-	  
-	      // Resolved #633 issue @author - Mayank
-	      var browser = (function (agent) {
-	        if (agent.indexOf("firefox") > -1) {
-	          return "firefox";
-	        } else {
-	          return "other";
-	        }
-	      })(window.navigator.userAgent.toLowerCase());
-	  
-	      if (browser === "firefox") {
-	        document.querySelectorAll(".wp-block").forEach(addBorderToAlignmentBlock); // Resolved #633 issue @author - Mayank
-	      }
-	  
-	      // Call the function to apply the styles
-	      addBorderStyle();
-	    });
+			var commentBoardWrapper = document.getElementById(
+			  "cf-comment-board-wrapper"
+			);
+			var commentSidebarCount = document.getElementById(
+			  "cf-comment-board-wrapper"
+			)?.children.length;
+			
+			var iframe = document.querySelector('iframe[name="editor-canvas"]');
+			let body;
+			let mainBodyClass = document.getElementsByClassName( 'wp-admin' )?.[0];
+			if( iframe ) {
+			  var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+			  body = iframeDocument.body;
+		
+			  if( mainBodyClass.classList.contains('hide-comments') ) {
+				body.classList.add('hide-comments');
+				if(iframe){
+				  iframe.contentDocument?.body.classList.add('hide-comments');
+				}
+			  } else {
+				body.classList.remove('hide-comments');
+				if(iframe){
+				  iframe.contentDocument?.body.classList.remove('hide-comments');
+				}
+			  }
+		
+			  if( mainBodyClass.classList.contains('hide-sg') ) {
+				body.classList.add('hide-sg');
+				if(iframe){
+				  iframe.contentDocument?.body.classList.add('hide-sg');
+				}
+			  } else {
+				body.classList.remove('hide-sg');
+				if(iframe){
+				  iframe.contentDocument?.body.classList.remove('hide-sg');
+				}
+			  }
+		
+			} else {
+			  body = document.body;
+			}
+		
+			if (body.classList.contains("commentOn") && commentSidebarCount > 0) {
+			  return;
+			}
+		
+			if (
+			  // !commentBoardWrapper ||
+			  // commentBoardWrapper.innerHTML.trim() === "" ||
+			  (body.classList.contains("hide-sg") &&
+				body.classList.contains("hide-comments"))
+			) {
+			  mainBodyClass.classList.remove('commentOn');
+			  //body.classList.remove("commentOn");
+			  if(iframe){
+				iframe.contentDocument?.body.classList.remove('commentOn');
+			  }
+			} else {
+			  var sgBoard = commentBoardWrapper?.querySelector(".sg-board");
+			  var cmBoard = commentBoardWrapper?.querySelector(".cm-board");
+			  if (
+				(
+				  !mainBodyClass.classList.contains("hide-sg") 
+				  //&& sgBoard
+				) ||
+				(
+				  !mainBodyClass.classList.contains("hide-comments") 
+				  //&& cmBoard
+				)
+			  ) {
+				//body.classList.add("commentOn");
+				mainBodyClass.classList.add('commentOn');
+				if(iframe){
+				  iframe.contentDocument?.body.classList.add('commentOn');
+				}
+			  } else if (
+				(mainBodyClass.classList.contains("hide-comments")
+				  && !mainBodyClass.classList.contains("hide-sg")
+				  //&& !sgBoard
+				) ||
+				(mainBodyClass.classList.contains("hide-sg")
+				&& !mainBodyClass.classList.contains("hide-comments")
+				//&& !cmBoard
+				)
+			  ) {
+				mainBodyClass.classList.remove('commentOn');
+				//body.classList.remove("commentOn");
+				if(iframe){
+				  iframe.contentDocument?.body.classList.remove('commentOn');
+				}
+			  }
+			}
+		
+			// Resolved #633 issue @author - Mayank
+			var browser = (function (agent) {
+			  if (agent.indexOf("firefox") > -1) {
+				return "firefox";
+			  } else {
+				return "other";
+			  }
+			})(window.navigator.userAgent.toLowerCase());
+		
+			if (browser === "firefox") {
+			  document.querySelectorAll(".wp-block").forEach(addBorderToAlignmentBlock); // Resolved #633 issue @author - Mayank
+			}
+		
+			// Call the function to apply the styles
+			addBorderStyle();
+		  });
 	  
 	    // Event listener for showHideComments
 	    document.addEventListener("showHideComments", function () {
@@ -835,7 +1207,7 @@ window.addEventListener("click", function (e) {
 				.querySelectorAll(
 					".cf-bodyrowupdate, .cf-columnalign, .cf-bodycolumnupdate, .cf-bodycolumndelete, .cf-bodyrowdeleteupdate"
 				)
-				.forEach((element) => {
+				?.forEach((element) => {
 					element.classList.remove("is-selected");
 				});
 	
@@ -878,7 +1250,7 @@ window.addEventListener("click", function (e) {
 				});
 	
 			// Remove "is-selected" class from comment icons
-			document.querySelectorAll(".commentIcon").forEach((element) => {
+			document.querySelectorAll(".commentIcon")?.forEach((element) => {
 				element.classList.remove("is-selected");
 			});
 	
@@ -983,65 +1355,97 @@ window.addEventListener("click", function (e) {
 	});
 
 	document.addEventListener("focusin", function (event) {
-		if (event.target.matches(".cf-share-comment")) {
-			event?.target?.classList.add("comment-focus");
-			// Solved overlap issue for adding comment on suggestion.
-			cfRemoveClass(".cls-board-outer", "focus onGoing");
-			const boardOuter = event?.target?.closest(".cls-board-outer");
-			if (boardOuter) {
-				boardOuter.classList.add("focus", "onGoing");
-			}
-			const nextElement = event?.target?.nextElementSibling;
+		// Cache commonly used DOM elements
+		const target = event.target;
+		const boardOuter = target.closest("#cf-comments-suggestions-parent .cls-board-outer");
+  		const activityBoardOuter = target.closest(".cf-activity-centre .cls-board-outer");
+		const shareCommentContainer = target.closest(".shareCommentContainer");
+		const btnWrapper = shareCommentContainer ? shareCommentContainer.querySelector(".btn-wrapper") : null;
+		const focusParentElement = boardOuter ? boardOuter.getAttribute("id") : null;
 	
-			const shareCommentContainer = event?.target?.closest(
-				".shareCommentContainer"
-			);
-			const btnWrapper = shareCommentContainer
-				? shareCommentContainer.querySelector(".btn-wrapper")
-				: null;
-			if (btnWrapper) {
-				btnWrapper.style.display = "block";
-			}
-	
-			const focusParentElement = boardOuter
-				? boardOuter.getAttribute("id")
-				: null;
-			if (focusParentElement) {
-				// Float board when we click on second board for comment over suggestion feature
-				if (document.querySelectorAll(".cls-board-outer.is-open").length) {
-					const focusParentElementWithoutSg = focusParentElement.replace(
-						"sg",
-						""
-					);
-					floatCommentsBoard(focusParentElementWithoutSg);
-				}
-				// remove scroll position effect when we click on board @author:Nirav Soni/since @4.8
-				/*const dataTextElement = document.querySelector(`[datatext="${focusParentElement}"]`);
-							if (dataTextElement && dataTextElement.classList.contains('cf-onwhole-block__comment')) {
-									const topOfText = dataTextElement.getBoundingClientRect().top + window.scrollY;
-									document.getElementById(focusParentElement).style.top = `${topOfText}px`;
-							}*/
-			}
-		}
-		if (event.target.matches(".js-cf-edit-comment")) {
-		    // Disable reply box when we focus on edit input box
-		    document.querySelectorAll(".cls-board-outer").forEach((element) => {
-		      element.classList.remove("cf-removeReply");
-		      element.style.opacity = "0.4";
-		    });
-
-		    const boardOuter = event.target.closest(".cls-board-outer");
-		    if (boardOuter) {
-		      boardOuter.classList.add("cf-removeReply");
-		      boardOuter.style.opacity = "1.0";
-		      const shareCommentContainer = boardOuter.querySelector(
-		        ".shareCommentContainer"
-		      );
-		      if(shareCommentContainer){
-		        shareCommentContainer.style.display = "none";
-		      }
+		// Handle focus event for comment input
+		if (target.matches(".cf-share-comment") && activityBoardOuter) {
+		    if (btnWrapper) {
+		      btnWrapper.style.display = "block";
 		    }
+		}
+
+		if (target.matches(".cf-share-comment") && boardOuter) {
+		target.classList.add("comment-focus");
+	
+		// Remove unnecessary classes for all boards
+		cfRemoveClass(".cls-board-outer", "focus onGoing");
+	
+		// Add focus and onGoing classes to the current board
+		boardOuter.classList.add("focus", "onGoing");
+	
+		// Show the comment button
+		if (btnWrapper) {
+			btnWrapper.style.display = "block";
+		}
+	
+		// Handle floating comments for suggestion feature
+		if (focusParentElement) {
+			const boardsWithOpenClass = document.querySelectorAll(".cls-board-outer.is-open");
+			const boardsWithFocusClass = document.querySelectorAll(".cls-board-outer.focus");
+			if (boardsWithOpenClass.length) {
+			  const focusParentElementWithoutSg = focusParentElement.replace("sg", "");
+	  
+			  const sortedBoardsWithOpenClass = Array.from(boardsWithOpenClass);
+	  
+					// Sort the array based on the id attribute, prioritizing those that start with 'el'
+			  sortedBoardsWithOpenClass.sort((a, b) => {
+				const idA = a.getAttribute("id");
+				const idB = b.getAttribute("id");
+	  
+				// Check if `idA` starts with 'el' and `idB` does not, so `a` should come first
+				if (idA && idA.startsWith('el') && !(idB && idB.startsWith('el'))) {
+				  return -1;
+				}
+				
+				// Check if `idB` starts with 'el' and `idA` does not, so `b` should come first
+				if (!(idA && idA.startsWith('el')) && idB && idB.startsWith('el')) {
+				  return 1;
+				}
+				// Otherwise, maintain the original order
+				return 0;
+			  });
+	  
+			  if( sortedBoardsWithOpenClass.length > 1 && sortedBoardsWithOpenClass[0].getAttribute("id").replace("sg", "") !== focusParentElementWithoutSg ) {
+				floatCommentsBoard(focusParentElementWithoutSg);
+			  }
+
+			  sortedBoardsWithOpenClass.map((board, i) => {
+				if( i > 0 ) {
+				  board.classList.remove("is-open");
+				  board.removeAttribute("style");
+				}
+			  });
+			  
+			} else if (boardsWithFocusClass.length) {
+			  boardOuter.classList.remove("focus");
+			  // Commented out unnecessary setTimeout
+			  // setTimeout(function () { jQuery(`#${focusParentElement}`).trigger('click'); }, 800);
+			}
 		  }
+		}
+	
+		// Handle focus event for editing comment
+		if (target.matches(".js-cf-edit-comment") && boardOuter) {
+		// Disable reply box on other boards and adjust opacity
+		document.querySelectorAll(".cls-board-outer").forEach((element) => {
+			element.classList.remove("cf-removeReply");
+			element.style.opacity = "0.4";
+		});
+	
+		boardOuter.classList.add("cf-removeReply");
+		boardOuter.style.opacity = "1.0";
+	
+		// Hide share comment container if present
+		if (boardOuter.querySelector(".shareCommentContainer")) {
+			boardOuter.querySelector(".shareCommentContainer").style.display = "none";
+		}
+		}
 	});
 
 	document.addEventListener("focusout", function (event) {
@@ -1091,68 +1495,79 @@ function isIntoView(elem) {
  * @param {string} elIDRemove - The ID of the tag to remove.
  */
 function removeTag(elIDRemove) {
-		// eslint-disable-line
-	
-		const element = document.querySelector('[datatext="' + elIDRemove + '"]');
-		const clientId = element?.closest("[data-block]").getAttribute("data-block");
-		var blockType = element?.closest("[data-block]").getAttribute("data-type");
-		const findAttributes = window.adminLocalizer.allowed_attribute_tags;
-		const blockAttributes = wp.data
-			.select("core/block-editor")
-			.getBlockAttributes(clientId); // eslint-disable-line
-		var prefixAcf = "acf/";
-	
-		if ("core/gallery" === blockType) {
-			removeGalleryTag(blockAttributes, clientId, elIDRemove);
-		}
-		if ("core/table" === blockType) {
-			removeTableTag(blockAttributes, clientId, elIDRemove);
-		}
-		if (blockType?.startsWith(prefixAcf)) {
-			removeAcfTag(blockAttributes, clientId, elIDRemove);
-		}
-	
-		if (null !== blockAttributes && !blockType.startsWith(prefixAcf)) {
-			findAttributes.forEach(function (attrb) {
-				var content = blockAttributes[attrb];
-	
-				if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
-					if ("" !== content) {
-						let tempDiv = document.createElement("div");
-						tempDiv.innerHTML = content; // phpcs:ignore
-						let childElements = tempDiv.getElementsByTagName("mdspan");
-						for (let i = 0; i < childElements.length; i++) {
-							if (elIDRemove === childElements[i].attributes.datatext.value) {
-								// Change logic to keep other HTML Tag in content..only remove mdspan tag
-	
-								var parent = childElements[i].parentNode;
-	
-								while (childElements[i].firstChild) {
-									parent.insertBefore(
-										childElements[i].firstChild,
-										childElements[i]
-									); // phpcs:ignore
-								}
-								parent.removeChild(childElements[i]);
-	
-								const finalContent = tempDiv.innerHTML;
-	
-								if (findAttributes.indexOf(attrb) !== -1) {
-									wp.data
-										.dispatch("core/editor")
-										.updateBlock(
-											clientId,
-											createNewAttributeWithFinalContent(attrb, finalContent)
-										);
-								}
-								break;
-							}
-						}
-					}
-				}
-			});
-		}
-	}
+  
+  const iframe = document.querySelector('iframe[name="editor-canvas"]');
+  const iframeDocument = iframe ? iframe.contentWindow.document : null;
+  let element;
+  if (iframeDocument) {
+    element = iframeDocument.querySelector('[datatext="' + elIDRemove + '"]');
+  }else{
+    element = document.querySelector('[datatext="' + elIDRemove + '"]');
+  }
+  
+  const clientId = element?.closest("[data-block]").getAttribute("data-block");
+  
+  const blockType = clientId 
+    ? wp.data.select('core/block-editor').getBlock(clientId)?.name 
+    : null;
+  
+  const findAttributes = window.adminLocalizer.allowed_attribute_tags;
+  const blockAttributes = wp.data
+    .select("core/block-editor")
+    .getBlockAttributes(clientId); // eslint-disable-line
+  var prefixAcf = "acf/";
+
+  if ("core/gallery" === blockType) {
+    removeGalleryTag(blockAttributes, clientId, elIDRemove);
+  }
+  if ("core/table" === blockType) {
+    removeTableTag(blockAttributes, clientId, elIDRemove);
+  }
+  if (blockType?.startsWith(prefixAcf)) {
+    removeAcfTag(blockAttributes, clientId, elIDRemove);
+  }
+
+  if (null !== blockAttributes && !blockType.startsWith(prefixAcf)) {
+    findAttributes.forEach(function (attrb) {
+      var content = blockAttributes[attrb];
+
+      if (undefined !== content && -1 !== content.indexOf(elIDRemove)) {
+        if ("" !== content) {
+          let tempDiv = document.createElement("div");
+          tempDiv.innerHTML = content; // phpcs:ignore
+          let childElements = tempDiv.getElementsByTagName("mdspan");
+          for (let i = 0; i < childElements.length; i++) {
+            if (elIDRemove === childElements[i].attributes.datatext.value) {
+              // Change logic to keep other HTML Tag in content..only remove mdspan tag
+
+              var parent = childElements[i].parentNode;
+
+              while (childElements[i].firstChild) {
+                parent.insertBefore(
+                  childElements[i].firstChild,
+                  childElements[i]
+                ); // phpcs:ignore
+              }
+              parent.removeChild(childElements[i]);
+
+              const finalContent = tempDiv.innerHTML;
+
+              if (findAttributes.indexOf(attrb) !== -1) {
+                wp.data
+                  .dispatch("core/editor")
+                  .updateBlock(
+                    clientId,
+                    createNewAttributeWithFinalContent(attrb, finalContent)
+                  );
+              }
+              break;
+            }
+          }
+        }
+      }
+    });
+  }
+}
 
 /**
  * Recursively removes 'mdspan' tags with a specific 'datatext' attribute value from the 'data' property of a block's attributes.
@@ -1910,64 +2325,75 @@ function chromeEdgeClearFix(typedContent) {
 			assignListTargetElement.insertAdjacentHTML("afterend", assignListTemplate);
 		}, 200);
 	}
-// Show Assignable Email List
-function showAssignableEmailList() {
-		const triggerLink = ".js-cf-show-assign-list";
-		const parentBoardClass = ".cls-board-outer";
-	
-		document.body.addEventListener("click", function (e) {
-			if (e.target.closest(triggerLink)) {
-				e.preventDefault();
-				const el = e.target.closest(parentBoardClass).id;
-				const textarea = `#${el} .js-cf-share-comment`;
-				const appendTo = `#${el} .shareCommentContainer .cf-assign-to`;
-				const content = document.querySelector(textarea).innerHTML;
-	
-				e.target.classList.remove("js-cf-show-assign-list");
-				e.target.classList.add("js-cf-hide-assign-list");
-	
-				// Get the assigner id of the current board.
-				const currentBoardAssingerID = document.querySelector(
-					`#${el} .cf-board-assigned-to`
-				)?.dataset?.userId;
-	
-				// Checked cached user list first.
-				let emailSet = content.match(
-					/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/gim
-				);
-				emailSet = new Set(emailSet);
-				const emailAddresses = Array.from(emailSet);
-				const dataItems = [];
-	
-				// Send Ajax Request.
-				fetch(ajaxurl, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded",
-					},
-					body: new URLSearchParams({
-						action: "cf_get_assignable_user_list",
-						content: content,
-						nonce: adminLocalizer.nonce,
-					}),
-				})
-					.then((response) => response.json())
-					.then((data) => {
-						emailAddresses.forEach((email) => {
-							const pattern = new RegExp(email);
-							data.forEach((item) => {
-								const userEmail = item.user_email;
-								const isMatched = userEmail.match(pattern);
-								if (isMatched && item.ID !== currentBoardAssingerID) {
-									dataItems.push(item);
-								}
-							});
-						});
-						assignableList(appendTo, dataItems);
-					});
-			}
-		});
+  // Show Assignable Email List
+	function showAssignableEmailList() {
+	  const triggerLink = ".js-cf-show-assign-list";
+	  const parentBoardClass = ".cls-board-outer";
+
+	  document.body.addEventListener("click", function (e) {
+	    if (e.target.closest(triggerLink)) {
+	      e.preventDefault();
+	      
+	      const el = e.target.closest(parentBoardClass).id;
+	      const textarea = `#${el} .js-cf-share-comment`;
+	      const appendTo = `#${el} .shareCommentContainer .cf-assign-to`;
+	      const content = document.querySelector(textarea).innerHTML;
+
+	      e.target.classList.remove("js-cf-show-assign-list");
+	      e.target.classList.add("js-cf-hide-assign-list");
+
+	      const assignableListPopup = document.querySelector(
+	        `#${el} .cf-assignable-list-popup`
+	      );
+	      if (assignableListPopup) {
+	        assignableListPopup.remove();
+	      }else{
+	        // Get the assigner id of the current board.
+	      const currentBoardAssingerID = document.querySelector(
+	        `#${el} .cf-board-assigned-to`
+	      )?.dataset?.userId;
+
+	      // Checked cached user list first.
+	      let emailSet = content.match(
+	        /[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/gim
+	      );
+	      emailSet = new Set(emailSet);
+	      const emailAddresses = Array.from(emailSet);
+	      const dataItems = [];
+
+	      // Send Ajax Request.
+	      fetch(ajaxurl, {
+	        method: "POST",
+	        headers: {
+	          "Content-Type": "application/x-www-form-urlencoded",
+	        },
+	        body: new URLSearchParams({
+	          action: "cf_get_assignable_user_list",
+	          content: content,
+	          nonce: adminLocalizer.nonce,
+	        }),
+	      })
+	        .then((response) => response.json())
+	        .then((data) => {
+	          emailAddresses.forEach((email) => {
+	            const pattern = new RegExp(email);
+	            data.forEach((item) => {
+	              const userEmail = item.user_email;
+	              const isMatched = userEmail.match(pattern);
+	              if (isMatched && item.ID !== currentBoardAssingerID) {
+	                dataItems.push(item);
+	              }
+	            });
+	          });
+	          assignableList(appendTo, dataItems);
+	        });
+	      }
+
+	      
+	    }
+	  });
 	}
+
 	function createAutoEmailMention() {
 		let el = "";
 		let currentBoardID = "";
@@ -2247,7 +2673,8 @@ function showAssignableEmailList() {
 	                if ('keypress' === e.type || 'keyup' === e.type) {
 	                    mentioncounter = 0;
 	                }
-	                if ('keypress' === e.type && true === jQuery(createTextarea).is(':focus')) {
+	                const actBoardID = currentBoardID.replace('#', '#txt');
+                  if ('keypress' === e.type && ( true === jQuery(createTextarea).is(':focus') || true === jQuery(actBoardID).is(':focus') ) ) {
 	                    isEmail = true;
 
 	                    jQuery.ajax({
