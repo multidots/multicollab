@@ -172,6 +172,7 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 			$plugin_admin = new Commenting_block_Admin( $this->get_plugin_name(), $this->get_version() );
 
 			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'cf_enqueue_styles' );
+			$this->loader->add_action( 'enqueue_block_assets', $plugin_admin, 'cf_enqueue_styles' );
 			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'cf_enqueue_scripts' );
 			$this->loader->add_action( 'wp_ajax_cf_comments_history', $plugin_admin, 'cf_comments_history' );
 			$this->loader->add_action( 'wp_ajax_cf_update_click', $plugin_admin, 'cf_update_click' );
