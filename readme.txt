@@ -252,7 +252,7 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 
 == Changelog ==
 
-= 4.9 - 21.03.2025 =
+= 4.9 - 24.03.2025 =
 * [New] Multicollab is now fully compatible with Gutenberg API 3.
 * [Enhancement] Optimized performance for faster and smoother collaboration.
 * [Bug Fixes] Fixed minor bugs related to the plugin’s interactions with Gutenberg blocks, providing a smoother editing experience.
