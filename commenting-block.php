@@ -14,7 +14,7 @@
  * @wordpress-plugin
  * Plugin Name:       Multicollab
  * Description:       Google Docs-Style Collaboration in WordPress. No copy-paste between apps. Faster Publishing. Works in Your Workflow. <strong>Features:</strong> Inline Commenting. Real-time Editing. Suggest Edits. Email & Slack Notifications. Guest Collaboration. Custom Permission. And a lot more!
- * Version:           4.9
+ * Version:           4.10
  * Author:            Multicollab
  * Author URI:        https://www.multicollab.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 }
 
 // Plugin version.
-define( 'COMMENTING_BLOCK_VERSION', '4.9' );
+define( 'COMMENTING_BLOCK_VERSION', '4.10' );
 
 // Define constants.
 define( 'COMMENTING_BLOCK_URL', plugin_dir_url( __FILE__ ) );
@@ -78,6 +78,7 @@ if ( ! function_exists( 'cf_custom_plugin_row_meta' ) ) {
  * @author: Rishi Shah
  * @version 3.4
  */
+
 define( 'CF_PROMOTIONAL_BANNER_API_URL', 'https://www.multicollab.com/' );
 define( 'CF_STORE_URL', 'https://www.multicollab.com/' );
 define( 'EDD_PLAN_PRO', 3793 );

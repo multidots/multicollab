@@ -209,12 +209,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		global $wp_version;
 
 		$current_user    = wp_get_current_user();
-		$subscribe_email = filter_input( INPUT_GET, 'subscribe_email', FILTER_SANITIZE_SPECIAL_CHARS );
+		$subscribe_email = filter_input( INPUT_POST, 'subscribe_email', FILTER_SANITIZE_SPECIAL_CHARS );
 		$subscribe_email = ! empty( $subscribe_email ) ? $subscribe_email : '';
 
-		$opt_in      = filter_input( INPUT_GET, 'opt_in', FILTER_SANITIZE_SPECIAL_CHARS );
-		$broser_name = filter_input( INPUT_GET, 'broser_name', FILTER_SANITIZE_SPECIAL_CHARS );
-		$country     = filter_input( INPUT_GET, 'country', FILTER_SANITIZE_SPECIAL_CHARS );
+		$opt_in      = filter_input( INPUT_POST, 'opt_in', FILTER_SANITIZE_SPECIAL_CHARS );
+		$broser_name = filter_input( INPUT_POST, 'broser_name', FILTER_SANITIZE_SPECIAL_CHARS );
+		$country     = filter_input( INPUT_POST, 'country', FILTER_SANITIZE_SPECIAL_CHARS );
 		$user_email  = $current_user->user_email;
 
 		// Get Gutenberg Version.
@@ -1009,7 +1009,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		// Enque de-active pro plugin JS.
 		if ( ! empty( $screen ) && 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
-			// wp_enqueue_script( 'wp-deactivation-message', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/src/dashboard/comenting-block-deactive-free.js', array( 'jquery' ), wp_rand(), false );
 			wp_localize_script(
 				'wp-deactivation-message',
 				'multicollab_plugin_path',
@@ -1032,24 +1031,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			wp_enqueue_script( 'cf-dom-purify', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'wp-i18n', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false );
 			wp_enqueue_script( $this->plugin_name . '-functions', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin-functions.js', array(), wp_rand(), false );
-			// Add wizard JS.
-
-			/**
-			 * Enqueues a JavaScript file for the commenting block wizard and localizes it with a nonce.
-			 *
-			 * This function is called when the current admin screen is 'admin_page_multicollab_setup_wizard'.
-			 * It enqueues the 'commenting-block-wizard-js' script and localizes it with a nonce for the 'multi_settings_nonce' action.
-			 */
-			// if ('admin_page_multicollab_setup_wizard' === $screen->base) {
-			// 	// wp_enqueue_script('commenting-block-wizard-js', trailingslashit(COMMENTING_BLOCK_URL) . 'admin/assets/js/src/dashboard/commenting-block-wizard.js', array('jquery'), wp_rand(), false);
-			// 	// wp_localize_script(
-			// 	// 	'commenting-block-wizard-js',
-			// 	// 	'commenting_block_wizard',
-			// 	// 	array(
-			// 	// 		'nonce'       =>  wp_create_nonce('multi_settings_nonce'),
-			// 	// 	)
-			// 	// );
-			// }	
+				
 			wp_enqueue_script(
 				'content-collaboration-inline-commenting',
 				trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/block.build.min.js',
@@ -1200,7 +1182,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		
 		wp_enqueue_script( $this->plugin_name . '-general', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin-general.js', array(), wp_rand(), false );
 		if( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base || 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
-			//wp_enqueue_script( $this->plugin_name . '-setttings-dashboard', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/src/dashboard/commenting-block-admin-setttings-dashboard.js', array(), wp_rand(), false );
 
 			wp_enqueue_script( 'cf-dashboard-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/dashboard.build.min.js', array(), wp_rand(), true );
 
@@ -1895,6 +1876,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 */
 	public function cf_get_comments() {
 		$current_post_id = filter_input( INPUT_GET, 'currentPostID', FILTER_SANITIZE_NUMBER_INT );
+		$currentUserID   = filter_input( INPUT_GET, 'currentUserID', FILTER_SANITIZE_NUMBER_INT );
 		$userDetails     = array();
 		$elID            = filter_input( INPUT_GET, 'elID', FILTER_SANITIZE_SPECIAL_CHARS );
 
@@ -1903,7 +1885,6 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$comments        = isset( $superCareerData['comments'] ) ? $superCareerData['comments'] : array();
 		$date_format     = get_option( 'date_format' );
 		$time_format     = get_option( 'time_format' );
-		$login_user      = wp_get_current_user();
 
 		if ( ( is_array( $comments ) && ! empty( $comments ) ) || ( is_object( $comments ) && ! empty( (array) $comments ) ) ) {
 			foreach ( $comments as $t => $val ) {
@@ -1952,15 +1933,17 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		// Get assigned user data
 		$assigned_to = null;
 		if ( isset( $superCareerData['assigned_to'] ) && $superCareerData['assigned_to'] > 0 ) {
-			$login_user  = wp_get_current_user();
+			$login_user   = get_user_by( 'ID', $currentUserID );
 			$user_data   = get_user_by( 'ID', $superCareerData['assigned_to'] );
-            $displayName = ($login_user->data->ID == $user_data->ID) ? 'You' : $user_data->display_name; // phpcs:ignore
-			$assigned_to = array(
-				'ID'           => $user_data->ID,
-				'display_name' => $displayName,
-				'user_email'   => $user_data->user_email,
-				'avatar'       => get_avatar_url( $user_data->ID, array( 'size' => 32 ) ),
-			);
+			if($login_user && $user_data){
+	            $displayName = ($login_user->data->ID == $user_data->ID) ? 'You' : $user_data->display_name; // phpcs:ignore
+				$assigned_to = array(
+					'ID'           => $user_data->ID,
+					'display_name' => $displayName,
+					'user_email'   => $user_data->user_email,
+					'avatar'       => get_avatar_url( $user_data->ID, array( 'size' => 32 ) ),
+				);
+			}
 		}
 
 		$data                    = array();
@@ -2255,10 +2238,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		}
 
 		$response_body = isset( $response['body'] ) ? $response['body'] : '';
-		//if ( 'success' === trim( $response_body ) ) {
-			deactivate_plugins( COMMENTING_BLOCK_BASE );
-			echo 'success';
-		//}
+		deactivate_plugins( COMMENTING_BLOCK_BASE );
+		echo 'success';
 
 		wp_die();
 	}

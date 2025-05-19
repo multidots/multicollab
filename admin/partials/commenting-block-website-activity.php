@@ -311,8 +311,8 @@ if ((is_array($this->cf_activities) && !empty($this->cf_activities)) || (is_obje
 												<div class="user-assigned-to"><span class="icon"></span><span class="assign-avatar-data"><?php esc_html_e( 'Assigned to', 'content-collaboration-inline-commenting' ); ?><a href="mailto:<?php echo esc_attr( $assigned_to['user_email'] ); ?>" title="<?php echo esc_attr( $assigned_to['display_name'] ); ?>"> <?php echo esc_html_e( $assigned_to['display_name'], 'content-collaboration-inline-commenting' ); ?></a></span></div>
 												<?php } ?>
 												<?php
-												$comment_status = isset( $comment['status'] ) ? $comment['status'] : '';
-												if ( isset( $comment['editedTime'] ) && 'deleted' !== $comment_status ) {
+												$cf_comment_status = isset( $comment['status'] ) ? $comment['status'] : '';
+												if ( isset( $comment['editedTime'] ) && 'deleted' !== $cf_comment_status ) {
 													if ( isset( $comment['editedTimestamp'] ) ) {
 														$timestamp = $comment['editedTimestamp'];
 													} elseif ( 10 !== strlen( $comment['editedTime'] ) ) {
