@@ -541,7 +541,7 @@ function showNoticeBoardonNewComments() {
 
 function getSelectionHtml() {
    
-    const iframe = document.querySelector('iframe[name="editor-canvas"]');
+    const iframe = cfGetIframe();
     var html = "";
     
     // Ensure iframe is available
@@ -593,7 +593,7 @@ function cf_removeAllNotices() {
 }
 
 function publishBtnClick(e) {
-    var openBoards = document.querySelectorAll('.cls-board-outer').length;
+    var openBoards = wp.data.select('mdstore').getBoardIds()?.length;
     if (0 !== openBoards) {
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -617,9 +617,9 @@ function publishBtnClick(e) {
  * It uses wp.data dispatch to lock/unlock post saving as needed during the process.
  */
 function prePostChecks(e) {
-    e.stopPropagation()
-    e.preventDefault()
-    var openBoards = document.querySelectorAll('.cls-board-outer').length;
+    e.stopPropagation();
+    e.preventDefault();
+    var openBoards = wp.data.select('mdstore').getBoardIds()?.length;
     let locked = false;
     if (multicollab_fs.is_plan_lite) {
         var msgReminderPublisher = wp.i18n.__('There are a few pending comments in this post. Do you still want to publish the post?', 'content-collaboration-inline-commenting');
@@ -1232,8 +1232,9 @@ function getBoardIdFromContent(text, keys) {
             }
         }
     }
+
     // Combine all tag-based regex patterns for <ins>, <del>, and <span> tags
-    const tagRegex = /<(ins|del)[^>]*\sid="([^"]+)"|<(span)[^>]*(?=.*\b(?:mdadded|mdmodified|mdremoved)\b)(?=.*\b(?:textalignupdate|alignupdate|lockupdate)\b)[^>]*\sid="([^"]+)"/g;
+    const tagRegex = /<(ins|del)[^>]*\sid="([^"]+)"|<(span)[^>]*(?=.*\b(?:mdadded|mdmodified|mdremoved)\b)(?=.*\b(?:textalignupdate|alignupdate|lockupdate|bodyupdate-row|bodyupdate-delete-row|bodyupdate-column|bodyupdate-delete-column)\b)[^>]*\sid="([^"]+)"/g;
     
     // Extract `id` values from <ins>, <del>, and <span> tags with specific classes
     while ((match = tagRegex.exec(text)) !== null) {
@@ -1349,7 +1350,7 @@ function cfDelay(ms) {
 }
 
 function returnCommntTextElement( elID ) {
-    const iframe = document.querySelector('[name="editor-canvas"]');
+    const iframe = cfGetIframe();
     let element;
     if (iframe) {			
         // Access the iframe's document
@@ -1399,4 +1400,43 @@ function getBoardIds(singleBoardId) {
     }
   
     return boardIds;
+}
+
+function cfGetIframe() {
+  return document.querySelector('iframe[name="editor-canvas"]');
+}
+
+/**
+ * Compares two version strings based on the specified comparison type.
+ * This function splits version strings into parts, compares them numerically,
+ * and returns a boolean indicating if the comparison is true.
+ * @param {string} v1 - First version string to compare (e.g. "1.2.3")
+ * @param {string} v2 - Second version string to compare (e.g. "1.3.0")
+ * @param {string} checkStatus - Type of comparison to perform:
+ * "lt": less than (v1 < v2)
+ * "lte": less than or equal (v1 <= v2)
+ * "gt": greater than (v1 > v2)
+ * "gte": greater than or equal (v1 >= v2)
+ * "eq": equal (v1 == v2)
+ * @returns {boolean} True if the comparison is satisfied, false otherwise 
+*/
+function cfIsVersionCheck(v1, v2, checkStatus) {
+  const v1Parts = v1.split('.').map(Number);
+  const v2Parts = v2.split('.').map(Number);
+  const maxLength = Math.max(v1Parts.length, v2Parts.length);
+
+  for (let i = 0; i < maxLength; i++) {
+    const num1 = v1Parts[i] || 0;
+    const num2 = v2Parts[i] || 0;
+
+    if (num1 < num2) {
+      return ['lt', 'lte'].includes(checkStatus);
+    }
+    if (num1 > num2) {
+      return ['gt', 'gte'].includes(checkStatus);
+    }
+  }
+
+  // If all parts are equal
+  return ['lte', 'gte', 'eq'].includes(checkStatus);
 }

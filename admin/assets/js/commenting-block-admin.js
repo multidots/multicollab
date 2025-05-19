@@ -192,7 +192,7 @@ window.process = {
   
 		  });
 
-		$(document).on('click', '.cf-activity-centre .cls-board-outer:not(.active)', function (e) {
+		$(document).on('click', '.cf-activity-centre .cls-board-outer:not(.is-active)', function (e) {
 
           var iframe = $('iframe[name="editor-canvas"]');
           var iframeDocument = iframe.length ? iframe[0].contentWindow.document : null;
@@ -207,7 +207,7 @@ window.process = {
           let referenceElement = document.getElementById(selectedText);
 
           if (referenceElement && referenceElement.classList.contains('is-open')) {
-            _this.addClass('active');
+            _this.addClass('is-active');
             return;
           }
 
@@ -227,10 +227,10 @@ window.process = {
 
           // Reset Comments Float.
           $('.cf-activity-centre .cls-board-outer').removeAttr('style');
-          cfRemoveClass('.cf-activity-centre .cls-board-outer', 'is-open active');
+          cfRemoveClass('.cf-activity-centre .cls-board-outer', 'is-open is-active');
           //cfRemoveClass('#cf-comment-board-wrapper .comment-delete-overlay', 'show');
           //$('#cf-comment-board-wrapper .comment-resolve .resolve-cb').prop("checked", false);
-          $('.cf-activity-centre .cls-board-outer .buttons-wrapper').removeClass('active');
+          $('.cf-activity-centre .cls-board-outer .buttons-wrapper').removeClass('is-active');
 
           let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
 
@@ -250,7 +250,7 @@ window.process = {
           }
           
 
-          _this.addClass('active');
+          _this.addClass('is-active');
           _this.addClass('is-open');
           //_this.css('opacity', '1');
           
@@ -534,7 +534,7 @@ window.addEventListener("click", function (e) {
 			  "cf-comment-board-wrapper"
 			)?.children.length;
 			
-			var iframe = document.querySelector('iframe[name="editor-canvas"]');
+			const iframe = cfGetIframe();
 			let body;
 			let mainBodyClass = document.getElementsByClassName( 'wp-admin' )?.[0];
 			if( iframe ) {
@@ -1011,41 +1011,44 @@ window.addEventListener("click", function (e) {
 			}
 		}
 	
-		if (event.target.matches(".md-plugin-tooltip svg")) {
-			event.preventDefault();
-			// Hide all .cf-suggestion-tooltip-box elements except the one within the clicked .md-plugin-tooltip
-			document
-				.querySelectorAll(".cf-suggestion-tooltip-box")
-				.forEach(function (tooltipBox) {
-					const parentTooltip = event.target.closest(".md-plugin-tooltip");
-					if (!parentTooltip.contains(tooltipBox)) {
-						tooltipBox.style.display = "none";
-					}
-				});
-	
-			// Toggle the .cf-suggestion-tooltip-box within the clicked .md-plugin-tooltip
-			const targetTooltipBox = event.target
+		document.addEventListener("click", function (event) {
+			// Toggle tooltip on main icon click
+			if (event.target.closest(".md-plugin-tooltip > svg")) {
+			  event.preventDefault();
+		  
+			  // Hide all other tooltip boxes
+			  document.querySelectorAll(".cf-suggestion-tooltip-box").forEach(function (tooltipBox) {
+				const parentTooltip = event.target.closest(".md-plugin-tooltip");
+				if (!parentTooltip.contains(tooltipBox)) {
+				  tooltipBox.style.display = "none";
+				}
+			  });
+		  
+			  // Toggle the current one
+			  const targetTooltipBox = event.target
 				.closest(".md-plugin-tooltip")
 				.querySelector(".cf-suggestion-tooltip-box");
-			if (targetTooltipBox) {
-				if (
-					targetTooltipBox.style.display === "none" ||
-					targetTooltipBox.style.display === ""
-				) {
-					targetTooltipBox.style.display = "block";
-				} else {
-					targetTooltipBox.style.display = "none";
-				}
+			  if (targetTooltipBox) {
+				targetTooltipBox.style.display =
+				  targetTooltipBox.style.display === "block" ? "none" : "block";
+			  }
+		  
+			  // Hide all feedback layouts
+			  document.querySelectorAll(".cf-feedback-dashboard .cf_feedback_layout").forEach(function (feedbackLayout) {
+				feedbackLayout.style.display = "none";
+			  });
 			}
-	
-			// Hide all .cf_feedback_layout elements within .cf-feedback-dashboard
-			document
-				.querySelectorAll(".cf-feedback-dashboard .cf_feedback_layout")
-				.forEach(function (feedbackLayout) {
-					feedbackLayout.style.display = "none";
-				});
-		}
-	
+		  
+			// Close tooltip on close icon click
+			if (event.target.closest(".cf-tooltip-close")) {
+			  event.preventDefault();
+			  const tooltipBox = event.target.closest(".cf-suggestion-tooltip-box");
+			  if (tooltipBox) {
+				tooltipBox.style.display = "none";
+			  }
+			}
+		  });
+		  
 		const handleShowAllComments = (
 			selector,
 			parentSelector,
@@ -1081,6 +1084,12 @@ window.addEventListener("click", function (e) {
 			true
 		);
 		// Show all comments in activity center
+		handleShowAllComments(
+	    ".js-activity-centre .user-data-row .show-all-comments",
+	    ".user-data-row",
+	    ".commentContainer",
+	    true
+	  );
 		handleShowAllComments(
 			".js-activity-centre .user-data-row .show-all-comments",
 			".user-data-row",
@@ -1405,7 +1414,7 @@ function isIntoView(elem) {
  */
 function removeTag(elIDRemove) {
   
-  const iframe = document.querySelector('iframe[name="editor-canvas"]');
+  const iframe = cfGetIframe();
   const iframeDocument = iframe ? iframe.contentWindow.document : null;
   let element;
   if (iframeDocument) {
@@ -2978,7 +2987,14 @@ function addBorderToAlignmentBlock(block) {
 		// Helper function to apply the border style updates
 		function updateBorderStyle() {
 			// Select all table rows
-			var tableRows = document.querySelectorAll("tr");
+			const iframe = cfGetIframe();
+	    const iframeDocument = iframe ? iframe.contentWindow.document : null;
+	    let tableRows;
+	    if (iframeDocument) {
+	      tableRows = iframeDocument.querySelectorAll("tr");
+	    }else{
+	      tableRows = document.querySelectorAll("tr");
+	    }
 	
 			// Loop through each row
 			tableRows.forEach(function (row) {

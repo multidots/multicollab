@@ -292,7 +292,6 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 						$existing_getting_started_post = array(
 							'ID' =>  $posts_array[0]->ID,
 							'post_title'    => $response_data_array['post_title'],
-							'post_content'  => $response_data_array['post_content'],
 							'post_status'   => $posts_array[0]->post_status,
 						);
 						wp_update_post( $existing_getting_started_post );
