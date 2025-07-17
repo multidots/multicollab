@@ -346,7 +346,6 @@ class Commenting_Block_Rest_Routes extends Commenting_block_Functions {
 				$elID  = 'sg' . $Id;
 
 				// passing the last activity parameters in thread for displaying in activity center last activity.
-				// $lastpostid = $row['post_id'];
 				$editedLastUser = get_post_meta( $current_post_id, 'last_user_edited', true );
 				$lasteditedtime = get_the_modified_time( 'U', $current_post_id );
 				$usr_login_name = get_user_by( 'login', $editedLastUser );

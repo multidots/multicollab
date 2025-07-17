@@ -13,7 +13,7 @@
                 <a href="<?php echo esc_url( site_url() ); ?>/wp-admin/admin.php?page=editorial-comments&view=settings" class="button button-primary">
                     <?php esc_html_e( 'Manage Settings', 'content-collaboration-inline-commenting' ); ?>
                 </a>
-                <a href="#." class="cf-plugin-button-link">
+                <a href="https://docs.multicollab.com/article/20-requirements?utm_source=plugin+&utm_medium=setting+page&utm_campaign=help+doc+from+plugin+setting+section" class="cf-plugin-button-link" target="_blank">
                 <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                     width="13px" height="13px" viewBox="0 0 459.319 459.319"
                     xml:space="preserve">

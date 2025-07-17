@@ -44,7 +44,7 @@ window.process = {
 			cfRemoveClass('#cf-comment-board-wrapper .comment-delete-overlay', 'show');
 			$('#cf-comment-board-wrapper .comment-resolve .resolve-cb').prop("checked", false);
 			$('#cf-comment-board-wrapper .cls-board-outer .buttons-wrapper').removeClass('active');
-			$('#cf-comment-board-wrapper .cls-board-outer').css('opacity', '0.4');
+			$('#cf-comment-board-wrapper .cls-board-outer').css('opacity', '0.2');
 			let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
 			if(true !== realTimeMode){
 				$('.btn-wrapper').css('display', 'none');
@@ -69,8 +69,6 @@ window.process = {
 			_this.addClass('is-open');
 			_this.css('opacity', '1');
 			
-			//let referenceElement = document.getElementById(selectedText); 
-			//let boardTopOfText = referenceElement ? referenceElement.getBoundingClientRect().top : 0;
 			const { singleBoardIdSuggestion, singleBoardIdComment, combineBoardId } = getBoardIds(selectedText);
   
 			const selectedTextWithoutSg = selectedText.replace( 'sg', '' );
@@ -149,7 +147,7 @@ window.process = {
 			  }
 			}  
 			if (referenceElement) {
-			  referenceElement?.setAttribute('data-rich-text-format-boundary', 'true');
+			  
 			  referenceElement.scrollIntoView({
 				  behavior: "smooth", // Optional: to scroll smoothly (instead of instantly)
 				  block: "center" // Optional: specifies vertical alignment (start, center, end, nearest)
@@ -175,6 +173,7 @@ window.process = {
 				  top: boardTopOfText,
 				});
 			  }, 1000);
+			  referenceElement?.setAttribute('data-rich-text-format-boundary', 'true');
 			}
 			if (iframeDocument) {
 			  if ($(iframeDocument).find(`#${selectedText}`).hasClass('sg-board')) {
@@ -228,8 +227,6 @@ window.process = {
           // Reset Comments Float.
           $('.cf-activity-centre .cls-board-outer').removeAttr('style');
           cfRemoveClass('.cf-activity-centre .cls-board-outer', 'is-open is-active');
-          //cfRemoveClass('#cf-comment-board-wrapper .comment-delete-overlay', 'show');
-          //$('#cf-comment-board-wrapper .comment-resolve .resolve-cb').prop("checked", false);
           $('.cf-activity-centre .cls-board-outer .buttons-wrapper').removeClass('is-active');
 
           let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
@@ -252,7 +249,6 @@ window.process = {
 
           _this.addClass('is-active');
           _this.addClass('is-open');
-          //_this.css('opacity', '1');
           
 
           let boardTopOfText = referenceElement ? referenceElement.getBoundingClientRect().top : 0;
@@ -321,27 +317,29 @@ window.process = {
                   topOfText = topOfText + heightOfelementNotice;
                 }
                 scrollBoardToPosition(topOfText);
+
+                const sgID = selectedText.replace('sg', '');
+                setTimeout(function () {
+                  if (iframeDocument) {
+				            if ($(iframeDocument).find(`#${sgID}`).length > 0) {
+				                $(iframeDocument).find(`#${sgID}`).attr('data-rich-text-format-boundary', 'true');
+				            }
+				            $(iframeDocument).find(`[datatext="${selectedText}"]`).attr('data-rich-text-format-boundary', true);
+				          } else {
+				              var targetElement = document.getElementById(sgID);
+				              if (targetElement) {
+				                  targetElement.setAttribute('data-rich-text-format-boundary', 'true');
+				              }
+
+				              // Check if the element with the selected text attribute exists
+				              var selectedElement = document.querySelector(`[datatext="${selectedText}"]`);
+				              if (selectedElement) {
+				                  selectedElement.setAttribute('data-rich-text-format-boundary', true);
+				              }
+				          }
+                }, 1000);
               }
           }, 800);
-          const sgID = selectedText.replace('sg', '');
-          if (iframeDocument) {
-            if ($(iframeDocument).find(`#${sgID}`).length > 0) {
-                $(iframeDocument).find(`#${sgID}`).attr('data-rich-text-format-boundary', 'true');
-            }
-            $(iframeDocument).find(`[datatext="${selectedText}"]`).attr('data-rich-text-format-boundary', true);
-          } else {
-              var targetElement = document.getElementById(sgID);
-              if (targetElement) {
-                  targetElement.setAttribute('data-rich-text-format-boundary', 'true');
-              }
-
-              // Check if the element with the selected text attribute exists
-              var selectedElement = document.querySelector(`[datatext="${selectedText}"]`);
-              if (selectedElement) {
-                  selectedElement.setAttribute('data-rich-text-format-boundary', true);
-              }
-          }
-
     });
 	});
 })(jQuery);
@@ -574,30 +572,22 @@ window.addEventListener("click", function (e) {
 			}
 		
 			if (
-			  // !commentBoardWrapper ||
-			  // commentBoardWrapper.innerHTML.trim() === "" ||
 			  (body.classList.contains("hide-sg") &&
 				body.classList.contains("hide-comments"))
 			) {
 			  mainBodyClass.classList.remove('commentOn');
-			  //body.classList.remove("commentOn");
 			  if(iframe){
 				iframe.contentDocument?.body.classList.remove('commentOn');
 			  }
 			} else {
-			  var sgBoard = commentBoardWrapper?.querySelector(".sg-board");
-			  var cmBoard = commentBoardWrapper?.querySelector(".cm-board");
 			  if (
 				(
 				  !mainBodyClass.classList.contains("hide-sg") 
-				  //&& sgBoard
 				) ||
 				(
-				  !mainBodyClass.classList.contains("hide-comments") 
-				  //&& cmBoard
+				  !mainBodyClass.classList.contains("hide-comments")
 				)
 			  ) {
-				//body.classList.add("commentOn");
 				mainBodyClass.classList.add('commentOn');
 				if(iframe){
 				  iframe.contentDocument?.body.classList.add('commentOn');
@@ -605,15 +595,12 @@ window.addEventListener("click", function (e) {
 			  } else if (
 				(mainBodyClass.classList.contains("hide-comments")
 				  && !mainBodyClass.classList.contains("hide-sg")
-				  //&& !sgBoard
 				) ||
 				(mainBodyClass.classList.contains("hide-sg")
 				&& !mainBodyClass.classList.contains("hide-comments")
-				//&& !cmBoard
 				)
 			  ) {
 				mainBodyClass.classList.remove('commentOn');
-				//body.classList.remove("commentOn");
 				if(iframe){
 				  iframe.contentDocument?.body.classList.remove('commentOn');
 				}
@@ -698,6 +685,39 @@ window.addEventListener("click", function (e) {
 	    assignThisToUser();
 	    showAssignableEmailList();
 	    createAutoEmailMention();
+
+		// Added settings screen tabbing js
+		const tabButtons = document.querySelectorAll('.cf-tab-btn');
+		const tabContents = document.querySelectorAll('.cf-tab-content');
+	
+		tabButtons.forEach(button => {
+			button.addEventListener('click', () => {
+				// Remove active from all
+				tabButtons.forEach(btn => btn.classList.remove('cf-tab-active'));
+				tabContents.forEach(tab => tab.classList.remove('cf-tab-active'));
+	
+				// Add cf-tab-active to current
+				button.classList.add('cf-tab-active');
+				const tabId = button.getAttribute('data-tab');
+				const tabToShow = document.getElementById(tabId);
+				if (tabToShow) tabToShow.classList.add('cf-tab-active');
+			});
+		});
+
+		const hash = window.location.hash.substring(1); // remove the "#" from hash
+		if (!hash) return;
+
+		const matchingTabButton = Array.from(tabButtons).find(btn => btn.getAttribute('data-tab') === hash);
+		if (matchingTabButton) {
+			matchingTabButton.click(); // trigger the click to activate the tab
+			// Optional: scroll to the section if you have anchor content inside
+			const scrollTarget = document.getElementById(hash);
+			if (scrollTarget) {
+				setTimeout(() => {
+					scrollTarget.scrollIntoView({ behavior: 'smooth' });
+				}, 200); // delay to ensure visibility
+			}
+		}
 	 });
 	
 
@@ -870,8 +890,6 @@ window.addEventListener("click", function (e) {
 					"#cf-comment-board-wrapper .cls-board-outer",
 					"is-open focus"
 				);
-				// document.querySelector('#cf-comment-board-wrapper .cls-board-outer').classList.remove('focus');
-				// document.querySelector('#cf-comment-board-wrapper .cls-board-outer').classList.remove('is-open');
 				document
 					.querySelector("#cf-comment-board-wrapper .cls-board-outer")
 					.removeAttribute("style");
@@ -1342,8 +1360,6 @@ window.addEventListener("click", function (e) {
 			  
 			} else if (boardsWithFocusClass.length) {
 			  boardOuter.classList.remove("focus");
-			  // Commented out unnecessary setTimeout
-			  // setTimeout(function () { jQuery(`#${focusParentElement}`).trigger('click'); }, 800);
 			}
 		  }
 		}
@@ -1353,7 +1369,7 @@ window.addEventListener("click", function (e) {
 		// Disable reply box on other boards and adjust opacity
 		document.querySelectorAll(".cls-board-outer").forEach((element) => {
 			element.classList.remove("cf-removeReply");
-			element.style.opacity = "0.4";
+			element.style.opacity = "0.2";
 		});
 	
 		boardOuter.classList.add("cf-removeReply");
@@ -1422,9 +1438,24 @@ function removeTag(elIDRemove) {
   }else{
     element = document.querySelector('[datatext="' + elIDRemove + '"]');
   }
-  
+
+  // Early return if element is not found
+  if (!element) {
+    return;
+  }
+
+  let suggestionFlag = false;
+  const isSuggestionMode = wp.data.select("core/editor").getEditedPostAttribute("meta")?._sb_is_suggestion_mode;
+
+  if(isSuggestionMode){
+    
+    wp.data.dispatch("core/editor").editPost({
+      meta: { _sb_is_suggestion_mode: false },
+    });
+    wp.data.dispatch("mdstore").setSuggestionMode(false);
+    suggestionFlag = true;
+  }
   const clientId = element?.closest("[data-block]").getAttribute("data-block");
-  
   const blockType = clientId 
     ? wp.data.select('core/block-editor').getBlock(clientId)?.name 
     : null;
@@ -1444,7 +1475,6 @@ function removeTag(elIDRemove) {
   if (blockType?.startsWith(prefixAcf)) {
     removeAcfTag(blockAttributes, clientId, elIDRemove);
   }
-
   if (null !== blockAttributes && !blockType.startsWith(prefixAcf)) {
     findAttributes.forEach(function (attrb) {
       var content = blockAttributes[attrb];
@@ -1485,6 +1515,38 @@ function removeTag(elIDRemove) {
       }
     });
   }
+
+  // for whole block comment
+  const wholeBlockClientId = element?.getAttribute("data-block");
+  if(wholeBlockClientId){
+    const doc = iframeDocument ? iframeDocument : document;
+    const elementsWholeBlock = doc.querySelectorAll('[datatext="' + elIDRemove + '"]');
+    if(elementsWholeBlock){
+      elementsWholeBlock.forEach((el) => {
+        el.classList.remove("cf-onwhole-block__comment");
+        el.classList.remove("cf-icon-wholeblock__comment");
+      });
+    }
+    wp.data.dispatch("core/block-editor").updateBlock(wholeBlockClientId, {
+      attributes: {
+        datatext: "",
+      },
+    });
+  }
+  unsetBoardIdByValue(elIDRemove);
+
+  setTimeout(function () {
+    if (suggestionFlag === true) {
+      wp.data.dispatch("core/editor").editPost({ meta: { _sb_is_suggestion_mode: true } });
+      wp.data.dispatch("mdstore").setSuggestionMode(true);
+    }
+  }, 1000);
+  
+
+  const boardIds = wp.data.select('mdstore').getBoardIds();
+  if( boardIds.length === 0 ) {
+      wp.data.dispatch('core/edit-post').closeGeneralSidebar('edit-post/cf-collab-sidebar');
+  } 
 }
 
 /**
@@ -2829,8 +2891,6 @@ function chromeEdgeClearFix(typedContent) {
 							document.getElementById(getCurrentTextAreaID);
 						currentTextAreaNode.innerHTML = "";
 						currentTextAreaNode.appendChild(fragments);
-						//document.querySelector(appendIn)?.remove();
-						//document.querySelector(assignablePopup)?.remove();
 				        jQuery(appendIn).remove(); // Remove previous DOM.
 				        jQuery(assignablePopup).remove(); // Remove previous DOM.
 						trackedStr = "";
@@ -2909,8 +2969,6 @@ function chromeEdgeClearFix(typedContent) {
 							document.getElementById(getCurrentTextAreaID);
 						currentTextAreaNode.innerHTML = "";
 						currentTextAreaNode.appendChild(fragments);
-						//document.querySelector(appendIn)?.remove();
-						//document.querySelector(assignablePopup)?.remove();
 				        jQuery(appendIn).remove(); // Remove previous DOM.
 				        jQuery(assignablePopup).remove(); // Remove previous DOM.
 						trackedStr = "";

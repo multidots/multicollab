@@ -9,41 +9,307 @@ $disabled_class = 'cf_disabled_input';
 delete_option( 'cf_permissions' );
 
 ?>
-<form class="cf-settings-panel__repeater-body" id="cf_permissions"  method="post"> 
-		<div id="cf-permissions-notice">
-			<div class="cf-success notices notice-success" style="display: none">
-				<p><?php esc_html_e( 'Permissions saved!', 'content-collaboration-inline-commenting' ); ?></p>
-			</div>
+<form class="cf-settings-panel__repeater-body" id="cf_permissions" method="post"> 
+
+<div id="cf-permissions-container">
+	
+			<div class="cf-settings-role-section cf-role-visible" data-role-index="1">
+				<div class="cf-settings-role-section__header">
+					<h3>Administrator</h3>
+				                  </div>
+
+				<!-- Comment Section -->
+				<div class="cf-settings-row">
+					<h4>Comment</h4>
+					<div class="cf-setting-options">
+						<label><input type="checkbox" name="cf_permissions[administrator][add_comment]" value="1"> Add</label>
+						<label><input type="checkbox" name="cf_permissions[administrator][resolved_comment]" value="1"> Resolve</label>
+						<label><input type="checkbox" name="cf_permissions[administrator][hide_comment]" value="1"> Disable</label>
+					</div>
+				</div>
+
+				<!-- Suggestion Section -->
+										<div class="cf-settings-row">
+						<h4>Suggestion</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[administrator][add_suggestion]" value="1"> Add</label>
+							<label><input type="checkbox" name="cf_permissions[administrator][resolved_suggestion]" value="1"> Accept/Reject</label>
+							<label><input type="checkbox" name="cf_permissions[administrator][hide_suggestion]" value="1"> Disable</label>
+						</div>
+					</div>
+
+					<!-- Real-Time Editing -->
+					<div class="cf-settings-row">
+						<h4>Real-time Editing</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[administrator][realtime_editing]" value="1"> Enable/Disable</label>
+						</div>
+					</div>
+								</div>
+
+			
+			<div class="cf-settings-role-section cf-role-visible" data-role-index="2">
+				<div class="cf-settings-role-section__header">
+					<h3>Editor</h3>
+										</div>
+
+				<!-- Comment Section -->
+				<div class="cf-settings-row">
+					<h4>Comment</h4>
+					<div class="cf-setting-options">
+						<label><input type="checkbox" name="cf_permissions[editor][add_comment]" value="1"> Add</label>
+						<label><input type="checkbox" name="cf_permissions[editor][resolved_comment]" value="1"> Resolve</label>
+						<label><input type="checkbox" name="cf_permissions[editor][hide_comment]" value="1"> Disable</label>
+					</div>
+				</div>
+
+				<!-- Suggestion Section -->
+										<div class="cf-settings-row">
+						<h4>Suggestion</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[editor][add_suggestion]" value="1"> Add</label>
+							<label><input type="checkbox" name="cf_permissions[editor][resolved_suggestion]" value="1"> Accept/Reject</label>
+							<label><input type="checkbox" name="cf_permissions[editor][hide_suggestion]" value="1"> Disable</label>
+						</div>
+					</div>
+
+					<!-- Real-Time Editing -->
+					<div class="cf-settings-row">
+						<h4>Real-time Editing</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[editor][realtime_editing]" value="1"> Enable/Disable</label>
+						</div>
+					</div>
+								</div>
+
+			
+			<div class="cf-settings-role-section cf-role-visible" data-role-index="3">
+				<div class="cf-settings-role-section__header">
+					<h3>Author</h3>
+										</div>
+
+				<!-- Comment Section -->
+				<div class="cf-settings-row">
+					<h4>Comment</h4>
+					<div class="cf-setting-options">
+						<label><input type="checkbox" name="cf_permissions[author][add_comment]" value="1"> Add</label>
+						<label><input type="checkbox" name="cf_permissions[author][resolved_comment]" value="1"> Resolve</label>
+						<label><input type="checkbox" name="cf_permissions[author][hide_comment]" value="1"> Disable</label>
+					</div>
+				</div>
+
+				<!-- Suggestion Section -->
+										<div class="cf-settings-row">
+						<h4>Suggestion</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[author][add_suggestion]" value="1"> Add</label>
+							<label><input type="checkbox" name="cf_permissions[author][resolved_suggestion]" value="1"> Accept/Reject</label>
+							<label><input type="checkbox" name="cf_permissions[author][hide_suggestion]" value="1"> Disable</label>
+						</div>
+					</div>
+
+					<!-- Real-Time Editing -->
+					<div class="cf-settings-row">
+						<h4>Real-time Editing</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[author][realtime_editing]" value="1"> Enable/Disable</label>
+						</div>
+					</div>
+								</div>
+
+			
+			<div class="cf-settings-role-section cf-role-hidden" data-role-index="4">
+				<div class="cf-settings-role-section__header">
+					<h3>Contributor</h3>
+										</div>
+
+				<!-- Comment Section -->
+				<div class="cf-settings-row">
+					<h4>Comment</h4>
+					<div class="cf-setting-options">
+						<label><input type="checkbox" name="cf_permissions[contributor][add_comment]" value="1"> Add</label>
+						<label><input type="checkbox" name="cf_permissions[contributor][resolved_comment]" value="1"> Resolve</label>
+						<label><input type="checkbox" name="cf_permissions[contributor][hide_comment]" value="1"> Disable</label>
+					</div>
+				</div>
+
+				<!-- Suggestion Section -->
+										<div class="cf-settings-row">
+						<h4>Suggestion</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[contributor][add_suggestion]" value="1"> Add</label>
+							<label><input type="checkbox" name="cf_permissions[contributor][resolved_suggestion]" value="1"> Accept/Reject</label>
+							<label><input type="checkbox" name="cf_permissions[contributor][hide_suggestion]" value="1"> Disable</label>
+						</div>
+					</div>
+
+					<!-- Real-Time Editing -->
+					<div class="cf-settings-row">
+						<h4>Real-time Editing</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[contributor][realtime_editing]" value="1"> Enable/Disable</label>
+						</div>
+					</div>
+								</div>
+
+			
+			<div class="cf-settings-role-section cf-role-hidden" data-role-index="5">
+				<div class="cf-settings-role-section__header">
+					<h3>Subscriber</h3>
+										</div>
+
+				<!-- Comment Section -->
+				<div class="cf-settings-row">
+					<h4>Comment</h4>
+					<div class="cf-setting-options">
+						<label><input type="checkbox" name="cf_permissions[subscriber][add_comment]" value="1"> Add</label>
+						<label><input type="checkbox" name="cf_permissions[subscriber][resolved_comment]" value="1"> Resolve</label>
+						<label><input type="checkbox" name="cf_permissions[subscriber][hide_comment]" value="1"> Disable</label>
+					</div>
+				</div>
+
+				<!-- Suggestion Section -->
+										<div class="cf-settings-row">
+						<h4>Suggestion</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[subscriber][add_suggestion]" value="1"> Add</label>
+							<label><input type="checkbox" name="cf_permissions[subscriber][resolved_suggestion]" value="1"> Accept/Reject</label>
+							<label><input type="checkbox" name="cf_permissions[subscriber][hide_suggestion]" value="1"> Disable</label>
+						</div>
+					</div>
+
+					<!-- Real-Time Editing -->
+					<div class="cf-settings-row">
+						<h4>Real-time Editing</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[subscriber][realtime_editing]" value="1"> Enable/Disable</label>
+						</div>
+					</div>
+								</div>
+
+			
+			<div class="cf-settings-role-section cf-role-hidden" data-role-index="6">
+				<div class="cf-settings-role-section__header">
+					<h3>Guest / Viewer</h3>
+										</div>
+
+				<!-- Comment Section -->
+				<div class="cf-settings-row">
+					<h4>Comment</h4>
+					<div class="cf-setting-options">
+						<label><input type="checkbox" name="cf_permissions[guest-Viewer][add_comment]" value="1"> Add</label>
+						<label><input type="checkbox" name="cf_permissions[guest-Viewer][resolved_comment]" value="1"> Resolve</label>
+						<label><input type="checkbox" name="cf_permissions[guest-Viewer][hide_comment]" value="1"> Disable</label>
+					</div>
+				</div>
+
+				<!-- Suggestion Section -->
+										<div class="cf-settings-row">
+						<h4>Suggestion</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[guest-Viewer][add_suggestion]" value="1"> Add</label>
+							<label><input type="checkbox" name="cf_permissions[guest-Viewer][resolved_suggestion]" value="1"> Accept/Reject</label>
+							<label><input type="checkbox" name="cf_permissions[guest-Viewer][hide_suggestion]" value="1"> Disable</label>
+						</div>
+					</div>
+
+					<!-- Real-Time Editing -->
+					<div class="cf-settings-row">
+						<h4>Real-time Editing</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[guest-Viewer][realtime_editing]" value="1"> Enable/Disable</label>
+						</div>
+					</div>
+								</div>
+
+			
+			<div class="cf-settings-role-section cf-role-hidden" data-role-index="7">
+				<div class="cf-settings-role-section__header">
+					<h3>Guest / Commenter</h3>
+										</div>
+
+				<!-- Comment Section -->
+				<div class="cf-settings-row">
+					<h4>Comment</h4>
+					<div class="cf-setting-options">
+						<label><input type="checkbox" name="cf_permissions[guest-Commenter][add_comment]" value="1"> Add</label>
+						<label><input type="checkbox" name="cf_permissions[guest-Commenter][resolved_comment]" value="1"> Resolve</label>
+						<label><input type="checkbox" name="cf_permissions[guest-Commenter][hide_comment]" value="1"> Disable</label>
+					</div>
+				</div>
+
+				<!-- Suggestion Section -->
+										<div class="cf-settings-row">
+						<h4>Suggestion</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[guest-Commenter][add_suggestion]" value="1"> Add</label>
+							<label><input type="checkbox" name="cf_permissions[guest-Commenter][resolved_suggestion]" value="1"> Accept/Reject</label>
+							<label><input type="checkbox" name="cf_permissions[guest-Commenter][hide_suggestion]" value="1"> Disable</label>
+						</div>
+					</div>
+
+					<!-- Real-Time Editing -->
+					<div class="cf-settings-row">
+						<h4>Real-time Editing</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[guest-Commenter][realtime_editing]" value="1"> Enable/Disable</label>
+						</div>
+					</div>
+								</div>
+
+			
+			<div class="cf-settings-role-section cf-role-hidden" data-role-index="8">
+				<div class="cf-settings-role-section__header">
+					<h3>Guest / Coeditor</h3>
+										</div>
+
+				<!-- Comment Section -->
+				<div class="cf-settings-row">
+					<h4>Comment</h4>
+					<div class="cf-setting-options">
+						<label><input type="checkbox" name="cf_permissions[guest-Coeditor][add_comment]" value="1"> Add</label>
+						<label><input type="checkbox" name="cf_permissions[guest-Coeditor][resolved_comment]" value="1"> Resolve</label>
+						<label><input type="checkbox" name="cf_permissions[guest-Coeditor][hide_comment]" value="1"> Disable</label>
+					</div>
+				</div>
+
+				<!-- Suggestion Section -->
+										<div class="cf-settings-row">
+						<h4>Suggestion</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[guest-Coeditor][add_suggestion]" value="1"> Add</label>
+							<label><input type="checkbox" name="cf_permissions[guest-Coeditor][resolved_suggestion]" value="1"> Accept/Reject</label>
+							<label><input type="checkbox" name="cf_permissions[guest-Coeditor][hide_suggestion]" value="1"> Disable</label>
+						</div>
+					</div>
+
+					<!-- Real-Time Editing -->
+					<div class="cf-settings-row">
+						<h4>Real-time Editing</h4>
+						<div class="cf-setting-options">
+							<label><input type="checkbox" name="cf_permissions[guest-Coeditor][realtime_editing]" value="1"> Enable/Disable</label>
+						</div>
+					</div>
+								</div>
+
+					
+	<!-- Show More/Less Controls -->
+				<div class="cf-permissions-controls">
+			<button type="button" id="cf-show-more-roles" class="button button-secondary">Show 5 more roles</button>
+			<button type="button" id="cf-show-less-roles" class="button button-secondary" style="display: none;">
+				Show less                </button>
 		</div>
-	<table class="wp-list-table widefat fixed striped">
-		<tr>
-			<th><b><?php esc_html_e( 'Roles', 'content-collaboration-inline-commenting' ); ?></b></th>
-			<th><b><?php esc_html_e( 'Add Comment', 'content-collaboration-inline-commenting' ); ?></b></th>
-			<th><b><?php esc_html_e( 'Resolve Comment', 'content-collaboration-inline-commenting' ); ?></b></th>
-			<th><b><?php esc_html_e( 'Disable Comments', 'content-collaboration-inline-commenting' ); ?></b></th>	
-		</tr>
-		<?php
-		if ((is_array($data) && !empty($data)) || (is_object($data) && !empty((array)$data))) {
-			foreach ( $data as $key => $value ) {
+		</div>
 
-					$disabled = (1 == isset($value['role']['capabilities']['edit_posts']) || 1 == isset($value['role']['capabilities']['edit_pages']) )? '':'disabled'; //phpcs:ignore
-					$options             = get_option( 'cf_permissions' );
-					$disabled_comment = ("1" == isset($options[$key]["hide_comment"])) ? 'disabled' : '';//phpcs:ignore
-					$disabled_suggestion = ('1'== isset($options[$key]["hide_suggestion"])) ? 'disabled' : '';//phpcs:ignore             
-				?>
-				<tr><td><?php echo esc_html( translate_user_role( $value['role']['name'] ) ); ?> </td>
-				
-				<td><input type='checkbox' name='<?php echo esc_attr($key)?>[add_comment]' id ='cf_add_comment' <?php echo '1' ==  isset($options[$key]['add_comment']) ? 'checked' : '' ?>  value='1'  <?php echo esc_attr($disabled.$disabled_comment);?>/></td> <?php  //phpcs:ignore ?>
-				<td><input type='checkbox' name='<?php echo esc_attr($key)?>[resolved_comment]'  id ='cf_resolved_comment' <?php echo '1' == isset($options[$key]['resolved_comment']) ? 'checked' : '' ?>  value='1' <?php echo esc_attr($disabled.$disabled_comment);?>/></td> <?php  //phpcs:ignore ?>
-				<td><input type='checkbox' name='<?php echo esc_attr($key)?>[hide_comment]'  id ='cf_hide_comment' <?php echo '1' ==isset( $options[$key]['hide_comment']) ? 'checked' : '' ?>  value='1' <?php echo esc_attr($disabled); ?>/></td> <?php  //phpcs:ignore ?>	
-				</tr>
-
-			<?php 
-			}
-		} ?>
-	</table> 
-	<div class="cf-submit-button-settings"><?php submit_button( __( 'Save', 'content-collaboration-inline-commenting' ) ); ?>
+<div id="cf-permissions-notice">
+	<div class="cf-success notices notice-success" style="display: none">
+		<p>Permissions saved!</p>
 	</div>
+</div>
+
+<div class="cf-submit-button-settings">
+	<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save"></p>    </div>
+
 </form>
 <script type="text/javascript">
 	/* <![CDATA[ */
