@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Collaboration, Editorial comments, Collaborative editing, Editorial, Team Collaboration
 Requires at least: 6.3
 Tested up to: 6.8
-Stable tag: 4.10
+Stable tag: 5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -251,6 +251,12 @@ Have you had a look at our documentation?
 If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as quickly as possible!
 
 == Changelog ==
+
+= 5.0 - 17.07.2025 =
+* [New] Introduce interactive guiding tour.
+* [New] Fixed bugs related to multiple text comment handling.
+* [Bug Fixes] Fixed minor bugs.
+* [Enhancement] - Redesigned settings UI to simplify user interactions.
 
 = 4.10 - 19.05.2025 =
 * [Enhancement] Enhanced compatibility with popular Learning Management Systems (LMS)

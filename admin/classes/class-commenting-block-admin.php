@@ -115,10 +115,13 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			add_action( 'admin_notices', array( $this, 'cf_display_promotional_banner_page_post' ) );
 		}
 
+		add_action( 'admin_notices', array( $this, 'cf_show_editor_notice' ) );
+
 		add_filter( 'cron_schedules', array( $this, 'cf_free_cron_job_recurrence' ) );
 		add_filter( 'plugin_action_links_' . COMMENTING_BLOCK_BASE, array( $this, 'cf_custom_plugin_action_links' ), 10, 4 );
 		add_filter( 'register_block_type_args', array( $this, 'cf_modify_block_type_args_defaults' ), 10, 2 );
 		add_filter( 'wp_kses_allowed_html', array( $this, 'cf_add_allowed_iframe_tag' ), 10, 2 );
+		add_action( 'wp_ajax_cf_set_welcome_tour_completed', array( $this, 'cf_set_welcome_tour_completed' ) );
 	}
 
 	/**
@@ -148,6 +151,41 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			echo $promotional_banner; // phpcs:ignore WordPress.Security.EscapeOutput
 		}
 
+	}
+
+	/**
+	 * Displays an admin notice if the Classic Editor is active.
+	 *
+	 * This notice appears only on post and page edit screens and warns
+	 * that the Multicollab plugin does not support the Classic Editor.
+	 * 
+	 * @author Nirav Soni
+	 * 
+	 */
+	public function cf_show_editor_notice() {
+		global $pagenow;
+
+		// Exit early if not on the post or page edit screen.
+		if ( $pagenow !== 'post.php' && $pagenow !== 'post-new.php' ) {
+			return;
+		}
+
+		$post = get_post();
+
+		// Sanity check: Ensure we have a post object.
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
+
+		// Check if Gutenberg (Block Editor) is used for this post.
+		$use_block_editor = use_block_editor_for_post( $post );
+
+		// If not using the Block Editor, show a warning notice.
+		if ( ! $use_block_editor ) {
+			echo '<div class="notice notice-warning is-dismissible">';
+			echo '<p><strong>' . esc_html__( 'Multicollab is not compatible with the Classic Editor. Please switch to the Gutenberg (Block) Editor to use all features of the Multicollab.' ) . '</strong></p>';
+			echo '</div>';
+		}
 	}
 
 	/**
@@ -556,8 +594,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$post_type                = isset( $post_type ) ? trim( $post_type ) : '';
 		$type                     = get_post_type();
 		$type                     = isset( $type ) ? trim( $type ) : '';
-		$cf_hide_editorial_column = get_option( 'cf_hide_editorial_column' );
-		if ( empty( $cf_hide_editorial_column ) ) {
+		$cf_hide_editorial_column = get_option( 'cf_hide_editorial_column' ) !== false
+    								? get_option( 'cf_hide_editorial_column' )
+    								: ( update_option( 'cf_hide_editorial_column', '0' ) ? '0' : '0' );
+    								
+		if ( '0' === $cf_hide_editorial_column ) {
 			if ( ( in_array( $post_type, $all_post_type, true ) ) || ( in_array( $type, $all_post_type, true ) ) ) {
 				if ( ( isset( $post_type ) || isset( $type ) ) && ( $post_type !== 'product' || $type !== 'product' ) ) {
 					$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ) . '" width=17/>' . __( 'Multicollab', 'content-collaboration-inline-commenting' );
@@ -974,12 +1015,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$screen = get_current_screen();
 		if ( ! empty( $screen ) && 'site-editor' !== $screen->base ) {
 
-			wp_enqueue_style( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/editorStyle.build.min.css', array(), wp_rand(), 'all' );
+			wp_enqueue_style( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/editorStyle.build.min.css', array(), $this->version, 'all' );
 		}
 
 		if ( ( ! empty( $screen ) && $screen->is_block_editor && 'site-editor' !== $screen->base && 'widgets' !== $screen->base ) || ! empty( $screen ) && ( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base ) ) {	
 
-			wp_enqueue_style( 'cf-select2', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/css/select2.min.css', array(), wp_rand(), 'all' );
+			wp_enqueue_style( 'cf-select2', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/css/select2.min.css', array(), $this->version, 'all' );
 		}
 		
 	}
@@ -1025,12 +1066,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		);
 
 		if ( ( ! empty( $screen ) && $screen->is_block_editor && 'site-editor' !== $screen->base && 'widgets' !== $screen->base ) || ! empty( $screen ) && ( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base ) ) {
-			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false );
-			wp_enqueue_script( 'es5-js', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/commenting-broser-details.js', array( 'jquery' ), wp_rand(), false );
+			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), $this->version, false );
+			wp_enqueue_script( 'es5-js', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/commenting-broser-details.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-mark', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/mark.min.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( 'cf-dom-purify', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/libs/purify.min.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'wp-i18n', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), wp_rand(), false );
-			wp_enqueue_script( $this->plugin_name . '-functions', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin-functions.js', array(), wp_rand(), false );
+			wp_enqueue_script( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin.js', array( 'jquery', 'wp-components', 'wp-editor', 'wp-data', 'wp-i18n', 'cf-mark', 'cf-dom-purify', 'react', 'react-dom' ), $this->version, false );
+			wp_enqueue_script( $this->plugin_name . '-functions', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin-functions.js', array(), $this->version, false );
 				
 			wp_enqueue_script(
 				'content-collaboration-inline-commenting',
@@ -1051,7 +1092,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					'wp-edit-post',
 					'wp-data',
 				),
-				wp_rand(),
+				$this->version,
 				true
 			);
 
@@ -1108,13 +1149,18 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			);
 			$can_upload_file = ( $current_user->has_cap( 'upload_files' ) );
 			wp_localize_script( $this->plugin_name, 'can_upload_file', array( 'can_upload' => $can_upload_file ) );
-			$cf_options                        = get_option( 'cf_permissions' );
-			$cf_add_comment_permission         = isset( $cf_options[ $current_user->roles[0] ]['add_comment'] ) ?? '';
-			$cf_resolved_comment_permission    = isset( $cf_options[ $current_user->roles[0] ]['resolved_comment'] ) ?? '';
-			$cf_hide_comment_permission        = isset( $cf_options[ $current_user->roles[0] ]['hide_comment'] ) ?? '';
-			$cf_add_suggestion_permission      = isset( $cf_options[ $current_user->roles[0] ]['add_suggestion'] ) ?? '';
-			$cf_resolved_suggestion_permission = isset( $cf_options[ $current_user->roles[0] ]['resolved_suggestion'] ) ?? '';
-			$cf_hide_suggestion_permission     = isset( $cf_options[ $current_user->roles[0] ]['hide_suggestion'] ) ?? '';
+			$cf_options = get_option( 'cf_permissions' );
+			$role = $current_user->roles[0] ?? null;
+
+			$permissions = $cf_options[ $role ] ?? [];
+
+			$cf_add_comment_permission         = $permissions['add_comment']         ?? '';
+			$cf_resolved_comment_permission    = $permissions['resolved_comment']    ?? '';
+			$cf_hide_comment_permission        = $permissions['hide_comment']        ?? '';
+			$cf_add_suggestion_permission      = $permissions['add_suggestion']      ?? '';
+			$cf_resolved_suggestion_permission = $permissions['resolved_suggestion'] ?? '';
+			$cf_hide_suggestion_permission     = $permissions['hide_suggestion']     ?? '';
+			
 			wp_localize_script(
 				$this->plugin_name,
 				'cf_permissions',
@@ -1141,8 +1187,11 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			);
 			wp_localize_script( $this->plugin_name, 'multicollab_suggestion_mode', $cf_suggestion_mode );
 					// Floating Icons/@author Rishi Shah/@since EDD - 3.0.1
+					$cf_hide_floating_icons_value = get_option( 'cf_hide_floating_icons' );
 					$cf_hide_floating_icons = array(
-						'cf_hide_floating_icons' => get_option( 'cf_hide_floating_icons' ),
+					    'cf_hide_floating_icons' => $cf_hide_floating_icons_value !== false
+					        ? $cf_hide_floating_icons_value
+					        : ( update_option( 'cf_hide_floating_icons', '0' ) ? '0' : '0' ),
 					);
 					wp_localize_script( $this->plugin_name, 'multicollab_floating_icons', $cf_hide_floating_icons );
 
@@ -1160,30 +1209,33 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 					wp_enqueue_script( 'jquery-ui-draggable' );
 					wp_enqueue_script( 'jquery-ui-droppable' );
 
-					wp_enqueue_script( 'cf-block-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/activityCentre.build.min.js', array(), wp_rand(), true );
+					wp_enqueue_script( 'cf-block-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/activityCentre.build.min.js', array(), $this->version, true );
 
 					$cf_protocol_remove = array( 'http://', 'https://' );
+
+					$api_url = is_multisite() ? home_url('wp-json') : rtrim( get_rest_url(), '/\\' );
+					$cf_site_url = is_multisite() ? str_replace( $cf_protocol_remove, "", home_url() ) : str_replace( $cf_protocol_remove, "", site_url() );
 
 					wp_localize_script(
 						'cf-block-script',
 						'activityLocalizer',
 						array(
 							'nonce'         => wp_create_nonce( 'wp_rest' ),
-							'apiUrl'        => rtrim( get_rest_url(), '/\\' ), // No nedded to pass wp-json inside this function as it is already giving same path.
+							'apiUrl'        => $api_url,
 							'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
 							'currentUserID' => get_current_user_id(),
-							'cf_site_url'   => str_replace( $cf_protocol_remove, '', site_url() ),
+							'cf_site_url' => $cf_site_url,
 						)
 					);
 
-			wp_enqueue_script( 'cf-select2-js', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/select2.min.js', array( 'jquery' ), wp_rand(), true );
+			wp_enqueue_script( 'cf-select2-js', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/select2.min.js', array( 'jquery' ), $this->version, true );
 		}
 
 		
-		wp_enqueue_script( $this->plugin_name . '-general', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin-general.js', array(), wp_rand(), false );
+		wp_enqueue_script( $this->plugin_name . '-general', trailingslashit( COMMENTING_BLOCK_URL ) . '/admin/assets/js/commenting-block-admin-general.js', array(), $this->version, false );
 		if( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base || 'plugins' === $screen->base && current_user_can( 'activate_plugins' ) ) {
 
-			wp_enqueue_script( 'cf-dashboard-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/dashboard.build.min.js', array(), wp_rand(), true );
+			wp_enqueue_script( 'cf-dashboard-script', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/dashboard.build.min.js', array(), $this->version, true );
 
 			wp_localize_script(
 				'cf-dashboard-script',
@@ -1206,8 +1258,90 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		}
 
-		if ( isset( $_GET['page'] ) && $_GET['page'] === 'editorial-comments' && isset( $_GET['view'] ) && $_GET['view'] === 'settings' || isset( $_GET['view'] ) && $_GET['view'] === 'intigrations' ) {
-			wp_enqueue_script( $this->plugin_name . '-upgrade-pro-modal', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin-upgrade-pro-modal.js', array(), wp_rand(), false );
+		if ( isset( $_GET['page'] ) && $_GET['page'] === 'editorial-comments' && isset( $_GET['view'] ) && $_GET['view'] === 'settings' || isset( $_GET['view'] ) && $_GET['view'] === 'intigrations' || isset( $_GET['view'] ) && $_GET['view'] === 'modules' ) {
+			wp_enqueue_script( $this->plugin_name . '-upgrade-pro-modal', trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/commenting-block-admin-upgrade-pro-modal.js', array(), $this->version, false );
+		}
+
+		// Check if welcome tour is already completed
+    	$welcome_tour_completed = get_option('cf_welcome_dashboard_completed_tour', 'false') === 'true';
+		if(!$welcome_tour_completed && !$screen->is_block_editor  && 'site-editor' !== $screen->base && 'widgets' !== $screen->base && 'admin_page_multicollab_setup_wizard' !== $screen->base){	
+			wp_enqueue_script(
+				'commenting-block-admin-tour-script',
+				trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/welcomeTour.build.min.js',
+				array(),
+				COMMENTING_BLOCK_VERSION, // or $this->version if in a class
+				true // Load in footer for better performance
+			);
+			wp_localize_script('commenting-block-admin-tour-script', 'cf_welcome_tour', array(
+	            'nonce' => wp_create_nonce('cf_welcome_tour_nonce'),
+	        ));
+		}
+	    if (
+		    $screen &&
+		    $screen->base === 'post' &&
+		    (
+		        ( is_plugin_active('query-monitor/query-monitor.php') ) ||
+		        ( is_multisite() && is_plugin_active_for_network('query-monitor/query-monitor.php') )
+		    )
+		) {
+		    wp_enqueue_script(
+		        'cf-qm-performance-notice',
+		        trailingslashit(COMMENTING_BLOCK_URL) . 'admin/assets/js/commenting-block-qmNotice.js',
+		        ['wp-element', 'wp-data', 'wp-edit-post'],
+		        COMMENTING_BLOCK_VERSION,
+		        false
+		    );
+		}
+	}
+
+	/**
+	 * Register the JavaScript for the User tour guide
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function cf_user_tour_enqueue_pointer() {
+		global $pagenow;
+	
+		// Run only on 'post.php' page with 'post' parameter.
+		if ( $pagenow !== 'post.php' || ! isset( $_GET['post'] ) ) {
+			return;
+		}
+	
+		$post_id  = absint( $_GET['post'] );
+		$post_obj = get_post( $post_id );
+	
+		// Ensure post object exists and is of expected type.
+		if ( ! $post_obj || $post_obj->post_type !== 'post' ) {
+			return;
+		}
+	
+		$target_partial_title = 'Getting Started with Multicollab';
+	
+		// Match post title (case-insensitive) and ensure it's still a draft.
+		if (
+			stripos( $post_obj->post_title, $target_partial_title ) !== false &&
+			$post_obj->post_status === 'draft'
+		) {
+			$script_handle = 'userTour';
+	
+			wp_enqueue_script(
+				$script_handle,
+				trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/userTour.build.min.js',
+				array( 'jquery', 'wp-pointer' ),
+				$this->version,
+				true
+			);
+	
+			wp_localize_script( $script_handle, 'cfTourVars', array(
+				'commentImage1'    => COMMENTING_BLOCK_URL . 'admin/assets/images/comment-two.png',
+				'commentImage2'    => COMMENTING_BLOCK_URL . 'admin/assets/images/comment-one.png',
+				'commentImage3'    => COMMENTING_BLOCK_URL . 'admin/assets/images/comment-three.png',
+				'suggestionImage1' => COMMENTING_BLOCK_URL . 'admin/assets/images/suggestion-two.png',
+				'suggestionImage2' => COMMENTING_BLOCK_URL . 'admin/assets/images/suggestion-one.png',
+				'teamImage1'       => COMMENTING_BLOCK_URL . 'admin/assets/images/team-one.png',
+				'resolveImage1'    => COMMENTING_BLOCK_URL . 'admin/assets/images/resolve-one.png',
+			) );
 		}
 	}
 
@@ -1534,12 +1668,12 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		if ( isset( $cf_hide_editorial_column ) ) {
 			update_option( 'cf_hide_editorial_column', $cf_hide_editorial_column );
 		} else {
-			delete_option( 'cf_hide_editorial_column' );
+			update_option( 'cf_hide_editorial_column', 1 );
 		}
 		if ( isset( $cf_hide_floating_icons ) ) {
 			update_option( 'cf_hide_floating_icons', $cf_hide_floating_icons );
 		} else {
-			delete_option( 'cf_hide_floating_icons' );
+			update_option( 'cf_hide_floating_icons', 1 );
 		}
 
 		if ( isset( $cf_show_multicollab_sidebar ) ) {
@@ -1736,13 +1870,28 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * Rest API for Gutenberg Commenting Feature.
 	 */
 	public function cf_rest_api() {
+
 		register_rest_route(
 			'cf',
 			'cf-get-comments-api',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'cf_get_comments' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => function () {
+			            return is_user_logged_in();
+			        },
+			)
+		);
+
+		register_rest_route(
+			'cf',
+			'cf-get-comments-on-load-api',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'cf_get_comments_on_load' ),
+				'permission_callback' => function () {
+			            return is_user_logged_in();
+			        },
 			)
 		);
 	}
@@ -1952,6 +2101,124 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		$data['commentedOnText'] = isset( $superCareerData['commentedOnText'] ) ? $superCareerData['commentedOnText'] : '';
 		$data['assignedTo']      = $assigned_to;
 		return rest_ensure_response( $data );
+	}
+
+	/**
+	 * Function is used to fetch stored comments on window load.
+	 *
+	 * @return mixed|\WP_REST_Response
+	 */
+	public function cf_get_comments_on_load() {
+	    $current_post_id = filter_input(INPUT_GET, 'currentPostID', FILTER_VALIDATE_INT);
+	    $current_user_id = filter_input(INPUT_GET, 'currentUserID', FILTER_VALIDATE_INT);
+	    $el_ids_param    = isset($_GET['elIDs']) ? json_decode(stripslashes($_GET['elIDs']), true) : [];
+
+	    if (!is_array($el_ids_param) || empty($el_ids_param)) {
+	        return rest_ensure_response(['error' => 'Invalid or missing elIDs']);
+	    }
+
+	    $output      = [];
+	    $date_format = get_option('date_format');
+	    $time_format = get_option('time_format');
+	    $user_cache  = [];
+
+	    // Preload current user
+	    $login_user = $current_user_id ? get_user_by('ID', $current_user_id) : null;
+
+	    foreach ($el_ids_param as $el_id) {
+	    	$el_id     = '_'.$el_id;
+	        $meta_data = get_post_meta($current_post_id, $el_id, true);
+	        $data      = maybe_unserialize($meta_data);
+	        $comments  = $data['comments'] ?? [];
+
+	        $details = [];
+
+	        if (is_array($comments)) {
+	            foreach ($comments as $timestamp => $comment) {
+	                if (!empty($comment['status']) && $comment['status'] === 'deleted') {
+	                    continue;
+	                }
+
+	                $user_id = $comment['userData'] ?? null;
+
+	                // Cache user info
+	                if ($user_id && !isset($user_cache[$user_id])) {
+	                    $user_obj = get_userdata($user_id);
+	                    if ($user_obj) {
+	                        $user_cache[$user_id] = [
+	                            'name'   => $user_obj->display_name,
+	                            'roles'  => implode(', ', $user_obj->roles ?? []),
+	                            'avatar' => get_avatar_url($user_obj->user_email),
+	                        ];
+	                    } else {
+	                        $user_cache[$user_id] = [
+	                            'name'   => '',
+	                            'roles'  => '',
+	                            'avatar' => '',
+	                        ];
+	                    }
+	                }
+
+	                $user_info = $user_cache[$user_id] ?? ['name' => '', 'roles' => '', 'avatar' => ''];
+
+	                $details[] = [
+	                    'userName'        => $user_info['name'],
+	                    'userRole'        => $user_info['roles'],
+	                    'profileURL'      => $user_info['avatar'],
+	                    'dtTime'          => gmdate("{$time_format} {$date_format}", $timestamp),
+	                    'thread'          => $comment['thread'] ?? '',
+	                    'userData'        => $user_id,
+	                    'status'          => $comment['status'] ?? '',
+	                    'timestamp'       => $timestamp,
+	                    'editedDraft'     => $comment['draft_edits']['thread'] ?? '',
+	                    'updatedTime'     => $comment['editedTime'] ?? '',
+	                    'editedTimestamp' => $comment['editedTimestamp'] ?? '',
+	                    'assignedText'    => $comment['assigned'] ?? '',
+	                    'attachmentText'  => $comment['attachmentText'] ?? '',
+	                ];
+	            }
+	        }
+
+	        // Assigned To
+	        $assigned_to = null;
+	        $assigned_id = $data['assigned_to'] ?? null;
+
+	        if ($assigned_id) {
+	            if (!isset($user_cache[$assigned_id])) {
+	                $assigned_user = get_user_by('ID', $assigned_id);
+	                if ($assigned_user) {
+	                    $user_cache[$assigned_id] = [
+	                        'object' => $assigned_user,
+	                        'name'   => $assigned_user->display_name,
+	                        'email'  => $assigned_user->user_email,
+	                        'avatar' => get_avatar_url($assigned_user->ID, ['size' => 32]),
+	                    ];
+	                }
+	            }
+
+	            $assigned_user_info = $user_cache[$assigned_id] ?? null;
+
+	            if ($login_user && $assigned_user_info) {
+	                $display_name = ($login_user->ID === $assigned_id) ? 'You' : $assigned_user_info['name'];
+	                $assigned_to  = [
+	                    'ID'           => $assigned_id,
+	                    'display_name' => $display_name,
+	                    'user_email'   => $assigned_user_info['email'],
+	                    'avatar'       => $assigned_user_info['avatar'],
+	                ];
+	            }
+	        }
+
+	        // Final response for each elID
+	        $output[$el_id] = [
+	            'userDetails'     => $details,
+	            'resolved'        => ($data['resolved'] ?? '') === 'true' ? 'true' : 'false',
+	            'commentedOnText' => $data['commentedOnText'] ?? '',
+	            'assignedTo'      => $assigned_to,
+	        ];
+	    }
+
+	    return rest_ensure_response($output);
 	}
 
 	/**
@@ -2175,15 +2442,9 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 	 * @return string
 	 */
 	function get_userRole_for_api( $object ) {
-		// get the id of the post object array
-		$user_id = $object['id'];
-
-		$user_meta = get_userdata( $user_id );
-
-		$user_roles = $user_meta->roles;
-
-		// return the post meta
-		return $user_roles[0];
+	    $user_id = $object['id'];
+	    $user_meta = get_userdata( $user_id );
+	    return $user_meta->roles[0] ?? null; // fallback if no roles
 	}
 
 	/**
@@ -2280,6 +2541,23 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		}
 
 		return $tags;
+	}
+
+	// AJAX handler to set welcome tour as completed
+	public function cf_set_welcome_tour_completed() {
+	    // Verify nonce
+	    if (!wp_verify_nonce($_POST['nonce'], 'cf_welcome_tour_nonce')) {
+	        wp_die('Security check failed');
+	    }
+	    
+	    // Store in options table
+	    $result = update_option('cf_welcome_dashboard_completed_tour', 'true');
+	    
+	    if ($result) {
+	        wp_send_json_success(array('message' => 'Welcome tour completion status saved'));
+	    } else {
+	        wp_send_json_error(array('message' => 'Failed to save welcome tour completion status'));
+	    }
 	}
 
 }

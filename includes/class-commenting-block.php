@@ -174,6 +174,7 @@ if ( ! class_exists( 'Commenting_block' ) ) :
 			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'cf_enqueue_styles' );
 			$this->loader->add_action( 'enqueue_block_assets', $plugin_admin, 'cf_enqueue_styles' );
 			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'cf_enqueue_scripts' );
+			$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'cf_user_tour_enqueue_pointer');
 			$this->loader->add_action( 'wp_ajax_cf_comments_history', $plugin_admin, 'cf_comments_history' );
 			$this->loader->add_action( 'wp_ajax_cf_update_click', $plugin_admin, 'cf_update_click' );
 			$this->loader->add_action( 'wp_ajax_cf_get_user', $plugin_admin, 'cf_get_user' );

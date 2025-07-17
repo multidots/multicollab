@@ -17,7 +17,17 @@ if ( ! empty( $unlock_premium_popup_data ) ) {
 		$unlock_premium_popup_data = json_decode( $unlock_premium_popup_body, true );
 	
 		if( isset( $unlock_premium_popup_data ) && ! empty( $unlock_premium_popup_data ) ) {
-			setcookie( 'cf_unlock_premium_popup', wp_json_encode( $unlock_premium_popup_data ), time() + 3600 * 6, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+			if ( ! headers_sent() ) {
+				setcookie(
+					'cf_unlock_premium_popup',
+					wp_json_encode( $unlock_premium_popup_data ),
+					time() + 3600 * 6,
+					COOKIEPATH,
+					COOKIE_DOMAIN,
+					is_ssl(),
+					true
+				);
+			}
 		}
 	}
 }

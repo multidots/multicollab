@@ -193,11 +193,7 @@ function filterTextBeforeSave(newText) {
           });
         }
 
-    // replace nbsp; with space for separate links
-    //newText = newText.replace(/&nbsp;|&nbsp/igm, ' ');
-
-
-    //newText = newText.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi, function (match) {
+    
     newText = newText.replace(/(?!]*>[^<])(((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?))(?![^<]*<\/a>)/gi, function (match) {     
         link = match;
         if ((link.includes("www.") || link.includes("WWW.")) && !link.includes("http://") && !link.includes("https://")) {
@@ -841,8 +837,7 @@ function floatCommentsBoard(selectedText) {
         element.checked = false;
     });
     document.querySelectorAll('#cf-comment-board-wrapper .cls-board-outer').forEach(function(element) {
-        element.style.opacity = '0.4';
-        //element.style.removeProperty('top');
+        element.style.opacity = '0.2';
     });
 
     var singleBoardId = selectedText;
@@ -895,14 +890,12 @@ function floatCommentsBoard(selectedText) {
             if( (allowedBlocks.media).includes(blockName) ) {
                 var clientId = wp.data.select('core/block-editor').getSelectedBlockClientId();
                 if( iframeDocument ) {
-                    //const iframeDocument = iframe?.contentDocument || iframe?.contentWindow?.document;
                     var element = iframeDocument.getElementById( 'block-' + clientId );
                 } else {
                     var element = document.getElementById( 'block-' + clientId );
                 }
             } else {
                 if( iframeDocument ) {
-                    //const iframeDocument = iframe?.contentDocument || iframe?.contentWindow?.document;
                     var element = iframeDocument.getElementById(sID);
                 } else {
                     var element = document.getElementById(sID);
@@ -959,8 +952,6 @@ function floatCommentsBoard(selectedText) {
             }
         });
     }
-    // Optional: Remove scroll position effect (uncomment if needed)
-    //scrollBoardToPosition(topOfTextSingleBoard);
 }
 
 // Generate multi formate suggestion board string/@author:Pooja bhimani/since @3.5
@@ -1160,12 +1151,8 @@ function cfgetCustomAttributeId(selectedText) {
             } else if (focusBoard) {
                 let topOfText;
                 if (elid && elid.match(/^el/m) !== null) {
-                    //topOfText = document.querySelector('[datatext="' + elid + '"]').offsetTop;
                     topOfText = jQuery('[datatext="' + elid + '"]').offset()?.top;
                 } else {
-                    // const sid = document.getElementById(elid)?.getAttribute('data-sid');
-                    // //topOfText = document.querySelector('[id="' + sid + '"]')?.offsetTop;
-                    // topOfText = document.getElementById( elid )?.offsetTop;
                     const sid = jQuery('#' + elid).attr('data-sid');
                     topOfText = jQuery('[id="' + sid + '"]').offset()?.top;
 
@@ -1175,8 +1162,6 @@ function cfgetCustomAttributeId(selectedText) {
                         }
                     });
                 }
-                // const focusBoardElement = document.querySelector('#cf-comment-board-wrapper').querySelector('.cls-board-outer.focus');
-                // focusBoardElement.style.top = topOfText + 'px';
                 jQuery('#cf-span__comments').find('.cls-board-outer.focus').offset({ top: topOfText });
                 
                 if(commentEditFocus){
