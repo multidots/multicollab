@@ -25,7 +25,7 @@ While external collaboration tools like Google Docs are an option, online collab
 
 So, what should WordPress-focused content teams do to improve their collaborative output?
 
-We bring to you - <a href="https://bit.ly/3vR2maF" target="_blank">Multicollab</a>: <strong>a WordPress collaboration plugin which lets you Comment, Suggest and Collaborate - <i>in real-time</i>, in WordPress without switching back and forth between WordPress and other Apps. You can easily share editorial feedback directly within WordPress, including commenting, tagging, replying and much more!</strong>
+We bring to you - <a href="https://www.multicollab.com/#utm_source=WordPressorg&utm_medium=WordPressorg_multicollab_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin&utm_term=multicollabwesite" target="_blank">Multicollab</a>: <strong>a WordPress collaboration plugin which lets you Comment, Suggest and Collaborate - <i>in real-time</i>, in WordPress without switching back and forth between WordPress and other Apps. You can easily share editorial feedback directly within WordPress, including commenting, tagging, replying and much more!</strong>
 
 The Multicollab WordPress plugin is a versatile WordPress collaboration plugin designed to streamline editorial collaboration and content feedback. It allows WordPress content creators to collaborate on articles, blog posts, and other editorial content directly within WordPress. 
 
@@ -70,24 +70,24 @@ Multicollab offers a comprehensive editorial content management system, enabling
 
 Multicollab was designed to work with Gutenberg natively, so there’s no need to change your workflow! Fully compatible with Gutenberg versions 14.2 to 16.7, it works right out of the box!
 
-<a href="https://bit.ly/3pBV6iK" target="_blank">The Arrival of Gutenberg Phase 3: A Comprehensive Overview</a>
+<a href="https://www.multicollab.com/blog/gutenberg-phase3-overview/#utm_source=WordPressorg&utm_medium=WordPressorg_multicollab_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin&utm_term=multicollabwesite" target="_blank">The Arrival of Gutenberg Phase 3: A Comprehensive Overview</a>
 
 <strong>Need support? You’ve got it!</strong>
 
 Multicollab is built to work effortlessly the minute you install it, with zero setup time: just add it, and start commenting on your pages or posts within Gutenberg within seconds.
 
-If you do have specific questions about the plugin, our extensive <a href="https://bit.ly/3FqfRRD" target="_blank">support centre documentation is available here</a> and should help you in most cases. 
+If you do have specific questions about the plugin, our extensive <a href="https://docs.multicollab.com/#utm_source=WordPressorg&utm_medium=WordPressorg_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin" target="_blank">support centre documentation is available here</a> and should help you in most cases. 
 
 If you do need more help or have a specific question, we’re always happy to support!
 
-<a href="https://bit.ly/3KPzx2I" target="_blank">Simply open a ticket directly on the WordPress.org forum here</a>, and we’ll get back to you within as short a time as possible.
+<a href="https://wordpress.org/support/plugin/commenting-feature/#utm_source=WordPressorg&utm_medium=WordPressorg_support_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin" target="_blank">Simply open a ticket directly on the WordPress.org forum here</a>, and we’ll get back to you within as short a time as possible.
 
 ><em>The plug-in is awesome! It works fantastically.
 <strong>-       Charudatta Mondale Co-Founder at QuickDraft LLP<strong></em>
 
 📣 <a href="https://www.multicollab.com/blog/multicollab-4-3-introducing-new-lite-plan/"><strong>Lite Plan for Smaller Teams</strong></a>
 
-We just introduced a brand new Lite Plan! Priced at $199/year, the Lite plan offers the following features:
+We just introduced a brand new Lite Plan! The Lite plan offers the following features:
 
 <ul>
 <li>Inline Commenting</li>
@@ -107,7 +107,7 @@ We are excited to see smaller teams reinvent their WordPress editorial collabora
 
 The free version of Multicollab is easy to use and gives you all the commenting functionality to power up your editorial collaboration.
 
-But if you’re looking to take your team’s collaboration even further, we offer a PRO plan which <a href="https://bit.ly/37n6XrN" target="_blank">takes things to the next level</a>.
+But if you’re looking to take your team’s collaboration even further, we offer a PRO plan which <a href="https://www.multicollab.com/features/#utm_source=WordPressorg&utm_medium=WordPressorg_featurespage_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin" target="_blank">takes things to the next level</a>.
 
 Here’s what you can unlock by <a href="https://www.multicollab.com/pricing/" target="_blank">upgrading today</a>:
 
@@ -128,6 +128,10 @@ Paired with mentions, tagging and notifications, this makes collaborative editin
 
 If you and your team use Slack to communicate internally, you can receive important Multicollab notifications in the Slack channel of your choice. You will get real-time updates for mentions, replies, and other comment activities in your Slack channel. 
 This allows you to fit Multicollab in a place you know your team will check all day.
+
+👉🏻 <strong>Editorial Checklist</strong>
+
+Ensure every post meets your publishing standards with in-editor checklists. You can define tasks as required or optional, track progress in real time, and display alerts for incomplete posts before they go live. Checklists can be applied based on post type and access can be restricted by user roles.
 
 👉🏻 <strong> Custom Permissions </strong>
 
@@ -160,12 +164,10 @@ Your team’s setup may have specific requirements and need attention to solve a
 
 Email support is available anytime, and all feedback is encouraged to ensure we can give you the best experience possible. This ensures everything keeps moving smoothly and that nothing delays your team collaboration.
 
-The team behind Multicollab is <a href="https://bit.ly/38Xwp7w" target="_blank">Multidots</a> - a full-service WordPress development agency and WordPress VIP Gold Agency Partner, so you can rest assured that our support is truly second to none!
-
 ><em>Great Solution. Fantastic Support! We were using the free version and it was already very helpful. We were very interested in the new features but concerned about price and the complexity of our specific needs. After upgrading we worked with support to customize the plugin so we can successfully support 50 contributors that use WordPress as our core editorial management system. I fully expect it to transform our editorial process. We’re very happy with the product and the company’s support.
 <strong>-       Charles Araujo - Co-Founder – The MAPS Institute<strong></em>
 
-<p align="center">🔥 <a href="https://bit.ly/3wcQjDB" target="_blank">Try out the full features of Multicollab Premium in our demo here!</a> 🔥
+<p align="center">🔥 <a href="https://www.multicollab.com/try-demo/#utm_source=WordPressorg&utm_medium=WordPressorg_multicollabdemo_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin" target="_blank">Try out the full features of Multicollab Premium in our demo here!</a> 🔥
 </p>
 
 
@@ -183,6 +185,9 @@ The team behind Multicollab is <a href="https://bit.ly/38Xwp7w" target="_blank">
 10.
 11.
 
+= Contribute =
+
+Multicollab is developed by <a href="https://www.multidots.com/#utm_source=WordPressorg&utm_medium=WordPressorg_multidotswebsite_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin" target="_blank"> Multidots</a>, a WordPress VIP Gold Agency Partner trusted by enterprise brands. Explore our client success stories <a href="https://www.multidots.com/case-studies/#utm_source=WordPressorg&utm_medium=WordPressorg_multidotswebsite_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin" target="_blank">here</a>.
 
 == Frequently Asked Questions ==
 
@@ -230,7 +235,7 @@ Yes, you can! Multicollab works perfectly in posts and pages of all types, enabl
 
 By default, all Super Admin, Administrator, and Editor roles can view, edit, delete, reply, and resolve comments on any posts and page. 
 
-Authors and Contributors can only add, edit, delete, reply, and resolve their posts’ comments. For complete control over users’ permissions, consider upgrading to <a href="https://bit.ly/3skcdDP">Multicollab Premium</a>.
+Authors and Contributors can only add, edit, delete, reply, and resolve their posts’ comments. For complete control over users’ permissions, consider upgrading to <a href="https://www.multicollab.com/pricing/#utm_source=WordPressorg&utm_medium=WordPressorg_pricingpage_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin&utm_term=Multicollab+Premium">Multicollab Premium</a>.
 
 = What types of content blocks are compatible with comments and suggestions? =
 
@@ -246,9 +251,9 @@ Available with our premium plan, users can either accept or reject all suggestio
 
 Have you had a look at our documentation? 
 
-<a href="https://bit.ly/3FqfRRD" target="_blank">We’ve covered a lot of common questions in our repository available freely here</a>.
+<a href="https://docs.multicollab.com/#utm_source=WordPressorg&utm_medium=WordPressorg_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin" target="_blank">We’ve covered a lot of common questions in our repository available freely here</a>.
 
-If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as quickly as possible!
+If you’d still like help, simply <a href="https://wordpress.org/support/plugin/commenting-feature/#utm_source=WordPressorg&utm_medium=WordPressorg_support_link&utm_campaign=WordPressorg_content_link&utm_id=multicollab_freeplugin" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as quickly as possible!
 
 == Changelog ==
 
