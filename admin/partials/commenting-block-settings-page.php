@@ -273,7 +273,7 @@ $cf_specific_post_types_checklist_values        = get_option( 'cf_specific_post_
 													</h3>
 														<p><?php esc_html_e( 'Ensure key publishing tasks are completed by enabling editorial checklists.', 'content-collaboration-inline-commenting' ); ?><a href="https://docs.multicollab.com/article/104-editorial-checklist?utm_source=plugin+&utm_medium=setting+page&utm_campaign=help+doc+from+plugin+setting+section" target="_blank"><?php esc_html_e( 'Learn More', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a></p>
 													</div>
-													<div class="<?php echo esc_html( $disabled_class ); ?>">
+													<div class="<?php echo esc_attr( $disabled_class ); ?>">
 														<?php
 															// Get permission form HTML.
 															require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-checklist.php';
@@ -293,7 +293,7 @@ $cf_specific_post_types_checklist_values        = get_option( 'cf_specific_post_
 														</h3>
 														<p><?php esc_html_e( 'Alert authors about any unresolved comments or suggestions before they publish a post.', 'content-collaboration-inline-commenting' ); ?><a href="https://docs.multicollab.com/article/21-publishing-settings?utm_source=plugin+&utm_medium=setting+page&utm_campaign=help+doc+from+plugin+setting+section" target="_blank"><?php esc_html_e( 'Learn More', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a></p>
 													</div>
-													<div class="<?php echo esc_html( $disabled_class ); ?>">
+													<div class="<?php echo esc_attr( $disabled_class ); ?>">
 														<?php
 															// Get permission form HTML.
 															require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-publishing.php';
@@ -317,7 +317,7 @@ $cf_specific_post_types_checklist_values        = get_option( 'cf_specific_post_
 													</h3>
 													<p><?php esc_html_e( 'Suggests edit without changing the original content.', 'content-collaboration-inline-commenting' ); ?><a href="https://docs.multicollab.com/article/23-suggestion-mode?utm_source=plugin+&utm_medium=setting+page&utm_campaign=help+doc+from+plugin+setting+section" target="_blank"><?php esc_html_e( 'Learn More', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a></p>
 													</div>
-													<div class="<?php echo esc_html( $disabled_class ); ?>">
+													<div class="<?php echo esc_attr( $disabled_class ); ?>">
 														<?php
 															// Get permission form HTML.
 															require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-suggestion-mode.php';
@@ -337,7 +337,7 @@ $cf_specific_post_types_checklist_values        = get_option( 'cf_specific_post_
 														</h3>
 														<p><?php esc_html_e( 'Multiple team members can write and edit the same post or page simultaneously.', 'content-collaboration-inline-commenting' ); ?><a href="https://docs.multicollab.com/article/24-real-time-editing?utm_source=plugin+&utm_medium=setting+page&utm_campaign=help+doc+from+plugin+setting+section" target="_blank"><?php esc_html_e( 'Learn More', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a></p>
 													</div>
-													<div class="<?php echo esc_html( $disabled_class ); ?>">
+													<div class="<?php echo esc_attr( $disabled_class ); ?>">
 														<?php
 															// Get permission form HTML.
 															require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-realtime-mode.php';
@@ -362,7 +362,7 @@ $cf_specific_post_types_checklist_values        = get_option( 'cf_specific_post_
 														</h3>
 														<p><?php esc_html_e( 'Decide which role should have permission to manage comments and suggestion in multicollab.', 'content-collaboration-inline-commenting' ); ?><a href="https://docs.multicollab.com/article/25-custom-permissions?utm_source=plugin+&utm_medium=setting+page&utm_campaign=help+doc+from+plugin+setting+section" target="_blank"><?php esc_html_e( 'Learn More', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a></p>
 													</div>
-													<div class="<?php echo esc_html( $disabled_class ); ?>">
+													<div class="<?php echo esc_attr( $disabled_class ); ?>">
 														<?php
 															// Get permission form HTML.
 															require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-permissions.php';
@@ -384,7 +384,7 @@ $cf_specific_post_types_checklist_values        = get_option( 'cf_specific_post_
 														</h3>
 														<p><?php esc_html_e( 'This features helps in enhavcing the accessibility of the Multicollab plugin for users who do not follow the English language.', 'content-collaboration-inline-commenting' ); ?><a href="https://docs.multicollab.com/article/26-multilingual?utm_source=plugin+&utm_medium=setting+page&utm_campaign=help+doc+from+plugin+setting+section" target="_blank"><?php esc_html_e( 'Learn More', 'content-collaboration-inline-commenting' ); ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a></p>
 													</div>
-													<div class="<?php echo esc_html( $disabled_class ); ?>">
+													<div class="<?php echo esc_attr( $disabled_class ); ?>">
 														<?php
 															// Get permission form HTML.
 															require_once COMMENTING_BLOCK_DIR . 'admin/settings/settings-multilingual-options.php';
