@@ -601,7 +601,7 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 		if ( '0' === $cf_hide_editorial_column ) {
 			if ( ( in_array( $post_type, $all_post_type, true ) ) || ( in_array( $type, $all_post_type, true ) ) ) {
 				if ( ( isset( $post_type ) || isset( $type ) ) && ( $post_type !== 'product' || $type !== 'product' ) ) {
-					$defaults['cb_comments_status'] = '<img id="cf-column-img" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ) . '" width=17/>' . __( 'Multicollab', 'content-collaboration-inline-commenting' );
+					$defaults['cb_comments_status'] = '<span title="Multicollab"><img id="cf-column-img" src="' . esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/commenting-logo.svg' ) . '" width=19/></span>';
 				}
 			}
 		}
@@ -1013,10 +1013,34 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 			require_once ABSPATH . '/wp-admin/includes/screen.php'; 
 		}
 		$screen = get_current_screen();
-		if ( ! empty( $screen ) && 'site-editor' !== $screen->base ) {
+		// Built-in post types you DO want to allow (exclude only custom CPTs)
+		$builtin_post_types = array( 'post', 'page', 'attachment' );
 
-			wp_enqueue_style( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/editorStyle.build.min.css', array(), $this->version, 'all' );
+		// Excluded screen IDs
+		$excluded_screens = array(
+			'edit-page',   // Pages list
+			'edit-post',   // Posts list
+			'upload',      // Media Library
+			'themes',      // Themes page
+		);
+
+		// If we are on a custom post type list screen (edit-{cpt}) that is not built-in
+		if ( $screen && isset( $screen->id ) && str_starts_with( $screen->id, 'edit-' ) ) {
+			$post_type = str_replace( 'edit-', '', $screen->id );
+			if ( ! in_array( $post_type, $builtin_post_types, true ) ) {
+				$excluded_screens[] = $screen->id;
+			}
 		}
+
+		if ( ! empty( $screen ) 
+			&& 'site-editor' !== $screen->base 
+			&& ! in_array( $screen->id, $excluded_screens, true ) 
+		) {
+			wp_enqueue_style( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/editorStyle.build.min.css', array(), $this->version, 'all' );
+		} else {
+			wp_enqueue_style( $this->plugin_name, trailingslashit( COMMENTING_BLOCK_URL ) . 'admin/assets/js/dist/styles/dashboardeditorStyle.build.min.css', array(), $this->version, 'all' );
+		}
+		
 
 		if ( ( ! empty( $screen ) && $screen->is_block_editor && 'site-editor' !== $screen->base && 'widgets' !== $screen->base ) || ! empty( $screen ) && ( 'toplevel_page_editorial-comments' === $screen->base || 'admin_page_multicollab_setup_wizard' === $screen->base ) ) {	
 

@@ -704,6 +704,26 @@ window.addEventListener("click", function (e) {
 			});
 		});
 
+		//Update video modal on dashboard
+		const videoPopup = document.querySelector('.cf-no-results__demo-btn'); // single button
+		const modal = document.getElementById('cf-dashboard_videomodal');
+		const videoPopupCloseBtn = document.querySelector('.modal-close-btn');
+
+		if (videoPopup && modal && videoPopupCloseBtn) {
+			// Open modal
+			videoPopup.addEventListener('click', function (event) {
+				event.preventDefault();
+				modal.classList.add('cf-active-modal');
+				document.body.style.overflowY = "hidden";
+			});
+
+			// Close modal
+			videoPopupCloseBtn.addEventListener('click', function () { 
+				modal.classList.remove('cf-active-modal');
+				document.body.style.overflowY = "unset";
+			});
+    	}
+
 		const hash = window.location.hash.substring(1); // remove the "#" from hash
 		if (!hash) return;
 
@@ -718,6 +738,7 @@ window.addEventListener("click", function (e) {
 				}, 200); // delay to ensure visibility
 			}
 		}
+
 	 });
 	
 

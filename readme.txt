@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Collaboration, Editorial comments, Collaborative editing, Editorial, Team Collaboration
 Requires at least: 6.3
 Tested up to: 6.8
-Stable tag: 5.0
+Stable tag: 5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -252,11 +252,14 @@ If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_bla
 
 == Changelog ==
 
+= 5.1 - 08.10.2025 =
+* [Enhancement] - Improved Dashboard for a more intuitive and user-friendly interface.
+* [Bug Fixes] - Applied minor fixes to improve sidebar stability.
+
 = 5.0 - 17.07.2025 =
 * [New] Introduce interactive guiding tour.
 * [New] Fixed bugs related to multiple text comment handling.
-* [Bug Fixes] Fixed minor bugs.
-* [Enhancement] - Redesigned settings UI to simplify user interactions.
+* [Bug Fixes] Fixed minor bugs
 
 = 4.10 - 19.05.2025 =
 * [Enhancement] Enhanced compatibility with popular Learning Management Systems (LMS)

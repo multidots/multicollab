@@ -12,7 +12,9 @@ $post_continue_in_loadmore = $post_continue_in_loadmore ?? false;   //phpcs:igno
 
 // If no data found, an HTML (message) will be returned instead of an array.
 if ( ! is_array( $this->cf_activities ) ) { //phpcs:ignore
-	echo $this->cf_activities; 				//phpcs:ignore
+
+	require_once COMMENTING_BLOCK_DIR . 'admin/partials/commenting-block-dashboard-no-results.php';
+	// echo $this->cf_activities; //phpcs:ignore
 
 	return;
 }
@@ -25,7 +27,8 @@ $time_format = get_option( 'time_format' );
 
 $final_activity = $userData = []; //phpcs:ignore
 $date_displayed = $displayed_dates ?? []; //phpcs:ignore
-
+?>
+<?php
 if ( 'detail-view' === $activity_view ) {
 	?>
 	<div class="board-detail-head">
