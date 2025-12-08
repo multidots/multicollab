@@ -641,8 +641,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		// Adding a new admin page for MYS
 		add_menu_page(
-			__( esc_html( $settings_title ), 'content-collaboration-inline-commenting' ),
-			__( esc_html( $settings_title ), 'content-collaboration-inline-commenting' ),
+			__( $settings_title, 'content-collaboration-inline-commenting' ),
+			__( $settings_title, 'content-collaboration-inline-commenting' ),
 			'manage_options',
 			'editorial-comments',
 			array( $this, 'cf_settings_callback' ),
@@ -651,8 +651,8 @@ class Commenting_block_Admin extends Commenting_block_Functions {
 
 		add_submenu_page(
 			' ',
-			__( 'Free Wizard', 'textdomain' ),
-			'Multicolab Wizard',
+			__( 'Free Wizard', 'content-collaboration-inline-commenting' ),
+			__( 'Multicolab Wizard', 'content-collaboration-inline-commenting' ),
 			'manage_options',
 			'multicollab_setup_wizard',
 			array( $this, 'multicollab_setup_wizard_function' )
