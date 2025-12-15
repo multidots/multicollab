@@ -212,6 +212,48 @@ $disabled_class = 'cf_disabled_input';
 		</div>
 	</div>
 
+	<div class="cf-card-modules-wrapper">
+		<div class="cf-card-modules <?php echo esc_html( $disabled_class ); ?>">
+			<div class="cf-card-modules-content">
+				<div class="cf-card-modules-content__wrap">
+					<div class="cf-card-icon" style="background-color: rgb(75 27 206 / 7%);">
+						<svg width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#4b1bce" stroke="#4b1bce"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.cf-workflow-svg{fill:none;stroke:#4b1bce;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;}</style></defs><circle class="cf-workflow-svg" cx="12" cy="6" r="3"></circle><rect class="cf-workflow-svg" height="5" rx="2" width="8" x="2" y="16"></rect><rect class="cf-workflow-svg" height="5" rx="2" width="8" x="14" y="16"></rect><path class="cf-workflow-svg" d="M6,16V14a2,2,0,0,1,2-2h8a2,2,0,0,1,2,2v2"></path><line class="cf-workflow-svg" x1="12" x2="12" y1="9" y2="12"></line></g></svg>
+					</div>
+					<h3 class="cf-card-title"><?php esc_html_e( 'Workflow Management', 'content-collaboration-inline-commenting' ) ?></h3>
+				</div>
+				<div class="cf-card-desc"><?php esc_html_e( "Streamline your editorial process with customizable, step-based workflows directly inside WordPress.", 'content-collaboration-inline-commenting' ) ?></div>
+				<ul class="cf-card-desc">
+					<li><?php esc_html_e( "Access and manage workflow steps right from the Multicollab sidebar while editing posts or pages.", 'content-collaboration-inline-commenting' ) ?></li>
+					<li><?php esc_html_e( "Assign responsible users, monitor progress, and update status at each step for complete visibility.", 'content-collaboration-inline-commenting' ) ?></li>
+					<li><?php esc_html_e( "Create versions of live content for updates and route them through the same workflow before publishing.", 'content-collaboration-inline-commenting' ) ?></li>
+				</ul>		
+			</div>
+			<div class="cf-card-footer">
+				<div class="cf-card-footer__wrap">
+					<a href="#." class="cf-theme-link" target="_blank"><?php esc_html_e( "Learn More", 'content-collaboration-inline-commenting' ) ?><img class="cf-external-link-icon" src="<?php echo esc_url( COMMENTING_BLOCK_URL . '/admin/assets/images/arrow_blue.svg' ); ?>" alt="external-link"></a>
+				</div>
+				<label class="cf-switch">
+					<input type="checkbox" class="cf-toggle" checked>
+					<span class="cf-slider"></span>
+				</label>
+			</div>
+		</div>
+		<div class="cf-upgrade-note-popup">
+			<h3><svg xmlns="http://www.w3.org/2000/svg" width="14" height="12.513" viewBox="0 0 14 12.513">
+					<g id="Group_52550" data-name="Group 52550" transform="translate(-285.455 -280.192)">
+						<path id="Path_199491" data-name="Path 199491" d="M324.995,428.1a.56.56,0,0,1-.561.561h-8.208a.561.561,0,1,1,0-1.121h8.208a.561.561,0,0,1,.56.561Z" transform="translate(-27.875 -135.952)" fill="#d0a823"></path>
+						<path id="Path_199492" data-name="Path 199492" d="M299.228,282.364h0a.559.559,0,0,0-.623-.029l-3.432,2.078-2.229-3.938a.561.561,0,0,0-.976,0l-2.229,3.938-3.432-2.078a.56.56,0,0,0-.833.616l1.728,6.863a.56.56,0,0,0,.543.424h9.423a.56.56,0,0,0,.543-.424l1.728-6.863A.559.559,0,0,0,299.228,282.364Zm-2.5,6.753h-8.549L286.893,284l2.759,1.67a.561.561,0,0,0,.778-.2l2.025-3.579,2.026,3.578a.561.561,0,0,0,.778.2l2.759-1.67Z" transform="translate(0 0)" fill="#d0a823"></path>
+					</g>
+					</svg>
+				<?php esc_html_e( 'Workflow is a Premium feature', 'content-collaboration-inline-commenting' ) ?></h3>
+			<p><?php esc_html_e( 'Start collaborating smarter with Multicollab Pro.', 'content-collaboration-inline-commenting' ) ?></p>
+			<div class="cf-upgrade-note-popup__btn">
+				<a  href="https://www.multicollab.com/pricing/#h-compare-features-side-by-side" target="_blank"><?php esc_html_e( 'See Features', 'content-collaboration-inline-commenting' ) ?></a>
+				<a href="https://www.multicollab.com/pricing/" class="cf-theme-link" target="_blank"><?php esc_html_e( "Upgrade", 'content-collaboration-inline-commenting' ) ?></a>
+			</div>
+		</div>
+	</div>
+
 </div>
 <div class="cf-modules-cta-features">
 	<a href="https://www.multicollab.com/pricing/#h-compare-features-side-by-side" target="_blank" class="cf-feature-comparison-btn"><?php esc_html_e( 'View full feature comparison', 'content-collaboration-inline-commenting' ) ?><svg height="200px" width="200px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 185.343 185.343" xml:space="preserve" fill="#ffffff" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path style="fill:#ffffff;" d="M51.707,185.343c-2.741,0-5.493-1.044-7.593-3.149c-4.194-4.194-4.194-10.981,0-15.175 l74.352-74.347L44.114,18.32c-4.194-4.194-4.194-10.987,0-15.175c4.194-4.194,10.987-4.194,15.18,0l81.934,81.934 c4.194,4.194,4.194,10.987,0,15.175l-81.934,81.939C57.201,184.293,54.454,185.343,51.707,185.343z"></path> </g> </g> </g></svg></a>

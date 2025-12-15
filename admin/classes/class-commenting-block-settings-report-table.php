@@ -72,6 +72,20 @@ class MC_List_Table_Report extends WP_List_Table {
 	}
 
 	/**
+	 * Display message when no items are found
+	 */
+	public function no_items() {
+		$m_filter = filter_input( INPUT_GET, 'm_report', FILTER_SANITIZE_SPECIAL_CHARS );
+		$has_month_filter = ! empty( $m_filter ) && '0' !== $m_filter;
+		
+		if ( $has_month_filter ) {
+			esc_html_e( 'No activity items found for the selected month.', 'content-collaboration-inline-commenting' );
+		} else {
+			esc_html_e( 'No activity items found.', 'content-collaboration-inline-commenting' );
+		}
+	}
+
+	/**
 	 * Extra table nav.
 	 *
 	 * @param string $which

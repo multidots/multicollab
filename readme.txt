@@ -7,7 +7,7 @@ Contributors: dots, multicollab, lkraav
 Tags: Collaboration, Editorial comments, Collaborative editing, Editorial, Team Collaboration
 Requires at least: 6.3
 Tested up to: 6.8
-Stable tag: 5.1
+Stable tag: 5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,7 +87,7 @@ If you do need more help or have a specific question, we’re always happy to su
 
 📣 <a href="https://www.multicollab.com/blog/multicollab-4-3-introducing-new-lite-plan/"><strong>Lite Plan for Smaller Teams</strong></a>
 
-We just introduced a brand new Lite Plan! Priced at $199/year, the Lite plan offers the following features:
+We just introduced a brand new Lite Plan! Priced at $249/year, the Lite plan offers the following features:
 
 <ul>
 <li>Inline Commenting</li>
@@ -182,7 +182,8 @@ The team behind Multicollab is <a href="https://bit.ly/38Xwp7w" target="_blank">
 9.
 10.
 11.
-
+12.
+13.
 
 == Frequently Asked Questions ==
 
@@ -251,6 +252,15 @@ Have you had a look at our documentation?
 If you’d still like help, simply <a href="https://bit.ly/3KPzx2I" target="_blank">open up a ticket on WordPress.org directly here</a> and we’ll get back to you as quickly as possible!
 
 == Changelog ==
+
+
+= 5.2 - 15.12.2025 =
+[Enhancement] – Fully compatible with WordPress 6.9.
+[Bug Fixes] – Resolved Spectra plugin conflict causing overlap between Comment Mode notifications and Spectra components.
+[Bug Fixes] – Improved performance on setups with multiple active plugins where loading comments resulted in significant lag.
+[Bug Fixes] – Addressed multiple design issues in the Activity Center for a cleaner and consistent UI.
+[Bug Fixes] – Resolved issue where user mentions were partially hidden when replying from the Activity Center in single-comment mode.
+[Bug Fixes] – Fixed commenting issue where adding a comment triggered console errors and prevented proper loading of the board.
 
 = 5.1 - 08.10.2025 =
 * [Enhancement] - Improved Dashboard for a more intuitive and user-friendly interface.

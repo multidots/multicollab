@@ -4,6 +4,7 @@
  * @param {string} selector - The CSS selector to match the elements.
  * @param {string} classes - The classes to be removed from the elements.
  */
+
 function cfRemoveClass(selector, classes) {
     const elements = document.querySelectorAll(selector);
     elements.forEach(function(element) {
@@ -836,9 +837,9 @@ function floatCommentsBoard(selectedText) {
     document.querySelectorAll('#cf-comment-board-wrapper .comment-resolve .resolve-cb').forEach(function(element) {
         element.checked = false;
     });
-    document.querySelectorAll('#cf-comment-board-wrapper .cls-board-outer').forEach(function(element) {
-        element.style.opacity = '0.2';
-    });
+    // document.querySelectorAll('#cf-comment-board-wrapper .cls-board-outer').forEach(function(element) {
+    //     element.style.opacity = '0.2';
+    // });
 
     var singleBoardId = selectedText;
    
@@ -851,7 +852,8 @@ function floatCommentsBoard(selectedText) {
 
     const elementcombineBoardId = document.getElementById(singleBoardIdWithSg);
     if (elementcombineBoardId) {
-        elementcombineBoardId.style.opacity = "1";
+        //elementcombineBoardId.style.opacity = "1";
+        elementcombineBoardId?.parentElement?.classList.add("cf-unset-all");
         elementcombineBoardId.classList.add("focus", "onGoing", "is-open");
         let referenceElement = iframeDocument 
           ? (singleBoardId.match(/^el/m) === null 
@@ -912,9 +914,10 @@ function floatCommentsBoard(selectedText) {
             setTimeout(() => {
               const rect = element.getBoundingClientRect();
               topOfText = rect.top + window.scrollY + 50;  // Adds scroll position to get position relative to the document
+              jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').parent().add('cf-unset-all');
               jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').addClass('focus');
               jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').addClass('is-open');
-              jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').css('opacity', '1');
+              //jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').css('opacity', '1');
               jQuery('#' + singleBoardIdWithSg + '.cls-board-outer').offset({ top: topOfText });
             }, 1000);
                                       
@@ -1082,7 +1085,7 @@ function cfgetCustomAttributeId(selectedText) {
     
                         const combineBoardElement = document.getElementById(combineBoardId);
                         if (combineBoardElement) {
-                            combineBoardElement.style.opacity = '1';
+                            //combineBoardElement.style.opacity = '1';
                             combineBoardElement.classList.add('is-open', 'focus', 'onGoing');
                         }
                     }
