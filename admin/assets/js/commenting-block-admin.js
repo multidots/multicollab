@@ -9,6 +9,9 @@ window.process = {
 	},
 };
 
+// Define sprintf with fallback for WordPress compatibility
+const { sprintf } = wp.i18n; // eslint-disable-line
+
 (function ($) {
 	$(document).ready(function () {
 
@@ -44,7 +47,7 @@ window.process = {
 			cfRemoveClass('#cf-comment-board-wrapper .comment-delete-overlay', 'show');
 			$('#cf-comment-board-wrapper .comment-resolve .resolve-cb').prop("checked", false);
 			$('#cf-comment-board-wrapper .cls-board-outer .buttons-wrapper').removeClass('active');
-			$('#cf-comment-board-wrapper .cls-board-outer').css('opacity', '0.2');
+			//$('#cf-comment-board-wrapper .cls-board-outer').css('opacity', '0.2');
 			let realTimeMode = wp.data.select('core/editor').getEditedPostAttribute('meta')?._is_real_time_mode ;
 			if(true !== realTimeMode){
 				$('.btn-wrapper').css('display', 'none');
@@ -67,7 +70,7 @@ window.process = {
   
 			_this.addClass('focus');
 			_this.addClass('is-open');
-			_this.css('opacity', '1');
+			_this.parent().addClass('cf-unset-all');
 			
 			const { singleBoardIdSuggestion, singleBoardIdComment, combineBoardId } = getBoardIds(selectedText);
   
@@ -904,9 +907,9 @@ window.addEventListener("click", function (e) {
 				document.querySelector(".cls-board-outer")?.classList.contains("locked")
 			) {
 				// Reset Comments Float. This will reset the positions of all comments.
-				document.querySelector(
-					"#cf-comment-board-wrapper .cls-board-outer"
-				).style.opacity = "1";
+				// document.querySelector(
+				// 	"#cf-comment-board-wrapper .cls-board-outer"
+				// ).style.opacity = "1";
 				cfRemoveClass(
 					"#cf-comment-board-wrapper .cls-board-outer",
 					"is-open focus"
@@ -996,44 +999,57 @@ window.addEventListener("click", function (e) {
 			}
 		}
 	
-		if (event.target.matches(".cls-board-outer .buttons-wrapper")) {
-			const target = event.target;
+	// Handle buttons-wrapper click - ensure only one dropdown is open at a time
+	// BUT exclude clicks on menu items (Share, Delete, etc.) - those should close the menu
+	const clickedMenuItem = event.target.closest(".comment-more-option-list li");
+	if (clickedMenuItem) {
+		// Don't handle menu item clicks here - let the React handlers manage them
+		return;
+	}
 	
-			if (target.classList.contains("active")) {
-				target.classList.toggle("active");
-				const commentContainer = target.closest(".commentContainer");
-				if (commentContainer) {
-					const siblings = Array.from(
-						commentContainer.parentElement.children
-					).filter((child) => child !== commentContainer);
-					siblings.forEach((sibling) => {
-						const buttonsWrapper = sibling.querySelector(".buttons-wrapper");
-						if (buttonsWrapper) {
-							buttonsWrapper.classList.remove("active");
-						}
-					});
-				}
-			} else {
-				document
-					.querySelectorAll(
-						"#cf-comment-board-wrapper .cls-board-outer .buttons-wrapper"
-					)
-					.forEach((el) => {
+	const clickedButtonsWrapper = event.target.closest(".buttons-wrapper");
+	if (clickedButtonsWrapper) {
+		// Check if it's within a comment board or activity center
+		const boardOuter = clickedButtonsWrapper.closest(".cls-board-outer");
+		const isInCommentBoard = boardOuter && document.getElementById("cf-comment-board-wrapper")?.contains(boardOuter);
+		const isInActivityCenter = boardOuter && (
+			boardOuter.closest(".cf-activity-centre") || 
+			boardOuter.closest(".js-activity-centre")
+		);
+		
+		if (isInCommentBoard || isInActivityCenter) {
+			event.stopPropagation();
+			
+			const isActive = clickedButtonsWrapper.classList.contains("active");
+			
+			// Close all other open dropdowns first (across all contexts)
+			document
+				.querySelectorAll(".cls-board-outer .buttons-wrapper, .cf-activity-centre .buttons-wrapper, .js-activity-centre .buttons-wrapper")
+				.forEach((el) => {
+					if (el !== clickedButtonsWrapper) {
 						el.classList.remove("active");
-					});
-				target.classList.toggle("active");
+					}
+				});
+			
+			// Toggle the clicked one
+			if (isActive) {
+				clickedButtonsWrapper.classList.remove("active");
+			} else {
+				clickedButtonsWrapper.classList.add("active");
 			}
 		}
-	
+	} else {
+		// Close all dropdowns when clicking outside
 		if (
-			!event.target.closest(".cls-board-outer .commentContainer .buttons-wrapper")
+			!event.target.closest(".buttons-wrapper")
 		) {
 			document
-				.querySelectorAll(".cls-board-outer .commentContainer .buttons-wrapper")
+				.querySelectorAll(".cls-board-outer .buttons-wrapper, .cf-activity-centre .buttons-wrapper, .js-activity-centre .buttons-wrapper")
 				.forEach(function (element) {
 					element.classList.remove("active");
 				});
 		}
+	}
 	
 		if (event.target.matches(".cf-slack-integration-box__acc-setting")) {
 			const target = event.target;
@@ -1390,11 +1406,11 @@ window.addEventListener("click", function (e) {
 		// Disable reply box on other boards and adjust opacity
 		document.querySelectorAll(".cls-board-outer").forEach((element) => {
 			element.classList.remove("cf-removeReply");
-			element.style.opacity = "0.2";
+			//element.style.opacity = "0.2";
 		});
 	
 		boardOuter.classList.add("cf-removeReply");
-		boardOuter.style.opacity = "1.0";
+		//boardOuter.style.opacity = "1.0";
 	
 		// Hide share comment container if present
 		if (boardOuter.querySelector(".shareCommentContainer")) {
@@ -1973,14 +1989,14 @@ function makeMatchedTextHighlighted(term, markEmail, markName) {
 	
 		if (term) {
 			if (markEmailElement) {
-				mark(markEmailElement, term);
+				cfMark(markEmailElement, term);
 			}
 			if (markNameElement) {
-				mark(markNameElement, term);
+				cfMark(markNameElement, term);
 			}
 		}
 	}
-	function mark(element, term) {
+	function cfMark(element, term) {
 		var innerHTML = element.innerHTML;
 		var regex = new RegExp(`(${term})`, "gi");
 		element.innerHTML = innerHTML.replace(regex, "<mark>$1</mark>");
